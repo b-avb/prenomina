@@ -1,0 +1,60 @@
+// Fuentes propias del proyecto, autohospedadas desde public/fonts.
+// IBM Plex Mono se mantiene por Google Fonts (ver index.html) — no es
+// una fuente de marca, solo se usa puntualmente para datos tabulares.
+
+@font-face {
+  font-family: 'Mavora Sans';
+  src: url('/fonts/mavora-sans/MavoraSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Mavora Sans';
+  src: url('/fonts/mavora-sans/MavoraSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Mavora Sans';
+  src: url('/fonts/mavora-sans/MavoraSans-BoldExpanded.ttf') format('truetype');
+  font-weight: 700;
+  font-stretch: expanded;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

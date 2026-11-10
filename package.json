@@ -1,0 +1,21 @@
+{
+  "name": "usta-prenomina-platform",
+  "private": true,
+  "description": "USTA Seccional Tunja faculty pre-payroll platform (monorepo: shared domain, REST API, web client).",
+  "scripts": {
+    "build:domain": "pnpm --filter @usta/domain build",
+    "build": "pnpm build:domain && pnpm --filter prenomina-back-usta-tunja build && pnpm --filter prenomina-frontend build",
+    "typecheck": "pnpm build:domain && pnpm -r --filter !@usta/domain typecheck",
+    "test": "pnpm build:domain && pnpm --filter prenomina-back-usta-tunja test",
+    "test:e2e": "pnpm build:domain && pnpm --filter prenomina-back-usta-tunja test:e2e",
+    "db:up": "docker compose up -d mariadb",
+    "db:down": "docker compose down",
+    "db:migrate": "pnpm --filter prenomina-back-usta-tunja db:migrate",
+    "db:seed": "pnpm --filter prenomina-back-usta-tunja db:seed",
+    "db:import": "pnpm --filter prenomina-back-usta-tunja db:import",
+    "db:reset": "pnpm --filter prenomina-back-usta-tunja db:reset",
+    "setup": "pnpm build && pnpm db:migrate && pnpm db:seed",
+    "start": "pnpm --filter prenomina-back-usta-tunja start"
+  },
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
+}

@@ -1,0 +1,33 @@
+// Design tokens del prototipo aprobado (gestion_docente_v2).
+// Único lugar donde se definen estos valores — todo lo demás los referencia por var(--token).
+:root {
+  --bg: #f6f8fa;
+  --surface: #ffffff;
+  --surface-soft: #eef2f6;
+  --border: #e6eaef;
+  --ink: #101826;
+  --ink-soft: #5b6675;
+  --ink-faint: #93a0af;
+
+  --navy: #00336a;
+  --blue: #004f9f;
+  --cerulean: #009fe3;
+  --yellow: #ffe000;
+  --gold: #fdc300;
+
+  --brand-tint: #e2f1fb;
+  --success: #1f7a5c;
+  --success-bg: #e4f3ec;
+  --danger: #b3413a;
+  --danger-bg: #fbeae9;
+  --warning: #8a5b00;
+  --warning-bg: #fdf1cf;
+
+  --r-lg: 18px;
+  --r-md: 12px;
+  --r-sm: 9px;
+
+  --font-display: 'Mavora Sans', sans-serif;
+  --font-body: 'Poppins', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}

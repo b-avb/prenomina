@@ -1,0 +1,650 @@
+@use './tokens';
+@use './fonts';
+@use './base';
+
+// ================= EXTENSIONES PRENÓMINA DOCENTE (UI/UX COMPACTA Y EJECUTIVA) =================
+
+.app-header {
+  padding: 10px 22px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.app-main {
+  padding: 18px 24px 36px;
+}
+
+.rail--labeled {
+  width: 92px;
+  padding: 14px 6px;
+  gap: 6px;
+  position: sticky;
+  top: 63px;
+  height: calc(100vh - 63px);
+  z-index: 45;
+}
+
+.rail-item--labeled {
+  width: 78px;
+  height: auto;
+  min-height: 58px;
+  padding: 8px 4px;
+  margin-bottom: 2px;
+  flex-direction: column;
+  gap: 4px;
+  border-radius: 12px;
+
+  .rail-item__icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rail-item__badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: var(--danger);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #fff;
+  }
+
+  .rail-item__text {
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.15;
+    letter-spacing: 0.1px;
+  }
+
+  &::after {
+    left: 84px;
+    z-index: 60;
+  }
+}
+
+.role-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--brand-tint);
+  border: 1.5px solid rgba(0, 79, 159, 0.22);
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  &__label {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-left: 4px;
+  }
+
+  select {
+    border: none;
+    background: #fff;
+    color: var(--navy);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 51, 106, 0.1);
+
+    &:focus {
+      outline: 2px solid var(--cerulean);
+    }
+  }
+}
+
+.period-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--navy);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  &__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--yellow);
+  }
+}
+
+.page-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+// ================= CINTA INTEGRADA DE BOLSAS DE FACULTAD (ANEXOS 5 Y 6) =================
+.bolsas-strip {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 18px;
+  box-shadow: 3px 3px 0 rgba(0, 51, 106, 0.04);
+  overflow: hidden;
+
+  @media (max-width: 1150px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 680px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bolsa-pill {
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border);
+  padding: 11px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  position: relative;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &:hover {
+    background: var(--surface-soft);
+  }
+
+  &.active-filter {
+    background: var(--brand-tint);
+    box-shadow: inset 0 -3px 0 var(--navy);
+  }
+
+  &.ok {
+    border-top: 3px solid var(--success);
+  }
+
+  &.warn {
+    border-top: 3px solid var(--gold);
+  }
+
+  &.error {
+    border-top: 3px solid var(--danger);
+  }
+
+  &__row1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  &__title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__code {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--surface-soft);
+    color: var(--ink-faint);
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  &__row2 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    font-family: var(--font-mono);
+
+    b {
+      font-size: 15px;
+      color: var(--navy);
+    }
+
+    span {
+      font-size: 11px;
+      font-weight: 700;
+    }
+  }
+}
+
+// ================= WORKSPACE MAESTRO-DETALLE POR DOCENTE =================
+.prenomina-workspace {
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 1080px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.docente-sidebar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  box-shadow: 4px 4px 0 rgba(0, 51, 106, 0.05);
+  position: sticky;
+  top: 76px;
+  z-index: 10;
+  max-height: calc(100vh - 96px);
+  display: flex;
+  flex-direction: column;
+}
+
+.docente-list {
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 2px 5px 6px 2px;
+}
+
+.docente-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.12s ease;
+
+  &:hover {
+    border-color: var(--cerulean);
+    background: #fafcff;
+  }
+
+  &.active {
+    border-color: var(--navy);
+    border-width: 1.5px;
+    background: var(--brand-tint);
+    box-shadow: 3px 3px 0 var(--navy);
+  }
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__cc {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 11px;
+  }
+}
+
+// ================= CABECERA COMPACTA DEL DOCENTE SELECCIONADO =================
+.docente-summary-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 18px 22px;
+  margin-bottom: 16px;
+  box-shadow: 4px 4px 0 rgba(0, 51, 106, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__identity {
+    flex: 1;
+    min-width: 260px;
+
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: var(--ink-soft);
+    }
+  }
+
+  &__kpis {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+}
+
+.kpi-mini {
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  text-align: center;
+  min-width: 102px;
+
+  b {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--navy);
+    line-height: 1.2;
+  }
+
+  span {
+    font-size: 10px;
+    color: var(--ink-soft);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  &.ok {
+    background: var(--success-bg);
+    border-color: rgba(29, 122, 74, 0.25);
+    b {
+      color: var(--success);
+    }
+  }
+
+  &.warn {
+    background: var(--warning-bg);
+    border-color: rgba(138, 91, 0, 0.25);
+    b {
+      color: var(--warning);
+    }
+  }
+
+  &.danger {
+    background: var(--danger-bg);
+    border-color: rgba(179, 65, 58, 0.3);
+    b {
+      color: var(--danger);
+    }
+  }
+}
+
+// ================= BARRA COMPACTA DE ALERTAS EN LÍNEA =================
+.alertas-compact-bar {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 14px;
+    border-radius: 9px;
+    font-size: 12px;
+    border: 1px solid transparent;
+
+    &.bloqueante {
+      background: var(--danger-bg);
+      border-color: rgba(179, 65, 58, 0.22);
+      color: var(--danger);
+    }
+
+    &.alerta {
+      background: var(--warning-bg);
+      border-color: rgba(138, 91, 0, 0.22);
+      color: var(--warning);
+    }
+
+    &.info {
+      background: var(--brand-tint);
+      border-color: rgba(0, 79, 159, 0.18);
+      color: var(--blue);
+    }
+  }
+}
+
+// ================= SECCIONES DE CARGA DEL DOCENTE (ESPACIOS + CÓDIGOS SAC) =================
+.docente-split-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 18px 22px;
+  box-shadow: 4px 4px 0 rgba(0, 51, 106, 0.05);
+  overflow-x: auto;
+  min-width: 0;
+}
+
+.panel-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+
+  h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0;
+  }
+
+  p {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin: 2px 0 0;
+  }
+}
+
+.segmented-control {
+  display: inline-flex;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 2px;
+  gap: 2px;
+
+  button {
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+
+    &.active {
+      background: var(--navy);
+      color: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+  }
+}
+
+// Cuadro de lineamiento contextual compacto
+.lineamiento-popover {
+  background: #f4f9fe;
+  border: 1px solid #cbe3fa;
+  border-left: 4px solid var(--blue);
+  border-radius: 9px;
+  padding: 10px 13px;
+  margin-bottom: 12px;
+  font-size: 12px;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+
+  &__body {
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+}
+
+.code-chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--navy);
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.diff-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  font-weight: 600;
+
+  del {
+    opacity: 0.7;
+    color: var(--danger);
+  }
+
+  ins {
+    text-decoration: none;
+    color: var(--success);
+    font-weight: 700;
+  }
+}
+
+.modal-shell.wide {
+  max-width: 860px;
+}
+
+.validation-banner {
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+
+  &.error {
+    background: var(--danger-bg);
+    border: 1px solid rgba(179, 65, 58, 0.3);
+    color: var(--danger);
+  }
+
+  &.warning {
+    background: var(--warning-bg);
+    border: 1px solid rgba(138, 91, 0, 0.3);
+    color: var(--warning);
+  }
+
+  &.info {
+    background: var(--brand-tint);
+    border: 1px solid rgba(0, 79, 159, 0.25);
+    color: var(--blue);
+  }
+}
+
+// Tablas más compactas para aprovechar mejor el espacio vertical
+table.compact-table {
+  th {
+    padding: 7px 8px;
+    font-size: 10px;
+  }
+  td {
+    padding: 8px 8px;
+    font-size: 12.5px;
+  }
+}

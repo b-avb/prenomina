@@ -1,0 +1,26 @@
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: usta_prenomina_mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_NAME:-usta_prenomina_tunja}
+      MARIADB_USER: ${DB_USER:-usta_app}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-usta_app_local}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-usta_root_local}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+00:00
+    ports:
+      - "127.0.0.1:${DB_PORT:-3307}:3306"
+    volumes:
+      - usta_mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  usta_mariadb_data:
