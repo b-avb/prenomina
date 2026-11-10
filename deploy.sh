@@ -27,8 +27,7 @@ DB_HOST="${DB_HOST:-127.0.0.1}"
 DB_PORT="${DB_PORT:-3306}"
 DB_NAME="${DB_NAME:-usta_prenomina_tunja}"
 DB_USER="${DB_USER:-usta_app}"
-# Contraseña compatible con políticas validate_password (MEDIUM/STRONG) de MySQL 8
-DB_PASSWORD="${DB_PASSWORD:-Usta2026*Prenomina99}"
+DB_PASSWORD="${DB_PASSWORD:-}"
 MYSQL_ADMIN_USER="${MYSQL_ADMIN_USER:-root}"
 MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
 
@@ -164,6 +163,17 @@ tar -czf "$BUNDLE_PATH" \
 if [[ "$DEPLOY_LOCAL" == "true" ]]; then
   echo "==> 4. Configurando MySQL / MariaDB y base de datos ${DB_NAME}..."
 
+  if [[ -z "$DB_PASSWORD" && -f /opt/usta-plataforma/usta-api/.env ]]; then
+    EXISTING_DB_PASS="$(grep -E '^DB_PASSWORD=' /opt/usta-plataforma/usta-api/.env | head -n1 | cut -d= -f2- || true)"
+    if [[ -n "$EXISTING_DB_PASS" && "$EXISTING_DB_PASS" != "usta_secret_password" ]]; then
+      DB_PASSWORD="$EXISTING_DB_PASS"
+    fi
+  fi
+
+  if [[ -z "$DB_PASSWORD" ]]; then
+    DB_PASSWORD="Usta*$(openssl rand -hex 12)9A"
+  fi
+
   if [[ "${DB_HOST}" = "127.0.0.1" || "${DB_HOST}" = "localhost" ]]; then
     if ! command -v mysql >/dev/null 2>&1 && ! command -v mariadb >/dev/null 2>&1; then
       echo "[Server] Instalando servidor de base de datos..."
@@ -179,7 +189,10 @@ if [[ "$DEPLOY_LOCAL" == "true" ]]; then
     fi
     run_as_root systemctl start mysqld 2>/dev/null || run_as_root systemctl start mariadb 2>/dev/null || true
 
-    SQL_SETUP="
+    if MYSQL_PWD="$DB_PASSWORD" mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" "$DB_NAME" -e "SELECT 1" >/dev/null 2>&1; then
+      echo "[Server] Conexión MySQL existente verificada para '${DB_USER}'@'${DB_HOST}' (${DB_NAME})."
+    else
+      SQL_SETUP="
 CREATE DATABASE IF NOT EXISTS ${DB_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASSWORD}';
 CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';
@@ -190,16 +203,17 @@ GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'localhost';
 FLUSH PRIVILEGES;
 "
 
-    if mysql -u "$MYSQL_ADMIN_USER" -e "SELECT 1" >/dev/null 2>&1; then
-      mysql -u "$MYSQL_ADMIN_USER" -e "$SQL_SETUP"
-    else
-      if [[ -n "$MYSQL_ROOT_PASSWORD" ]] && MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysql -u "$MYSQL_ADMIN_USER" -e "SELECT 1" >/dev/null 2>&1; then
-        MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysql -u "$MYSQL_ADMIN_USER" -e "$SQL_SETUP"
+      if mysql -u "$MYSQL_ADMIN_USER" -e "SELECT 1" >/dev/null 2>&1; then
+        mysql -u "$MYSQL_ADMIN_USER" -e "$SQL_SETUP"
       else
-        echo ""
-        echo "Se requiere autenticar en MySQL con el usuario '${MYSQL_ADMIN_USER}' para crear la BD '${DB_NAME}'."
-        echo "(Se abrirá el prompt nativo de mysql: escribe la contraseña de MySQL y presiona Enter)"
-        mysql -u "$MYSQL_ADMIN_USER" -p -e "$SQL_SETUP"
+        if [[ -n "$MYSQL_ROOT_PASSWORD" ]] && MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysql -u "$MYSQL_ADMIN_USER" -e "SELECT 1" >/dev/null 2>&1; then
+          MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysql -u "$MYSQL_ADMIN_USER" -e "$SQL_SETUP"
+        else
+          echo ""
+          echo "Se requiere autenticar en MySQL con el usuario '${MYSQL_ADMIN_USER}' para crear la BD '${DB_NAME}'."
+          echo "(Se abrirá el prompt nativo de mysql: escribe la contraseña de MySQL y presiona Enter)"
+          mysql -u "$MYSQL_ADMIN_USER" -p -e "$SQL_SETUP"
+        fi
       fi
     fi
   fi
