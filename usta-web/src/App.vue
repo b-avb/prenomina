@@ -8,6 +8,9 @@ import AuthPasswordChangeModal from '@/components/domain/AuthPasswordChangeModal
 import UstaModal from '@/components/ui/UstaModal.vue';
 import UstaToastContainer from '@/components/ui/UstaToastContainer.vue';
 import { usePeriodSelect } from '@/composables/usePeriodSelect';
+import { resolvePublicAssetUrl } from '@/services/api.client';
+
+const logoUrl = resolvePublicAssetUrl('images/LogoUsta2026.png');
 
 interface NavItem {
   to: string;
@@ -119,7 +122,7 @@ const navItems = computed<NavItem[]>(() => {
   <div v-else class="app-shell">
     <header class="app-header">
       <div class="app-header__brand">
-        <img src="/images/LogoUsta2026.png" class="brand-mark" alt="USTA" />
+        <img :src="logoUrl" class="brand-mark" alt="USTA" />
         <div class="brand-word">
           <b>Gestión Docente · Prenómina</b>
           <span>Santo Tomás · Tunja</span>

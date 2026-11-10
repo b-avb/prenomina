@@ -3,9 +3,22 @@
   <head>
     <meta charset="utf-8" />
     <title>Prenómina Docente · USTA Tunja</title>
-    <base href="/" />
+    <script>
+      (function () {
+        var p = window.location.pathname;
+        var base = '/';
+        if (p === '/app/prenomina' || p.indexOf('/app/prenomina/') === 0) {
+          base = '/app/prenomina/';
+        } else if (p === '/prenomina' || p.indexOf('/prenomina/') === 0) {
+          base = '/prenomina/';
+        }
+        var b = document.createElement('base');
+        b.href = base;
+        document.head.appendChild(b);
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

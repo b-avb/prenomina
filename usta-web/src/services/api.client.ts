@@ -172,7 +172,30 @@ export class HttpClient {
   }
 }
 
-export const API_BASE_URL: string =
-  import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:4301/api' : '/api');
+export function detectAppBasePath(): string {
+  if (typeof window === 'undefined') return '/';
+  const pathname = window.location.pathname;
+  if (pathname === '/app/prenomina' || pathname.startsWith('/app/prenomina/')) {
+    return '/app/prenomina/';
+  }
+  if (pathname === '/prenomina' || pathname.startsWith('/prenomina/')) {
+    return '/prenomina/';
+  }
+  return '/';
+}
+
+export function resolvePublicAssetUrl(relativePath: string): string {
+  const cleanRelative = relativePath.replace(/^\/+/, '');
+  return `${detectAppBasePath()}${cleanRelative}`;
+}
+
+function resolveApiBaseUrl(): string {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (import.meta.env.DEV) return 'http://localhost:4301/api';
+  const basePath = detectAppBasePath();
+  return `${basePath.replace(/\/+$/, '')}/api`;
+}
+
+export const API_BASE_URL: string = resolveApiBaseUrl();
 
 export const apiClient = new HttpClient({ baseUrl: API_BASE_URL });

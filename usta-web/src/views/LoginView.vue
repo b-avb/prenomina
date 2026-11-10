@@ -7,6 +7,9 @@ import AuthPasswordChangeForm from '@/components/domain/AuthPasswordChangeForm.v
 import { toApiError } from '@/composables/useMutation';
 import { getHomeRouteForRole, useAuthStore } from '@/stores/auth.store';
 import { usePayrollStore } from '@/stores/payroll.store';
+import { resolvePublicAssetUrl } from '@/services/api.client';
+
+const logoUrl = resolvePublicAssetUrl('images/LogoUsta2026.png');
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -141,7 +144,7 @@ function handleCancelPasswordChange(): void {
   <div class="login-screen">
     <div class="card login-card" :class="{ 'login-card--wide': isPasswordChangeStep }">
       <div class="login-card__brand">
-        <img src="/images/LogoUsta2026.png" class="login-card__mark" alt="USTA" />
+        <img :src="logoUrl" class="login-card__mark" alt="USTA" />
         <div>
           <b>Gestión Docente · Prenómina</b>
           <span>Santo Tomás · Seccional Tunja</span>

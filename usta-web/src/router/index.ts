@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
+import { detectAppBasePath } from '@/services/api.client';
 import { getHomeRouteForRole, useAuthStore } from '@/stores/auth.store';
 import type { PayrollRole } from '@usta/domain';
 
@@ -95,7 +96,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 export const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(detectAppBasePath()),
   routes,
 });
 

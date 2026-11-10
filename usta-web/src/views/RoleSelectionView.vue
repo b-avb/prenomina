@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { usePayrollStore } from '@/stores/payroll.store';
+import { resolvePublicAssetUrl } from '@/services/api.client';
 import type { PayrollRole } from '@usta/domain';
+
+const logoUrl = resolvePublicAssetUrl('images/LogoUsta2026.png');
 
 const router = useRouter();
 const store = usePayrollStore();
@@ -48,7 +51,7 @@ function selectRoleView(item: (typeof availableViews)[number]): void {
   <div class="login-screen">
     <div class="card login-card">
       <div class="login-card__brand">
-        <img src="/images/LogoUsta2026.png" class="login-card__mark" alt="USTA" />
+        <img :src="logoUrl" class="login-card__mark" alt="USTA" />
         <div>
           <b>Gestión Docente · Prenómina</b>
           <span>Santo Tomás · Tunja</span>

@@ -273,11 +273,144 @@ SERVICE
   curl -fsS "http://127.0.0.1:${APP_PORT}/api/health" >/dev/null
   echo "[Server] Health check http://127.0.0.1:${APP_PORT}/api/health OK"
 
+  echo "==> 8. Configurando acceso web en Apache (/app/prenomina/) y permisos SELinux..."
+  if command -v setsebool >/dev/null 2>&1; then
+    run_as_root setsebool -P httpd_can_network_connect 1 >/dev/null 2>&1 || true
+  fi
+
+  # Si el repositorio fue clonado dentro de /var/... (ej. /var/app/www/html/prenomina),
+  # publicar también allí los estáticos compilados y el puente .htaccess + api-proxy.php
+  WEB_TARGET_DIR=""
+  if [[ "$ROOT_DIR" == /var/* ]]; then
+    WEB_TARGET_DIR="$ROOT_DIR"
+  elif [[ -d "/var/app/www/html/prenomina" ]]; then
+    WEB_TARGET_DIR="/var/app/www/html/prenomina"
+  elif [[ -d "/var/www/html/app/prenomina" ]]; then
+    WEB_TARGET_DIR="/var/www/html/app/prenomina"
+  fi
+
+  if [[ -n "$WEB_TARGET_DIR" ]]; then
+    echo "[Server] Publicando frontend compilado en ${WEB_TARGET_DIR}..."
+    run_as_root cp -r /opt/usta-plataforma/usta-web/dist/* "$WEB_TARGET_DIR"/
+
+    run_as_root tee "${WEB_TARGET_DIR}/api-proxy.php" >/dev/null <<PHPPROXY
+<?php
+\$path = isset(\$_GET['path']) ? \$_GET['path'] : '';
+\$qs = \$_SERVER['QUERY_STRING'] ?? '';
+\$qs = preg_replace('/(^|&)path=[^&]*(&|$)/', '\$1', \$qs);
+\$qs = trim(\$qs, '&');
+\$target = 'http://127.0.0.1:${APP_PORT}/api/' . ltrim(\$path, '/') . (\$qs !== '' ? '?' . \$qs : '');
+
+\$method = \$_SERVER['REQUEST_METHOD'] ?? 'GET';
+\$body = file_get_contents('php://input');
+\$headers = ["Content-Type: " . (\$_SERVER['CONTENT_TYPE'] ?? 'application/json')];
+if (!empty(\$_SERVER['HTTP_AUTHORIZATION'])) {
+    \$headers[] = "Authorization: " . \$_SERVER['HTTP_AUTHORIZATION'];
+} elseif (function_exists('getallheaders')) {
+    foreach (getallheaders() as \$k => \$v) {
+        if (strtolower(\$k) === 'authorization') {
+            \$headers[] = "Authorization: " . \$v;
+        }
+    }
+}
+
+\$ch = curl_init(\$target);
+curl_setopt(\$ch, CURLOPT_CUSTOMREQUEST, \$method);
+curl_setopt(\$ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt(\$ch, CURLOPT_HTTPHEADER, \$headers);
+if (\$method !== 'GET' && \$method !== 'HEAD' && \$body !== false && \$body !== '') {
+    curl_setopt(\$ch, CURLOPT_POSTFIELDS, \$body);
+}
+\$response = curl_exec(\$ch);
+\$status = curl_getinfo(\$ch, CURLINFO_HTTP_CODE) ?: 502;
+\$contentType = curl_getinfo(\$ch, CURLINFO_CONTENT_TYPE) ?: 'application/json; charset=utf-8';
+curl_close(\$ch);
+
+http_response_code(\$status);
+header('Content-Type: ' . \$contentType);
+echo \$response;
+PHPPROXY
+
+    run_as_root tee "${WEB_TARGET_DIR}/.htaccess" >/dev/null <<'HTACCESS'
+DirectoryIndex index.html index.php
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^api/(.*)$ api-proxy.php?path=$1 [QSA,L]
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteRule ^ index.html [L]
+</IfModule>
+HTACCESS
+
+    run_as_root chmod 755 "$WEB_TARGET_DIR"
+    run_as_root chmod -R a+rX "${WEB_TARGET_DIR}/index.html" "${WEB_TARGET_DIR}/assets" "${WEB_TARGET_DIR}/images" "${WEB_TARGET_DIR}/.htaccess" "${WEB_TARGET_DIR}/api-proxy.php" 2>/dev/null || true
+    if command -v chcon >/dev/null 2>&1; then
+      run_as_root chcon -R -t httpd_sys_content_t "$WEB_TARGET_DIR" >/dev/null 2>&1 || true
+    fi
+    if command -v restorecon >/dev/null 2>&1; then
+      run_as_root restorecon -R "$WEB_TARGET_DIR" >/dev/null 2>&1 || true
+    fi
+  fi
+
+  if [[ -d "/etc/httpd/conf.d" ]]; then
+    echo "[Server] Configurando Reverse Proxy en /etc/httpd/conf.d/usta-prenomina.conf..."
+    run_as_root tee /etc/httpd/conf.d/usta-prenomina.conf >/dev/null <<APACHECONF
+<IfModule mod_proxy.c>
+  ProxyRequests Off
+  ProxyPreserveHost On
+  ProxyPassInherit On
+
+  <Location "/app/prenomina/api/">
+    ProxyPass "http://127.0.0.1:${APP_PORT}/api/"
+    ProxyPassReverse "http://127.0.0.1:${APP_PORT}/api/"
+    Require all granted
+  </Location>
+
+  <Location "/app/prenomina/">
+    ProxyPass "http://127.0.0.1:${APP_PORT}/"
+    ProxyPassReverse "http://127.0.0.1:${APP_PORT}/"
+    Require all granted
+  </Location>
+</IfModule>
+
+<Directory "${WEB_TARGET_DIR:-/var/app/www/html/prenomina}">
+  Options FollowSymLinks
+  AllowOverride All
+  Require all granted
+</Directory>
+APACHECONF
+    run_as_root systemctl reload httpd 2>/dev/null || run_as_root systemctl restart httpd 2>/dev/null || true
+  elif [[ -d "/etc/apache2/conf-enabled" ]]; then
+    run_as_root a2enmod proxy proxy_http rewrite >/dev/null 2>&1 || true
+    run_as_root tee /etc/apache2/conf-enabled/usta-prenomina.conf >/dev/null <<APACHECONF
+<IfModule mod_proxy.c>
+  ProxyRequests Off
+  ProxyPreserveHost On
+  ProxyPassInherit On
+
+  <Location "/app/prenomina/api/">
+    ProxyPass "http://127.0.0.1:${APP_PORT}/api/"
+    ProxyPassReverse "http://127.0.0.1:${APP_PORT}/api/"
+    Require all granted
+  </Location>
+
+  <Location "/app/prenomina/">
+    ProxyPass "http://127.0.0.1:${APP_PORT}/"
+    ProxyPassReverse "http://127.0.0.1:${APP_PORT}/"
+    Require all granted
+  </Location>
+</IfModule>
+APACHECONF
+    run_as_root systemctl reload apache2 2>/dev/null || run_as_root systemctl restart apache2 2>/dev/null || true
+  fi
+
   SERVER_IP="$(hostname -I 2>/dev/null | awk '{print $1}' || echo 'localhost')"
   echo "=============================================================================="
   echo " ¡Despliegue completado exitosamente!"
-  echo " -> Acceso local en el servidor : http://localhost:${APP_PORT}"
-  echo " -> Acceso en red institucional : http://${SERVER_IP}:${APP_PORT}"
+  echo " -> Acceso público institucional : https://campusvirtual.santototunja.edu.co/app/prenomina/"
+  echo " -> Acceso local en el servidor  : http://localhost:${APP_PORT}"
+  echo " -> Acceso en red interna        : http://${SERVER_IP}:${APP_PORT}"
   echo "=============================================================================="
   exit 0
 fi

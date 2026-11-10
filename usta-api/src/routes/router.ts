@@ -44,7 +44,13 @@ const MIME_TYPES: Readonly<Record<string, string>> = {
 
 async function tryServeWebSpa(pathname: string, res: ServerResponse): Promise<boolean> {
   try {
-    const safeRelative = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
+    let cleanPathname = pathname;
+    const assetMatch = cleanPathname.match(/\/(assets\/.+|images\/.+|favicon\.ico)$/);
+    if (assetMatch?.[1]) {
+      cleanPathname = `/${assetMatch[1]}`;
+    }
+
+    const safeRelative = cleanPathname === '/' ? 'index.html' : cleanPathname.replace(/^\/+/, '');
     const candidatePath = path.resolve(WEB_DIST_DIR, safeRelative);
     if (!candidatePath.startsWith(WEB_DIST_DIR)) {
       return false;
@@ -529,7 +535,9 @@ export class ApiRouter {
 
     const url = new URL(req.url ?? '/', `http://localhost:${ENV_CONFIG.port}`);
     const method = (req.method ?? 'GET').toUpperCase();
-    const actualSegments = splitPath(url.pathname);
+    const normalizedPathname =
+      url.pathname.replace(/^\/(?:app\/)?prenomina(?=\/|$)/, '') || '/';
+    const actualSegments = splitPath(normalizedPathname);
 
     try {
       for (const route of this.routes) {
@@ -548,8 +556,8 @@ export class ApiRouter {
         }
       }
 
-      if (method === 'GET' && !url.pathname.startsWith('/api')) {
-        const served = await tryServeWebSpa(url.pathname, res);
+      if (method === 'GET' && !normalizedPathname.startsWith('/api')) {
+        const served = await tryServeWebSpa(normalizedPathname, res);
         if (served) return;
       }
 

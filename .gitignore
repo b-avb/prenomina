@@ -8,3 +8,9 @@ dist/
 *.pem
 *.key
 .DS_Store
+/index.html
+/assets/
+/images/
+/favicon.ico
+/.htaccess
+/api-proxy.php
