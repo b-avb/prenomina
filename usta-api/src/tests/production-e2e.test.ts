@@ -30,6 +30,7 @@ import {
   WorkloadCalculatorDomain,
 } from '@usta/domain';
 import { JwtActorResolver } from '../auth/actor-resolver.js';
+import { hashPassword } from '../auth/password-crypto.js';
 import { ENV_CONFIG } from '../config/env.config.js';
 import { AcademicProgramsController } from '../controllers/academic-programs.controller.js';
 import { AcademicUnitsController } from '../controllers/academic-units.controller.js';
@@ -234,6 +235,7 @@ async function runProductionE2ESuite(): Promise<void> {
     await seedDatabaseWithOfficialData(tx, repos, ids, {
       forceTruncate: true,
       preferJsonSnapshot: false,
+      overridePasswordHash: hashPassword(DEFAULT_TEMPORARY_PASSWORD),
     });
 
     // -------------------------------------------------------------------------
@@ -314,27 +316,27 @@ async function runProductionE2ESuite(): Promise<void> {
     }
 
     const directorSession = await authenticateAndActivateAccount(
-      'sandra.parra',
+      'dir.ensenanza',
       'DirectorProd2026*Ok',
     );
     recordStep(
-      'UC-0.3 Director (@sandra.parra) first-time login, mandatory password change & JWT rotation verified',
+      'UC-0.3 Director (@dir.ensenanza) first-time login, mandatory password change & JWT rotation verified',
     );
 
     const deanSession = await authenticateAndActivateAccount(
-      'gloria.grimaldo',
+      'dec.industrial',
       'DeanProd2026*Ok',
     );
     recordStep(
-      'UC-0.4 Dean (@gloria.grimaldo · Ing. Industrial) first-time login & mandatory password change verified',
+      'UC-0.4 Dean (@dec.industrial · Ing. Industrial) first-time login & mandatory password change verified',
     );
 
     const viceRectorSession = await authenticateAndActivateAccount(
-      'wilmar.ruiz',
+      'viceacademica',
       'ViceRectorProd2026*Ok',
     );
     recordStep(
-      'UC-0.5 Vice-Rector (@wilmar.ruiz) first-time login & mandatory password change verified',
+      'UC-0.5 Vice-Rector (@viceacademica) first-time login & mandatory password change verified',
     );
 
     const researchSession = await authenticateAndActivateAccount(

@@ -15,7 +15,10 @@ import type {
   UnitPayrollCycle,
 } from '../models/persistence.models.js';
 import type { Repositories } from '../repositories/repositories.js';
-import { buildDefaultSeedUsers } from '../services/auth.service.js';
+import {
+  buildDefaultSeedUsers,
+  OFFICIAL_INSTITUTIONAL_ACCOUNTS,
+} from '../services/auth.service.js';
 import { DEFAULT_BUSINESS_RULES } from '../services/period-context.service.js';
 import {
   normalizePersistedState,
@@ -57,6 +60,7 @@ export interface SeedOptions {
   forceTruncate?: boolean;
   preferJsonSnapshot?: boolean;
   jsonPath?: string;
+  overridePasswordHash?: string;
 }
 
 export interface SeedResult {
@@ -122,10 +126,61 @@ export async function seedDatabaseWithOfficialData(
   return tx.run(async (trx) => {
     const existingUnitCount = await repos.units.count(trx);
     if (existingUnitCount > 0 && !options?.forceTruncate) {
+      const existingUnits = await repos.units.listAll(trx);
       const existingUsers = await repos.users.count(trx);
       if (existingUsers === 0) {
-        const existingUnits = await repos.units.listAll(trx);
-        await repos.users.insertMany(trx, buildDefaultSeedUsers(existingUnits));
+        await repos.users.insertMany(
+          trx,
+          buildDefaultSeedUsers(existingUnits, options?.overridePasswordHash),
+        );
+      } else {
+        const nowIso = new Date().toISOString();
+        const unitById = new Map(existingUnits.map((u) => [u.id, u]));
+        for (const official of OFFICIAL_INSTITUTIONAL_ACCOUNTS) {
+          if (official.unitId) {
+            const unit = unitById.get(official.unitId);
+            if (unit && unit.deanName !== official.fullName) {
+              await repos.units.update(trx, { ...unit, deanName: official.fullName });
+            }
+          }
+          const existingById = await repos.users.findById(trx, official.id, { forUpdate: true });
+          if (existingById) {
+            const hasNotChangedPassword = existingById.passwordChangedAt === null;
+            await repos.users.update(trx, {
+              ...existingById,
+              username: official.username,
+              email: official.email,
+              fullName: official.fullName,
+              role: official.role,
+              unitId: official.unitId,
+              isActive: true,
+              passwordHash: hasNotChangedPassword
+                ? official.passwordHash
+                : existingById.passwordHash,
+              mustChangePassword: hasNotChangedPassword ? true : existingById.mustChangePassword,
+              updatedAt: nowIso,
+            });
+          } else {
+            await repos.users.insertMany(trx, [
+              {
+                id: official.id,
+                username: official.username,
+                email: official.email,
+                entraOid: null,
+                authProvider: 'hybrid',
+                passwordHash: official.passwordHash,
+                fullName: official.fullName,
+                role: official.role,
+                unitId: official.unitId,
+                mustChangePassword: true,
+                isActive: true,
+                passwordChangedAt: null,
+                lastLoginAt: null,
+                updatedAt: nowIso,
+              },
+            ]);
+          }
+        }
       }
       return { seeded: false, source: 'skipped' };
     }
@@ -194,7 +249,10 @@ export async function seedDatabaseWithOfficialData(
       updatedAt: u.updatedAt || nowIso,
     }));
     await repos.units.insertMany(trx, unitRecords);
-    await repos.users.insertMany(trx, buildDefaultSeedUsers(unitRecords));
+    await repos.users.insertMany(
+      trx,
+      buildDefaultSeedUsers(unitRecords, options?.overridePasswordHash),
+    );
 
     const unitCycles: UnitPayrollCycle[] = state.units.map((u) => ({
       unitId: u.id,

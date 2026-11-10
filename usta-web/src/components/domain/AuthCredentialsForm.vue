@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-  DEFAULT_TEMPORARY_PASSWORD,
-  type AuthUser,
-  type PayrollRole,
-} from '@usta/domain';
+import type { AuthUser, PayrollRole } from '@usta/domain';
 
 const props = defineProps<{
   usersDirectory: AuthUser[];
@@ -38,11 +34,8 @@ function roleBadgeLabel(role: PayrollRole, unitName?: string | null): string {
   }
 }
 
-function selectQuickUser(username: string, mustChange: boolean): void {
+function selectQuickUser(username: string): void {
   usernameInput.value = username;
-  if (mustChange && !passwordInput.value) {
-    passwordInput.value = DEFAULT_TEMPORARY_PASSWORD;
-  }
 }
 
 function onFormSubmit(): void {
@@ -62,7 +55,7 @@ function onFormSubmit(): void {
         Ingresa con tu cuenta institucional de Microsoft (<code>@{{ props.institutionalDomain }}</code>) para gestionar la prenómina docente seccional.
       </template>
       <template v-else>
-        Ingresa con tu <b>nombre de usuario</b> (sin @dominio) y tu contraseña institucional. Si es tu primer ingreso, usa la contraseña temporal asignada.
+        Ingresa con tu <b>correo o usuario institucional</b> y tu contraseña. En tu primer ingreso, digita tu documento de identidad y el sistema te solicitará crear tu clave personal.
       </template>
     </p>
 
@@ -100,18 +93,18 @@ function onFormSubmit(): void {
 
     <form v-if="props.isLocalLoginAllowed" @submit.prevent="onFormSubmit">
       <div class="field" style="margin-bottom: 12px">
-        <label for="login-username">Nombre de Usuario (solo usuario)</label>
+        <label for="login-username">Usuario o Correo Institucional</label>
         <input
           id="login-username"
           v-model="usernameInput"
           type="text"
           autocomplete="username"
-          placeholder="Ej: sandra.parra o gloria.grimaldo"
+          placeholder="Ej: dir.ensenanza o dec.industrial@ustatunja.edu.co"
           required
           style="font-family: var(--font-mono); font-weight: 700"
         />
         <span class="field-hint">
-          Escribe únicamente el usuario (ej. <code>sandra.parra</code>, <code>wilmar.ruiz</code>, <code>gloria.grimaldo</code>). Compatible con AD <code>@{{ props.institutionalDomain }}</code>.
+          Puedes escribir tu usuario (ej. <code>dir.ensenanza</code>, <code>viceacademica</code>, <code>dec.industrial</code>) o tu correo institucional completo.
         </span>
       </div>
 
@@ -163,20 +156,16 @@ function onFormSubmit(): void {
       </button>
 
       <div v-if="showQuickDirectory" class="directory-box__body">
-        <div class="temp-pass-banner">
-          Contraseña temporal inicial por defecto:
-          <code>{{ DEFAULT_TEMPORARY_PASSWORD }}</code>
-        </div>
         <div class="directory-list">
           <button
             v-for="u in props.usersDirectory"
             :key="u.id"
             type="button"
             class="directory-item"
-            @click="selectQuickUser(u.username, u.mustChangePassword)"
+            @click="selectQuickUser(u.username)"
           >
             <div>
-              <div class="directory-item__user">@{{ u.username }}</div>
+              <div class="directory-item__user">{{ u.email || `@${u.username}` }}</div>
               <div class="directory-item__name">
                 {{ u.fullName }} · {{ roleBadgeLabel(u.role, u.unitName) }}
               </div>
@@ -186,7 +175,7 @@ function onFormSubmit(): void {
               :class="u.mustChangePassword ? 'observado' : 'avalado'"
               style="font-size: 9.5px"
             >
-              {{ u.mustChangePassword ? 'Clave Temporal' : 'Clave Personal' }}
+              {{ u.mustChangePassword ? 'Primer Ingreso' : 'Activa' }}
             </span>
           </button>
         </div>
