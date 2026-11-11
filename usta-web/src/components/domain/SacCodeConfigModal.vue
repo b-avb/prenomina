@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import UstaUnitMultiSelect from '@/components/ui/UstaUnitMultiSelect.vue';
 import { usePayrollStore } from '@/stores/payroll.store';
@@ -15,7 +15,12 @@ const emit = defineEmits<{
 
 const store = usePayrollStore();
 
+const originalCode = ref<string>('');
 const draft = ref<SacCode | null>(null);
+
+const isProtectedTrunkCode = computed(
+  () => originalCode.value === '40104' || originalCode.value === '40108',
+);
 
 const newFacultyRule = ref<{
   unitId: string;
@@ -29,12 +34,40 @@ const newFacultyRule = ref<{
   facultyBagCap: null,
 });
 
+function toNullableNumber(val: unknown): number | null {
+  if (val === null || val === undefined || val === '') return null;
+  const num = typeof val === 'number' ? val : Number(val);
+  return Number.isFinite(num) ? num : null;
+}
+
+function toNullableText(val: unknown): string | null {
+  if (typeof val !== 'string') return null;
+  const trimmed = val.trim();
+  return trimmed === '' ? null : trimmed;
+}
+
 watch(
   () => props.codeItem,
   (item) => {
-    draft.value = item ? structuredClone(item) : null;
-    if (item && !newFacultyRule.value.unitId) {
-      newFacultyRule.value.unitId = store.units[0]?.id ?? '';
+    if (item) {
+      originalCode.value = item.code;
+      draft.value = {
+        ...structuredClone(item),
+        postgraduateCapHours: item.postgraduateCapHours ?? null,
+        psePercentage: item.psePercentage ?? null,
+        hoursPerUnitFactor: item.hoursPerUnitFactor ?? null,
+        unitLabel: item.unitLabel ?? null,
+        annex3Format: item.annex3Format ?? null,
+        mandatoryInFaculty: Boolean(item.mandatoryInFaculty),
+        lockedByResearch: Boolean(item.lockedByResearch),
+        facultyRules: item.facultyRules ? structuredClone(item.facultyRules) : [],
+      };
+      if (!newFacultyRule.value.unitId) {
+        newFacultyRule.value.unitId = store.units[0]?.id ?? '';
+      }
+    } else {
+      originalCode.value = '';
+      draft.value = null;
     }
   },
   { immediate: true },
@@ -51,9 +84,9 @@ function addFacultyRuleToCode() {
   const rule = {
     unitId: unit.id,
     unitName: unit.name,
-    minTeacherHours: newFacultyRule.value.minTeacherHours,
-    maxTeacherHours: newFacultyRule.value.maxTeacherHours,
-    facultyBagCap: newFacultyRule.value.facultyBagCap,
+    minTeacherHours: toNullableNumber(newFacultyRule.value.minTeacherHours),
+    maxTeacherHours: toNullableNumber(newFacultyRule.value.maxTeacherHours),
+    facultyBagCap: toNullableNumber(newFacultyRule.value.facultyBagCap),
   };
   if (existingIndex >= 0) {
     draft.value.facultyRules[existingIndex] = rule;
@@ -74,17 +107,54 @@ function removeFacultyRuleFromCode(unitId: string) {
 
 async function handleSave() {
   if (!draft.value) return;
-  const { code, ...patch } = draft.value;
-  const res = await store.updateSacCode(code, patch);
+  const targetCode = draft.value.code.trim().toUpperCase();
+  if (!targetCode || !draft.value.name.trim()) {
+    store.showToast('El código SAC y el nombre de la actividad son obligatorios', 'error');
+    return;
+  }
+
+  const normalizedRules = (draft.value.facultyRules ?? []).map((rule) => ({
+    unitId: rule.unitId,
+    unitName: rule.unitName,
+    minTeacherHours: toNullableNumber(rule.minTeacherHours),
+    maxTeacherHours: toNullableNumber(rule.maxTeacherHours),
+    facultyBagCap: toNullableNumber(rule.facultyBagCap),
+  }));
+
+  const res = await store.updateSacCode(originalCode.value, {
+    ...(targetCode !== originalCode.value ? { newCode: targetCode } : {}),
+    name: draft.value.name.trim().toUpperCase(),
+    substantiveFunction: draft.value.substantiveFunction,
+    definition: draft.value.definition.trim(),
+    guideline: draft.value.guideline.trim(),
+    baseHours: toNullableNumber(draft.value.baseHours),
+    capHours: toNullableNumber(draft.value.capHours),
+    postgraduateCapHours: toNullableNumber(draft.value.postgraduateCapHours),
+    psePercentage:
+      originalCode.value === '40108'
+        ? toNullableNumber(draft.value.psePercentage)
+        : null,
+    hoursPerUnitFactor: toNullableNumber(draft.value.hoursPerUnitFactor),
+    unitLabel: toNullableText(draft.value.unitLabel),
+    requiresViceRectorApproval: Boolean(draft.value.requiresViceRectorApproval),
+    annex3Format: draft.value.requiresViceRectorApproval
+      ? (draft.value.annex3Format || null)
+      : null,
+    appliesTo: draft.value.appliesTo.trim() || 'Todas las unidades académicas',
+    severity: draft.value.severity,
+    mandatoryInFaculty: Boolean(draft.value.mandatoryInFaculty),
+    lockedByResearch: Boolean(draft.value.lockedByResearch),
+    facultyRules: normalizedRules,
+  });
   if (res.ok) {
-    store.showToast('Regla actualizada en el catálogo ANEXO 4');
+    store.showToast(`Código SAC ${res.data.code} actualizado en el catálogo ANEXO 4`);
     emit('close');
   }
 }
 
 async function handleDelete() {
-  if (!draft.value) return;
-  const res = await store.deleteSacCode(draft.value.code);
+  if (!draft.value || isProtectedTrunkCode.value) return;
+  const res = await store.deleteSacCode(originalCode.value);
   if (res.ok) {
     emit('close');
   }
@@ -94,18 +164,29 @@ async function handleDelete() {
 <template>
   <UstaModal
     :open="!!draft"
-    :title="draft ? `Configurar Código SAC ${draft.code} y Reglas de Validación` : ''"
+    :title="draft ? `Configurar Código SAC ${originalCode} y Parámetros Normativos` : ''"
     :subtitle="draft?.name"
-    max-width="780px"
+    max-width="820px"
     @close="emit('close')"
   >
     <template v-if="draft">
-      <div class="grid cols-2">
+      <div class="grid cols-3" style="gap: 10px">
         <div class="field">
-          <label>Nombre de la Actividad</label>
-          <input v-model="draft.name" type="text" />
+          <label>
+            Código SAC
+            <span v-if="isProtectedTrunkCode" style="color: var(--ink-soft); font-weight: 500">
+              (Troncal)
+            </span>
+          </label>
+          <input
+            v-model="draft.code"
+            type="text"
+            maxlength="20"
+            :disabled="isProtectedTrunkCode"
+            style="font-family: var(--font-mono); font-weight: 700"
+          />
         </div>
-        <div class="field">
+        <div class="field" style="grid-column: span 2">
           <label>Función Sustantiva</label>
           <select v-model="draft.substantiveFunction">
             <option value="Enseñanza-Aprendizaje">Enseñanza-Aprendizaje</option>
@@ -114,6 +195,11 @@ async function handleDelete() {
             <option value="Gestión Académica">Gestión Académica</option>
           </select>
         </div>
+      </div>
+
+      <div class="field">
+        <label>Nombre Oficial de la Actividad (ANEXO 4)</label>
+        <input v-model="draft.name" type="text" maxlength="200" />
       </div>
 
       <div class="field">
@@ -126,28 +212,53 @@ async function handleDelete() {
       </div>
 
       <div class="grid cols-3" style="gap: 10px">
+        <div v-if="originalCode === '40108'" class="field">
+          <label>Porcentaje Automático PSE (% sobre 40104)</label>
+          <input
+            v-model.number="draft.psePercentage"
+            type="number"
+            min="0"
+            max="100"
+            placeholder="25"
+          />
+        </div>
+        <div v-else class="field">
+          <label>Base Horas (Mínimo General · vacío = sin mín.)</label>
+          <input
+            v-model.number="draft.baseHours"
+            type="number"
+            min="0"
+            max="240"
+            placeholder="Sin mínimo"
+          />
+        </div>
+
         <div class="field">
-          <label>Base Horas (Mínimo General)</label>
-          <input v-model.number="draft.baseHours" type="number" min="0" max="240" />
+          <label>Tope Horas (Máximo General · vacío = según aval)</label>
+          <input
+            v-model.number="draft.capHours"
+            type="number"
+            min="0"
+            max="240"
+            :disabled="originalCode === '40108'"
+            placeholder="Según aval / sin tope"
+          />
         </div>
         <div class="field">
-          <label>Tope Horas (Máximo General)</label>
-          <input v-model.number="draft.capHours" type="number" min="0" max="240" />
-        </div>
-        <div class="field">
-          <label>Tope si tiene Posgrado (Opcional)</label>
+          <label>Tope con Posgrado Activo (Opcional)</label>
           <input
             v-model.number="draft.postgraduateCapHours"
             type="number"
             min="0"
             max="240"
+            placeholder="—"
           />
         </div>
       </div>
 
       <div class="grid cols-2" style="gap: 10px">
         <div class="field">
-          <label>Comportamiento si el Decano supera el tope (RF-07)</label>
+          <label>Comportamiento si se supera el tope</label>
           <select v-model="draft.severity">
             <option value="blocking">Bloqueante (No dejar pasar sin ajuste)</option>
             <option value="justifiable_alert">
@@ -157,6 +268,75 @@ async function handleDelete() {
           </select>
         </div>
         <UstaUnitMultiSelect v-model="draft.appliesTo" :units="store.units" />
+      </div>
+
+      <!-- PRE-AVAL ANEXO 3, MULTIPLICADOR Y BANDERAS NORMATIVAS -->
+      <div
+        style="background: var(--surface-soft); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px"
+      >
+        <div style="font-size: 12px; font-weight: 800; color: var(--navy); margin-bottom: 8px">
+          ⚙️ Condiciones Normativas, Pre-Aval (ANEXO 3) y Multiplicador por Unidad
+        </div>
+
+        <div class="grid cols-3" style="gap: 10px; margin-bottom: 10px">
+          <label class="toggle">
+            <input v-model="draft.requiresViceRectorApproval" type="checkbox" />
+            <span class="toggle__track"></span>
+            <span style="font-size: 11.5px; font-weight: 700">
+              Requiere Pre-Aval V.A. (ANEXO 3)
+            </span>
+          </label>
+
+          <label class="toggle">
+            <input v-model="draft.mandatoryInFaculty" type="checkbox" />
+            <span class="toggle__track"></span>
+            <span style="font-size: 11.5px; font-weight: 700">
+              Uso obligatorio en la unidad
+            </span>
+          </label>
+
+          <label class="toggle">
+            <input v-model="draft.lockedByResearch" type="checkbox" />
+            <span class="toggle__track"></span>
+            <span style="font-size: 11.5px; font-weight: 700">
+              Cargue exclusivo Investigación (ANEXO 7)
+            </span>
+          </label>
+        </div>
+
+        <div class="grid cols-3" style="gap: 10px">
+          <div v-if="draft.requiresViceRectorApproval" class="field" style="margin: 0">
+            <label>Plantilla de Pre-Aval (ANEXO 3)</label>
+            <select v-model="draft.annex3Format">
+              <option :value="null">Formato General ANEXO 3</option>
+              <option value="10212">10212 · Internacionalización / Movilidad</option>
+              <option value="20223_20120">20223 / 20120 · Consultorio Jurídico y Conciliación</option>
+              <option value="20222">20222 · Prácticas y Pasantías</option>
+              <option value="40126">40126 · Tutoría y Consejería</option>
+              <option value="40222">40222 · Proyectos Institucionales</option>
+              <option value="43401">43401 · Actividades Académicas Especiales</option>
+            </select>
+          </div>
+          <div class="field" style="margin: 0">
+            <label>Factor Horas por Unidad (Opc.)</label>
+            <input
+              v-model.number="draft.hoursPerUnitFactor"
+              type="number"
+              min="0"
+              max="240"
+              placeholder="Ej: 4"
+            />
+          </div>
+          <div class="field" style="margin: 0">
+            <label>Etiqueta Unidad (Opc.)</label>
+            <input
+              v-model="draft.unitLabel"
+              type="text"
+              maxlength="80"
+              placeholder="Ej: semillero, proyecto, revista"
+            />
+          </div>
+        </div>
       </div>
 
       <!-- FACULTY-SPECIFIC RULES -->
@@ -267,14 +447,17 @@ async function handleDelete() {
     <template #actions>
       <div style="display: flex; justify-content: space-between; width: 100%">
         <button
-          v-if="draft && draft.code !== '40104' && draft.code !== '40108'"
+          v-if="draft && !isProtectedTrunkCode"
           class="btn danger small"
           @click="handleDelete"
         >
           Eliminar Código del Catálogo
         </button>
         <div v-else></div>
-        <button class="btn primary" @click="handleSave">Guardar Cambios</button>
+        <div style="display: flex; gap: 8px">
+          <button class="btn ghost" @click="emit('close')">Cancelar</button>
+          <button class="btn primary" @click="handleSave">Guardar Cambios</button>
+        </div>
       </div>
     </template>
   </UstaModal>

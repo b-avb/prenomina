@@ -241,7 +241,10 @@ export interface ProgramMutationResponse {
 export type CreateSacCodeDto = SacCode;
 
 /** PUT /api/sac-codes/:code */
-export type UpdateSacCodeDto = Partial<Omit<SacCode, 'code'>> & { code: string };
+export type UpdateSacCodeDto = Partial<Omit<SacCode, 'code'>> & {
+  code: string;
+  newCode?: string;
+};
 
 export interface ImportedSacCodeRowDto {
   code: string;

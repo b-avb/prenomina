@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, toRef } from 'vue';
-import { DEFAULT_TEMPORARY_PASSWORD, type AcademicUnitSummary } from '@usta/domain';
+import type { AcademicUnitSummary } from '@usta/domain';
 import { usePayrollStore } from '@/stores/payroll.store';
 import { useSearchFilter } from '@/composables/useSearchFilter';
 import { eventChecked, eventNumber } from '@/utils/dom-events';
@@ -65,9 +65,9 @@ async function handleResetDeanPassword(unit: AcademicUnitSummary): Promise<void>
     return;
   }
   try {
-    const res = await store.resetUserPassword(user.id, DEFAULT_TEMPORARY_PASSWORD);
+    const res = await store.resetUserPassword(user.id);
     store.showToast(
-      `Contraseña de @${res.user.username} (${unit.deanName}) restablecida a temporal: ${res.temporaryPassword}`,
+      `Contraseña de @${res.user.username} (${unit.deanName}) restablecida a clave temporal única: ${res.temporaryPassword}`,
       'success',
     );
   } catch (err) {
@@ -89,7 +89,7 @@ async function handleResetDeanPassword(unit: AcademicUnitSummary): Promise<void>
           Decanos(as), Directores(as), Usuarios de Acceso y Topes de Bolsa por Unidad Académica
         </div>
         <p style="font-size: 12px; color: var(--ink-soft); margin: 3px 0 0">
-          Desde aquí Sandra puede registrar nuevas decanaturas, actualizar el Decano(a) titular, consultar su nombre de usuario y restablecer su contraseña temporal (<code>{{ DEFAULT_TEMPORARY_PASSWORD }}</code>).
+          Desde aquí la Dirección de Enseñanza y Aprendizaje puede registrar nuevas decanaturas, actualizar el Decano(a) titular, consultar su nombre de usuario y generar una nueva contraseña temporal única.
         </p>
       </div>
 
@@ -252,7 +252,7 @@ async function handleResetDeanPassword(unit: AcademicUnitSummary): Promise<void>
               </button>
               <button
                 class="btn ghost small"
-                title="Restablecer la contraseña del Decano(a) a la clave temporal inicial (Usta2026*)"
+                title="Generar y asignar una nueva contraseña temporal única al Decano(a)"
                 @click="handleResetDeanPassword(unit)"
               >
                 Restablecer Clave

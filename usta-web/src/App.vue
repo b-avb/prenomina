@@ -216,7 +216,7 @@ const navItems = computed<NavItem[]>(() => {
 
     <UstaModal
       :open="isNewPeriodModalOpen"
-      title="Crear / Clonar Nuevo Periodo Semestral (RF-08)"
+      title="Crear / Clonar Nuevo Periodo Semestral"
       subtitle="Abre un nuevo semestre (por ejemplo <b>2027-1</b> o <b>2027-2</b>) clonando automáticamente el catálogo vigente de códigos SAC, las reglas de validación y las bolsas de horas de las unidades académicas."
       @close="isNewPeriodModalOpen = false"
     >

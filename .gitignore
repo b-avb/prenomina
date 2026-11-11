@@ -14,3 +14,5 @@ dist/
 /favicon.ico
 /.htaccess
 /api-proxy.php
+usta-api/data/
+

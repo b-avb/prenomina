@@ -2,7 +2,6 @@
 import { ref, watch } from 'vue';
 import {
   AcademicOrganizationDomain,
-  DEFAULT_TEMPORARY_PASSWORD,
   type AcademicUnitSummary,
 } from '@usta/domain';
 import UstaModal from '@/components/ui/UstaModal.vue';
@@ -72,9 +71,6 @@ watch(
       form.value.username = newName.trim()
         ? AcademicOrganizationDomain.deriveUsernameFromFullName(newName)
         : '';
-      if (!form.value.temporaryPassword) {
-        form.value.temporaryPassword = DEFAULT_TEMPORARY_PASSWORD;
-      }
     }
   },
 );
@@ -125,12 +121,12 @@ function handleSave() {
         <input
           v-model="form.deanName"
           type="text"
-          placeholder="Ej: Ing. Gloria Elizabeth Grimaldo León"
+          placeholder="Ej: Ing. Juan Camilo Ernesto Valderrama Balaguera"
         />
       </div>
       <div class="field">
         <label>Documento / Cédula</label>
-        <input v-model="form.documentId" type="text" placeholder="Ej: 37274697" />
+        <input v-model="form.documentId" type="text" placeholder="Ej: 74382158" />
       </div>
     </div>
 
@@ -140,17 +136,17 @@ function handleSave() {
         <input
           v-model="form.username"
           type="text"
-          placeholder="Ej: gloria.grimaldo"
+          placeholder="Ej: juan.valderrama"
           style="font-family: var(--font-mono); font-weight: 700"
           @input="usernameManuallyEdited = true"
         />
       </div>
       <div class="field">
-        <label>Nueva Contraseña Temporal (opcional para reiniciar clave)</label>
+        <label>Nueva Contraseña Temporal (opcional para asignar o reiniciar clave)</label>
         <input
           v-model="form.temporaryPassword"
           type="text"
-          :placeholder="`Dejar vacío o ej. ${DEFAULT_TEMPORARY_PASSWORD}`"
+          placeholder="Dejar vacío o ingresar cédula / clave temporal"
           style="font-family: var(--font-mono)"
         />
       </div>

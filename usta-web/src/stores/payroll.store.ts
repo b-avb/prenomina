@@ -266,7 +266,30 @@ export const usePayrollStore = defineStore('payroll', () => {
 
     // Catalog & Rules Mutations
     createSacCode: catalogStore.createSacCode,
-    updateSacCode: catalogStore.updateSacCode,
+    updateSacCode: async (
+      code: string,
+      patch: Parameters<typeof catalogStore.updateSacCode>[1],
+      successMessage?: string,
+    ) => {
+      const res = await catalogStore.updateSacCode(code, patch, successMessage);
+      if (res.ok && res.data.code !== code) {
+        const nextCode = res.data.code;
+        for (const teacher of teachers.value) {
+          const allocation = teacher.allocations[code];
+          if (allocation) {
+            delete teacher.allocations[code];
+            teacher.allocations[nextCode] = { ...allocation, code: nextCode };
+          }
+        }
+        for (const req of approvalRequests.value) {
+          if (req.code === code) req.code = nextCode;
+        }
+        for (const item of researchAllocations.value) {
+          if (item.code === code) item.code = nextCode;
+        }
+      }
+      return res;
+    },
     deleteSacCode: catalogStore.deleteSacCode,
     importSacCodes: catalogStore.importSacCodes,
     updateRulesConfig: catalogStore.updateRulesConfig,

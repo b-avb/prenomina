@@ -36,15 +36,15 @@ export interface SacCode {
   baseHours: number | null;
   capHours: number | null;
   postgraduateCapHours?: number | null;
-  psePercentage?: number;
-  hoursPerUnitFactor?: number;
-  unitLabel?: string;
+  psePercentage?: number | null;
+  hoursPerUnitFactor?: number | null;
+  unitLabel?: string | null;
   requiresViceRectorApproval: boolean;
-  annex3Format?: '10212' | '20223_20120' | '20222' | '40126' | '40222' | '43401';
+  annex3Format?: '10212' | '20223_20120' | '20222' | '40126' | '40222' | '43401' | null;
   appliesTo: string;
   severity: RuleSeverity;
-  mandatoryInFaculty?: boolean;
-  lockedByResearch?: boolean;
+  mandatoryInFaculty?: boolean | null;
+  lockedByResearch?: boolean | null;
   facultyRules?: FacultySpecificRule[];
 }
 

@@ -234,9 +234,13 @@ async function runProductionE2ESuite(): Promise<void> {
     // Ensure clean canonical database seed before starting the full lifecycle
     await seedDatabaseWithOfficialData(tx, repos, ids, {
       forceTruncate: true,
-      preferJsonSnapshot: false,
       overridePasswordHash: hashPassword(DEFAULT_TEMPORARY_PASSWORD),
     });
+    const seededAuditCount = await repos.auditLogs.list(tx.executor, {
+      periodCode: '2026-2',
+      limit: 10,
+    });
+    assert.equal(seededAuditCount.length, 0);
 
     // -------------------------------------------------------------------------
     // UC-0: System Health, Auth Config & Mandatory First-Login Password Change
@@ -258,11 +262,12 @@ async function runProductionE2ESuite(): Promise<void> {
     async function authenticateAndActivateAccount(
       username: string,
       newPersonalPassword: string,
+      initialPassword: string = DEFAULT_TEMPORARY_PASSWORD,
     ): Promise<{ token: string; user: AuthUser }> {
       const loginRes = await request<AuthSessionResponse>({
         method: 'POST',
         path: '/api/auth/login',
-        body: { username, password: DEFAULT_TEMPORARY_PASSWORD },
+        body: { username, password: initialPassword },
       });
       const initialSession = expectData(loginRes, 200, `POST /api/auth/login (${username})`);
       assert.equal(initialSession.user.mustChangePassword, true);
@@ -285,7 +290,7 @@ async function runProductionE2ESuite(): Promise<void> {
         path: '/api/auth/change-password',
         token: initialSession.token,
         body: {
-          currentPassword: DEFAULT_TEMPORARY_PASSWORD,
+          currentPassword: initialPassword,
           newPassword: newPersonalPassword,
         },
       });
@@ -323,6 +328,24 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-0.3 Director (@dir.ensenanza) first-time login, mandatory password change & JWT rotation verified',
     );
 
+    // Verify clean initial audit trail (only @dir.ensenanza's real password change, 0 demo logs) & exact 22 official institutional accounts
+    const initialAuditRes = await request<AuditLogEntry[]>({
+      path: '/api/audit-logs?period=2026-2&limit=50',
+      token: directorSession.token,
+    });
+    const initialAuditLogs = expectData(initialAuditRes, 200, 'Initial GET /api/audit-logs');
+    assert.equal(initialAuditLogs.length, 1);
+    assert.ok(initialAuditLogs[0]?.action.includes('Contraseña'));
+
+    const initialUsersRes = await request<AuthUser[]>({
+      path: '/api/users',
+      token: directorSession.token,
+    });
+    const initialUsers = expectData(initialUsersRes, 200, 'Initial GET /api/users');
+    assert.equal(initialUsers.length, 22);
+    assert.ok(!initialUsers.some((u) => u.username === 'investigacion'));
+    assert.ok(!initialUsers.some((u) => u.username === 'yolanda.fonseca'));
+
     const deanSession = await authenticateAndActivateAccount(
       'dec.industrial',
       'DeanProd2026*Ok',
@@ -339,12 +362,33 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-0.5 Vice-Rector (@viceacademica) first-time login & mandatory password change verified',
     );
 
+    // Provision Research account via Director with auto-generated cryptographic temporary password
+    const provisionResearchRes = await request<ResetUserPasswordResponse>({
+      method: 'POST',
+      path: '/api/users',
+      token: directorSession.token,
+      body: {
+        username: 'investigacion',
+        fullName: 'Dirección de Investigación e Innovación',
+        role: 'research',
+        unitId: null,
+      },
+    });
+    const provisionedResearch = expectData(
+      provisionResearchRes,
+      201,
+      'POST /api/users (@investigacion)',
+    );
+    assert.ok(provisionedResearch.temporaryPassword.length >= 10);
+    assert.notEqual(provisionedResearch.temporaryPassword, DEFAULT_TEMPORARY_PASSWORD);
+
     const researchSession = await authenticateAndActivateAccount(
       'investigacion',
       'ResearchProd2026*Ok',
+      provisionedResearch.temporaryPassword,
     );
     recordStep(
-      'UC-0.6 Research Director (@investigacion) first-time login & mandatory password change verified',
+      'UC-0.6 Research account provisioned with random temporary password, logged in & activated',
     );
 
     // -------------------------------------------------------------------------
@@ -431,8 +475,32 @@ async function runProductionE2ESuite(): Promise<void> {
     assert.equal(snapshot.teachers.length, 291);
     assert.equal(snapshot.sacCodes.length, 51);
     assert.equal(snapshot.programQuotas.length, 21);
+    assert.equal(snapshot.approvalRequests.length, 0);
+    assert.equal(snapshot.researchAllocations.length, 0);
+    assert.ok(
+      snapshot.units.every(
+        (u) => u.payrollStatus === 'Borrador' && u.currentVersion === 1,
+      ),
+    );
+    assert.equal(
+      snapshot.units.find((u) => u.id === 'ing-industrial')?.deanName,
+      'Juan Camilo Ernesto Valderrama Balaguera',
+    );
+    assert.equal(
+      snapshot.units.find((u) => u.id === 'derecho')?.deanName,
+      'Carlos Andrés Aranda Camacho',
+    );
+    assert.equal(
+      snapshot.units.find((u) => u.id === 'lic-infantil')?.deanName,
+      'Gladys Leonor Arias Rodríguez',
+    );
+    assert.ok(
+      snapshot.sacCodes.every(
+        (c) => !c.guideline.includes('INC-') && !c.name.includes('SIN CÓDIGO'),
+      ),
+    );
     recordStep(
-      `UC-2.1 Full institutional state hydrated (${snapshot.units.length} units, ${snapshot.teachers.length} teachers, ${snapshot.sacCodes.length} SAC codes)`,
+      `UC-2.1 Clean production state verified (${snapshot.units.length} units in Borrador v1, ${snapshot.teachers.length} preloaded teachers, ${snapshot.sacCodes.length} official SAC codes, 0 test approvals/research/logs)`,
     );
 
     const periodsRes = await request<AcademicPeriod[]>({
@@ -440,6 +508,7 @@ async function runProductionE2ESuite(): Promise<void> {
       token: directorSession.token,
     });
     const periods = expectData(periodsRes, 200, 'GET /api/periods');
+    assert.equal(periods.length, 1);
     assert.ok(periods.some((p) => p.code === '2026-2' && p.isCurrent));
 
     const usersRes = await request<AuthUser[]>({
@@ -447,8 +516,8 @@ async function runProductionE2ESuite(): Promise<void> {
       token: directorSession.token,
     });
     const usersList = expectData(usersRes, 200, 'GET /api/users');
-    assert.equal(usersList.length, 24);
-    recordStep('UC-2.2 Academic periods and 24 institutional user accounts verified');
+    assert.equal(usersList.length, 23);
+    recordStep('UC-2.2 Active period (2026-2 only) and 22+1 institutional user accounts verified');
 
     // -------------------------------------------------------------------------
     // UC-3: Academic Units, Auto-Provisioned Dean Login & Annex 5 Program Quotas
@@ -464,6 +533,7 @@ async function runProductionE2ESuite(): Promise<void> {
         hasPostgraduates: true,
         deanName: 'Dra. Elena Vargas Soto',
         username: 'elena.vargas',
+        temporaryPassword: DEFAULT_TEMPORARY_PASSWORD,
         qualityCap30411: 20,
         curriculumCap40106: 20,
         seaCap40109: 20,
@@ -622,21 +692,46 @@ async function runProductionE2ESuite(): Promise<void> {
       path: '/api/sac-codes/90999',
       token: directorSession.token,
       body: {
-        capHours: 12,
+        newCode: '90998',
         name: 'Laboratorio de Innovación Curricular E2E Actualizado',
+        baseHours: 4,
+        capHours: null,
+        postgraduateCapHours: 16,
+        requiresViceRectorApproval: true,
+        annex3Format: '43401',
+        mandatoryInFaculty: true,
+        lockedByResearch: false,
+        hoursPerUnitFactor: 4,
+        unitLabel: 'proyecto',
       },
     });
-    const updatedSac = expectData(updateSacRes, 200, 'PUT /api/sac-codes/90999');
-    assert.equal(updatedSac.capHours, 12);
+    const updatedSac = expectData(updateSacRes, 200, 'PUT /api/sac-codes/90999 -> 90998');
+    assert.equal(updatedSac.code, '90998');
+    assert.equal(updatedSac.baseHours, 4);
+    assert.equal(updatedSac.capHours, null);
+    assert.equal(updatedSac.postgraduateCapHours, 16);
+    assert.equal(updatedSac.requiresViceRectorApproval, true);
+    assert.equal(updatedSac.annex3Format, '43401');
+    assert.equal(updatedSac.mandatoryInFaculty, true);
+    assert.equal(updatedSac.hoursPerUnitFactor, 4);
+    assert.equal(updatedSac.unitLabel, 'proyecto');
 
-    const deleteSacRes = await request<DeletedResponse>({
-      method: 'DELETE',
+    const oldSacRes = await request<SacCode>({
       path: '/api/sac-codes/90999',
       token: directorSession.token,
     });
-    const deletedSac = expectData(deleteSacRes, 200, 'DELETE /api/sac-codes/90999');
-    assert.equal(deletedSac.deletedId, '90999');
-    recordStep('UC-4.1 SAC Activity Code (Annex 4) create, read, update & delete verified');
+    expectError(oldSacRes, 404, 'GET old /api/sac-codes/90999 after rename');
+
+    const deleteSacRes = await request<DeletedResponse>({
+      method: 'DELETE',
+      path: '/api/sac-codes/90998',
+      token: directorSession.token,
+    });
+    const deletedSac = expectData(deleteSacRes, 200, 'DELETE /api/sac-codes/90998');
+    assert.equal(deletedSac.deletedId, '90998');
+    recordStep(
+      'UC-4.1 SAC Activity Code (Annex 4) create, full-attribute edit, code rename (90999->90998) & delete verified',
+    );
 
     const rulesRes = await request<BusinessRulesConfig>({
       path: '/api/rules-config',
@@ -861,7 +956,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'PATCH /api/approvals/:id/decision (as Vice-Rector)',
     );
     assert.equal(decidedApproval.status, 'Avalado');
-    assert.equal(decidedApproval.decidedBy, 'Fr. Wilmar Yesid Ruiz Cortés, O.P.');
+    assert.equal(decidedApproval.decidedBy, 'Fray Wilmar Yesid Ruiz Cortés, O.P.');
     recordStep(
       'UC-6.1 Annex 3 Vice-Rectorate Approval request (by Dean) and official decision (by Vice-Rector) verified',
     );
@@ -874,7 +969,7 @@ async function runProductionE2ESuite(): Promise<void> {
       token: researchSession.token,
     });
     const initialResearch = expectData(listResearchRes, 200, 'GET /api/research');
-    assert.ok(initialResearch.length > 0);
+    assert.equal(initialResearch.length, 0);
 
     const createResearchRes = await request<ResearchMutationResponse>({
       method: 'POST',
@@ -1054,9 +1149,30 @@ async function runProductionE2ESuite(): Promise<void> {
     const auditLogs = expectData(auditLogsRes, 200, 'GET /api/audit-logs');
     assert.ok(auditLogs.length >= 15);
     assert.ok(auditLogs.some((log) => log.user === 'Sandra Lizeth Parra Cruz'));
-    assert.ok(auditLogs.some((log) => log.user === 'Gloria Elizabeth Grimaldo León'));
+    assert.ok(
+      auditLogs.some((log) => log.user === 'Juan Camilo Ernesto Valderrama Balaguera'),
+    );
     recordStep(
       `UC-9.1 User provisioning, password reset & immutable audit trail (${auditLogs.length} entries) verified`,
+    );
+
+    // Verify idempotent non-destructive re-seed preserves changed personal passwords
+    await seedDatabaseWithOfficialData(tx, repos, ids, {
+      forceTruncate: false,
+    });
+    const reloginDirectorRes = await request<AuthSessionResponse>({
+      method: 'POST',
+      path: '/api/auth/login',
+      body: { username: 'dir.ensenanza', password: 'DirectorProd2026*Ok' },
+    });
+    const reloginDirector = expectData(
+      reloginDirectorRes,
+      200,
+      'POST /api/auth/login after idempotent re-seed',
+    );
+    assert.equal(reloginDirector.user.mustChangePassword, false);
+    recordStep(
+      'UC-9.2 Idempotent production re-seed (deploy.sh path) preserves activated user passwords',
     );
 
     console.log('\n====================================================================');
@@ -1068,7 +1184,6 @@ async function runProductionE2ESuite(): Promise<void> {
     // Restore canonical official seed data so the database stays clean after tests
     await seedDatabaseWithOfficialData(tx, repos, ids, {
       forceTruncate: true,
-      preferJsonSnapshot: false,
     });
     await new Promise<void>((resolve) => server.close(() => resolve()));
     await db.destroy();

@@ -223,7 +223,7 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
                 min="0"
                 max="240"
                 step="2"
-                :disabled="codeItem.lockedByResearch && store.activeRole === 'dean'"
+                :disabled="Boolean(codeItem.lockedByResearch) && store.activeRole === 'dean'"
                 style="width: 64px; padding: 4px 6px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 12px; color: var(--navy)"
                 @change="
                   emit(
@@ -236,7 +236,7 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
               <span
                 v-if="codeItem.hoursPerUnitFactor"
                 style="font-size: 10px; color: var(--blue); font-weight: 700; white-space: nowrap"
-                :title="`RN-08: ${codeItem.hoursPerUnitFactor} h por ${codeItem.unitLabel || 'unidad'}`"
+                :title="`${codeItem.hoursPerUnitFactor} h por ${codeItem.unitLabel || 'unidad'}`"
               >
                 ({{ codeItem.hoursPerUnitFactor }}h/{{ codeItem.unitLabel || 'u' }})
               </span>

@@ -8,7 +8,7 @@ const store = usePayrollStore();
 <template>
   <div class="card" style="padding: 16px 18px">
     <div class="section-label" style="margin: 0 0 6px">
-      Interruptores de Reglas de Negocio Institucionales (INC-01 a INC-18 · PA-01 a PA-20)
+      Interruptores de Reglas Normativas Institucionales de Validación
     </div>
     <p style="font-size: 12px; color: var(--ink-soft); margin: 0 0 16px">
       La Dirección de Enseñanza y Aprendizaje puede ajustar estos parámetros en tiempo real sin necesidad de soporte técnico. Los cambios recalculan de inmediato las alertas de las {{ store.units.length }} unidades académicas.
@@ -20,7 +20,7 @@ const store = usePayrollStore();
       >
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px">
           <div>
-            <span class="code-chip" style="margin-bottom: 4px">INC-03 · RF-10</span>
+            <span class="code-chip" style="margin-bottom: 4px">REGLA PSE · CÓD. 40108</span>
             <h3 style="margin: 4px 0; font-size: 13.5px; color: var(--navy)">
               Cálculo automático de PSE (40108 = 40104 × 0.25) sobre Posgrado
             </h3>
@@ -56,7 +56,7 @@ const store = usePayrollStore();
       >
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px">
           <div>
-            <span class="code-chip" style="margin-bottom: 4px">INC-08 · PA-09 · ANEXO 6</span>
+            <span class="code-chip" style="margin-bottom: 4px">ANEXO 6 · GRADUADOS</span>
             <h3 style="margin: 4px 0; font-size: 13.5px; color: var(--navy)">
               Tope Institucional de Seguimiento a Graduados (20502 / 41201)
             </h3>
@@ -92,7 +92,7 @@ const store = usePayrollStore();
       >
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px">
           <div>
-            <span class="code-chip" style="margin-bottom: 4px">RF-30 · FLUJO DECANO → DIRECTORA</span>
+            <span class="code-chip" style="margin-bottom: 4px">FLUJO DE RADICACIÓN</span>
             <h3 style="margin: 4px 0; font-size: 13.5px; color: var(--navy)">
               Bloqueo de envío cuando existan alertas bloqueantes sin resolver
             </h3>
@@ -126,7 +126,7 @@ const store = usePayrollStore();
       <div
         style="border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; background: var(--surface-soft)"
       >
-        <span class="code-chip" style="margin-bottom: 4px">RF-11 · RF-22 · PARÁMETROS PEDAGÓGICOS</span>
+        <span class="code-chip" style="margin-bottom: 4px">PARÁMETROS DOCENCIA DIRECTA</span>
         <h3 style="margin: 4px 0 8px; font-size: 13.5px; color: var(--navy)">
           Umbrales de Docencia Directa (40104) y Número de Asignaturas
         </h3>
@@ -138,8 +138,8 @@ const store = usePayrollStore();
             <input
               :value="store.rulesConfig.minFullTimeTeachingHours"
               type="number"
-              min="4"
-              max="80"
+              min="0"
+              max="160"
               step="4"
               style="width: 100%; padding: 6px 8px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700"
               @change="

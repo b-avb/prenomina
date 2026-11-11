@@ -1,6 +1,6 @@
+import { randomBytes } from 'node:crypto';
 import {
   AcademicOrganizationDomain,
-  DEFAULT_TEMPORARY_PASSWORD,
   INSTITUTIONAL_EMAIL_DOMAIN,
   type ActorContext,
   type AuthConfigResponse,
@@ -287,84 +287,32 @@ export const OFFICIAL_INSTITUTIONAL_ACCOUNTS: readonly OfficialInstitutionalAcco
   },
 ];
 
+export function generateSecureTemporaryPassword(): string {
+  return `Usta-${randomBytes(5).toString('hex')}1A`;
+}
+
 export function buildDefaultSeedUsers(
-  units: AcademicUnitRecord[],
+  _units?: AcademicUnitRecord[],
   overridePasswordHash?: string,
 ): UserRecord[] {
   const nowIso = new Date().toISOString();
-  const fallbackHash = overridePasswordHash ?? hashPassword(DEFAULT_TEMPORARY_PASSWORD);
-  const usedUsernames = new Set<string>();
 
-  const officialUsers: UserRecord[] = OFFICIAL_INSTITUTIONAL_ACCOUNTS.map((acc) => {
-    usedUsernames.add(acc.username);
-    return {
-      id: acc.id,
-      username: acc.username,
-      email: acc.email,
-      entraOid: null,
-      authProvider: 'hybrid',
-      passwordHash: overridePasswordHash ?? acc.passwordHash,
-      fullName: acc.fullName,
-      role: acc.role,
-      unitId: acc.unitId,
-      mustChangePassword: true,
-      isActive: true,
-      passwordChangedAt: null,
-      lastLoginAt: null,
-      updatedAt: nowIso,
-    };
-  });
-
-  // Cuenta transversal de Investigación (SICDDI)
-  const researchUsername = 'investigacion';
-  usedUsernames.add(researchUsername);
-  officialUsers.push({
-    id: 'user-research',
-    username: researchUsername,
-    email: buildInstitutionalEmail(researchUsername),
+  return OFFICIAL_INSTITUTIONAL_ACCOUNTS.map((acc) => ({
+    id: acc.id,
+    username: acc.username,
+    email: acc.email,
     entraOid: null,
     authProvider: 'hybrid',
-    passwordHash: fallbackHash,
-    fullName: 'Dirección de Investigación (SICDDI)',
-    role: 'research',
-    unitId: null,
+    passwordHash: overridePasswordHash ?? acc.passwordHash,
+    fullName: acc.fullName,
+    role: acc.role,
+    unitId: acc.unitId,
     mustChangePassword: true,
     isActive: true,
     passwordChangedAt: null,
     lastLoginAt: null,
     updatedAt: nowIso,
-  });
-
-  // Si existe alguna unidad adicional sin cuenta en el listado oficial, asignarle cuenta derivada
-  const coveredUnitIds = new Set(
-    OFFICIAL_INSTITUTIONAL_ACCOUNTS.map((a) => a.unitId).filter((id): id is string => Boolean(id)),
-  );
-  for (const unit of units) {
-    if (coveredUnitIds.has(unit.id)) continue;
-    const base =
-      sanitizeUsernameInput(AcademicOrganizationDomain.deriveUsernameFromFullName(unit.deanName)) ||
-      sanitizeUsernameInput(unit.id);
-    const uname = usedUsernames.has(base) ? `${base}.${sanitizeUsernameInput(unit.id)}` : base;
-    usedUsernames.add(uname);
-    officialUsers.push({
-      id: `user-dean-${unit.id}`,
-      username: uname,
-      email: buildInstitutionalEmail(uname),
-      entraOid: null,
-      authProvider: 'hybrid',
-      passwordHash: fallbackHash,
-      fullName: unit.deanName,
-      role: 'dean',
-      unitId: unit.id,
-      mustChangePassword: true,
-      isActive: true,
-      passwordChangedAt: null,
-      lastLoginAt: null,
-      updatedAt: nowIso,
-    });
-  }
-
-  return officialUsers;
+  }));
 }
 
 export class AuthService {
@@ -433,9 +381,29 @@ export class AuthService {
         return seedUsers.length;
       }
 
+      // Eliminar cuentas derivadas heredadas de semillas anteriores si nunca iniciaron sesión
+      for (const legacyId of ['user-research', 'user-dean-lic-infantil']) {
+        const legacyUser = await this.repos.users.findById(trx, legacyId, { forUpdate: true });
+        if (
+          legacyUser &&
+          legacyUser.passwordChangedAt === null &&
+          legacyUser.lastLoginAt === null
+        ) {
+          await trx.deleteFrom('users').where('id', '=', legacyId).execute();
+        }
+      }
+
       // Sincronizar cuentas oficiales y nombres de Decanos en unidades académicas existentes
       const nowIso = new Date().toISOString();
       const unitById = new Map(units.map((u) => [u.id, u]));
+      const licInfantil = unitById.get('lic-infantil');
+      if (licInfantil && licInfantil.deanName === 'Yolanda Patricia Fonseca Arias') {
+        await this.repos.units.update(trx, {
+          ...licInfantil,
+          deanName: 'Gladys Leonor Arias Rodríguez',
+        });
+      }
+
       let syncedCount = 0;
 
       for (const official of OFFICIAL_INSTITUTIONAL_ACCOUNTS) {
@@ -726,7 +694,7 @@ export class AuthService {
         'El nombre de usuario debe tener entre 3 y 60 caracteres (solo letras minúsculas, números, punto o guion, sin @dominio).',
       );
     }
-    const temporaryPassword = dto.temporaryPassword?.trim() || DEFAULT_TEMPORARY_PASSWORD;
+    const temporaryPassword = dto.temporaryPassword?.trim() || generateSecureTemporaryPassword();
     if (temporaryPassword.length < 6) {
       throw new BadRequestError(
         'La contraseña temporal debe tener al menos 6 caracteres.',
@@ -793,7 +761,7 @@ export class AuthService {
     actor: ActorContext,
     dto: ResetUserPasswordDto,
   ): Promise<ResetUserPasswordResponse> {
-    const temporaryPassword = dto.temporaryPassword?.trim() || DEFAULT_TEMPORARY_PASSWORD;
+    const temporaryPassword = dto.temporaryPassword?.trim() || generateSecureTemporaryPassword();
     if (temporaryPassword.length < 6) {
       throw new BadRequestError(
         'La contraseña temporal debe tener al menos 6 caracteres.',
@@ -854,7 +822,7 @@ export class AuthService {
       (options?.username ? sanitizeUsernameInput(options.username) : '') ||
       AcademicOrganizationDomain.deriveUsernameFromFullName(unit.deanName);
     const temporaryPassword =
-      options?.temporaryPassword?.trim() || DEFAULT_TEMPORARY_PASSWORD;
+      options?.temporaryPassword?.trim() || generateSecureTemporaryPassword();
     const nowIso = new Date().toISOString();
 
     const resolveUniqueUsername = async (

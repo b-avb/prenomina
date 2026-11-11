@@ -111,6 +111,14 @@ export class PayloadReader {
     return this.fail(key, 'Debe ser booleano.', undefined);
   }
 
+  public optionalNullableBoolean(key: string): boolean | null | undefined {
+    const value = this.source[key];
+    if (value === undefined) return undefined;
+    if (value === null) return null;
+    if (typeof value === 'boolean') return value;
+    return this.fail(key, 'Debe ser booleano.', undefined);
+  }
+
   public requiredEnum<T extends string>(key: string, allowed: readonly T[]): T {
     const value = this.source[key];
     if (isOneOf(value, allowed)) return value;

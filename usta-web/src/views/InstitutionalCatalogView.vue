@@ -79,7 +79,7 @@ async function handleImportCatalogExcel(ev: Event) {
     <div class="page-top">
       <div>
         <div class="eyebrow-tag" style="margin-bottom: 3px">
-          PARAMETRIZACIÓN SEMESTRAL SIN PROGRAMAR (RNF-09) · PERIODO {{ store.activePeriod }}
+          PARAMETRIZACIÓN INSTITUCIONAL · PERIODO {{ store.activePeriod }}
         </div>
         <h1 class="screen-title" style="margin: 0; font-size: 22px">
           Catálogo de Códigos SAC (ANEXO 4) y Topes por Facultad (ANEXOS 5 y 6)
@@ -147,7 +147,7 @@ async function handleImportCatalogExcel(ev: Event) {
         :class="{ active: activeTab === 'institutional_rules' }"
         @click="activeTab = 'institutional_rules'"
       >
-        4. Reglas Institucionales y Casos Especiales (INC / PA)
+        4. Reglas Institucionales de Validación
       </button>
     </div>
 
@@ -177,7 +177,7 @@ async function handleImportCatalogExcel(ev: Event) {
     <!-- Clone Period Modal -->
     <UstaModal
       :open="isPeriodModalOpen"
-      title="Clonar Catálogo y Topes a Nuevo Periodo (RF-08)"
+      title="Clonar Catálogo y Topes a Nuevo Periodo"
       subtitle="Crea un nuevo periodo académico conservando el catálogo de códigos SAC, las reglas de validación y las bolsas semestrales de las unidades académicas."
       @close="isPeriodModalOpen = false"
     >

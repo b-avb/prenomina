@@ -7,7 +7,6 @@ import { seedDatabaseWithOfficialData } from '../seed/database-seeder.js';
 
 async function main(): Promise<void> {
   const force = process.argv.includes('--force');
-  const useTsSeed = process.argv.includes('--ts-seed');
   const db = createDatabase(ENV_CONFIG.database);
   const tx = new KyselyTransactionRunner(db);
   const repos = createMariaDbRepositories();
@@ -16,12 +15,13 @@ async function main(): Promise<void> {
   try {
     const result = await seedDatabaseWithOfficialData(tx, repos, ids, {
       forceTruncate: force,
-      preferJsonSnapshot: !useTsSeed,
     });
     if (result.seeded) {
-      console.log(`[db:seed] MariaDB seeded successfully (source: ${result.source}).`);
+      console.log(`[db:seed] Database seeded successfully (${result.source}).`);
     } else {
-      console.log('[db:seed] Database already contains data. Pass --force to overwrite.');
+      console.log(
+        '[db:seed] Existing database synchronized with official institutional accounts and clean catalog.',
+      );
     }
   } finally {
     await db.destroy();

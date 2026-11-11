@@ -28,10 +28,16 @@ export class MariaDbSacCodeRepository implements SacCodeRepository {
     await this.insertFacultyRules(db, codes);
   }
 
-  public async update(db: DbExecutor, code: SacCode): Promise<void> {
-    const { code: key, ...changes } = toSacCodeRow(code);
-    await db.updateTable('sac_codes').set(changes).where('code', '=', key).execute();
-    await db.deleteFrom('sac_faculty_rules').where('sac_code', '=', key).execute();
+  public async update(db: DbExecutor, code: SacCode, previousCode?: string): Promise<void> {
+    const targetKey = previousCode ?? code.code;
+    const row = toSacCodeRow(code);
+    if (previousCode && previousCode !== code.code) {
+      await db.updateTable('sac_codes').set(row).where('code', '=', targetKey).execute();
+    } else {
+      const { code: _key, ...changes } = row;
+      await db.updateTable('sac_codes').set(changes).where('code', '=', targetKey).execute();
+    }
+    await db.deleteFrom('sac_faculty_rules').where('sac_code', '=', code.code).execute();
     await this.insertFacultyRules(db, [code]);
   }
 

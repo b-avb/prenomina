@@ -65,7 +65,7 @@ export class SacCatalogController {
     _url: URL,
     params: RouteParams,
   ): Promise<void> => {
-    const code = requirePathParam(params, 'code', { maxLength: 16 });
+    const code = requirePathParam(params, 'code', { maxLength: 20 });
     const item = await this.service.getByCode(code);
     sendSuccess(res, 200, item);
   };
@@ -81,7 +81,7 @@ export class SacCatalogController {
     const dto = PayloadReader.parse<CreateSacCodeDto>(raw, (r) => {
       const facultyRules = readFacultyRules(r);
       return {
-        code: r.requiredString('code', { maxLength: 16 }),
+        code: r.requiredString('code', { maxLength: 20 }),
         name: r.requiredString('name', { maxLength: 200 }),
         substantiveFunction: r.requiredEnum(
           'substantiveFunction',
@@ -93,31 +93,31 @@ export class SacCatalogController {
         capHours: r.nullableNumber('capHours', { min: 0 }),
         ...(r.has('postgraduateCapHours')
           ? {
-              postgraduateCapHours: r.nullableNumber('postgraduateCapHours', {
+              postgraduateCapHours: r.optionalNullableNumber('postgraduateCapHours', {
                 min: 0,
               }),
             }
           : {}),
         ...(r.has('psePercentage')
-          ? { psePercentage: r.optionalNumber('psePercentage', { min: 0, max: 100 }) }
+          ? { psePercentage: r.optionalNullableNumber('psePercentage', { min: 0, max: 100 }) }
           : {}),
         ...(r.has('hoursPerUnitFactor')
-          ? { hoursPerUnitFactor: r.optionalNumber('hoursPerUnitFactor', { min: 0 }) }
+          ? { hoursPerUnitFactor: r.optionalNullableNumber('hoursPerUnitFactor', { min: 0 }) }
           : {}),
         ...(r.has('unitLabel')
-          ? { unitLabel: r.optionalString('unitLabel', { maxLength: 80 }) }
+          ? { unitLabel: r.optionalNullableString('unitLabel', { maxLength: 80 }) }
           : {}),
         requiresViceRectorApproval: r.requiredBoolean('requiresViceRectorApproval'),
         ...(r.has('annex3Format')
-          ? { annex3Format: r.optionalEnum('annex3Format', ANNEX3_FORMATS) }
+          ? { annex3Format: r.optionalNullableEnum('annex3Format', ANNEX3_FORMATS) }
           : {}),
         appliesTo: r.optionalString('appliesTo', { maxLength: 255 }) ?? '',
         severity: r.requiredEnum('severity', RULE_SEVERITIES),
         ...(r.has('mandatoryInFaculty')
-          ? { mandatoryInFaculty: r.optionalBoolean('mandatoryInFaculty') }
+          ? { mandatoryInFaculty: r.optionalNullableBoolean('mandatoryInFaculty') }
           : {}),
         ...(r.has('lockedByResearch')
-          ? { lockedByResearch: r.optionalBoolean('lockedByResearch') }
+          ? { lockedByResearch: r.optionalNullableBoolean('lockedByResearch') }
           : {}),
         ...(facultyRules !== undefined ? { facultyRules } : {}),
       };
@@ -133,13 +133,16 @@ export class SacCatalogController {
     params: RouteParams,
   ): Promise<void> => {
     const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management);
-    const code = requirePathParam(params, 'code', { maxLength: 16 });
+    const code = requirePathParam(params, 'code', { maxLength: 20 });
     const period = optionalQueryParam(url, 'period', req);
     const raw = await readJsonBody(req);
     const dto = PayloadReader.parse<UpdateSacCodeDto>(raw, (r) => {
       const facultyRules = readFacultyRules(r);
       return {
         code,
+        ...(r.has('newCode')
+          ? { newCode: r.optionalString('newCode', { allowEmpty: false, maxLength: 20 }) }
+          : {}),
         ...(r.has('name')
           ? { name: r.optionalString('name', { allowEmpty: false, maxLength: 200 }) }
           : {}),
@@ -169,13 +172,13 @@ export class SacCatalogController {
             }
           : {}),
         ...(r.has('psePercentage')
-          ? { psePercentage: r.optionalNumber('psePercentage', { min: 0, max: 100 }) }
+          ? { psePercentage: r.optionalNullableNumber('psePercentage', { min: 0, max: 100 }) }
           : {}),
         ...(r.has('hoursPerUnitFactor')
-          ? { hoursPerUnitFactor: r.optionalNumber('hoursPerUnitFactor', { min: 0 }) }
+          ? { hoursPerUnitFactor: r.optionalNullableNumber('hoursPerUnitFactor', { min: 0 }) }
           : {}),
         ...(r.has('unitLabel')
-          ? { unitLabel: r.optionalString('unitLabel', { maxLength: 80 }) }
+          ? { unitLabel: r.optionalNullableString('unitLabel', { maxLength: 80 }) }
           : {}),
         ...(r.has('requiresViceRectorApproval')
           ? {
@@ -185,7 +188,7 @@ export class SacCatalogController {
             }
           : {}),
         ...(r.has('annex3Format')
-          ? { annex3Format: r.optionalEnum('annex3Format', ANNEX3_FORMATS) }
+          ? { annex3Format: r.optionalNullableEnum('annex3Format', ANNEX3_FORMATS) }
           : {}),
         ...(r.has('appliesTo')
           ? { appliesTo: r.optionalString('appliesTo', { maxLength: 255 }) }
@@ -194,10 +197,10 @@ export class SacCatalogController {
           ? { severity: r.optionalEnum('severity', RULE_SEVERITIES) }
           : {}),
         ...(r.has('mandatoryInFaculty')
-          ? { mandatoryInFaculty: r.optionalBoolean('mandatoryInFaculty') }
+          ? { mandatoryInFaculty: r.optionalNullableBoolean('mandatoryInFaculty') }
           : {}),
         ...(r.has('lockedByResearch')
-          ? { lockedByResearch: r.optionalBoolean('lockedByResearch') }
+          ? { lockedByResearch: r.optionalNullableBoolean('lockedByResearch') }
           : {}),
         ...(facultyRules !== undefined ? { facultyRules } : {}),
       };
@@ -216,7 +219,7 @@ export class SacCatalogController {
     const raw = await readJsonBody(req);
     const dto = PayloadReader.parse<ImportSacCodesDto>(raw, (r) => ({
       rows: r.objectArray('rows', (item) => ({
-        code: item.requiredString('code', { maxLength: 16 }),
+        code: item.requiredString('code', { maxLength: 20 }),
         ...(item.has('name')
           ? { name: item.optionalString('name', { maxLength: 200 }) }
           : {}),
@@ -274,7 +277,7 @@ export class SacCatalogController {
     params: RouteParams,
   ): Promise<void> => {
     const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management);
-    const code = requirePathParam(params, 'code', { maxLength: 16 });
+    const code = requirePathParam(params, 'code', { maxLength: 20 });
     const period = optionalQueryParam(url, 'period', req);
     const deleted = await this.service.remove(actor, code, period);
     sendSuccess(res, 200, deleted);

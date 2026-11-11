@@ -2,7 +2,6 @@
 import { ref, watch } from 'vue';
 import {
   AcademicOrganizationDomain,
-  DEFAULT_TEMPORARY_PASSWORD,
 } from '@usta/domain';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import { usePayrollStore } from '@/stores/payroll.store';
@@ -24,7 +23,7 @@ const form = ref({
   unitType: 'Facultad' as 'Facultad' | 'Dirección Académica',
   deanName: '',
   username: '',
-  temporaryPassword: DEFAULT_TEMPORARY_PASSWORD,
+  temporaryPassword: '',
   deanDocumentId: '',
   deanEducation: '',
   hasPostgraduates: true,
@@ -56,14 +55,19 @@ async function handleSave() {
     return;
   }
 
+  const explicitTempPassword =
+    form.value.temporaryPassword.trim() ||
+    (form.value.deanDocumentId.trim().length >= 6
+      ? form.value.deanDocumentId.trim()
+      : undefined);
+
   const createdRes = await store.addAcademicUnit({
     name: form.value.name.trim(),
     division: form.value.division.trim(),
     unitType: form.value.unitType,
     deanName: form.value.deanName.trim(),
     username: form.value.username.trim() || undefined,
-    temporaryPassword:
-      form.value.temporaryPassword.trim() || DEFAULT_TEMPORARY_PASSWORD,
+    temporaryPassword: explicitTempPassword,
     hasPostgraduates: form.value.hasPostgraduates,
     qualityCap30411: form.value.qualityCap30411,
     curriculumCap40106: form.value.curriculumCap40106,
@@ -102,7 +106,7 @@ async function handleSave() {
   form.value.name = '';
   form.value.deanName = '';
   form.value.username = '';
-  form.value.temporaryPassword = DEFAULT_TEMPORARY_PASSWORD;
+  form.value.temporaryPassword = '';
   form.value.deanDocumentId = '';
   form.value.deanEducation = '';
   form.value.initialProgramName = '';
@@ -160,11 +164,11 @@ async function handleSave() {
         />
       </div>
       <div class="field">
-        <label>Contraseña Temporal (deberá cambiarla al iniciar sesión)</label>
+        <label>Contraseña Temporal (opcional · por defecto cédula o autogenerada)</label>
         <input
           v-model="form.temporaryPassword"
           type="text"
-          placeholder="Ej: Usta2026*"
+          placeholder="Dejar vacío para usar cédula o clave aleatoria"
           style="font-family: var(--font-mono); font-weight: 700"
         />
       </div>

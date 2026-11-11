@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import type { RuleSeverity, SacCode } from '@usta/domain';
 import { usePayrollStore } from '@/stores/payroll.store';
-import { eventChecked, eventNumber, eventValue } from '@/utils/dom-events';
+import { eventChecked, eventNullableNumber, eventValue } from '@/utils/dom-events';
 
 const emit = defineEmits<{
   editCode: [codeItem: SacCode];
@@ -71,7 +71,7 @@ const filteredCodes = computed(() =>
           <th>Base (Mín)</th>
           <th>Tope (Máx)</th>
           <th>Pre-Aval V.A.</th>
-          <th>Severidad Regla (RF-07)</th>
+          <th>Severidad del Tope</th>
           <th style="text-align: right">Detalle</th>
         </tr>
       </thead>
@@ -91,9 +91,35 @@ const filteredCodes = computed(() =>
               {{ codeItem.guideline }}
             </div>
             <div
-              v-if="codeItem.facultyRules && codeItem.facultyRules.length > 0"
+              v-if="
+                (codeItem.facultyRules && codeItem.facultyRules.length > 0) ||
+                codeItem.mandatoryInFaculty ||
+                codeItem.lockedByResearch ||
+                codeItem.hoursPerUnitFactor
+              "
               style="display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px"
             >
+              <span
+                v-if="codeItem.mandatoryInFaculty"
+                class="badge inscrito"
+                style="font-size: 10px"
+              >
+                Obligatorio en unidad
+              </span>
+              <span
+                v-if="codeItem.lockedByResearch"
+                class="badge observado"
+                style="font-size: 10px"
+              >
+                ANEXO 7 · Investigación
+              </span>
+              <span
+                v-if="codeItem.hoursPerUnitFactor"
+                class="badge inscrito"
+                style="font-size: 10px"
+              >
+                {{ codeItem.hoursPerUnitFactor }}h / {{ codeItem.unitLabel || 'unidad' }}
+              </span>
               <span
                 v-for="rf in codeItem.facultyRules"
                 :key="rf.unitId"
@@ -110,38 +136,50 @@ const filteredCodes = computed(() =>
             </div>
           </td>
           <td data-label="Base (Mín)">
+            <span
+              v-if="codeItem.code === '40108'"
+              style="font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint)"
+            >
+              {{ codeItem.psePercentage ?? 25 }}%
+            </span>
             <input
-              v-if="codeItem.baseHours !== null"
-              :value="codeItem.baseHours"
+              v-else
+              :value="codeItem.baseHours ?? ''"
               type="number"
               min="0"
               max="240"
+              placeholder="—"
+              title="Horas mínimas base (dejar vacío si no aplica mínimo fijo)"
               style="width: 62px; padding: 4px 6px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 12px"
-              @change="store.updateSacCode(codeItem.code, { baseHours: eventNumber($event) })"
+              @change="
+                store.updateSacCode(codeItem.code, {
+                  baseHours: eventNullableNumber($event),
+                })
+              "
             />
-            <span
-              v-else
-              style="font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint)"
-            >
-              {{ codeItem.psePercentage ? `${codeItem.psePercentage}%` : '—' }}
-            </span>
           </td>
           <td data-label="Tope (Máx)">
+            <span
+              v-if="codeItem.code === '40108'"
+              style="font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint)"
+            >
+              Auto {{ codeItem.psePercentage ?? 25 }}%
+            </span>
             <input
-              v-if="codeItem.capHours !== null"
-              :value="codeItem.capHours"
+              v-else
+              :value="codeItem.capHours ?? ''"
               type="number"
               min="0"
               max="240"
+              placeholder="Aval"
+              title="Tope máximo mensual (dejar vacío cuando el tope dependa del aval o resolución)"
               style="width: 62px; padding: 4px 6px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 12px"
-              @change="store.updateSacCode(codeItem.code, { capHours: eventNumber($event) })"
+              @change="
+                store.updateSacCode(codeItem.code, {
+                  capHours: eventNullableNumber($event),
+                })
+              "
             />
-            <span
-              v-else
-              style="font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint)"
-            >
-              {{ codeItem.psePercentage ? 'Auto 25%' : 'Según aval' }}
-            </span>
             <div
               v-if="codeItem.postgraduateCapHours"
               style="font-size: 10px; color: var(--blue); font-weight: 700"

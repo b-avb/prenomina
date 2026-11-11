@@ -216,7 +216,6 @@ export class PayrollStateService {
     }
     await seedDatabaseWithOfficialData(this.tx, this.repos, this.ids, {
       forceTruncate: true,
-      preferJsonSnapshot: false,
     });
     return this.getSnapshot();
   }

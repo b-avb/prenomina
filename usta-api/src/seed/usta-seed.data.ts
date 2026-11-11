@@ -77,7 +77,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "PREPARACIÓN EXAMEN HABILITANTE PARA ABOGADOS",
     "substantiveFunction": "Enseñanza-Aprendizaje",
     "definition": "Preparación de estudiantes y egresados de Derecho para el examen de Estado habilitante.",
-    "guideline": "Entre 4 y 12 h/mes. Máximo 4 docentes en el programa de Derecho (en hoja DOCENCIA figura como 40134).",
+    "guideline": "Entre 4 y 12 h/mes. Máximo 4 docentes en el programa de Derecho.",
     "baseHours": 4,
     "capHours": 12,
     "requiresViceRectorApproval": false,
@@ -113,7 +113,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA GESTIÓN ACADÉMICA VIRTUAL POSGRADOS",
     "substantiveFunction": "Enseñanza-Aprendizaje",
     "definition": "Gestión académica y acompañamiento de espacios en modalidad virtual de posgrados.",
-    "guideline": "Entre 4 y 28 h/mes (nota INC-01: en la fila 20 de CÓDIGOS aparece duplicado con rango 4–20 h; en DOCENCIA rige 4–28 h).",
+    "guideline": "Entre 4 y 28 h/mes para programas de posgrado en modalidad virtual.",
     "baseHours": 4,
     "capHours": 28,
     "requiresViceRectorApproval": false,
@@ -203,7 +203,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA DOCENTE GESTOR VIRTUAL",
     "substantiveFunction": "Enseñanza-Aprendizaje",
     "definition": "Gestión académica y curricular de programas en modalidad virtual.",
-    "guideline": "Entre 20 y 80 h/mes en hoja CÓDIGOS (hasta 160 h/mes en hoja DOCENCIA). Aplica a programas virtuales (Esp. Estructuras, M. Geotecnia Vial, Esp. Gerencia de Mantenimiento, Esp. Cadena de Valor, etc.).",
+    "guideline": "Entre 20 y 80 h/mes (hasta 160 h/mes según dedicación al programa). Aplica a programas virtuales autorizados.",
     "baseHours": 20,
     "capHours": 80,
     "requiresViceRectorApproval": false,
@@ -278,7 +278,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "DIRECCIÓN Y/O ASESORÍA EN OPCIONES DE GRADO DE ORDEN SOCIAL, EMPRESARIAL (PREGRADO Y POSGRADO)",
     "substantiveFunction": "Proyección Social",
     "definition": "Dirección o asesoría de trabajos de grado en modalidad de proyección social o empresarial.",
-    "guideline": "Entre 2 y 24 h/mes (2 h por proyecto en hoja PS / hasta 4 h en CÓDIGOS). Requiere aval de la Vicerrectoría Académica (ANEXO 3) presentando listado de proyectos aprobados por comité curricular.",
+    "guideline": "Entre 2 y 24 h/mes (2 h por proyecto dirigido). Requiere aval de la Vicerrectoría Académica (ANEXO 3) presentando listado de proyectos aprobados por Comité Curricular.",
     "baseHours": 2,
     "capHours": 24,
     "hoursPerUnitFactor": 2,
@@ -373,7 +373,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA DOCENTE COEDITOR O ASISTENTE DE REVISTAS CIENTÍFICAS",
     "substantiveFunction": "Investigación",
     "definition": "Coedición y asistencia editorial de revistas científicas indexadas.",
-    "guideline": "Entre 8 y 20 h/mes (hasta 40 h con dos revistas según hoja INVESTIGACIÓN). No aplica para revistas de divulgación.",
+    "guideline": "Entre 8 y 20 h/mes por revista científica indexada (hasta 40 h/mes con dos revistas). No aplica para revistas de divulgación.",
     "baseHours": 8,
     "capHours": 20,
     "hoursPerUnitFactor": 20,
@@ -387,7 +387,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA DOCENTE DIRECTOR DE POSDOCTORADO",
     "substantiveFunction": "Investigación",
     "definition": "Dirección y acompañamiento de estancias posdoctorales.",
-    "guideline": "En CÓDIGOS: 20–80 h/mes; en INVESTIGACIÓN: hasta 12 h/mes (4 h por estancia posdoctoral, máximo 3). Solo aplica para Derecho.",
+    "guideline": "Entre 4 y 80 h/mes según estancias posdoctorales asignadas (4 h/mes por estancia). Exclusivo Facultad de Derecho.",
     "baseHours": 4,
     "capHours": 80,
     "requiresViceRectorApproval": false,
@@ -447,7 +447,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA DOCENTE APOYO CITECDES",
     "substantiveFunction": "Investigación",
     "definition": "Apoyo a proyectos en el Centro de Investigación e Innovación en Ingeniería (CITECDES).",
-    "guideline": "Entre 8 y 20 h/mes según relación del ANEXO 7 (en ANEXO 2 aparece como columna CITECDES).",
+    "guideline": "Entre 8 y 20 h/mes según relación aprobada en el ANEXO 7 de Investigación.",
     "baseHours": 8,
     "capHours": 20,
     "requiresViceRectorApproval": false,
@@ -472,7 +472,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA DOCENTE LIVING LAB",
     "substantiveFunction": "Investigación",
     "definition": "Proyectos de innovación abierta y laboratorio vivo (Living Lab).",
-    "guideline": "En CÓDIGOS: 8–20 h/mes (en INVESTIGACIÓN: 12–60 h/mes). Asignación directa por la Vicerrectoría Académica.",
+    "guideline": "Entre 8 y 60 h/mes. Asignación directa con aval de la Vicerrectoría Académica.",
     "baseHours": 8,
     "capHours": 60,
     "requiresViceRectorApproval": true,
@@ -497,7 +497,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA FORMACIÓN EN CAPACIDADES CTeI",
     "substantiveFunction": "Investigación",
     "definition": "Tutoría de semilleros de investigación y grupos de estudio estudiantiles.",
-    "guideline": "Hasta 4 h/mes por cada estrategia CTeI liderada (semillero o grupo de estudio registrado ante Investigación). Tope: 12 h en CÓDIGOS / 16 h en INVESTIGACIÓN.",
+    "guideline": "Hasta 4 h/mes por cada estrategia CTeI liderada (semillero o grupo de estudio registrado ante Investigación), con tope de 16 h/mes.",
     "baseHours": 4,
     "capHours": 16,
     "hoursPerUnitFactor": 4,
@@ -632,10 +632,10 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
   },
   {
     "code": "LACT-MAT",
-    "name": "TUNJA LACTANCIA MATERNA (SIN CÓDIGO SAC EN ANEXO 4)",
+    "name": "TUNJA LACTANCIA MATERNA",
     "substantiveFunction": "Gestión Académica",
     "definition": "Hora de lactancia materna legalmente reconocida.",
-    "guideline": "Entre 10 y 20 h/mes. Se asigna con aval de la Dirección de Gestión del Talento Humano (INC-14).",
+    "guideline": "Entre 10 y 20 h/mes. Se asigna con soporte de la Dirección de Gestión del Talento Humano.",
     "baseHours": 10,
     "capHours": 20,
     "requiresViceRectorApproval": false,
@@ -664,17 +664,17 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Juan Camilo Ernesto Valderrama Balaguera",
-    "payrollStatus": "En Revisión",
-    "currentVersion": 2,
-    "updatedAt": "2026-07-08 16:40",
+    "payrollStatus": "Borrador",
+    "currentVersion": 1,
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 32,
     "curriculumCap40106": 20,
     "seaCap40109": 8,
     "saberProCap40127": 20,
     "graduatesCap20502": 12,
     "totalTeachers": 12,
-    "pendingAlerts": 3,
-    "pendingApprovals": 1
+    "pendingAlerts": 0,
+    "pendingApprovals": 0
   },
   {
     "id": "ing-mecanica",
@@ -683,17 +683,17 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Helver Mauricio Muñoz Barajas",
-    "payrollStatus": "Enviada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-07 11:15",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 44,
     "curriculumCap40106": 24,
     "seaCap40109": 8,
     "saberProCap40127": 12,
     "graduatesCap20502": 12,
     "totalTeachers": 12,
-    "pendingAlerts": 5,
-    "pendingApprovals": 2
+    "pendingAlerts": 0,
+    "pendingApprovals": 0
   },
   {
     "id": "ing-sistemas",
@@ -702,17 +702,17 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Luz Santamaría Granados",
-    "payrollStatus": "Devuelta con Observaciones",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-06 17:20",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 28,
     "curriculumCap40106": 44,
     "seaCap40109": 12,
     "saberProCap40127": 20,
     "graduatesCap20502": 16,
     "totalTeachers": 13,
-    "pendingAlerts": 2,
-    "pendingApprovals": 1
+    "pendingAlerts": 0,
+    "pendingApprovals": 0
   },
   {
     "id": "adm-empresas",
@@ -721,9 +721,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Jean Pierre Anchicoque Cadena",
-    "payrollStatus": "Avalada",
-    "currentVersion": 2,
-    "updatedAt": "2026-07-08 09:30",
+    "payrollStatus": "Borrador",
+    "currentVersion": 1,
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 80,
     "curriculumCap40106": 60,
     "seaCap40109": 24,
@@ -740,9 +740,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Katherine Johana Aguja Herrera",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-07 14:10",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 28,
     "curriculumCap40106": 24,
     "seaCap40109": 8,
@@ -761,15 +761,15 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "deanName": "Carlos Andrés Aranda Camacho",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-05 10:00",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 138,
     "curriculumCap40106": 104,
     "seaCap40109": 48,
     "saberProCap40127": 24,
     "graduatesCap20502": 32,
     "totalTeachers": 44,
-    "pendingAlerts": 4,
-    "pendingApprovals": 2
+    "pendingAlerts": 0,
+    "pendingApprovals": 0
   },
   {
     "id": "ing-civil",
@@ -778,17 +778,17 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Brigid Hiomara Pacheco García",
-    "payrollStatus": "En Revisión",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-08 10:05",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 132,
     "curriculumCap40106": 68,
     "seaCap40109": 32,
     "saberProCap40127": 20,
     "graduatesCap20502": 32,
     "totalTeachers": 19,
-    "pendingAlerts": 1,
-    "pendingApprovals": 1
+    "pendingAlerts": 0,
+    "pendingApprovals": 0
   },
   {
     "id": "arquitectura",
@@ -797,9 +797,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Felipe Andrés Muñoz Cárdenas",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-06 15:00",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 32,
     "curriculumCap40106": 24,
     "seaCap40109": 16,
@@ -816,9 +816,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Adriana Jiménez Herrera",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-07 16:00",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 32,
     "curriculumCap40106": 44,
     "seaCap40109": 16,
@@ -835,16 +835,16 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Esperanza Díaz Casallas",
-    "payrollStatus": "En Revisión",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-08 11:20",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 32,
     "curriculumCap40106": 44,
     "seaCap40109": 8,
     "saberProCap40127": 20,
     "graduatesCap20502": 12,
     "totalTeachers": 13,
-    "pendingAlerts": 1,
+    "pendingAlerts": 0,
     "pendingApprovals": 0
   },
   {
@@ -854,9 +854,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "William Fabián Chaparro Becerra",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-07 15:45",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 52,
     "curriculumCap40106": 40,
     "seaCap40109": 8,
@@ -873,9 +873,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": false,
     "deanName": "Yuddy Alejandra Castro Ortegón",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-06 14:20",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 12,
     "curriculumCap40106": 16,
     "seaCap40109": 8,
@@ -892,9 +892,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": false,
     "deanName": "Juan Francisco Mendoza Moreno",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-06 16:10",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 4,
     "curriculumCap40106": 16,
     "seaCap40109": 8,
@@ -911,9 +911,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Luis Rafael Hutchison Salazar",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-07 10:30",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 10,
     "curriculumCap40106": 16,
     "seaCap40109": 16,
@@ -930,9 +930,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": false,
     "deanName": "Julián Santiago Delgadillo Aponte",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-07 12:00",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 16,
     "curriculumCap40106": 16,
     "seaCap40109": 8,
@@ -949,9 +949,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Gladys Leonor Arias Rodríguez",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-07 17:00",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 16,
     "curriculumCap40106": 20,
     "seaCap40109": 8,
@@ -967,10 +967,10 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "division": "División de Ciencias Sociales y de la Educación",
     "unitType": "Facultad",
     "hasPostgraduates": false,
-    "deanName": "Yolanda Patricia Fonseca Arias",
-    "payrollStatus": "Avalada",
+    "deanName": "Gladys Leonor Arias Rodríguez",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-07 17:15",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 0,
     "curriculumCap40106": 8,
     "seaCap40109": 4,
@@ -987,9 +987,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Facultad",
     "hasPostgraduates": false,
     "deanName": "Eduardo López Flórez",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-07 09:50",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 4,
     "curriculumCap40106": 16,
     "seaCap40109": 8,
@@ -1006,16 +1006,16 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Dirección Académica",
     "hasPostgraduates": false,
     "deanName": "Ruth Marlene Sandoval Ortiz",
-    "payrollStatus": "En Revisión",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-08 08:30",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 0,
     "curriculumCap40106": 20,
     "seaCap40109": 8,
     "saberProCap40127": 60,
     "graduatesCap20502": 0,
     "totalTeachers": 25,
-    "pendingAlerts": 1,
+    "pendingAlerts": 0,
     "pendingApprovals": 0
   },
   {
@@ -1025,9 +1025,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Dirección Académica",
     "hasPostgraduates": false,
     "deanName": "David Sáenz Guerrero",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-07 16:40",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 0,
     "curriculumCap40106": 20,
     "seaCap40109": 8,
@@ -1044,9 +1044,9 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "unitType": "Dirección Académica",
     "hasPostgraduates": false,
     "deanName": "José Miguel Fagua Contreras",
-    "payrollStatus": "Avalada",
+    "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-07-07 15:10",
+    "updatedAt": "2026-08-01 08:00",
     "qualityCap30411": 16,
     "curriculumCap40106": 16,
     "seaCap40109": 8,
@@ -1368,35 +1368,21 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
   {
     "id": "ind-1",
     "unitId": "ing-industrial",
-    "documentId": "37274697",
-    "fullName": "GLORIA ELIZABETH GRIMALDO LEÓN",
+    "documentId": "74382158",
+    "fullName": "JUAN CAMILO ERNESTO VALDERRAMA BALAGUERA",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Decana de Facultad",
-    "education": "Ingeniera de Producción Industrial - Magíster en Administración y Dirección de Empresas",
+    "rank": "Decano(a) de Facultad",
+    "education": "Ingeniero Industrial · Magíster en Ingeniería",
     "isProvisional": false,
-    "seniorityYears": 8,
+    "seniorityYears": 5,
     "academicSpaces": [],
     "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 40,
-        "version1Hours": 0,
-        "directorNote": "Se incluyen 40h de proyecto de investigación aprobadas en revisión v2.",
-        "adjustedByDirector": true
-      },
       "30222": {
         "code": "30222",
-        "hours": 170,
-        "version1Hours": 240,
-        "directorNote": "Se reduce de 240h a 170h en revisión con la Directora.",
-        "adjustedByDirector": true
+        "hours": 190
       }
-    },
-    "sharedHours": 18,
-    "sharedUnitName": "INVESTIGACIÓN",
-    "generalNote": "En v2 se ajustó 30222 de 240h a 170h y se asignaron 40h en 10336 (Investigación) para un total de 210h. Alerta RN-12: Lineamiento B-12 exige que los Decanos orienten al menos 1 espacio académico (40104 o 40006).",
-    "version1Total": 240
+    }
   },
   {
     "id": "ind-2",
@@ -1440,28 +1426,23 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
       "10212": {
         "code": "10212",
         "hours": 8,
-        "version1Hours": 8,
         "unitCount": 2
       },
       "10336": {
         "code": "10336",
-        "hours": 10,
-        "version1Hours": 10
+        "hours": 10
       },
       "30420": {
         "code": "30420",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
     },
     "sharedHours": 16,
-    "sharedUnitName": "PROYECCIÓN SOCIAL",
-    "version1Total": 160
+    "sharedUnitName": "PROYECCIÓN SOCIAL"
   },
   {
     "id": "ind-3",
@@ -1510,28 +1491,23 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
       "10212": {
         "code": "10212",
         "hours": 4,
-        "version1Hours": 4,
         "unitCount": 1
       },
       "20120": {
         "code": "20120",
         "hours": 16,
-        "version1Hours": 16,
         "unitCount": 8
       },
       "20223": {
         "code": "20223",
         "hours": 16,
-        "version1Hours": 16,
         "unitCount": 8
       },
       "43401": {
         "code": "43401",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ind-4",
@@ -1574,38 +1550,30 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 10,
-        "version1Hours": 10
+        "hours": 10
       },
       "20223": {
         "code": "20223",
         "hours": 16,
-        "version1Hours": 0,
-        "unitCount": 8,
-        "directorNote": "En v2 se reasignó de 30411 Calidad (16h) a 20223 Opciones de Grado Social (16h)."
+        "unitCount": 8
       },
       "20225": {
         "code": "20225",
-        "hours": 16,
-        "version1Hours": 12
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "43401": {
         "code": "43401",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ind-5",
@@ -1648,23 +1616,19 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
       "10212": {
         "code": "10212",
         "hours": 4,
-        "version1Hours": 4,
         "unitCount": 1
       },
       "10336": {
         "code": "10336",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "20220": {
         "code": "20220",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       }
     },
     "sharedHours": 120,
-    "sharedUnitName": "INGENIERÍA AMBIENTAL (Compartido)",
-    "version1Total": 160
+    "sharedUnitName": "INGENIERÍA AMBIENTAL (Compartido)"
   },
   {
     "id": "ind-6",
@@ -1707,34 +1671,28 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
       "10212": {
         "code": "10212",
         "hours": 4,
-        "version1Hours": 4,
         "unitCount": 1
       },
       "10318": {
         "code": "10318",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 64
+        "hours": 32
       },
       "20223": {
         "code": "20223",
         "hours": 4,
-        "version1Hours": 0,
         "unitCount": 2
       },
       "40117": {
         "code": "40117",
-        "hours": 6,
-        "version1Hours": 8
+        "hours": 6
       }
     },
     "sharedHours": 110,
-    "sharedUnitName": "ADMINISTRACIÓN / POSGRADOS",
-    "version1Total": 160
+    "sharedUnitName": "ADMINISTRACIÓN / POSGRADOS"
   },
   {
     "id": "ind-7",
@@ -1789,36 +1747,27 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
       "10212": {
         "code": "10212",
         "hours": 16,
-        "version1Hours": 12,
         "unitCount": 4
       },
       "10364": {
         "code": "10364",
         "hours": 8,
-        "version1Hours": 8,
         "unitCount": 2
       },
       "20223": {
         "code": "20223",
         "hours": 5,
-        "version1Hours": 0,
         "unitCount": 3
       },
       "30420": {
         "code": "30420",
-        "hours": 8,
-        "version1Hours": 16,
-        "directorNote": "En v1 tenía 16h (excedía el tope de 8h). Se redujo a 8h en revisión.",
-        "adjustedByDirector": true
+        "hours": 8
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "generalNote": "Caso real CP-01 y CP-07: En la versión 1 tenía 197 h totales y 16 h en Internacionalización (30420, cuyo tope es 8 h). Tras la revisión con la Directora quedó cuadrado en 160 h.",
-    "version1Total": 197
+    }
   },
   {
     "id": "ind-8",
@@ -1867,37 +1816,30 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
       "10212": {
         "code": "10212",
         "hours": 14,
-        "version1Hours": 12,
         "unitCount": 4
       },
       "10225": {
         "code": "10225",
-        "hours": 8,
-        "version1Hours": 16
+        "hours": 8
       },
       "10336": {
         "code": "10336",
-        "hours": 36,
-        "version1Hours": 36
+        "hours": 36
       },
       "10364": {
         "code": "10364",
         "hours": 8,
-        "version1Hours": 8,
         "unitCount": 2
       },
       "10384": {
         "code": "10384",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ind-9",
@@ -1934,18 +1876,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10226": {
         "code": "10226",
-        "hours": 48,
-        "version1Hours": 48,
-        "exceptionJustification": "Asignación registrada en columna SICDDI del archivo de Industrial."
+        "hours": 48
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       }
-    },
-    "generalNote": "Caso real CP-02 y CP-05: En v1 sumaba 178 h. En v2 se retiraron 16 h de CTeI (10364) y se ajustó PSE de 18 h a 16 h (marcado en rojo en el Excel) para cerrar en 160 h.",
-    "version1Total": 178
+    }
   },
   {
     "id": "ind-10",
@@ -1994,27 +1931,22 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
       "10212": {
         "code": "10212",
         "hours": 16,
-        "version1Hours": 16,
         "unitCount": 4
       },
       "20223": {
         "code": "20223",
         "hours": 8,
-        "version1Hours": 8,
         "unitCount": 4
       },
       "20502": {
         "code": "20502",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30312": {
         "code": "30312",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ind-11",
@@ -2031,11 +1963,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40614": {
         "code": "40614",
-        "hours": 80,
-        "version1Hours": 80
+        "hours": 80
       }
-    },
-    "version1Total": 80
+    }
   },
   {
     "id": "ind-12",
@@ -2095,16 +2025,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "mec-1",
@@ -2755,21 +2682,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-2",
@@ -2811,21 +2734,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "30411": {
         "code": "30411",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-3",
@@ -2873,21 +2792,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-4",
@@ -2947,21 +2862,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-5",
@@ -3009,21 +2920,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-6",
@@ -3065,21 +2972,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-7",
@@ -3133,21 +3036,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-8",
@@ -3207,21 +3106,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-9",
@@ -3269,21 +3164,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "20502": {
         "code": "20502",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-10",
@@ -3337,16 +3228,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-11",
@@ -3388,16 +3276,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-12",
@@ -3439,16 +3324,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-sistemas-13",
@@ -3496,16 +3378,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "adm-empresas-1",
@@ -3529,11 +3408,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30222": {
         "code": "30222",
-        "hours": 190,
-        "version1Hours": 190
+        "hours": 190
       }
-    },
-    "version1Total": 210
+    }
   },
   {
     "id": "adm-empresas-2",
@@ -3575,21 +3452,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30312": {
         "code": "30312",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40127": {
         "code": "40127",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "adm-empresas-3",
@@ -3631,21 +3504,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "20502": {
         "code": "20502",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "30312": {
         "code": "30312",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "adm-empresas-4",
@@ -3681,26 +3550,21 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "20502": {
         "code": "20502",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "adm-empresas-5",
@@ -3754,21 +3618,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "30411": {
         "code": "30411",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "adm-empresas-6",
@@ -3798,21 +3658,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "adm-empresas-7",
@@ -3854,21 +3710,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "adm-empresas-8",
@@ -3910,21 +3762,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "adm-empresas-9",
@@ -3972,21 +3820,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "adm-empresas-10",
@@ -4040,21 +3884,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-ambiental-1",
@@ -4078,21 +3918,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-ambiental-2",
@@ -4122,21 +3958,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "30411": {
         "code": "30411",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-ambiental-3",
@@ -4178,21 +4010,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-ambiental-4",
@@ -4234,21 +4062,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-ambiental-5",
@@ -4302,21 +4126,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-ambiental-6",
@@ -4340,21 +4160,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-ambiental-7",
@@ -4402,22 +4218,18 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "ING. CIVIL",
-    "version1Total": 160
+    "sharedUnitName": "ING. CIVIL"
   },
   {
     "id": "ing-ambiental-8",
@@ -4441,16 +4253,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-1",
@@ -4474,39 +4283,28 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30222": {
         "code": "30222",
-        "hours": 190,
-        "version1Hours": 190
+        "hours": 190
       }
-    },
-    "version1Total": 210
+    }
   },
   {
     "id": "derecho-2",
     "unitId": "derecho",
-    "documentId": "1049621815",
-    "fullName": "DIANA PAOLA CORREDOR PAMPLONA",
+    "documentId": "1057515000",
+    "fullName": "CARLOS ANDRÉS ARANDA CAMACHO",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
     "rank": "Decano(a) de Facultad",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Abogado · Magíster en Derecho",
     "isProvisional": false,
-    "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "derecho-2-esp-1",
-        "name": "DERECHO ADMINISTRATIVO - DER3B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
+    "seniorityYears": 5,
+    "academicSpaces": [],
     "allocations": {
       "30222": {
         "code": "30222",
-        "hours": 190,
-        "version1Hours": 190
+        "hours": 190
       }
-    },
-    "version1Total": 210
+    }
   },
   {
     "id": "derecho-3",
@@ -4530,11 +4328,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30222": {
         "code": "30222",
-        "hours": 190,
-        "version1Hours": 190
+        "hours": 190
       }
-    },
-    "version1Total": 210
+    }
   },
   {
     "id": "derecho-4",
@@ -4582,21 +4378,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-5",
@@ -4650,21 +4442,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-6",
@@ -4712,21 +4500,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-7",
@@ -4786,21 +4570,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-8",
@@ -4842,21 +4622,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-9",
@@ -4910,21 +4686,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 14,
-        "version1Hours": 14
+        "hours": 14
       },
       "30411": {
         "code": "30411",
-        "hours": 18,
-        "version1Hours": 18
+        "hours": 18
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-10",
@@ -4948,21 +4720,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-11",
@@ -4998,21 +4766,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-12",
@@ -5048,21 +4812,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-13",
@@ -5092,21 +4852,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-14",
@@ -5178,21 +4934,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-15",
@@ -5222,21 +4974,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-16",
@@ -5278,21 +5026,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-17",
@@ -5316,21 +5060,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-18",
@@ -5354,21 +5094,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-19",
@@ -5428,21 +5164,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-20",
@@ -5466,21 +5198,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-21",
@@ -5516,21 +5244,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-22",
@@ -5554,21 +5278,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-23",
@@ -5622,21 +5342,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-24",
@@ -5720,21 +5436,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-25",
@@ -5758,16 +5470,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-26",
@@ -5821,16 +5530,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-27",
@@ -5896,16 +5602,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-28",
@@ -5953,16 +5656,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-29",
@@ -6022,16 +5722,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-30",
@@ -6055,16 +5752,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-31",
@@ -6124,16 +5818,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-32",
@@ -6163,16 +5854,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-33",
@@ -6208,16 +5896,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-34",
@@ -6277,16 +5962,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-35",
@@ -6340,16 +6022,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-36",
@@ -6403,16 +6082,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-37",
@@ -6436,16 +6112,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-38",
@@ -6469,16 +6142,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-39",
@@ -6520,16 +6190,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-40",
@@ -6730,8 +6397,7 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
         "monthlyHours": 4
       }
     ],
-    "allocations": {},
-    "version1Total": 160
+    "allocations": {}
   },
   {
     "id": "derecho-41",
@@ -6779,16 +6445,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-42",
@@ -6830,16 +6493,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-43",
@@ -6863,16 +6523,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "derecho-44",
@@ -6926,16 +6583,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-1",
@@ -6977,21 +6631,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-2",
@@ -7039,21 +6689,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-3",
@@ -7095,21 +6741,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-4",
@@ -7151,21 +6793,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-5",
@@ -7201,21 +6839,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-6",
@@ -7257,21 +6891,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "30411": {
         "code": "30411",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-7",
@@ -7313,21 +6943,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-8",
@@ -7369,21 +6995,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-9",
@@ -7431,21 +7053,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-10",
@@ -7487,21 +7105,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-11",
@@ -7543,21 +7157,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-12",
@@ -7605,21 +7215,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-13",
@@ -7643,21 +7249,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-14",
@@ -7693,21 +7295,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-15",
@@ -7755,21 +7353,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-16",
@@ -7811,21 +7405,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-17",
@@ -7855,21 +7445,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-18",
@@ -7911,16 +7497,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-civil-19",
@@ -7962,16 +7545,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-1",
@@ -8007,21 +7587,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-2",
@@ -8063,22 +7639,18 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "30411": {
         "code": "30411",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "CIENCIAS BÁSICAS",
-    "version1Total": 160
+    "sharedUnitName": "CIENCIAS BÁSICAS"
   },
   {
     "id": "arquitectura-3",
@@ -8126,22 +7698,18 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
     },
-    "sharedUnitName": "CIENCIAS BÁSICAS",
-    "version1Total": 160
+    "sharedUnitName": "CIENCIAS BÁSICAS"
   },
   {
     "id": "arquitectura-4",
@@ -8177,21 +7745,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-5",
@@ -8251,22 +7815,18 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
     },
-    "sharedUnitName": "CIENCIAS BÁSICAS",
-    "version1Total": 160
+    "sharedUnitName": "CIENCIAS BÁSICAS"
   },
   {
     "id": "arquitectura-6",
@@ -8314,21 +7874,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40109": {
         "code": "40109",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-7",
@@ -8382,21 +7938,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-8",
@@ -8444,21 +7996,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-9",
@@ -8500,21 +8048,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-10",
@@ -8568,16 +8112,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-11",
@@ -8613,16 +8154,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-12",
@@ -8670,16 +8208,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-13",
@@ -8715,16 +8250,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-14",
@@ -8778,16 +8310,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-15",
@@ -8823,17 +8352,14 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "ING. AMBIENTAL",
-    "version1Total": 160
+    "sharedUnitName": "ING. AMBIENTAL"
   },
   {
     "id": "arquitectura-16",
@@ -8875,16 +8401,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-17",
@@ -8932,16 +8455,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-18",
@@ -8983,16 +8503,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-19",
@@ -9034,16 +8551,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-20",
@@ -9103,16 +8617,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "arquitectura-21",
@@ -9166,16 +8677,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "contaduria-1",
@@ -9223,21 +8731,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30312": {
         "code": "30312",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40127": {
         "code": "40127",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "contaduria-2",
@@ -9279,27 +8783,22 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "20502": {
         "code": "20502",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "30411": {
         "code": "30411",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
     },
-    "sharedUnitName": "MARKETING",
-    "version1Total": 160
+    "sharedUnitName": "MARKETING"
   },
   {
     "id": "contaduria-3",
@@ -9347,26 +8846,21 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "20502": {
         "code": "20502",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "contaduria-4",
@@ -9414,21 +8908,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "contaduria-5",
@@ -9482,21 +8972,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "contaduria-6",
@@ -9538,21 +9024,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "contaduria-7",
@@ -9606,21 +9088,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40109": {
         "code": "40109",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-1",
@@ -9656,21 +9134,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-2",
@@ -9712,21 +9186,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "30411": {
         "code": "30411",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-3",
@@ -9768,21 +9238,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-4",
@@ -9818,21 +9284,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-5",
@@ -9880,21 +9342,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-6",
@@ -9936,21 +9394,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-7",
@@ -9998,21 +9452,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-8",
@@ -10054,21 +9504,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-9",
@@ -10116,16 +9562,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-10",
@@ -10173,16 +9616,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-11",
@@ -10224,16 +9664,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-12",
@@ -10281,16 +9718,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "negocios-int-13",
@@ -10326,16 +9760,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-electronica-1",
@@ -10359,11 +9790,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30222": {
         "code": "30222",
-        "hours": 190,
-        "version1Hours": 190
+        "hours": 190
       }
-    },
-    "version1Total": 210
+    }
   },
   {
     "id": "ing-electronica-2",
@@ -10387,11 +9816,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30222": {
         "code": "30222",
-        "hours": 190,
-        "version1Hours": 190
+        "hours": 190
       }
-    },
-    "version1Total": 210
+    }
   },
   {
     "id": "ing-electronica-3",
@@ -10433,21 +9860,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-electronica-4",
@@ -10489,21 +9912,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "30411": {
         "code": "30411",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-electronica-5",
@@ -10551,21 +9970,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "30411": {
         "code": "30411",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-electronica-6",
@@ -10607,21 +10022,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-electronica-7",
@@ -10657,21 +10068,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-electronica-8",
@@ -10725,22 +10132,18 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "CIENCIAS BÁSICAS",
-    "version1Total": 160
+    "sharedUnitName": "CIENCIAS BÁSICAS"
   },
   {
     "id": "ing-electronica-9",
@@ -10782,22 +10185,18 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       }
     },
-    "sharedUnitName": "ING. CIVIL",
-    "version1Total": 160
+    "sharedUnitName": "ING. CIVIL"
   },
   {
     "id": "ing-electronica-10",
@@ -10845,21 +10244,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "bioingenieria-1",
@@ -10913,22 +10308,18 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "30411": {
         "code": "30411",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
     },
-    "sharedUnitName": "CIENCIAS BÁSICAS",
-    "version1Total": 160
+    "sharedUnitName": "CIENCIAS BÁSICAS"
   },
   {
     "id": "bioingenieria-2",
@@ -10970,21 +10361,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "bioingenieria-3",
@@ -11032,22 +10419,18 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "ING. CIVIL",
-    "version1Total": 160
+    "sharedUnitName": "ING. CIVIL"
   },
   {
     "id": "bioingenieria-4",
@@ -11095,22 +10478,18 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40127": {
         "code": "40127",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "CIENCIAS BÁSICAS",
-    "version1Total": 160
+    "sharedUnitName": "CIENCIAS BÁSICAS"
   },
   {
     "id": "bioingenieria-5",
@@ -11158,17 +10537,14 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "CIENCIAS BÁSICAS",
-    "version1Total": 160
+    "sharedUnitName": "CIENCIAS BÁSICAS"
   },
   {
     "id": "bioingenieria-6",
@@ -11192,16 +10568,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "bioingenieria-7",
@@ -11249,16 +10622,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "bioingenieria-8",
@@ -11306,17 +10676,14 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "CIENCIAS BÁSICAS",
-    "version1Total": 160
+    "sharedUnitName": "CIENCIAS BÁSICAS"
   },
   {
     "id": "bioingenieria-9",
@@ -11364,17 +10731,14 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "ING. CIVIL",
-    "version1Total": 160
+    "sharedUnitName": "ING. CIVIL"
   },
   {
     "id": "ing-datos-ia-1",
@@ -11422,21 +10786,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "30411": {
         "code": "30411",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-datos-ia-2",
@@ -11472,21 +10832,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-datos-ia-3",
@@ -11540,21 +10896,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-datos-ia-4",
@@ -11602,21 +10954,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40127": {
         "code": "40127",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-datos-ia-5",
@@ -11664,16 +11012,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ing-datos-ia-6",
@@ -11721,16 +11066,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cultura-fisica-1",
@@ -11754,11 +11096,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30222": {
         "code": "30222",
-        "hours": 190,
-        "version1Hours": 190
+        "hours": 190
       }
-    },
-    "version1Total": 210
+    }
   },
   {
     "id": "cultura-fisica-2",
@@ -11806,21 +11146,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 22,
-        "version1Hours": 22
+        "hours": 22
       },
       "30411": {
         "code": "30411",
-        "hours": 10,
-        "version1Hours": 10
+        "hours": 10
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cultura-fisica-3",
@@ -11844,21 +11180,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cultura-fisica-4",
@@ -11918,21 +11250,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cultura-fisica-5",
@@ -11962,21 +11290,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40109": {
         "code": "40109",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cultura-fisica-6",
@@ -12018,21 +11342,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cultura-fisica-7",
@@ -12086,21 +11406,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "20502": {
         "code": "20502",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cultura-fisica-8",
@@ -12142,16 +11458,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cultura-fisica-9",
@@ -12205,16 +11518,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cultura-fisica-10",
@@ -12274,16 +11584,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cultura-fisica-11",
@@ -12337,16 +11644,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cultura-fisica-12",
@@ -12400,16 +11704,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "diseno-interaccion-1",
@@ -12457,21 +11758,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "30411": {
         "code": "30411",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "diseno-interaccion-2",
@@ -12537,21 +11834,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "diseno-interaccion-3",
@@ -12599,21 +11892,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "diseno-interaccion-4",
@@ -12673,21 +11962,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 12,
-        "version1Hours": 12
+        "hours": 12
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "diseno-interaccion-5",
@@ -12741,21 +12026,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "20502": {
         "code": "20502",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "diseno-interaccion-6",
@@ -12785,16 +12066,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "diseno-interaccion-7",
@@ -12818,16 +12096,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "diseno-interaccion-8",
@@ -12887,16 +12162,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-1",
@@ -12920,17 +12192,15 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30222": {
         "code": "30222",
-        "hours": 190,
-        "version1Hours": 190
+        "hours": 190
       }
-    },
-    "version1Total": 210
+    }
   },
   {
     "id": "lic-lenguas-2",
     "unitId": "lic-lenguas",
     "documentId": "40032659",
-    "fullName": "GLADIS LEONOR ARIAS RODRIGUEZ",
+    "fullName": "GLADYS LEONOR ARIAS RODRÍGUEZ",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
     "rank": "Decano(a) de Facultad",
@@ -12948,11 +12218,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30222": {
         "code": "30222",
-        "hours": 190,
-        "version1Hours": 190
+        "hours": 190
       }
-    },
-    "version1Total": 210
+    }
   },
   {
     "id": "lic-lenguas-3",
@@ -13006,21 +12274,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "30411": {
         "code": "30411",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-4",
@@ -13074,21 +12338,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-5",
@@ -13136,21 +12396,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-6",
@@ -13204,16 +12460,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-7",
@@ -13261,16 +12514,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-8",
@@ -13330,16 +12580,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-9",
@@ -13411,16 +12658,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-10",
@@ -13468,16 +12712,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-11",
@@ -13549,16 +12790,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-12",
@@ -13612,16 +12850,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-13",
@@ -13663,16 +12898,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-14",
@@ -13714,16 +12946,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-15",
@@ -13777,16 +13006,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-16",
@@ -13828,16 +13054,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-lenguas-17",
@@ -13915,16 +13138,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-infantil-1",
@@ -13948,21 +13168,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40106": {
         "code": "40106",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "lic-infantil-2",
@@ -14010,22 +13226,18 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40109": {
         "code": "40109",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
     },
-    "sharedUnitName": "LIC. LENGUAS",
-    "version1Total": 160
+    "sharedUnitName": "LIC. LENGUAS"
   },
   {
     "id": "lic-infantil-3",
@@ -14073,17 +13285,14 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "LIC. LENGUAS",
-    "version1Total": 160
+    "sharedUnitName": "LIC. LENGUAS"
   },
   {
     "id": "marketing-1",
@@ -14107,21 +13316,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "30411": {
         "code": "30411",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "marketing-2",
@@ -14151,21 +13356,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "marketing-3",
@@ -14225,22 +13426,18 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "NEGOCIOS INT.",
-    "version1Total": 160
+    "sharedUnitName": "NEGOCIOS INT."
   },
   {
     "id": "marketing-4",
@@ -14288,21 +13485,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40127": {
         "code": "40127",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "marketing-5",
@@ -14356,16 +13549,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "marketing-6",
@@ -14407,16 +13597,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "marketing-7",
@@ -14476,17 +13663,14 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
     },
-    "sharedUnitName": "NEGOCIOS INT.",
-    "version1Total": 160
+    "sharedUnitName": "NEGOCIOS INT."
   },
   {
     "id": "marketing-8",
@@ -14534,16 +13718,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-1",
@@ -14591,21 +13772,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-2",
@@ -14659,21 +13836,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-3",
@@ -14727,21 +13900,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-4",
@@ -14801,21 +13970,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-5",
@@ -14875,21 +14040,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-6",
@@ -14943,16 +14104,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-7",
@@ -15000,16 +14158,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-8",
@@ -15045,16 +14200,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-9",
@@ -15120,16 +14272,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-10",
@@ -15189,16 +14338,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-11",
@@ -15246,16 +14392,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-12",
@@ -15309,16 +14452,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-13",
@@ -15360,16 +14500,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-14",
@@ -15423,16 +14560,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-15",
@@ -15486,16 +14620,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-16",
@@ -15555,16 +14686,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-17",
@@ -15612,16 +14740,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-18",
@@ -15675,16 +14800,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-19",
@@ -15738,16 +14860,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-20",
@@ -15795,16 +14914,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-21",
@@ -15846,16 +14962,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-22",
@@ -15879,16 +14992,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-23",
@@ -15930,16 +15040,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-24",
@@ -15975,16 +15082,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "ciencias-basicas-25",
@@ -16038,16 +15142,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-1",
@@ -16107,21 +15208,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40106": {
         "code": "40106",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-2",
@@ -16181,21 +15278,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       },
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-3",
@@ -16243,21 +15336,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-4",
@@ -16317,21 +15406,17 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40117": {
         "code": "40117",
-        "hours": 4,
-        "version1Hours": 4
+        "hours": 4
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-5",
@@ -16385,16 +15470,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-6",
@@ -16418,16 +15500,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-7",
@@ -16493,16 +15572,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-8",
@@ -16568,16 +15644,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-9",
@@ -16625,16 +15698,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-10",
@@ -16700,16 +15770,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-11",
@@ -16775,16 +15842,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-12",
@@ -16844,16 +15908,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-13",
@@ -16901,16 +15962,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-14",
@@ -16976,16 +16034,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-15",
@@ -17045,16 +16100,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-16",
@@ -17126,16 +16178,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-17",
@@ -17189,16 +16238,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-18",
@@ -17258,16 +16304,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-19",
@@ -17327,16 +16370,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-20",
@@ -17396,16 +16436,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "humanidades-21",
@@ -17441,16 +16478,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "10336": {
         "code": "10336",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       },
       "40117": {
         "code": "40117",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-1",
@@ -17474,11 +16508,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30222": {
         "code": "30222",
-        "hours": 190,
-        "version1Hours": 190
+        "hours": 190
       }
-    },
-    "version1Total": 210
+    }
   },
   {
     "id": "cilce-2",
@@ -17532,16 +16564,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "30411": {
         "code": "30411",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40123": {
         "code": "40123",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-3",
@@ -17601,16 +16630,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40106": {
         "code": "40106",
-        "hours": 16,
-        "version1Hours": 16
+        "hours": 16
       },
       "40123": {
         "code": "40123",
-        "hours": 24,
-        "version1Hours": 24
+        "hours": 24
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-4",
@@ -17664,16 +16690,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40109": {
         "code": "40109",
-        "hours": 8,
-        "version1Hours": 8
+        "hours": 8
       },
       "40123": {
         "code": "40123",
-        "hours": 32,
-        "version1Hours": 32
+        "hours": 32
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-5",
@@ -17727,16 +16750,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40123": {
         "code": "40123",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-6",
@@ -17796,16 +16816,13 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40123": {
         "code": "40123",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       },
       "40127": {
         "code": "40127",
-        "hours": 20,
-        "version1Hours": 20
+        "hours": 20
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-7",
@@ -17859,11 +16876,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40123": {
         "code": "40123",
-        "hours": 40,
-        "version1Hours": 40
+        "hours": 40
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-8",
@@ -17917,11 +16932,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40123": {
         "code": "40123",
-        "hours": 40,
-        "version1Hours": 40
+        "hours": 40
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-9",
@@ -17981,11 +16994,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40123": {
         "code": "40123",
-        "hours": 40,
-        "version1Hours": 40
+        "hours": 40
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-10",
@@ -18045,11 +17056,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40123": {
         "code": "40123",
-        "hours": 40,
-        "version1Hours": 40
+        "hours": 40
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-11",
@@ -18103,11 +17112,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40123": {
         "code": "40123",
-        "hours": 40,
-        "version1Hours": 40
+        "hours": 40
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-12",
@@ -18161,11 +17168,9 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40123": {
         "code": "40123",
-        "hours": 40,
-        "version1Hours": 40
+        "hours": 40
       }
-    },
-    "version1Total": 160
+    }
   },
   {
     "id": "cilce-13",
@@ -18225,269 +17230,14 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "allocations": {
       "40123": {
         "code": "40123",
-        "hours": 40,
-        "version1Hours": 40
+        "hours": 40
       }
-    },
-    "version1Total": 160
+    }
   }
 ];
 
-export const APPROVAL_REQUESTS_ANNEX3_SEED: ApprovalRequestAnnex3[] = [
-  {
-    "id": "aval-1",
-    "period": "2026-2",
-    "unitId": "ing-industrial",
-    "unitName": "Ingeniería Industrial",
-    "teacherId": "ind-7",
-    "teacherName": "QUINTERO NAVARRO GEIDER",
-    "teacherDocumentId": "19619292",
-    "code": "10212",
-    "codeName": "DIRECCIÓN Y/O ASESORÍA EN OPCIONES DE GRADO DE ORDEN INVESTIGATIVO",
-    "requestedHours": 16,
-    "formatType": "10212",
-    "programName": "Ingeniería Industrial",
-    "projectDetails": [
-      {
-        "title": "Optimización estocástica de rutas de última milla en Boyacá",
-        "projectType": "Proyecto de Investigación",
-        "studentsOrCourse": "Laura Gómez, Mateo Rincón",
-        "committeeApprovalMinute": "Acta Comité Curricular N° 014 - 12/06/2026",
-        "hours": 4
-      },
-      {
-        "title": "Simulación discreta de tiempos de espera en urgencias hospitalarias",
-        "projectType": "Monografía Investigativa",
-        "studentsOrCourse": "Camilo Torres",
-        "committeeApprovalMinute": "Acta Comité Curricular N° 014 - 12/06/2026",
-        "hours": 4
-      },
-      {
-        "title": "Modelo Lean Six Sigma en plantas procesadoras de lácteos",
-        "projectType": "Proyecto de Investigación",
-        "studentsOrCourse": "Valentina Rojas, Sebastián Díaz",
-        "committeeApprovalMinute": "Acta Comité Curricular N° 015 - 18/06/2026",
-        "hours": 4
-      },
-      {
-        "title": "Análisis ergonómico predictivo mediante visión artificial",
-        "projectType": "Producto de Innovación",
-        "studentsOrCourse": "Andrés Felipe Castro",
-        "committeeApprovalMinute": "Acta Comité Curricular N° 015 - 18/06/2026",
-        "hours": 4
-      }
-    ],
-    "attachmentUrl": "Acta_Comite_Curricular_Industrial_014_015.pdf",
-    "status": "Pendiente",
-    "requestedAt": "2026-07-07 15:20"
-  },
-  {
-    "id": "aval-2",
-    "period": "2026-2",
-    "unitId": "ing-industrial",
-    "unitName": "Ingeniería Industrial",
-    "teacherId": "ind-3",
-    "teacherName": "TRUJILLO MANRIQUE JAIME",
-    "teacherDocumentId": "74182244",
-    "code": "20223",
-    "codeName": "DIRECCIÓN Y/O ASESORÍA EN OPCIONES DE GRADO DE ORDEN SOCIAL / EMPRESARIAL",
-    "requestedHours": 16,
-    "formatType": "20223_20120",
-    "programName": "Ingeniería Industrial",
-    "projectDetails": [
-      {
-        "title": "Acompañamiento técnico en productividad a 8 MiPymes de la provincia Centro (8 proyectos × 2h)",
-        "projectType": "Proyección Social / Consultoría Empresarial",
-        "studentsOrCourse": "16 estudiantes de 8° y 9° semestre",
-        "committeeApprovalMinute": "Acta Comité Curricular N° 014 - 12/06/2026",
-        "hours": 16
-      }
-    ],
-    "attachmentUrl": "Relacion_Pasantias_Empresariales_2026_2.pdf",
-    "status": "Avalado",
-    "requestedAt": "2026-07-06 10:15",
-    "decidedBy": "Fr. Wilmar Yesid Ruiz Cortés, O.P. (Vicerrector Académico)",
-    "decidedAt": "2026-07-07 09:40"
-  },
-  {
-    "id": "aval-3",
-    "period": "2026-2",
-    "unitId": "ing-mecanica",
-    "unitName": "Ingeniería Mecánica",
-    "teacherId": "mec-3",
-    "teacherName": "LUIS FERNANDO ACOSTA JOYA",
-    "teacherDocumentId": "7163979",
-    "code": "40222",
-    "codeName": "DISEÑO DE CURSOS E-LEARNING",
-    "requestedHours": 7,
-    "formatType": "40222",
-    "programName": "Especialización en Gerencia de Mantenimiento y Gestión de Activos",
-    "projectDetails": [
-      {
-        "title": "Virtualización del módulo: Confiabilidad y Mantenimiento Predictivo (2 créditos)",
-        "projectType": "Producción de Aula Virtual Posgrado",
-        "studentsOrCourse": "Módulo de 32 horas - Cohorte 2026-2",
-        "committeeApprovalMinute": "Aval Dirección Campus Virtual CV-2026-089",
-        "hours": 7
-      }
-    ],
-    "attachmentUrl": "Aval_Campus_Virtual_Mantenimiento.pdf",
-    "status": "Con Observaciones",
-    "viceRectorNote": "El mínimo del código 40222 en el ANEXO 4 es de 8 horas/mes. Ajustar de 7 h a 8 h en la prenómina.",
-    "requestedAt": "2026-07-06 16:00",
-    "decidedBy": "Sandra Lizeth Parra Cruz (Pre-revisión E&A)",
-    "decidedAt": "2026-07-07 14:10"
-  },
-  {
-    "id": "aval-4",
-    "period": "2026-2",
-    "unitId": "ing-mecanica",
-    "unitName": "Ingeniería Mecánica",
-    "teacherId": "mec-7",
-    "teacherName": "FABIAN LEONARDO HIGUERA SANCHEZ",
-    "teacherDocumentId": "7225532",
-    "code": "43401",
-    "codeName": "DOCENTE DE TUTORÍA ESPECIALIZADA",
-    "requestedHours": 11,
-    "formatType": "43401",
-    "programName": "Ingeniería Mecánica",
-    "projectDetails": [
-      {
-        "title": "Tutoría especializada en Ciencias Básicas de Ingeniería (Estática, Dinámica y Mecánica de Fluidos)",
-        "projectType": "Tutoría Disciplinar",
-        "studentsOrCourse": "Área de Mecánica Aplicada",
-        "committeeApprovalMinute": "Solicitud Decanatura Mecánica",
-        "hours": 11
-      }
-    ],
-    "attachmentUrl": "Plan_Tutoria_Mecanica_2026_2.pdf",
-    "status": "Pendiente",
-    "requestedAt": "2026-07-07 11:00"
-  }
-];
+export const APPROVAL_REQUESTS_ANNEX3_SEED: ApprovalRequestAnnex3[] = [];
 
-export const RESEARCH_ALLOCATIONS_ANNEX7_SEED: ResearchAllocationAnnex7[] = [
-  {
-    "id": "inv-1",
-    "period": "2026-2",
-    "unitId": "ing-industrial",
-    "unitName": "Ingeniería Industrial",
-    "documentId": "1020396093",
-    "teacherName": "MEDINA JARAMILLO CAROLINA",
-    "code": "10336",
-    "activityName": "Desarrollo de Proyectos de Investigación (FODEIN + Externo)",
-    "projectOrGroup": "Biopolímeros activos a partir de subproductos agroindustriales en Boyacá",
-    "role": "Investigadora Principal",
-    "sicddiLevel": null,
-    "weeklyHours": 9,
-    "monthlyHours": 36,
-    "isSicddiLocked": false,
-    "notes": "Aprobado por convocatoria FODEIN 2026."
-  },
-  {
-    "id": "inv-2",
-    "period": "2026-2",
-    "unitId": "ing-industrial",
-    "unitName": "Ingeniería Industrial",
-    "documentId": "1020396093",
-    "teacherName": "MEDINA JARAMILLO CAROLINA",
-    "code": "10384",
-    "activityName": "Docente Coordinador de Investigación de Facultad",
-    "projectOrGroup": "Coordinación de Investigación - Ingeniería Industrial",
-    "role": "Coordinadora Facultad",
-    "sicddiLevel": null,
-    "weeklyHours": 4,
-    "monthlyHours": 16,
-    "isSicddiLocked": false
-  },
-  {
-    "id": "inv-3",
-    "period": "2026-2",
-    "unitId": "ing-industrial",
-    "unitName": "Ingeniería Industrial",
-    "documentId": "1002697950",
-    "teacherName": "MARLY YASMIN HASTAMORIR DUARTE",
-    "code": "10336",
-    "activityName": "Desarrollo de Proyectos de Investigación",
-    "projectOrGroup": "Modelo logístico humanitario y abastecimiento regional",
-    "role": "Investigadora Principal",
-    "sicddiLevel": null,
-    "weeklyHours": 8,
-    "monthlyHours": 32,
-    "isSicddiLocked": false,
-    "notes": "En v1 tenía 64h; verificado con ANEXO 7 corresponden 32h/mes."
-  },
-  {
-    "id": "inv-4",
-    "period": "2026-2",
-    "unitId": "ing-mecanica",
-    "unitName": "Ingeniería Mecánica",
-    "documentId": "1032362640",
-    "teacherName": "CARLOS ANDRES AGUIRRE RODRIGUEZ",
-    "code": "10226",
-    "activityName": "Docente Investigador Escalafonado SICDDI",
-    "projectOrGroup": "Grupo GIMUP - Categoría A1 Minciencias",
-    "role": "Investigador SICDDI Nivel II",
-    "sicddiLevel": "Nivel II (80h)",
-    "weeklyHours": 20,
-    "monthlyHours": 80,
-    "isSicddiLocked": true,
-    "notes": "Acuerdo 3 del 19/03/2025: Horas fijas no editables por el decano."
-  },
-  {
-    "id": "inv-5",
-    "period": "2026-2",
-    "unitId": "ing-mecanica",
-    "unitName": "Ingeniería Mecánica",
-    "documentId": "6775059",
-    "teacherName": "JUAN RODRIGO SALAMANCA SARMIENTO",
-    "code": "10226",
-    "activityName": "Docente Investigador Escalafonado SICDDI",
-    "projectOrGroup": "Grupo GIMUP - Categoría A1 Minciencias",
-    "role": "Investigador SICDDI Nivel II",
-    "sicddiLevel": "Nivel II (80h)",
-    "weeklyHours": 20,
-    "monthlyHours": 80,
-    "isSicddiLocked": true,
-    "notes": "Acuerdo 3 del 19/03/2025: Horas fijas no editables por el decano."
-  }
-];
+export const RESEARCH_ALLOCATIONS_ANNEX7_SEED: ResearchAllocationAnnex7[] = [];
 
-export const INITIAL_AUDIT_LOGS_SEED: AuditLogEntry[] = [
-  {
-    "id": "b-1",
-    "timestamp": "2026-07-08 16:40",
-    "user": "Sandra Lizeth Parra Cruz",
-    "role": "Directora de Enseñanza y Aprendizaje",
-    "unitName": "Ingeniería Industrial",
-    "teacherName": "QUINTERO NAVARRO GEIDER",
-    "action": "Ajuste en jornada de revisión (v1 → v2)",
-    "previousValue": "Total: 197 h (40104: 116 h, 30420: 16 h)",
-    "newValue": "Total: 160 h (40104: 92 h, 30420: 8 h)",
-    "reason": "Superaba la carga mensual de 160 h y el tope máximo de 8 h en Internacionalización (30420)."
-  },
-  {
-    "id": "b-2",
-    "timestamp": "2026-07-08 16:25",
-    "user": "Sandra Lizeth Parra Cruz",
-    "role": "Directora de Enseñanza y Aprendizaje",
-    "unitName": "Ingeniería Industrial",
-    "teacherName": "AGUILAR TOVAR CRISTIAN ALEJANDRO",
-    "action": "Ajuste directo de PSE y CTeI (v1 → v2)",
-    "previousValue": "Total: 178 h (PSE: 18 h, 10364: 16 h)",
-    "newValue": "Total: 160 h (PSE: 16 h, 10364: 0 h)",
-    "reason": "Ajuste autorizado por la Directora para cuadrar las 160 h del docente."
-  },
-  {
-    "id": "b-3",
-    "timestamp": "2026-07-07 09:40",
-    "user": "Fr. Wilmar Yesid Ruiz Cortés, O.P.",
-    "role": "Vicerrector Académico",
-    "unitName": "Ingeniería Industrial",
-    "teacherName": "TRUJILLO MANRIQUE JAIME",
-    "action": "Pre-aval aprobado de código especial 20223",
-    "previousValue": "Pendiente de aval (16 h)",
-    "newValue": "Avalado (16 h - 8 proyectos empresariales)",
-    "reason": "Cumple con aval del Comité Curricular Acta N° 014."
-  }
-];
+export const INITIAL_AUDIT_LOGS_SEED: AuditLogEntry[] = [];

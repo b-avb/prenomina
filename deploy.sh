@@ -219,7 +219,8 @@ FLUSH PRIVILEGES;
   fi
 
   echo "==> 5. Instalando aplicación en /opt/usta-plataforma..."
-  run_as_root mkdir -p /opt/usta-plataforma/usta-api/data
+  run_as_root mkdir -p /opt/usta-plataforma
+  run_as_root rm -rf /opt/usta-plataforma/usta-api/data
   run_as_root tar -xzf "$BUNDLE_PATH" -C /opt/usta-plataforma
   rm -f "$BUNDLE_PATH"
 

@@ -6,8 +6,8 @@ export const toFlag = (value: boolean): Flag => (value ? 1 : 0);
 
 export const fromFlag = (value: Flag | number): boolean => value === 1;
 
-export const toNullableFlag = (value: boolean | undefined): Flag | null =>
-  value === undefined ? null : toFlag(value);
+export const toNullableFlag = (value: boolean | null | undefined): Flag | null =>
+  value === undefined || value === null ? null : toFlag(value);
 
 export const fromNullableFlag = (value: Flag | number | null): boolean | null =>
   value === null ? null : fromFlag(value);
@@ -17,7 +17,8 @@ export const toIsoString = (value: Date): string => value.toISOString();
 /** `DATE` columns are read at UTC midnight (`timezone: 'Z'`). */
 export const toDateOnly = (value: Date): string => value.toISOString().slice(0, 10);
 
-export const nullable = <T>(value: T | undefined): T | null => (value === undefined ? null : value);
+export const nullable = <T>(value: T | null | undefined): T | null =>
+  value === undefined || value === null ? null : value;
 
 type DefinedProps<T> = { [K in keyof T]?: NonNullable<T[K]> };
 

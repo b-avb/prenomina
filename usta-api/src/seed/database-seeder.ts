@@ -1,14 +1,11 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import type {
   AcademicPeriod,
   FacultyTeacher,
   IdGenerator,
   SchedulePhase,
 } from '@usta/domain';
+import type { DbExecutor } from '../database/database.types.js';
 import type { TransactionRunner } from '../database/transaction-runner.js';
-import type { AuditLogRecord } from '../models/audit.models.js';
 import type {
   AcademicProgramRecord,
   AcademicUnitRecord,
@@ -20,101 +17,316 @@ import {
   OFFICIAL_INSTITUTIONAL_ACCOUNTS,
 } from '../services/auth.service.js';
 import { DEFAULT_BUSINESS_RULES } from '../services/period-context.service.js';
-import {
-  normalizePersistedState,
-  type LegacyImportedState,
-} from '../utils/state-migrator.utils.js';
 
 export const DEFAULT_SCHEDULE_PHASES_SEED: SchedulePhase[] = [
   {
     id: 'fase-1',
     label: 'Fase 1',
     title: 'Parametrización ANEXOS 4–7',
-    dateRange: '26 Jun – 30 Jun',
-    status: 'Completada',
+    dateRange: 'Por programar',
+    status: 'Activa',
   },
   {
     id: 'fase-2',
     label: 'Fase 2',
     title: 'Diligenciamiento y ANEXO 3',
-    dateRange: '01 Jul – 05 Jul',
-    status: 'Completada',
+    dateRange: 'Por programar',
+    status: 'Programada',
   },
   {
     id: 'fase-3',
-    label: 'Fase 3 · Activa',
+    label: 'Fase 3',
     title: 'Jornadas Revisión E&A + TH',
-    dateRange: '06 Jul – 09 Jul',
-    status: 'Activa',
+    dateRange: 'Por programar',
+    status: 'Programada',
   },
   {
     id: 'fase-4',
     label: 'Fase 4',
     title: 'Cargue SAC y Auditoría',
-    dateRange: '13 Jul – 15 Jul',
+    dateRange: 'Por programar',
     status: 'Programada',
   },
 ];
 
 export interface SeedOptions {
   forceTruncate?: boolean;
-  preferJsonSnapshot?: boolean;
-  jsonPath?: string;
   overridePasswordHash?: string;
 }
 
 export interface SeedResult {
   seeded: boolean;
-  source: 'json' | 'ts-seed' | 'skipped';
+  source: 'ts-seed' | 'synced';
 }
 
-function resolveDefaultJsonPath(): string {
-  const fromCwd = path.resolve(process.cwd(), 'data/prenomina-state.json');
-  if (fs.existsSync(fromCwd)) return fromCwd;
-  const currentDir = path.dirname(fileURLToPath(import.meta.url));
-  return path.resolve(currentDir, '../../data/prenomina-state.json');
-}
+const LEGACY_DEMO_APPROVAL_IDS = ['aval-1', 'aval-2', 'aval-3', 'aval-4'] as const;
+const LEGACY_DEMO_RESEARCH_IDS = ['inv-1', 'inv-2', 'inv-3', 'inv-4', 'inv-5'] as const;
+const LEGACY_DEMO_AUDIT_IDS = ['b-1', 'b-2', 'b-3'] as const;
+const LEGACY_DEMO_CLOSED_PERIODS = ['2026-1', '2025-2'] as const;
 
-async function loadLegacySeedState(options?: SeedOptions): Promise<{
-  state: LegacyImportedState;
-  source: 'json' | 'ts-seed';
-}> {
-  const preferJson = options?.preferJsonSnapshot !== false;
-  const jsonPath = options?.jsonPath ?? resolveDefaultJsonPath();
+async function cleanupAndSyncExistingDatabase(
+  trx: DbExecutor,
+  repos: Repositories,
+  options?: SeedOptions,
+): Promise<void> {
+  // 1. Purge legacy demo Annex 3 approvals, Annex 7 research rows, and demo audit logs
+  await trx
+    .deleteFrom('approval_requests')
+    .where('id', 'in', [...LEGACY_DEMO_APPROVAL_IDS])
+    .execute();
+  await trx
+    .deleteFrom('research_allocations')
+    .where('id', 'in', [...LEGACY_DEMO_RESEARCH_IDS])
+    .execute();
+  await trx
+    .deleteFrom('audit_logs')
+    .where('id', 'in', [...LEGACY_DEMO_AUDIT_IDS])
+    .execute();
 
-  if (preferJson && fs.existsSync(jsonPath)) {
-    const raw = JSON.parse(fs.readFileSync(jsonPath, 'utf8')) as Record<string, unknown>;
-    return {
-      state: normalizePersistedState(raw),
-      source: 'json',
-    };
+  // 2. Purge empty closed demo periods ('2026-1', '2025-2') if they have no teachers
+  for (const periodCode of LEGACY_DEMO_CLOSED_PERIODS) {
+    const teacherInPeriod = await trx
+      .selectFrom('teachers')
+      .select('id')
+      .where('period_code', '=', periodCode)
+      .limit(1)
+      .executeTakeFirst();
+    if (!teacherInPeriod) {
+      await trx.deleteFrom('academic_periods').where('code', '=', periodCode).execute();
+    }
   }
 
-  const seed = await import('./usta-seed.data.js');
-  return {
-    source: 'ts-seed',
-    state: {
-      activePeriod: '2026-2',
-      availablePeriods: ['2026-2', '2026-1', '2025-2'],
-      schedulePhases: DEFAULT_SCHEDULE_PHASES_SEED,
-      rulesConfig: { ...DEFAULT_BUSINESS_RULES },
-      sacCodes: structuredClone(seed.SAC_CODES_ANNEX4_SEED),
-      units: structuredClone(seed.ACADEMIC_UNITS_SEED),
-      programQuotas: structuredClone(seed.PROGRAM_QUOTAS_ANNEX5_SEED),
-      teachers: structuredClone(seed.FACULTY_TEACHERS_SEED),
-      approvalRequests: structuredClone(seed.APPROVAL_REQUESTS_ANNEX3_SEED),
-      researchAllocations: structuredClone(seed.RESEARCH_ALLOCATIONS_ANNEX7_SEED),
-      auditLogs: structuredClone(seed.INITIAL_AUDIT_LOGS_SEED),
-      updatedAt: new Date().toISOString(),
-    },
-  };
-}
+  // 3. Sync official Deans and institutional user accounts (removing unused legacy derived accounts)
+  const existingUnits = await repos.units.listAll(trx);
+  const existingUsers = await repos.users.count(trx);
+  if (existingUsers === 0) {
+    await repos.users.insertMany(
+      trx,
+      buildDefaultSeedUsers(existingUnits, options?.overridePasswordHash),
+    );
+  } else {
+    for (const legacyId of ['user-research', 'user-dean-lic-infantil']) {
+      const legacyUser = await repos.users.findById(trx, legacyId, { forUpdate: true });
+      if (
+        legacyUser &&
+        legacyUser.passwordChangedAt === null &&
+        legacyUser.lastLoginAt === null
+      ) {
+        await trx.deleteFrom('users').where('id', '=', legacyId).execute();
+      }
+    }
 
-function parseTimestampOrNow(value: string | undefined): Date {
-  if (!value) return new Date();
-  const normalized = value.includes('T') ? value : `${value.replace(' ', 'T')}:00Z`;
-  const parsed = new Date(normalized);
-  return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+    const nowIso = new Date().toISOString();
+    const unitById = new Map(existingUnits.map((u) => [u.id, u]));
+    const licInfantil = unitById.get('lic-infantil');
+    if (licInfantil && licInfantil.deanName === 'Yolanda Patricia Fonseca Arias') {
+      await repos.units.update(trx, {
+        ...licInfantil,
+        deanName: 'Gladys Leonor Arias Rodríguez',
+      });
+    }
+
+    for (const official of OFFICIAL_INSTITUTIONAL_ACCOUNTS) {
+      if (official.unitId) {
+        const unit = unitById.get(official.unitId);
+        if (unit && unit.deanName !== official.fullName) {
+          await repos.units.update(trx, { ...unit, deanName: official.fullName });
+        }
+      }
+
+      const existingById = await repos.users.findById(trx, official.id, {
+        forUpdate: true,
+      });
+      if (existingById) {
+        const hasNotChangedPassword = existingById.passwordChangedAt === null;
+        await repos.users.update(trx, {
+          ...existingById,
+          username: official.username,
+          email: official.email,
+          fullName: official.fullName,
+          role: official.role,
+          unitId: official.unitId,
+          isActive: true,
+          passwordHash: hasNotChangedPassword
+            ? (options?.overridePasswordHash ?? official.passwordHash)
+            : existingById.passwordHash,
+          mustChangePassword: hasNotChangedPassword ? true : existingById.mustChangePassword,
+          updatedAt: nowIso,
+        });
+      } else {
+        await repos.users.insertMany(trx, [
+          {
+            id: official.id,
+            username: official.username,
+            email: official.email,
+            entraOid: null,
+            authProvider: 'hybrid',
+            passwordHash: options?.overridePasswordHash ?? official.passwordHash,
+            fullName: official.fullName,
+            role: official.role,
+            unitId: official.unitId,
+            mustChangePassword: true,
+            isActive: true,
+            passwordChangedAt: null,
+            lastLoginAt: null,
+            updatedAt: nowIso,
+          },
+        ]);
+      }
+    }
+  }
+
+  // 4. Replace stale former Deans on Directivo teacher rows if untouched
+  const ind1 = await trx
+    .selectFrom('teachers')
+    .select(['id', 'document_id'])
+    .where('id', '=', 'ind-1')
+    .executeTakeFirst();
+  if (ind1 && ind1.document_id === '37274697') {
+    await trx
+      .updateTable('teachers')
+      .set({
+        document_id: '74382158',
+        full_name: 'JUAN CAMILO ERNESTO VALDERRAMA BALAGUERA',
+        academic_rank: 'Decano(a) de Facultad',
+        education: 'Ingeniero Industrial · Magíster en Ingeniería',
+        shared_hours: null,
+        shared_unit_name: null,
+        general_note: null,
+        version1_total: null,
+      })
+      .where('id', '=', 'ind-1')
+      .execute();
+    await trx.deleteFrom('teacher_code_allocations').where('teacher_id', '=', 'ind-1').execute();
+    await trx
+      .insertInto('teacher_code_allocations')
+      .values({
+        teacher_id: 'ind-1',
+        code: '30222',
+        hours: 190,
+        version1_hours: null,
+        unit_count: null,
+        exception_justification: null,
+        director_note: null,
+        adjusted_by_director: null,
+      })
+      .execute();
+  }
+
+  const derecho2 = await trx
+    .selectFrom('teachers')
+    .select(['id', 'document_id'])
+    .where('id', '=', 'derecho-2')
+    .executeTakeFirst();
+  if (derecho2 && derecho2.document_id === '1049621815') {
+    await trx
+      .updateTable('teachers')
+      .set({
+        document_id: '1057515000',
+        full_name: 'CARLOS ANDRÉS ARANDA CAMACHO',
+        academic_rank: 'Decano(a) de Facultad',
+        education: 'Abogado · Magíster en Derecho',
+        general_note: null,
+        version1_total: null,
+      })
+      .where('id', '=', 'derecho-2')
+      .execute();
+    await trx
+      .deleteFrom('teacher_academic_spaces')
+      .where('teacher_id', '=', 'derecho-2')
+      .where('id', '=', 'derecho-2-esp-1')
+      .execute();
+    await trx
+      .deleteFrom('teacher_code_allocations')
+      .where('teacher_id', '=', 'derecho-2')
+      .execute();
+    await trx
+      .insertInto('teacher_code_allocations')
+      .values({
+        teacher_id: 'derecho-2',
+        code: '30222',
+        hours: 190,
+        version1_hours: null,
+        unit_count: null,
+        exception_justification: null,
+        director_note: null,
+        adjusted_by_director: null,
+      })
+      .execute();
+  }
+
+  await trx
+    .updateTable('teachers')
+    .set({ full_name: 'GLADYS LEONOR ARIAS RODRÍGUEZ' })
+    .where('id', '=', 'lic-lenguas-2')
+    .where('full_name', '=', 'GLADIS LEONOR ARIAS RODRIGUEZ')
+    .execute();
+
+  // 5. Check if any real operational audit logs exist (excluding auth/password events)
+  const realOperationalAudit = await trx
+    .selectFrom('audit_logs')
+    .select('id')
+    .where('action', 'not like', '%Contraseña%')
+    .where('action', 'not like', '%Microsoft Entra%')
+    .limit(1)
+    .executeTakeFirst();
+
+  if (!realOperationalAudit) {
+    // Strip simulated v1/v2 demo notes and reset unit statuses to clean 'Borrador' v1
+    await trx
+      .updateTable('teachers')
+      .set({ general_note: null, version1_total: null })
+      .execute();
+    await trx
+      .updateTable('teacher_code_allocations')
+      .set({
+        version1_hours: null,
+        director_note: null,
+        adjusted_by_director: null,
+        exception_justification: null,
+      })
+      .execute();
+    await trx
+      .updateTable('unit_payroll_cycles')
+      .set({ payroll_status: 'Borrador', current_version: 1 })
+      .where('period_code', '=', '2026-2')
+      .execute();
+  }
+
+  // 6. Sync clean official SAC descriptions/guidelines if untouched in audit trail
+  const sacEditedAudit = await trx
+    .selectFrom('audit_logs')
+    .select('id')
+    .where('unit_name', '=', 'Catálogo Institucional SAC (ANEXO 4)')
+    .limit(1)
+    .executeTakeFirst();
+  if (!sacEditedAudit) {
+    const seed = await import('./usta-seed.data.js');
+    for (const cleanCode of seed.SAC_CODES_ANNEX4_SEED) {
+      await trx
+        .updateTable('sac_codes')
+        .set({
+          name: cleanCode.name,
+          definition: cleanCode.definition,
+          guideline: cleanCode.guideline,
+        })
+        .where('code', '=', cleanCode.code)
+        .execute();
+    }
+  }
+
+  // 7. Sync schedule phases if untouched in audit trail
+  const scheduleEditedAudit = await trx
+    .selectFrom('audit_logs')
+    .select('id')
+    .where('unit_name', '=', 'Cronograma Semestral de Prenómina')
+    .limit(1)
+    .executeTakeFirst();
+  if (!scheduleEditedAudit) {
+    for (const phase of DEFAULT_SCHEDULE_PHASES_SEED) {
+      await repos.schedulePhases.update(trx, phase);
+    }
+  }
 }
 
 export async function seedDatabaseWithOfficialData(
@@ -126,63 +338,8 @@ export async function seedDatabaseWithOfficialData(
   return tx.run(async (trx) => {
     const existingUnitCount = await repos.units.count(trx);
     if (existingUnitCount > 0 && !options?.forceTruncate) {
-      const existingUnits = await repos.units.listAll(trx);
-      const existingUsers = await repos.users.count(trx);
-      if (existingUsers === 0) {
-        await repos.users.insertMany(
-          trx,
-          buildDefaultSeedUsers(existingUnits, options?.overridePasswordHash),
-        );
-      } else {
-        const nowIso = new Date().toISOString();
-        const unitById = new Map(existingUnits.map((u) => [u.id, u]));
-        for (const official of OFFICIAL_INSTITUTIONAL_ACCOUNTS) {
-          if (official.unitId) {
-            const unit = unitById.get(official.unitId);
-            if (unit && unit.deanName !== official.fullName) {
-              await repos.units.update(trx, { ...unit, deanName: official.fullName });
-            }
-          }
-          const existingById = await repos.users.findById(trx, official.id, { forUpdate: true });
-          if (existingById) {
-            const hasNotChangedPassword = existingById.passwordChangedAt === null;
-            await repos.users.update(trx, {
-              ...existingById,
-              username: official.username,
-              email: official.email,
-              fullName: official.fullName,
-              role: official.role,
-              unitId: official.unitId,
-              isActive: true,
-              passwordHash: hasNotChangedPassword
-                ? official.passwordHash
-                : existingById.passwordHash,
-              mustChangePassword: hasNotChangedPassword ? true : existingById.mustChangePassword,
-              updatedAt: nowIso,
-            });
-          } else {
-            await repos.users.insertMany(trx, [
-              {
-                id: official.id,
-                username: official.username,
-                email: official.email,
-                entraOid: null,
-                authProvider: 'hybrid',
-                passwordHash: official.passwordHash,
-                fullName: official.fullName,
-                role: official.role,
-                unitId: official.unitId,
-                mustChangePassword: true,
-                isActive: true,
-                passwordChangedAt: null,
-                lastLoginAt: null,
-                updatedAt: nowIso,
-              },
-            ]);
-          }
-        }
-      }
-      return { seeded: false, source: 'skipped' };
+      await cleanupAndSyncExistingDatabase(trx, repos, options);
+      return { seeded: false, source: 'synced' };
     }
 
     if (options?.forceTruncate) {
@@ -204,37 +361,31 @@ export async function seedDatabaseWithOfficialData(
       await trx.deleteFrom('academic_periods').execute();
     }
 
-    const { state, source } = await loadLegacySeedState(options);
-    const activePeriod = state.activePeriod || '2026-2';
-    const periodCodes = Array.from(
-      new Set([activePeriod, ...(state.availablePeriods ?? []), '2026-2']),
-    );
+    const seed = await import('./usta-seed.data.js');
+    const activePeriod = '2026-2';
     const nowIso = new Date().toISOString();
 
-    const periods: AcademicPeriod[] = periodCodes.map((code) => ({
-      code,
-      name: `Periodo Académico ${code} — Seccional Tunja`,
-      status: code === activePeriod ? 'ABIERTO' : 'CERRADO_SAC',
-      isCurrent: code === activePeriod,
-      openedAt: nowIso,
-      closedAt: code === activePeriod ? null : nowIso,
-    }));
+    const periods: AcademicPeriod[] = [
+      {
+        code: activePeriod,
+        name: `Periodo Académico ${activePeriod} — Seccional Tunja`,
+        status: 'ABIERTO',
+        isCurrent: true,
+        openedAt: nowIso,
+        closedAt: null,
+      },
+    ];
 
     await repos.periods.insertMany(trx, periods);
     await repos.businessRules.save(
       trx,
       activePeriod,
-      state.rulesConfig ?? DEFAULT_BUSINESS_RULES,
+      { ...DEFAULT_BUSINESS_RULES },
       'Sistema (Semilla Inicial)',
     );
+    await repos.schedulePhases.insertMany(trx, activePeriod, DEFAULT_SCHEDULE_PHASES_SEED);
 
-    const phases =
-      state.schedulePhases && state.schedulePhases.length > 0
-        ? state.schedulePhases
-        : DEFAULT_SCHEDULE_PHASES_SEED;
-    await repos.schedulePhases.insertMany(trx, activePeriod, phases);
-
-    const unitRecords: AcademicUnitRecord[] = state.units.map((u) => ({
+    const unitRecords: AcademicUnitRecord[] = seed.ACADEMIC_UNITS_SEED.map((u) => ({
       id: u.id,
       name: u.name,
       division: u.division,
@@ -254,25 +405,27 @@ export async function seedDatabaseWithOfficialData(
       buildDefaultSeedUsers(unitRecords, options?.overridePasswordHash),
     );
 
-    const unitCycles: UnitPayrollCycle[] = state.units.map((u) => ({
+    const unitCycles: UnitPayrollCycle[] = seed.ACADEMIC_UNITS_SEED.map((u) => ({
       unitId: u.id,
       periodCode: activePeriod,
-      payrollStatus: u.payrollStatus,
-      currentVersion: u.currentVersion || 1,
-      updatedAt: u.updatedAt || nowIso,
+      payrollStatus: 'Borrador',
+      currentVersion: 1,
+      updatedAt: nowIso,
     }));
     await repos.units.saveCycles(trx, unitCycles);
 
-    const programRecords: AcademicProgramRecord[] = state.programQuotas.map(
+    const programRecords: AcademicProgramRecord[] = seed.PROGRAM_QUOTAS_ANNEX5_SEED.map(
       ({ unitName: _unitName, ...program }) => program,
     );
     await repos.programs.insertMany(trx, programRecords);
 
-    await repos.sacCodes.insertMany(trx, state.sacCodes);
+    await repos.sacCodes.insertMany(trx, structuredClone(seed.SAC_CODES_ANNEX4_SEED));
 
     const seenUnitDoc = new Set<string>();
     const seenSpaceIds = new Set<string>();
-    const sanitizedTeachers: FacultyTeacher[] = state.teachers.map((teacher, idx) => {
+    const sanitizedTeachers: FacultyTeacher[] = structuredClone(
+      seed.FACULTY_TEACHERS_SEED,
+    ).map((teacher, idx) => {
       let documentId = teacher.documentId || `DOC-${idx + 1}`;
       const docKey = `${teacher.unitId}:${documentId}`;
       if (seenUnitDoc.has(docKey)) {
@@ -301,45 +454,6 @@ export async function seedDatabaseWithOfficialData(
 
     await repos.teachers.insertMany(trx, activePeriod, sanitizedTeachers);
 
-    if (state.approvalRequests.length > 0) {
-      await repos.approvals.insertMany(
-        trx,
-        state.approvalRequests.map((req) => ({
-          ...req,
-          period: req.period || activePeriod,
-        })),
-      );
-    }
-
-    if (state.researchAllocations.length > 0) {
-      await repos.research.insertMany(
-        trx,
-        state.researchAllocations.map((alloc) => ({
-          ...alloc,
-          period: alloc.period || activePeriod,
-        })),
-      );
-    }
-
-    if (state.auditLogs.length > 0) {
-      const unitIdByName = new Map(state.units.map((u) => [u.name, u.id]));
-      const auditRecords: AuditLogRecord[] = state.auditLogs.map((entry) => ({
-        id: entry.id || ids.next(),
-        periodCode: activePeriod,
-        unitId: unitIdByName.get(entry.unitName) ?? null,
-        unitName: entry.unitName,
-        ...(entry.teacherName !== undefined ? { teacherName: entry.teacherName } : {}),
-        action: entry.action,
-        ...(entry.previousValue !== undefined ? { previousValue: entry.previousValue } : {}),
-        ...(entry.newValue !== undefined ? { newValue: entry.newValue } : {}),
-        ...(entry.reason !== undefined ? { reason: entry.reason } : {}),
-        occurredAt: parseTimestampOrNow(entry.timestamp),
-        actorName: entry.user,
-        actorRole: entry.role,
-      }));
-      await repos.auditLogs.insertMany(trx, auditRecords);
-    }
-
-    return { seeded: true, source };
+    return { seeded: true, source: 'ts-seed' };
   });
 }

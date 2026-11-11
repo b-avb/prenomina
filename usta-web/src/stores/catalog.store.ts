@@ -62,12 +62,40 @@ export const useCatalogStore = defineStore('catalog', () => {
     patch: SacCodePatch,
     successMessage?: string,
   ): Promise<MutationResult<SacCode>> {
-    const current = sacCodes.value[findSacCodeIndex(code)];
+    const index = findSacCodeIndex(code);
+    const current = sacCodes.value[index];
     if (!current) return reject('NOT_FOUND', `El código ${code} ya no existe en el catálogo`);
+
+    const targetCode = patch.newCode?.trim().toUpperCase();
+    if (targetCode && targetCode !== code) {
+      if (TRUNK_SAC_CODES.includes(code)) {
+        return reject(
+          'BUSINESS_RULE_VIOLATION',
+          'Los códigos troncales 40104 y 40108 no pueden renombrarse',
+        );
+      }
+      if (findSacCodeIndex(targetCode) >= 0) {
+        return reject('CONFLICT', `El código ${targetCode} ya existe en el catálogo`);
+      }
+      return runPessimistic({
+        request: () => sacCodesApi.update({ code, ...patch, newCode: targetCode }),
+        commit: (saved) => {
+          const prevIdx = findSacCodeIndex(code);
+          if (prevIdx >= 0) {
+            sacCodes.value[prevIdx] = saved;
+          } else {
+            replaceSacCode(saved);
+          }
+        },
+        successMessage,
+      });
+    }
+
+    const { newCode: _ignoredNewCode, ...cleanPatch } = patch;
     return runOptimistic({
-      capture: () => current,
-      apply: () => Object.assign(current, patch),
-      request: () => sacCodesApi.update({ code, ...patch }),
+      capture: () => structuredClone(current),
+      apply: () => Object.assign(current, cleanPatch),
+      request: () => sacCodesApi.update({ code, ...cleanPatch }),
       commit: replaceSacCode,
       rollback: replaceSacCode,
       successMessage,

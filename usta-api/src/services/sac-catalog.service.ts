@@ -53,7 +53,7 @@ export class SacCatalogService {
   ): Promise<SacCode> {
     return this.tx.run(async (trx) => {
       const periodCode = await this.periodContext.resolvePeriod(trx, requestedPeriod);
-      const code = dto.code.trim();
+      const code = dto.code.trim().toUpperCase();
       const existing = await this.repos.sacCodes.findByCode(trx, code);
       if (existing) {
         throw new ConflictError(`El código SAC '${code}' ya está registrado en el catálogo.`);
@@ -63,6 +63,7 @@ export class SacCatalogService {
         ...dto,
         code,
         name: dto.name.trim().toUpperCase(),
+        annex3Format: dto.requiresViceRectorApproval ? (dto.annex3Format ?? null) : null,
       };
 
       await this.repos.sacCodes.insertMany(trx, [newCode]);
@@ -94,26 +95,53 @@ export class SacCatalogService {
         throw new NotFoundError(`El código SAC '${code}' no existe.`);
       }
 
+      const targetCode =
+        dto.newCode !== undefined ? dto.newCode.trim().toUpperCase() : code;
+      if (targetCode !== code) {
+        if (PROTECTED_SAC_CODES.has(code)) {
+          throw new BusinessRuleError(
+            `El código '${code}' es estructural para el cálculo de docencia directa y PSE y no puede renombrarse.`,
+          );
+        }
+        const collision = await this.repos.sacCodes.findByCode(trx, targetCode);
+        if (collision) {
+          throw new ConflictError(
+            `El código SAC '${targetCode}' ya está registrado en el catálogo.`,
+          );
+        }
+      }
+
+      const { newCode: _ignoredNewCode, ...restDto } = dto;
+      const requiresApproval =
+        restDto.requiresViceRectorApproval ?? existing.requiresViceRectorApproval;
       const updated: SacCode = {
         ...existing,
-        ...dto,
-        code,
-        name: dto.name !== undefined ? dto.name.trim().toUpperCase() : existing.name,
+        ...restDto,
+        code: targetCode,
+        name: restDto.name !== undefined ? restDto.name.trim().toUpperCase() : existing.name,
+        annex3Format: requiresApproval
+          ? restDto.annex3Format !== undefined
+            ? restDto.annex3Format
+            : existing.annex3Format
+          : null,
       };
 
-      await this.repos.sacCodes.update(trx, updated);
+      await this.repos.sacCodes.update(trx, updated, code);
 
       await this.audit.record(trx, actor, {
         periodCode,
         unitId: null,
         unitName: 'Catálogo Institucional SAC (ANEXO 4)',
-        action: `Actualización de Código SAC ${code} (${updated.name})`,
-        previousValue: `Base: ${existing.baseHours ?? 'S/L'}h · Tope: ${existing.capHours ?? 'S/L'}h · Severidad: ${existing.severity}`,
-        newValue: `Base: ${updated.baseHours ?? 'S/L'}h · Tope: ${updated.capHours ?? 'S/L'}h · Severidad: ${updated.severity}`,
+        action:
+          targetCode !== code
+            ? `Renombramiento y Actualización de Código SAC ${code} → ${targetCode} (${updated.name})`
+            : `Actualización de Código SAC ${code} (${updated.name})`,
+        previousValue: `Código: ${existing.code} · Base: ${existing.baseHours ?? 'S/L'}h · Tope: ${existing.capHours ?? 'S/L'}h · Severidad: ${existing.severity}`,
+        newValue: `Código: ${updated.code} · Base: ${updated.baseHours ?? 'S/L'}h · Tope: ${updated.capHours ?? 'S/L'}h · Severidad: ${updated.severity}`,
         reason: 'Edición de parámetros normativos del código SAC',
       });
 
-      const persisted = await this.repos.sacCodes.findByCode(trx, code);
+      const persisted = await this.repos.sacCodes.findByCode(trx, targetCode);
       return persisted ?? updated;
     });
   }
