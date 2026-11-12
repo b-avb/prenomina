@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Modal dialog shell anchoring the close button outside the scrollable body and supporting both
+ * `#footer` and `#actions` footer slot aliases.
+ */
 withDefaults(
   defineProps<{
     open: boolean;

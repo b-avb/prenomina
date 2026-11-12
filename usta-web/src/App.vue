@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Root application shell: bypasses chrome on `/login`, hosts the global academic period
+ * selector and period-creation modal, and filters primary navigation items by active role.
+ */
 import { computed, ref } from 'vue';
 import { useRoute, useRouter, RouterLink, RouterView } from 'vue-router';
 import type { PayrollRole } from '@usta/domain';

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Modal form for creating or editing a faculty teacher or provisional vacancy, including contract
+ * dedication, academic rank, and cross-unit shared hours.
+ */
 import { ref, watch } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import { usePayrollStore } from '@/stores/payroll.store';

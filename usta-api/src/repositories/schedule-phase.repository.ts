@@ -2,6 +2,7 @@ import type { SchedulePhase } from '@usta/domain';
 import type { DbExecutor } from '../database/database.types.js';
 import type { PeriodScoped } from '../models/persistence.models.js';
 
+/** Persistence port for period-scoped semester payroll schedule phases. */
 export interface SchedulePhaseRepository {
   listByPeriod(db: DbExecutor, periodCode: string): Promise<SchedulePhase[]>;
   findById(db: DbExecutor, id: string): Promise<PeriodScoped<SchedulePhase> | undefined>;

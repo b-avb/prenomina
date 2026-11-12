@@ -49,6 +49,9 @@ function toUserRow(user: UserRecord): Insertable<UsersTable> {
   };
 }
 
+/**
+ * MariaDB adapter for `users`, normalizing `username` and `email` to lowercase on read/write.
+ */
 export class MariaDbUserRepository implements UserRepository {
   public async listAll(db: DbExecutor): Promise<UserRecord[]> {
     const rows = await db.selectFrom('users').selectAll().orderBy('insertion_order').execute();
@@ -102,6 +105,7 @@ export class MariaDbUserRepository implements UserRepository {
     return row ? toUserRecord(row) : undefined;
   }
 
+  /** Looks up the earliest-registered `dean` account assigned directly to `unitId`. */
   public async findByUnitId(
     db: DbExecutor,
     unitId: string,

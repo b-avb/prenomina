@@ -3,6 +3,7 @@ import type { ApiErrorCode, ApiFailure, ApiSuccess } from '@usta/domain';
 /** Failures detected by the client itself (no server envelope available). */
 export type ClientErrorCode = 'NETWORK_ERROR' | 'TIMEOUT' | 'INVALID_RESPONSE' | 'UNEXPECTED_ERROR';
 
+/** Structured HTTP or transport failure normalized from `usta-api` error envelopes or `fetch` exceptions. */
 export class ApiError extends Error {
   constructor(
     public readonly status: number,
@@ -47,6 +48,15 @@ async function readJson(response: Response): Promise<unknown> {
   }
 }
 
+/**
+ * Typed JSON and binary HTTP client for `usta-api`.
+ *
+ * Architectural behaviors:
+ * - Deduplicates `/api` prefixes when joining `baseUrl` and endpoint paths.
+ * - Tunnels `PUT`, `PATCH`, and `DELETE` over `POST ?_method=<VERB>` with `X-HTTP-Method-Override`
+ *   and a fallback `{}` JSON payload so restrictive reverse proxies/WAFs do not block mutating verbs.
+ * - Invokes the registered `401` handler on expired sessions while excluding unauthenticated login endpoints.
+ */
 export class HttpClient {
   private readonly baseUrl: string;
   private readonly timeoutMs: number;
@@ -87,6 +97,7 @@ export class HttpClient {
     options: { query?: QueryParams; body?: unknown } = {},
   ): Promise<T> {
     const normalizedMethod = method.toUpperCase();
+    // Tunnel non-POST write verbs over POST so institutional reverse proxies do not reject PUT/PATCH/DELETE.
     const shouldTunnelOverPost =
       normalizedMethod === 'PUT' ||
       normalizedMethod === 'PATCH' ||
@@ -98,6 +109,7 @@ export class HttpClient {
     const endpoint = this.resolveEndpoint(path, effectiveQuery);
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.timeoutMs);
+    // Supply `{}` on bodyless tunneled writes so proxies requiring Content-Length on POST accept the request.
     const payload =
       options.body !== undefined
         ? options.body
@@ -189,6 +201,7 @@ export class HttpClient {
     return this.request<T>('DELETE', path, { query });
   }
 
+  /** Downloads an authenticated binary attachment (e.g. Annex 3 support PDF) with timeout and 401 handling. */
   public async fetchBlob(path: string, query?: QueryParams): Promise<Blob> {
     const endpoint = this.resolveEndpoint(path, query);
     const controller = new AbortController();
@@ -243,6 +256,7 @@ export class HttpClient {
   }
 }
 
+/** Detects deployment mount subpath (`/app/prenomina/`, `/prenomina/`, or `/`) from `window.location`. */
 export function detectAppBasePath(): string {
   if (typeof window === 'undefined') return '/';
   const pathname = window.location.pathname;
@@ -255,11 +269,13 @@ export function detectAppBasePath(): string {
   return '/';
 }
 
+/** Prefixes static public asset paths with the active deployment subpath. */
 export function resolvePublicAssetUrl(relativePath: string): string {
   const cleanRelative = relativePath.replace(/^\/+/, '');
   return `${detectAppBasePath()}${cleanRelative}`;
 }
 
+/** Resolves the API base URL from `VITE_API_URL`, local dev port `4301`, or the mounted subpath `/api`. */
 function resolveApiBaseUrl(): string {
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
   if (import.meta.env.DEV) return 'http://localhost:4301/api';

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Interactive card for assigning SAC activity hours to a teacher, linking Annex 5 program quotas,
+ * inspecting Annex 4 guidelines, and launching Annex 3 or cap-exception workflows.
+ */
 import { computed, ref, watch } from 'vue';
 import type {
   FacultyTeacher,
@@ -254,7 +258,6 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
       </div>
     </div>
 
-    <!-- Quick code assignment bar -->
     <div
       v-if="codesViewMode === 'assigned' && !readonly"
       style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; background: var(--surface-soft); padding: 8px; border-radius: 9px"
@@ -588,7 +591,6 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
       </tbody>
     </table>
 
-    <!-- Contextual Annex 4 Guideline Popover -->
     <div
       v-if="selectedCodeInfo"
       class="lineamiento-popover"

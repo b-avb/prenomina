@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Fullscreen authentication view handling local credentials, Microsoft Entra ID SSO
+ * (popup with redirect fallback), and mandatory first-login password rotation.
+ */
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { INSTITUTIONAL_EMAIL_DOMAIN } from '@usta/domain';
@@ -61,6 +65,7 @@ async function handleMicrosoftLogin(): Promise<void> {
     await router.push(getHomeRouteForRole(session.user.role));
   } catch (popupError) {
     const msg = popupError instanceof Error ? popupError.message : '';
+    // Fall back to full-page redirect when browser policies block the MSAL popup window.
     if (msg.includes('popup_window_error') || msg.includes('BrowserAuthError')) {
       try {
         await authStore.startMicrosoftRedirect();

@@ -1,17 +1,11 @@
 #!/usr/bin/env bash
-# ==============================================================================
-# USTA Tunja · Plataforma de Gestión Docente y Prenómina
-# Script de Aprovisionamiento y Despliegue Automatizado en Producción
-# Soporta: RHEL / CentOS / Rocky / AlmaLinux (dnf/yum) y Ubuntu / Debian (apt)
-# Soporta: MySQL 8.x y MariaDB 10/11
-# ==============================================================================
-# Uso rápido:
-#   1) Directamente dentro del servidor Linux:
-#      ./deploy.sh --local
+# Production provisioning and deployment script for the USTA Tunja payroll platform.
+# Supports Debian/Ubuntu (`apt-get`) and RHEL/Rocky/AlmaLinux (`dnf`/`yum`) hosts
+# running MySQL 8.x or MariaDB 10/11 behind Apache httpd.
 #
-#   2) Desde estación de trabajo por SSH (compila local, sube bundle e instala):
-#      ./deploy.sh --host 54.xxx.xxx.xxx --user root
-# ==============================================================================
+# Usage:
+#   Local execution on target host:  ./deploy.sh --local
+#   Remote execution over SSH:       ./deploy.sh --host <ip-or-hostname> --user <ssh-user>
 
 set -euo pipefail
 
@@ -66,7 +60,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --help|-h)
-      sed -n '2,15p' "${BASH_SOURCE[0]}"
+      sed -n '2,8p' "${BASH_SOURCE[0]}"
       exit 0
       ;;
     *)
@@ -159,9 +153,7 @@ ensure_node_and_pnpm() {
 
 ensure_node_and_pnpm
 
-# ==============================================================================
-# Pasos 1–3: Compilación y empaquetado (se omiten cuando se invoca --from-bundle)
-# ==============================================================================
+# Build and package production artifacts unless invoked on the remote host via `--from-bundle`.
 if [[ "$DEPLOY_FROM_BUNDLE" != "true" ]]; then
   echo "==> 1. Instalando dependencias del monorepo (node_modules)..."
   cd "$ROOT_DIR"
@@ -191,9 +183,7 @@ if [[ "$DEPLOY_FROM_BUNDLE" != "true" ]]; then
     usta-web/dist
 fi
 
-# ==============================================================================
-# Modo remoto por SSH (--host <IP>): transfiere el bundle y ejecuta --from-bundle
-# ==============================================================================
+# Remote deployment mode (`--host`): upload prebuilt tarball and re-invoke with `--from-bundle`.
 if [[ "$DEPLOY_LOCAL" != "true" && "$DEPLOY_FROM_BUNDLE" != "true" ]]; then
   SSH_TARGET="${DEPLOY_USER}@${DEPLOY_HOST}"
   SSH_OPTS=(-p "$DEPLOY_PORT" -o StrictHostKeyChecking=accept-new)
@@ -214,9 +204,7 @@ if [[ "$DEPLOY_LOCAL" != "true" && "$DEPLOY_FROM_BUNDLE" != "true" ]]; then
   exit 0
 fi
 
-# ==============================================================================
-# Pasos 4–8: Instalación en el servidor (--local o --from-bundle)
-# ==============================================================================
+# Target-host installation (`--local` or `--from-bundle`).
 if [[ ! -f "$BUNDLE_PATH" ]]; then
   echo "ERROR: No se encontró el paquete de despliegue en ${BUNDLE_PATH}."
   exit 1
@@ -302,7 +290,7 @@ else
   run_as_root npx --yes pnpm@10 install --prod
 fi
 
-# Crear o actualizar .env preservando AUTH_TOKEN_SECRET, AUTH_MODE y variables AZURE_* existentes
+# Initialize or update `.env` while preserving existing `AUTH_TOKEN_SECRET`, `AUTH_MODE`, and `AZURE_*` settings.
 if [[ ! -f "$ENV_FILE" ]]; then
   echo "[Server] Generando ${ENV_FILE} con secreto JWT criptográfico..."
   run_as_root cp /opt/usta-plataforma/usta-api/.env.example "$ENV_FILE"
@@ -501,7 +489,7 @@ Options -Indexes
   RewriteCond %{HTTP:Authorization} .+
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-  # Bloquear cualquier acceso público a dotfiles, scripts o carpetas de código fuente
+  # Deny direct HTTP access to dotfiles, deployment scripts, and monorepo source directories.
   RewriteRule (^|/)\.(?!well-known/) - [F,L]
   RewriteRule ^(deploy\.sh|package\.json|pnpm-.*|tsconfig.*|README\.md|usta-api|usta-web|packages|node_modules)(/|$) - [F,L]
 

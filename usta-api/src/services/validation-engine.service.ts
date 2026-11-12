@@ -9,6 +9,7 @@ import type { Repositories } from '../repositories/repositories.js';
 import { NotFoundError } from '../utils/app-error.js';
 import type { PeriodContextService } from './period-context.service.js';
 
+/** Consolidated validation report, Annex 5 bag utilization, and submission-readiness verdict for an academic unit. */
 export interface UnitValidationEvaluation {
   unitId: string;
   unitName: string;
@@ -22,6 +23,9 @@ export interface UnitValidationEvaluation {
   alerts: ValidationAlert[];
 }
 
+/**
+ * Evaluates domain validation alerts and Annex 5 hour-bag indicators for a faculty unit.
+ */
 export class ValidationEngineService {
   constructor(
     private readonly tx: TransactionRunner,
@@ -29,6 +33,10 @@ export class ValidationEngineService {
     private readonly periodContext: PeriodContextService,
   ) {}
 
+  /**
+   * Computes interactive editing alerts alongside stricter `enforceSubmissionReadiness` checks
+   * (such as unstarted teacher workloads and unapproved Annex 3 requests) to derive `canSubmitPayroll`.
+   */
   public async evaluateFacultyUnit(
     unitId: string,
     requestedPeriod?: string,

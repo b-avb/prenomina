@@ -13,6 +13,7 @@ import {
   toTeacherRow,
 } from './mappers/teacher.mapper.js';
 
+/** Maximum rows per multi-row `INSERT` statement to stay within MariaDB packet and placeholder bounds. */
 const INSERT_BATCH_SIZE = 500;
 
 function chunk<T>(items: T[], size: number): T[][] {
@@ -33,6 +34,10 @@ function groupBy<T>(items: T[], key: (item: T) => string): Map<string, T[]> {
   return groups;
 }
 
+/**
+ * MariaDB adapter for the `FacultyTeacher` aggregate (`teachers`, `teacher_academic_spaces`,
+ * and `teacher_code_allocations`).
+ */
 export class MariaDbTeacherRepository implements TeacherRepository {
   public async listByPeriod(
     db: DbExecutor,
@@ -88,6 +93,7 @@ export class MariaDbTeacherRepository implements TeacherRepository {
     await this.insertChildren(db, teachers);
   }
 
+  /** Updates parent profile columns and replaces child academic spaces and SAC allocations in place. */
   public async save(db: DbExecutor, teacher: FacultyTeacher): Promise<void> {
     await db
       .updateTable('teachers')
@@ -120,6 +126,7 @@ export class MariaDbTeacherRepository implements TeacherRepository {
     }
   }
 
+  /** Batch-loads child academic spaces and SAC allocations for `rows` in two `IN (...)` queries. */
   private async hydrate(db: DbExecutor, rows: Selectable<TeachersTable>[]): Promise<FacultyTeacher[]> {
     if (rows.length === 0) return [];
     const ids = rows.map((row) => row.id);

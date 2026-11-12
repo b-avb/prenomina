@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Modal form for registering a custom Annex 4 SAC activity code with hour bounds, cap severity,
+ * unit applicability, and optional Annex 3 pre-approval bindings.
+ */
 import { ref } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import UstaUnitMultiSelect from '@/components/ui/UstaUnitMultiSelect.vue';

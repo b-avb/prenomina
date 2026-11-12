@@ -1,11 +1,13 @@
 import { computed, ref, type Ref } from 'vue';
 
+/** Field extractors configuring case-insensitive text search and optional category filtering. */
 export interface SearchFilterOptions<T> {
   textFields: (item: T) => string[];
   categoryField?: (item: T) => string;
   allCategoriesValue?: string;
 }
 
+/** Provides reactive text query and category state with a computed filtered subset of `items`. */
 export function useSearchFilter<T>(
   items: Ref<T[]>,
   options: SearchFilterOptions<T>,

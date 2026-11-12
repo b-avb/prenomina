@@ -3,6 +3,7 @@ import type { DbExecutor } from '../../database/database.types.js';
 import type { BusinessRulesRepository } from '../business-rules.repository.js';
 import { toBusinessRules, toBusinessRulesRow } from './mappers/period.mapper.js';
 
+/** MariaDB adapter for `business_rules`, upserting period-scoped rule configurations via `ON DUPLICATE KEY UPDATE`. */
 export class MariaDbBusinessRulesRepository implements BusinessRulesRepository {
   public async findByPeriod(db: DbExecutor, periodCode: string): Promise<BusinessRulesConfig | undefined> {
     const row = await db

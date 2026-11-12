@@ -6,6 +6,7 @@ import type {
 } from '../../../database/database.types.js';
 import { definedProps, nullable, toIsoString } from './mapper.utils.js';
 
+/** Joined `approval_requests` row enriched with unit, teacher, and SAC code labels. */
 export type ApprovalRequestRow = Selectable<ApprovalRequestsTable> & {
   unit_name: string;
   teacher_name: string;

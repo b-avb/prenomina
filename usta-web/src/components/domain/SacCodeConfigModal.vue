@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Modal editor for Annex 4 SAC code parameters, Annex 3 approval format bindings, per-unit hour
+ * rules, and non-structural code deletion.
+ */
 import { computed, ref, watch } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import UstaUnitMultiSelect from '@/components/ui/UstaUnitMultiSelect.vue';
@@ -274,7 +278,6 @@ async function handleDelete() {
         <UstaUnitMultiSelect v-model="draft.appliesTo" :units="store.units" />
       </div>
 
-      <!-- PRE-AVAL ANEXO 3, MULTIPLICADOR Y BANDERAS NORMATIVAS -->
       <div
         style="background: var(--surface-soft); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px"
       >
@@ -343,7 +346,6 @@ async function handleDelete() {
         </div>
       </div>
 
-      <!-- FACULTY-SPECIFIC RULES -->
       <div
         style="background: var(--surface-soft); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-top: 6px"
       >

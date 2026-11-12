@@ -14,6 +14,7 @@ export interface InstitutionalUserProfile {
   initials: string;
 }
 
+/** Strips ecclesiastical and academic honorifics before extracting two-letter avatar initials. */
 function computeInitials(name: string): string {
   const cleaned = name
     .replace(/\b(Fr\.|O\.P\.|Ing\.|Dr\.|Dra\.|Mg\.)/gi, '')
@@ -25,6 +26,7 @@ function computeInitials(name: string): string {
   return cleaned.slice(0, 2).toUpperCase() || 'US';
 }
 
+/** Derives the header user profile chip and role boolean flags from active auth and unit state. */
 export function useAuthRole(
   activeRole: Ref<PayrollRole>,
   units: Ref<AcademicUnitSummary[]>,

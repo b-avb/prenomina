@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Modal form for authoring Annex 3 Vice-Rectory pre-approval requests, uploading supporting
+ * evidence, and synchronizing the teacher's SAC hour allocation upon submission.
+ */
 import { computed, ref } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import { usePayrollStore } from '@/stores/payroll.store';
@@ -84,6 +88,7 @@ async function handleSubmit() {
 
   isSubmitting.value = true;
   try {
+    // Synchronize the teacher's SAC hour allocation first so the Annex 3 request matches active workload.
     const allocRes = await store.updateCodeAllocation(
       props.teacher.id,
       s.codeItem.code,

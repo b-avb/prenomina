@@ -10,6 +10,7 @@ export interface TransactionRunner {
   run<T>(work: (trx: DbExecutor) => Promise<T>): Promise<T>;
 }
 
+/** MariaDB/Kysely implementation of `TransactionRunner` backed by InnoDB ACID transactions. */
 export class KyselyTransactionRunner implements TransactionRunner {
   public readonly executor: DbExecutor;
 

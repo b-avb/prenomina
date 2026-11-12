@@ -4,6 +4,7 @@ import type { AuditLogsTable } from '../../../database/database.types.js';
 import type { AuditLogRecord } from '../../../models/audit.models.js';
 import { definedProps, nullable, toIsoString } from './mapper.utils.js';
 
+/** Maps `audit_logs` rows to domain `AuditLogEntry` DTOs, omitting null optional fields. */
 export function toAuditLogEntry(row: Selectable<AuditLogsTable>): AuditLogEntry {
   return {
     id: row.id,

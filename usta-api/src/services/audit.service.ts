@@ -8,6 +8,11 @@ import type { Repositories } from '../repositories/repositories.js';
 const DEFAULT_AUDIT_LIMIT = 200;
 const MAX_AUDIT_LIMIT = 1000;
 
+/**
+ * Records and queries append-only domain audit trail entries.
+ * Audit writes execute within the caller's database transaction so every domain mutation and its
+ * audit record commit or roll back atomically.
+ */
 export class AuditService {
   constructor(
     private readonly tx: TransactionRunner,
@@ -33,6 +38,10 @@ export class AuditService {
     await this.repos.auditLogs.insertMany(db, [entry]);
   }
 
+  /**
+   * Lists recent audit entries in reverse chronological order (clamped to `[1, 1000]`).
+   * Defaults to the current active period when `period` is omitted and scopes Dean queries to `managedUnitIds`.
+   */
   public async list(options: {
     period?: string;
     unitId?: string;

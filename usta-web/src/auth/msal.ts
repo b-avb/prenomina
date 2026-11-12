@@ -35,14 +35,20 @@ function readViteEnv(keys: readonly ViteEnvStringKey[], fallback = ''): string {
   return fallback;
 }
 
-// Configuración compartida de Microsoft Entra ID (SSO Institucional USTA Tunja)
-// Soporta tanto variables de entorno VITE_* en tiempo de compilación como configuración dinámica desde GET /api/auth/config.
+/**
+ * Build-time Microsoft Entra ID settings for USTA Tunja institutional SSO.
+ * Merged with runtime values from `GET /api/auth/config` in `resolveMsalRuntimeConfig`.
+ */
 export const MSAL_CONFIG = {
   tenantId: readViteEnv(['VITE_AZURE_TENANT_ID', 'VITE_MSAL_TENANT_ID']),
   clientId: readViteEnv(['VITE_AZURE_CLIENT_ID', 'VITE_MSAL_CLIENT_ID']),
   apiScope: readViteEnv(['VITE_AZURE_API_SCOPE', 'VITE_MSAL_API_SCOPE']),
 };
 
+/**
+ * Resolves effective Microsoft Entra ID settings using precedence:
+ * `VITE_*` build-time env vars -> `GET /api/auth/config` payload -> subpath-aware defaults.
+ */
 export function resolveMsalRuntimeConfig(
   backendConfig?: AuthConfigResponse | null,
 ): MsalRuntimeConfig {
@@ -104,6 +110,10 @@ export function resolveMsalRuntimeConfig(
 let cachedMsalInstance: PublicClientApplication | null = null;
 let cachedMsalKey = '';
 
+/**
+ * Returns an initialized MSAL `PublicClientApplication` singleton, recreating it
+ * if tenant, client, or storage cache settings change after backend config loads.
+ */
 export async function getInitializedMsalClient(
   backendConfig?: AuthConfigResponse | null,
 ): Promise<{ client: PublicClientApplication; config: MsalRuntimeConfig }> {
@@ -119,7 +129,7 @@ export async function getInitializedMsalClient(
         postLogoutRedirectUri: config.postLogoutRedirectUri,
       },
       cache: {
-        // sessionStorage igual que formacion-frontend (o localStorage cuando estén bajo el mismo dominio)
+        // Defaults to sessionStorage to isolate MSAL tokens per browser tab unless shared SSO persistence is configured.
         cacheLocation: config.cacheLocation,
       },
       system: {
@@ -140,6 +150,7 @@ export async function getInitializedMsalClient(
   return { client: cachedMsalInstance, config };
 }
 
+/** Builds the OIDC and Microsoft Graph scope list, appending the custom API scope when configured. */
 export function buildMsalScopes(config: MsalRuntimeConfig): string[] {
   const scopes = ['openid', 'profile', 'email', 'User.Read'];
   if (config.apiScope && !scopes.includes(config.apiScope)) {
@@ -155,6 +166,7 @@ function toMicrosoftLoginDto(result: AuthenticationResult): MicrosoftLoginDto {
   };
 }
 
+/** Completes any pending Entra ID redirect callback on page load and extracts tokens for backend exchange. */
 export async function consumeMicrosoftRedirectResult(
   backendConfig?: AuthConfigResponse | null,
 ): Promise<MicrosoftLoginDto | null> {
@@ -168,6 +180,7 @@ export async function consumeMicrosoftRedirectResult(
   return toMicrosoftLoginDto(result);
 }
 
+/** Initiates interactive Entra ID sign-in in a popup window with explicit account selection. */
 export async function signInWithMicrosoftPopup(
   backendConfig?: AuthConfigResponse | null,
 ): Promise<MicrosoftLoginDto> {
@@ -179,6 +192,7 @@ export async function signInWithMicrosoftPopup(
   return toMicrosoftLoginDto(result);
 }
 
+/** Initiates full-page Entra ID redirect sign-in when browser popup windows are blocked. */
 export async function signInWithMicrosoftRedirect(
   backendConfig?: AuthConfigResponse | null,
 ): Promise<void> {

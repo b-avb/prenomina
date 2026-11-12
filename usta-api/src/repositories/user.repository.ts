@@ -1,6 +1,7 @@
 import type { DbExecutor } from '../database/database.types.js';
 import type { LockOptions, UserRecord } from '../models/persistence.models.js';
 
+/** Persistence port for institutional user accounts, local credential hashes, and Entra ID bindings. */
 export interface UserRepository {
   listAll(db: DbExecutor): Promise<UserRecord[]>;
   findById(db: DbExecutor, id: string, options?: LockOptions): Promise<UserRecord | undefined>;

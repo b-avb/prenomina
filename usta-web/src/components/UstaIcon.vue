@@ -1,4 +1,7 @@
 <script lang="ts">
+/**
+ * Identifier union for stroke-based navigation glyphs rendered in the institutional sidebar.
+ */
 export type UstaIconName =
   | 'dashboard'
   | 'prenomina'

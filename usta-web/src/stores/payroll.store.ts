@@ -24,10 +24,9 @@ import { useStateSyncStore } from './state-sync.store';
 import { useWorkloadStore } from './workload.store';
 
 /**
- * Enterprise Domain Facade Store (GoF Facade Pattern).
- * Coordinates the single-responsibility modular stores while providing
- * a clean, 100% English unified API for views and components.
- * Cross-aggregate writes (unit + director/roster) are orchestrated here.
+ * Facade store aggregating modular Pinia stores (`auth`, `organization`, `catalog`,
+ * `workload`, `approval`, `research`, `audit`, `stateSync`) and orchestrating cross-store
+ * mutations such as unit-with-director provisioning, status transitions, and SAC code renames.
  */
 export const usePayrollStore = defineStore('payroll', () => {
   const authStore = useAuthStore();
@@ -198,7 +197,6 @@ export const usePayrollStore = defineStore('payroll', () => {
   }
 
   return {
-    // State & Computed
     activePeriod,
     availablePeriods,
     schedulePhases,
@@ -226,7 +224,6 @@ export const usePayrollStore = defineStore('payroll', () => {
     activeUnitBagIndicators,
     activeUnitAlerts,
 
-    // Session & Navigation (UI state)
     login: authStore.login,
     changePassword: authStore.changePassword,
     logout: authStore.logout,
@@ -236,13 +233,11 @@ export const usePayrollStore = defineStore('payroll', () => {
     selectUnit: authStore.setActiveUnit,
     setVersionComparisonMode: authStore.setVersionComparisonMode,
 
-    // Notifications & Periods
     showToast,
     dismissToast,
     switchPeriod: syncStore.switchPeriod,
     createPeriod: syncStore.createPeriod,
 
-    // Calculations & Validations
     computeHours40104: workloadStore.computeHours40104,
     computeHours40006: workloadStore.computeHours40006,
     computeExactPse25: workloadStore.computeExactPse25,
@@ -261,7 +256,6 @@ export const usePayrollStore = defineStore('payroll', () => {
     validateTeacher: workloadStore.validateTeacher,
     suggestTeacherHourBalance: workloadStore.suggestTeacherHourBalance,
 
-    // Workload Mutations
     addAcademicSpace: workloadStore.addAcademicSpace,
     updateAcademicSpace: workloadStore.updateAcademicSpace,
     removeAcademicSpace: workloadStore.removeAcademicSpace,
@@ -273,7 +267,6 @@ export const usePayrollStore = defineStore('payroll', () => {
     removeFacultyTeacher: workloadStore.removeTeacher,
     applyBalanceSuggestion,
 
-    // Catalog & Rules Mutations
     createSacCode: catalogStore.createSacCode,
     updateSacCode: async (
       code: string,
@@ -281,6 +274,7 @@ export const usePayrollStore = defineStore('payroll', () => {
       successMessage?: string,
     ) => {
       const res = await catalogStore.updateSacCode(code, patch, successMessage);
+      // Cascade code renames in memory to match the backend's atomic foreign-key update across aggregates.
       if (res.ok && res.data.code !== code) {
         const nextCode = res.data.code;
         for (const teacher of teachers.value) {
@@ -304,7 +298,6 @@ export const usePayrollStore = defineStore('payroll', () => {
     updateRulesConfig: catalogStore.updateRulesConfig,
     saveSchedulePhases: orgStore.saveSchedulePhases,
 
-    // Organization Mutations
     addAcademicUnit,
     updateUnit: orgStore.updateUnit,
     updateUnitDean,
@@ -313,7 +306,6 @@ export const usePayrollStore = defineStore('payroll', () => {
     updateProgram: orgStore.updateProgram,
     removeProgram: orgStore.removeProgram,
 
-    // Approvals & Research Mutations
     uploadApprovalAttachment: approvalStore.uploadApprovalAttachment,
     openApprovalAttachment: approvalStore.openApprovalAttachment,
     registerApprovalRequest: approvalStore.registerApprovalRequest,

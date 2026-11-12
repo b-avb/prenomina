@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Self-service modal allowing authenticated local-account users to rotate their password from the
+ * sidebar profile menu.
+ */
 import { ref } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import { usePayrollStore } from '@/stores/payroll.store';

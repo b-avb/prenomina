@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Annex 5 academic program quota table supporting inline cap edits (`30411`/`40106`/`40109`/`40127`)
+ * and cohort activation toggles that recalculate parent unit bags.
+ */
 import { computed, ref } from 'vue';
 import type { ProgramQuotaAnnex5 } from '@usta/domain';
 import UstaModal from '@/components/ui/UstaModal.vue';

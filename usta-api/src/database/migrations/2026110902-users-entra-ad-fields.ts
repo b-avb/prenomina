@@ -1,5 +1,9 @@
 import { sql, type Kysely } from 'kysely';
 
+/**
+ * Extends `users` with Microsoft Entra ID SSO identity columns (`email`, `entra_oid`,
+ * `auth_provider`, `last_login_at`) and backfills missing institutional email addresses.
+ */
 export async function up(db: Kysely<unknown>): Promise<void> {
   await sql`ALTER TABLE users
     ADD COLUMN email VARCHAR(180) NULL AFTER username,

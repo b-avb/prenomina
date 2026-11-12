@@ -4,6 +4,7 @@ import type { PeriodScoped } from '../../models/persistence.models.js';
 import type { SchedulePhaseRepository } from '../schedule-phase.repository.js';
 import { toSchedulePhase, toSchedulePhaseRow } from './mappers/period.mapper.js';
 
+/** MariaDB adapter for `schedule_phases`, preserving phase sequence via `sort_order`. */
 export class MariaDbSchedulePhaseRepository implements SchedulePhaseRepository {
   public async listByPeriod(db: DbExecutor, periodCode: string): Promise<SchedulePhase[]> {
     const rows = await db

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Institutional governance workspace for managing the Annex 4 SAC catalog, Annex 6 unit quotas,
+ * Annex 5 academic programs, validation thresholds, and academic period cloning.
+ */
 import { ref } from 'vue';
 import { usePayrollStore } from '@/stores/payroll.store';
 import { usePeriodSelect } from '@/composables/usePeriodSelect';
@@ -187,6 +191,7 @@ async function handleImportCatalogExcel(ev: Event) {
   for (const row of parsed.unitQuotas) {
     const unit = matchUnitByName(row.unitName);
     if (!unit) continue;
+    // Preserve program-derived caps when Annex 5 programs govern 30411/40106/40109/40127 in this unit.
     const hasProgramsInUnit =
       unitsTouchedByAnnex5.has(unit.id) ||
       store.programQuotas.some((p) => p.unitId === unit.id && p.isActive);
@@ -318,7 +323,6 @@ async function handleImportCatalogExcel(ev: Event) {
     />
     <InstitutionalRulesPanel v-else />
 
-    <!-- MODALS -->
     <SacCodeConfigModal :code-item="editingCode" @close="editingCode = null" />
     <SacCodeCreateModal :open="isNewCodeModalOpen" @close="isNewCodeModalOpen = false" />
     <AcademicUnitFormModal
@@ -332,7 +336,6 @@ async function handleImportCatalogExcel(ev: Event) {
       @close="closeProgramModal"
     />
 
-    <!-- Open Period Modal -->
     <UstaModal
       :open="isPeriodModalOpen"
       title="Abrir nuevo periodo"
@@ -359,7 +362,6 @@ async function handleImportCatalogExcel(ev: Event) {
       </template>
     </UstaModal>
 
-    <!-- Persistent Credentials Modal -->
     <UstaModal
       :open="!!issuedCredentials"
       :title="issuedCredentials?.title ?? 'Credenciales temporales'"

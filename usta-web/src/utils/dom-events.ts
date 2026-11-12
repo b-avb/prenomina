@@ -10,6 +10,7 @@ export function eventNumber(event: Event): number {
   return Number((event.target as FormControl).value) || 0;
 }
 
+/** Parses a numeric input value, returning `null` when cleared so optional caps can be unset. */
 export function eventNullableNumber(event: Event): number | null {
   const raw = (event.target as FormControl).value.trim();
   if (raw === '') return null;

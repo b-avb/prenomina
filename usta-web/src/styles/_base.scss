@@ -1,7 +1,4 @@
-// Base global: reset, tipografía y primitivas visuales reutilizables
-// (tarjetas, botones, badges, formularios, tablas) tomadas tal cual del
-// prototipo aprobado. Se usan como clases de utilidad (class="card",
-// class="btn primary") desde cualquier feature.
+// Global reset, typography defaults, and shared UI primitives (.card, .btn, .badge, .field, tables, modals).
 
 * {
   box-sizing: border-box;
@@ -44,9 +41,6 @@ textarea::placeholder {
   flex-direction: column;
   min-height: 100vh;
 }
-
-// ================= HEADER =================
-// Persistente en todos los shells por rol (admin/tutor/docente).
 
 .app-header {
   background: var(--surface);
@@ -142,8 +136,6 @@ textarea::placeholder {
     color: var(--ink-faint);
   }
 }
-
-// ================= LAYOUT DE CUERPO POR ROL =================
 
 .app-body {
   display: flex;
@@ -255,8 +247,6 @@ h3 {
   margin: 0;
 }
 
-// ================= LAYOUT =================
-
 .grid {
   display: grid;
   gap: 16px;
@@ -291,7 +281,6 @@ h3 {
   }
 }
 
-// Catálogo de cursos estilo tarjetas (usa <app-course-tile> por dentro).
 .course-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -301,9 +290,7 @@ h3 {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  // ".wide" y los breakpoints tienen la misma especificidad (una clase);
-  // sin repetir "&.wide" acá, .wide ganaba sobre estos por venir antes en
-  // el CSS compilado y dejaba el grid en 2 columnas incluso en móvil.
+  // Repeat &.wide inside breakpoints to match selector specificity so mobile viewports collapse columns.
   @media (max-width: 880px) {
     &,
     &.wide {
@@ -368,8 +355,6 @@ h3 {
   }
 }
 
-// ================= TABS: estilo pestañas de navegador =================
-
 .tabs {
   display: flex;
   gap: 4px;
@@ -402,8 +387,6 @@ h3 {
   }
 }
 
-// ================= SELECTOR DE DÍAS (checkbox como chip) =================
-
 .dia-chip {
   display: inline-flex;
   align-items: center;
@@ -435,16 +418,13 @@ h3 {
   }
 }
 
-// ================= CARDS: sombra dura, sin blur =================
-
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: 20px 22px;
   box-shadow: 5px 5px 0 rgba(0, 51, 106, 0.06);
-  // Si el contenido (normalmente una tabla) es más ancho que la card en
-  // móvil/tablet, que scrollee la card — nunca la página completa.
+  // Contain wide tables inside the card scroll area rather than overflowing the viewport.
   overflow-x: auto;
 }
 
@@ -462,8 +442,6 @@ h3 {
     margin-top: 4px;
   }
 }
-
-// ================= BADGES =================
 
 .badge {
   display: inline-flex;
@@ -503,8 +481,7 @@ h3 {
     color: var(--warning);
   }
 
-  // Alias semánticos para estado de usuario (activo/inactivo), separados
-  // de aprobado/retirado que son estados de inscripción.
+  // Semantic aliases for account and approval workflow states.
   &.activo,
   &.avalado {
     background: var(--success-bg);
@@ -521,8 +498,6 @@ h3 {
     color: var(--ink-soft);
   }
 }
-
-// ================= BOTONES: color plano + sombra dura de "capa" =================
 
 .btn {
   display: inline-flex;
@@ -613,8 +588,7 @@ h3 {
     font-size: 12px;
   }
 
-  // Botón cuadrado solo-ícono (fila/tarjeta de acciones) — mismo tratamiento
-  // de color por variante, sin el ancho extra que deja el texto.
+  // Fixed-square icon-only button preserving variant colors without label padding.
   &.icon {
     display: inline-flex;
     align-items: center;
@@ -639,8 +613,6 @@ h3 {
     }
   }
 }
-
-// ================= FORMULARIOS =================
 
 .field {
   margin-bottom: 14px;
@@ -850,8 +822,6 @@ h3 {
   }
 }
 
-// ================= TABLAS =================
-
 table {
   width: 100%;
   border-collapse: collapse;
@@ -879,9 +849,7 @@ tr:last-child td {
   border-bottom: none;
 }
 
-// En móvil una tabla de varias columnas ya no cabe ni scrolleando bien —
-// cada fila se convierte en una tarjeta con pares etiqueta/valor. Requiere
-// que cada <td> traiga [attr.data-label] con el texto de su columna.
+// Stacks multi-column card tables into label/value cards on mobile; requires data-label on each <td>.
 @media (max-width: 640px) {
   .card table {
     border: none;
@@ -913,8 +881,7 @@ tr:last-child td {
     padding-bottom: 0;
   }
 
-  // Etiqueta arriba, valor abajo (no lado a lado): un correo o nombre
-  // largo simplemente hace salto de línea, nunca fuerza scroll horizontal.
+  // Stacks the label above the value so long emails or names wrap onto the next line without horizontal scrolling.
   .card table td {
     padding: 6px 0;
     border-bottom: none;
@@ -932,15 +899,12 @@ tr:last-child td {
     color: var(--ink-faint);
   }
 
-  // Fila de "no hay X registrados": un solo mensaje, sin etiqueta ni
-  // alineación a la derecha.
+  // Keeps empty-state rows left-aligned without a column label.
   .card table td.empty-note {
     display: block;
     text-align: left;
   }
 }
-
-// ================= BANNER DE HORAS (panel docente) =================
 
 .hours-gauge__track {
   height: 11px;
@@ -1034,8 +998,6 @@ tr:last-child td {
   }
 }
 
-// ================= TOASTS =================
-
 #toast-container {
   position: fixed;
   bottom: 24px;
@@ -1113,10 +1075,6 @@ tr:last-child td {
   }
 }
 
-// ================= MODAL =================
-// Shell genérico reutilizado por cualquier formulario/acción en overlay
-// (crear/editar usuario, calificar, encuesta, crear curso, ...).
-
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -1128,10 +1086,7 @@ tr:last-child td {
   padding: 20px;
 }
 
-// El tamaño/centrado que antes tenía .modal directamente ahora vive acá:
-// .modal-cerrar queda fuera de .modal (que es el que hace scroll interno),
-// así el botón de cerrar nunca se mueve aunque el contenido del formulario
-// sea largo.
+// Anchors .modal-cerrar outside the scrolling .modal container so the close button stays fixed.
 .modal-shell {
   position: relative;
   width: 100%;

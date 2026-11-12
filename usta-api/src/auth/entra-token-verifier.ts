@@ -2,6 +2,7 @@ import { createHmac, createPublicKey, timingSafeEqual, verify, type JsonWebKey }
 import { resolveAuthEnvConfig, type AuthEnvConfig } from '../config/env.config.js';
 import { UnauthorizedError } from '../utils/app-error.js';
 
+/** Normalized identity claims extracted from a verified Microsoft Entra ID v2.0 JWT. */
 export interface VerifiedEntraIdentity {
   entraOid: string;
   username: string;
@@ -40,7 +41,7 @@ interface CachedJwks {
   keysByKid: Map<string, JsonWebKey>;
 }
 
-const JWKS_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+const JWKS_CACHE_TTL_MS = 60 * 60 * 1000;
 const CLOCK_SKEW_SECONDS = 60;
 const jwksCacheByTenant = new Map<string, CachedJwks>();
 
@@ -53,6 +54,10 @@ function decodeBase64UrlJson<T>(segment: string): T {
   }
 }
 
+/**
+ * Derives the set of acceptable JWT `aud` values from the configured client ID, explicit audience,
+ * and `api://<app-id>/<scope>` URI forms emitted by Entra ID v1/v2 access and ID tokens.
+ */
 export function buildAllowedAudiences(authConfig: AuthEnvConfig): Set<string> {
   const allowed = new Set<string>();
   const addCandidate = (value: string): void => {
@@ -80,6 +85,10 @@ export function buildAllowedAudiences(authConfig: AuthEnvConfig): Set<string> {
   return allowed;
 }
 
+/**
+ * Resolves a tenant signing key by `kid` from the Microsoft OpenID v2.0 JWKS endpoint.
+ * Caches keysets per tenant for 1 hour, automatically re-fetching on cache miss when Microsoft rotates keys.
+ */
 async function getMicrosoftJwk(tenantId: string, kid: string): Promise<JsonWebKey> {
   const now = Date.now();
   const cached = jwksCacheByTenant.get(tenantId);
@@ -126,6 +135,16 @@ async function getMicrosoftJwk(tenantId: string, kid: string): Promise<JsonWebKe
   return matched;
 }
 
+/**
+ * Verifies an incoming Microsoft Entra ID Bearer token and extracts normalized institutional identity claims.
+ *
+ * Validation pipeline:
+ * - Enforces `exp` and `nbf` bounds with a 60-second clock-skew allowance.
+ * - Pins `tid` to the configured USTA Azure tenant and matches `aud` against allowed application identifiers.
+ * - Verifies `RS256` signatures against Microsoft's v2.0 JWKS discovery keys; permits `HS256` signed with
+ *   `ENTRA_TEST_HS256_SECRET` exclusively when `NODE_ENV === 'test'` for offline E2E verification.
+ * - Restricts principal email domains to `authConfig.institutionalDomains` and derives a normalized username.
+ */
 export async function verifyMicrosoftEntraToken(
   rawToken: string,
   authConfig: AuthEnvConfig = resolveAuthEnvConfig(),
@@ -180,6 +199,7 @@ export async function verifyMicrosoftEntraToken(
   const signingInput = Buffer.from(`${headerSeg}.${payloadSeg}`, 'utf8');
   const signatureBytes = Buffer.from(signatureSeg, 'base64url');
 
+  // Offline integration tests inject an HS256 secret under NODE_ENV=test to exercise SSO flows without outbound JWKS calls.
   const testSecret = process.env.ENTRA_TEST_HS256_SECRET;
   if (header.alg === 'HS256' && testSecret && process.env.NODE_ENV === 'test') {
     const expectedSig = createHmac('sha256', testSecret).update(signingInput).digest();

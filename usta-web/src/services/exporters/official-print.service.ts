@@ -1,6 +1,7 @@
 import type { ApprovalRequestAnnex3 } from '@usta/domain';
 import { useToast } from '@/composables/useToast';
 
+/** Escapes dynamic fields before interpolating into the printable Annex 3 HTML document. */
 function escapeHtml(value: unknown): string {
   return String(value ?? '')
     .replace(/&/g, '&amp;')
@@ -10,7 +11,12 @@ function escapeHtml(value: unknown): string {
     .replace(/'/g, '&#39;');
 }
 
+/** Generates standalone printable HTML documents for official institutional forms. */
 export class OfficialPrintService {
+  /**
+   * Opens a dedicated browser window and writes the formatted Annex 3 approval document,
+   * surfacing a toast error if popup windows are blocked by the browser.
+   */
   public static printOfficialAnnex3Format(
     request: ApprovalRequestAnnex3,
     _period?: string,

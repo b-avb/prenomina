@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Modal dialog for recording Annex 4 cap-exception justifications (requiring three acknowledgements
+ * from Deans) or executive review adjustment notes.
+ */
 import { computed, ref } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import { usePayrollStore } from '@/stores/payroll.store';

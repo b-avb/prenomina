@@ -59,7 +59,12 @@ export interface ImportedCatalogAnnexes456Result {
   unitQuotas: ImportedAnnex6UnitQuotaRow[];
 }
 
+/** XLSX import/export service for sectional consolidated reports, Annexes 4/5/6 catalog rules, and Annex 7 research matrices. */
 export class CatalogExcelService {
+  /**
+   * Exports a five-sheet sectional workbook (`Sábana maestra SAC`, unit quota summary,
+   * `Avales Anexo 3`, `Investigación Anexo 7`, and `Bitácora Auditoría`).
+   */
   public static exportSectionalConsolidatedXlsx(
     params: ExportSectionalConsolidatedParams,
   ): void {
@@ -257,6 +262,10 @@ export class CatalogExcelService {
     XLSX.writeFile(wb, `CONSOLIDADO_SECCIONAL_PRENOMINA_USTA_TUNJA_${period}.xlsx`);
   }
 
+  /**
+   * Exports a three-sheet parameterization workbook covering Annex 4 (SAC catalog),
+   * Annex 5 (program hour quotas), and consolidated Annexes 5/6 unit caps.
+   */
   public static exportCatalogAnnexes456Xlsx(params: ExportCatalogAnnexes456Params): void {
     const wb = XLSX.utils.book_new();
 
@@ -356,6 +365,10 @@ export class CatalogExcelService {
     XLSX.writeFile(wb, `PARAMETRIZACION_ANEXOS_4_5_6_USTA_${params.period}.xlsx`);
   }
 
+  /**
+   * Parses an uploaded parameterization workbook by classifying each worksheet heuristically
+   * as Annex 4 (SAC catalog), Annex 5 (program quotas), or Annex 6 (unit caps).
+   */
   public static async importCatalogAnnexes456FromXlsx(
     file: File,
   ): Promise<ImportedCatalogAnnexes456Result> {
@@ -575,6 +588,7 @@ export class CatalogExcelService {
     return { sacCodes, programs, unitQuotas };
   }
 
+  /** Exports the active period's Annex 7 research and SICDDI allocations to a single-sheet XLSX workbook. */
   public static exportResearchMatrixAnnex7Xlsx(
     period: string,
     allocations: ResearchAllocationAnnex7[],
@@ -627,6 +641,9 @@ export class CatalogExcelService {
     XLSX.writeFile(wb, `ANEXO_7_Matriz_Investigacion_USTA_${period}.xlsx`);
   }
 
+  /**
+   * Parses an Annex 7 Excel sheet into research and SICDDI allocation drafts (`10211` / `10226`).
+   */
   public static async importResearchMatrixAnnex7FromXlsx(
     file: File,
   ): Promise<Omit<ResearchAllocationAnnex7, 'id' | 'period'>[]> {

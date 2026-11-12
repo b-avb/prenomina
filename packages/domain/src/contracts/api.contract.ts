@@ -31,8 +31,6 @@ import type {
   SchedulePhase,
 } from '../types/payroll.types.js';
 
-// ─── Envelope ────────────────────────────────────────────────────────────────
-
 export interface ApiSuccess<T> {
   ok: true;
   data: T;
@@ -63,6 +61,7 @@ export const ACTOR_HEADERS = {
   period: 'X-Academic-Period',
 } as const;
 
+/** Authenticated principal resolved from the verified Bearer JWT on each request. */
 export interface ActorContext {
   name: string;
   role: PayrollRole;
@@ -72,11 +71,9 @@ export interface ActorContext {
   managedUnitIds?: string[];
 }
 
-// ─── Authentication & Users ──────────────────────────────────────────────────
-
 export const INSTITUTIONAL_EMAIL_DOMAIN = 'santototunja.edu.co';
 
-/** GET /api/auth/config */
+/** `GET /api/auth/config` */
 export interface AuthConfigResponse {
   authMode: AuthMode;
   allowLocalLogin: boolean;
@@ -91,13 +88,13 @@ export interface AuthConfigResponse {
   };
 }
 
-/** POST /api/auth/login */
+/** `POST /api/auth/login` */
 export interface LoginDto {
   username: string;
   password: string;
 }
 
-/** POST /api/auth/microsoft */
+/** `POST /api/auth/microsoft` */
 export interface MicrosoftLoginDto {
   idToken?: string;
   accessToken?: string;
@@ -108,16 +105,16 @@ export interface AuthSessionResponse {
   user: AuthUser;
 }
 
-/** POST /api/auth/change-password */
+/** `POST /api/auth/change-password` */
 export interface ChangePasswordDto {
   currentPassword: string;
   newPassword: string;
 }
 
-/** GET /api/users */
+/** `GET /api/users` */
 export type UserListResponse = AuthUser[];
 
-/** POST /api/users */
+/** `POST /api/users` */
 export interface CreateUserAccountDto {
   username: string;
   email?: string | null;
@@ -128,7 +125,7 @@ export interface CreateUserAccountDto {
   authProvider?: AuthProvider;
 }
 
-/** POST /api/users/:id/reset-password */
+/** `POST /api/users/:id/reset-password` */
 export interface ResetUserPasswordDto {
   id: string;
   temporaryPassword?: string;
@@ -139,8 +136,6 @@ export interface ResetUserPasswordResponse {
   temporaryPassword: string;
 }
 
-// ─── System ──────────────────────────────────────────────────────────────────
-
 export interface HealthResponse {
   status: 'ok' | 'degraded';
   database: 'up' | 'down';
@@ -148,12 +143,10 @@ export interface HealthResponse {
   timestamp: string;
 }
 
-/** GET /api/state?period= */
+/** `GET /api/state?period=` */
 export type SnapshotResponse = PayrollSnapshot;
 
-// ─── Periods ─────────────────────────────────────────────────────────────────
-
-/** POST /api/periods — clones the source period server-side. */
+/** `POST /api/periods` — clones teachers, spaces, allocations, rules, and schedule phases from `sourcePeriod`. */
 export interface CreatePeriodDto {
   code: string;
   sourcePeriod: string;
@@ -162,29 +155,24 @@ export interface CreatePeriodDto {
 
 export type PeriodResponse = AcademicPeriod;
 
-// ─── Rules ───────────────────────────────────────────────────────────────────
-
-/** PUT /api/rules-config?period= → BusinessRulesConfig */
+/** `PUT /api/rules-config?period=` */
 export type UpdateRulesConfigDto = Partial<BusinessRulesConfig>;
 
-// ─── Schedule phases ─────────────────────────────────────────────────────────
-
-/** PUT /api/schedule-phases/:id → SchedulePhase (phase ids are unique across periods). */
+/** `PUT /api/schedule-phases/:id` */
 export type UpdateSchedulePhaseDto = Partial<Omit<SchedulePhase, 'id'>> & { id: string };
 
-// ─── Academic units ──────────────────────────────────────────────────────────
-
-/** POST /api/units */
+/** `POST /api/units` */
 export type CreateAcademicUnitDto = CreateAcademicUnitPayload;
 
 export interface UnitWithDirectorResponse {
   unit: AcademicUnitSummary;
   directorTeacher: FacultyTeacher;
   deanUser?: AuthUser;
+  /** Populated only when a new Dean account is provisioned or its password is explicitly reset. */
   temporaryPassword?: string;
 }
 
-/** PUT /api/units/:id — profile and quota caps edition. */
+/** `PUT /api/units/:id` */
 export interface UpdateAcademicUnitDto {
   id: string;
   name?: string;
@@ -198,17 +186,17 @@ export interface UpdateAcademicUnitDto {
   graduatesCap20502?: number;
 }
 
-/** PUT /api/units/:id/dean */
+/** `PUT /api/units/:id/dean` */
 export type UpdateUnitDeanDto = UpdateUnitDeanPayload;
 
-/** PATCH /api/units/:id/status?period= → UnitVersionSnapshotResponse ('Enviada' snapshots v1 and bumps the version). */
+/** `PATCH /api/units/:id/status?period=` — transitioning to `Enviada` captures the v1 baseline snapshot and increments `currentVersion` on subsequent re-submissions. */
 export interface ChangeUnitStatusDto {
   unitId: string;
   status: PayrollStatus;
   observation?: string;
 }
 
-/** POST /api/units/:id/version-snapshot?period= */
+/** `POST /api/units/:id/version-snapshot?period=` */
 export interface SnapshotUnitVersionDto {
   unitId: string;
 }
@@ -218,28 +206,24 @@ export interface UnitVersionSnapshotResponse {
   teachers: FacultyTeacher[];
 }
 
-// ─── Academic programs (Annex 5) ─────────────────────────────────────────────
-
-/** POST /api/programs */
+/** `POST /api/programs` */
 export type CreateAcademicProgramDto = Omit<ProgramQuotaAnnex5, 'id' | 'unitName'>;
 
-/** PUT /api/programs/:id */
+/** `PUT /api/programs/:id` */
 export type UpdateAcademicProgramDto = Partial<Omit<ProgramQuotaAnnex5, 'id' | 'unitId' | 'unitName'>> & {
   id: string;
 };
 
-/** Program writes return the unit too, because its quota caps are recalculated server-side. */
+/** Returns both the mutated program and the parent unit after recalculating its aggregated Annex 5 caps. */
 export interface ProgramMutationResponse {
   program: ProgramQuotaAnnex5 | null;
   unit: AcademicUnitSummary;
 }
 
-// ─── SAC catalog (Annex 4) ───────────────────────────────────────────────────
-
-/** POST /api/sac-codes */
+/** `POST /api/sac-codes` */
 export type CreateSacCodeDto = SacCode;
 
-/** PUT /api/sac-codes/:code */
+/** `PUT /api/sac-codes/:code` — setting `newCode` renames the code across allocations, approvals, and research records. */
 export type UpdateSacCodeDto = Partial<Omit<SacCode, 'code'>> & {
   code: string;
   newCode?: string;
@@ -259,7 +243,7 @@ export interface ImportedSacCodeRowDto {
   severity?: SacCode['severity'];
 }
 
-/** POST /api/sac-codes/import → ImportSacCodesResponse */
+/** `POST /api/sac-codes/import` */
 export interface ImportSacCodesDto {
   rows: ImportedSacCodeRowDto[];
 }
@@ -270,12 +254,10 @@ export interface ImportSacCodesResponse {
   updatedCount: number;
 }
 
-// ─── Teachers (Annex 2) ──────────────────────────────────────────────────────
-
-/** POST /api/teachers?period= */
+/** `POST /api/teachers?period=` */
 export type CreateTeacherDto = CreateTeacherPayload & { unitId: string };
 
-/** PUT /api/teachers/:id — profile fields only; allocations and spaces have dedicated endpoints. */
+/** `PUT /api/teachers/:id` — updates roster profile attributes; spaces and SAC allocations use dedicated sub-resources. */
 export interface UpdateTeacherDto {
   id: string;
   documentId?: string;
@@ -291,7 +273,7 @@ export interface UpdateTeacherDto {
   pseManualOverride?: number | null;
 }
 
-/** POST /api/teachers/:teacherId/spaces — `hours` are module hours for postgraduate spaces. */
+/** `POST /api/teachers/:teacherId/spaces` — `hours` represents monthly hours for `Pregrado` and total module hours for `Posgrado`. */
 export interface AddAcademicSpaceDto {
   teacherId: string;
   name: string;
@@ -299,7 +281,7 @@ export interface AddAcademicSpaceDto {
   hours: number;
 }
 
-/** PUT /api/teachers/:teacherId/spaces/:spaceId → FacultyTeacher. `hours` are module hours for postgraduate spaces. */
+/** `PUT /api/teachers/:teacherId/spaces/:spaceId` — `hours` represents monthly hours for `Pregrado` and total module hours for `Posgrado`. */
 export interface UpdateAcademicSpaceDto {
   teacherId: string;
   spaceId: string;
@@ -308,9 +290,7 @@ export interface UpdateAcademicSpaceDto {
   hours?: number;
 }
 
-/** DELETE /api/teachers/:teacherId/spaces/:spaceId → FacultyTeacher */
-
-/** PUT /api/teachers/:teacherId/allocations/:code */
+/** `PUT /api/teachers/:teacherId/allocations/:code` */
 export interface UpdateCodeAllocationDto {
   teacherId: string;
   code: string;
@@ -321,27 +301,25 @@ export interface UpdateCodeAllocationDto {
   directorNote?: string;
 }
 
-/** Teacher import row: identical to a teacher but without any identifier. */
+/** Roster import entry; server assigns teacher and academic space UUIDs during persistence. */
 export type ImportedTeacherDto = Omit<FacultyTeacher, 'id' | 'unitId' | 'academicSpaces'> & {
   academicSpaces: Array<Omit<FacultyTeacher['academicSpaces'][number], 'id'>>;
 };
 
-/** POST /api/units/:id/teachers/import?period= — replaces the unit roster for the period. */
+/** `POST /api/units/:id/teachers/import?period=` — atomically replaces the unit's period roster. */
 export interface ImportTeachersDto {
   unitId: string;
   fileName: string;
   teachers: ImportedTeacherDto[];
 }
 
-// ─── Approvals (Annex 3) ─────────────────────────────────────────────────────
-
-/** POST /api/approvals?period= — upserts the pending request for (teacherId, code). */
+/** `POST /api/approvals?period=` — upserts the Annex 3 request for `(teacherId, code)`. */
 export type CreateApprovalRequestDto = Omit<
   ApprovalRequestAnnex3,
   'id' | 'period' | 'status' | 'requestedAt' | 'decidedBy' | 'decidedAt' | 'viceRectorNote'
 >;
 
-/** POST /api/approvals/attachments */
+/** `POST /api/approvals/attachments` — accepts a base64-encoded PDF verified by `%PDF-` magic bytes on the server. */
 export interface UploadApprovalAttachmentDto {
   fileName: string;
   mimeType: string;
@@ -356,32 +334,28 @@ export interface ApprovalAttachmentResponse {
   url: string;
 }
 
-/** PATCH /api/approvals/:id/decision — `decidedBy` is taken from the actor context. */
+/** `PATCH /api/approvals/:id/decision` — `decidedBy` is stamped from the authenticated Vice-Rector principal. */
 export interface DecideApprovalDto {
   id: string;
   status: ApprovalStatus;
   viceRectorNote?: string;
 }
 
-// ─── Research (Annex 7) ──────────────────────────────────────────────────────
-
-/** POST /api/research?period= */
+/** `POST /api/research?period=` */
 export type CreateResearchAllocationDto = Omit<ResearchAllocationAnnex7, 'id' | 'period'>;
 
-/** PUT /api/research/:id */
+/** `PUT /api/research/:id` */
 export type UpdateResearchAllocationDto = Partial<Omit<ResearchAllocationAnnex7, 'id' | 'period'>> & {
   id: string;
 };
 
-/** Research writes return the affected teacher, whose allocations are synchronized server-side. */
+/** Returns the mutated Annex 7 row and the affected teacher after synchronizing their SAC allocations. */
 export interface ResearchMutationResponse {
   allocation: ResearchAllocationAnnex7 | null;
   teacher: FacultyTeacher | null;
 }
 
-// ─── Audit ───────────────────────────────────────────────────────────────────
-
-/** GET /api/audit-logs?unitId=&limit= — read only; entries are written by the server. */
+/** `GET /api/audit-logs?unitId=&limit=` */
 export type AuditLogListResponse = AuditLogEntry[];
 
 export interface DeletedResponse {

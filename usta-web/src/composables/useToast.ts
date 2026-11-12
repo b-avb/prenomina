@@ -8,6 +8,7 @@ export interface ToastItem {
 
 const toasts = ref<ToastItem[]>([]);
 
+/** Module-scoped toast notification queue shared across Pinia stores and Vue components. */
 export function useToast() {
   function showToast(
     message: string,

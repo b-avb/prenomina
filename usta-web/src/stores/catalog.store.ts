@@ -18,6 +18,10 @@ import { restoreAt } from './utils/collection.utils';
 
 export type SacCodePatch = Omit<UpdateSacCodeDto, 'code'>;
 
+/**
+ * Manages the institutional Annex 4 SAC activity catalog and global validation rules,
+ * guarding structural codes (`40104`, `40108`, Annex 5/6 bag codes, `10226`) against rename or deletion.
+ */
 export const useCatalogStore = defineStore('catalog', () => {
   const orgStore = useOrganizationStore();
   const { runOptimistic, runPessimistic, reject } = useMutation();
@@ -57,6 +61,7 @@ export const useCatalogStore = defineStore('catalog', () => {
     );
   }
 
+  /** Uses pessimistic commit when renaming a SAC code (`newCode`) so dependent stores can re-key references after commit. */
   function updateSacCode(
     code: string,
     patch: SacCodePatch,

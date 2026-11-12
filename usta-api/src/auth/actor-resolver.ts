@@ -29,6 +29,7 @@ export const ROLE_PERMISSIONS = {
 } as const;
 
 export interface ResolveActorOptions {
+  /** Permits access while `mustChangePassword` is active (used only by `/api/auth/me` and `/api/auth/change-password`). */
   allowPendingPasswordChange?: boolean;
 }
 
@@ -41,6 +42,10 @@ export interface ActorResolver {
   ): Promise<ActorContext>;
 }
 
+/**
+ * Strips diacritics, punctuation, and redundant whitespace to compare human names case-insensitively
+ * when matching a Dean user's `fullName` against `academic_units.dean_name`.
+ */
 export function normalizeComparableName(raw: string): string {
   return raw
     .normalize('NFD')
@@ -51,6 +56,7 @@ export function normalizeComparableName(raw: string): string {
     .toLowerCase();
 }
 
+/** Extracts the raw token from an RFC 6750 `Authorization: Bearer <token>` request header. */
 export function extractBearerToken(req: IncomingMessage): string | null {
   const raw = req.headers.authorization;
   const value = Array.isArray(raw) ? raw[0] : raw;
@@ -59,6 +65,10 @@ export function extractBearerToken(req: IncomingMessage): string | null {
   return match?.[1]?.trim() ?? null;
 }
 
+/**
+ * Extracts and verifies the request's HS256 Bearer JWT, rejecting requests from accounts flagged
+ * with `mustChangePassword` unless the route explicitly opts into `allowPendingPasswordChange`.
+ */
 export function requireValidTokenClaims(
   req: IncomingMessage,
   options: ResolveActorOptions = {},
@@ -81,6 +91,7 @@ export function requireValidTokenClaims(
   return claims;
 }
 
+/** Returns all academic unit IDs a Dean is authorized to manage, falling back to their primary `unitId`. */
 export function getActorAllowedUnitIds(actor: ActorContext): readonly string[] {
   if (actor.managedUnitIds && actor.managedUnitIds.length > 0) {
     return actor.managedUnitIds;
@@ -89,8 +100,8 @@ export function getActorAllowedUnitIds(actor: ActorContext): readonly string[] {
 }
 
 /**
- * Enforces multi-tenant faculty isolation: a Dean (`role === 'dean'`) may only
- * access or mutate resources belonging to their assigned `managedUnitIds`.
+ * Enforces faculty-level tenant isolation: a Dean (`role === 'dean'`) may only read or mutate
+ * resources belonging to their resolved `managedUnitIds`. Institutional roles bypass unit scoping.
  */
 export function assertUnitAccess(actor: ActorContext, targetUnitId: string): void {
   if (actor.role === 'dean') {
@@ -104,8 +115,15 @@ export function assertUnitAccess(actor: ActorContext, targetUnitId: string): voi
 }
 
 /**
- * Strictly resolves the acting user from a signed RFC 7519 HMAC-SHA256 Bearer JWT
- * and verifies live account status, role, unit assignment, and password state in MariaDB.
+ * Resolves the acting user from a signed RFC 7519 HMAC-SHA256 Bearer JWT and cross-checks
+ * live account state in MariaDB on every authenticated request.
+ *
+ * Security invariants enforced:
+ * - Immediate session revocation: tokens whose `pwdChangedAt` claim diverges from `userRecord.passwordChangedAt`
+ *   (or that predate an administrative password reset) are rejected with `401 Unauthorized`.
+ * - Authoritative RBAC: role checks evaluate `userRecord.role` from MariaDB rather than trusting the JWT claim.
+ * - Multi-unit Dean scope: unions `userRecord.unitId` with any academic unit whose normalized `deanName`
+ *   matches `userRecord.fullName`, supporting Deans who oversee both a Faculty and an academic Department.
  */
 export class JwtActorResolver implements ActorResolver {
   constructor(

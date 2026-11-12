@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Mandatory first-login password replacement step enforcing length, alphanumeric complexity, and
+ * differentiation from the temporary credential.
+ */
 import { computed, ref, watch } from 'vue';
 import type { AuthUser, PayrollRole } from '@usta/domain';
 

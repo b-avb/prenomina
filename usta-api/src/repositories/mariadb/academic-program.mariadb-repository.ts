@@ -4,6 +4,7 @@ import type { AcademicProgramRecord } from '../../models/persistence.models.js';
 import type { AcademicProgramRepository } from '../academic-program.repository.js';
 import { toAcademicProgram, toAcademicProgramRow } from './mappers/academic-program.mapper.js';
 
+/** MariaDB adapter for `academic_programs`, joining `academic_units` to project `unitName`. */
 export class MariaDbAcademicProgramRepository implements AcademicProgramRepository {
   public async list(db: DbExecutor, filter: { unitId?: string } = {}): Promise<ProgramQuotaAnnex5[]> {
     let query = this.baseQuery(db);

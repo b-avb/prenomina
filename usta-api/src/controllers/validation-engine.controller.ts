@@ -5,6 +5,10 @@ import type { ValidationEngineService } from '../services/validation-engine.serv
 import { type RouteParams, sendSuccess } from '../utils/http.utils.js';
 import { optionalQueryParam, requirePathParam } from '../validation/query-params.js';
 
+/**
+ * HTTP handler evaluating institutional compliance rules (`Acuerdo No. 48 de 2025`, Annexes 4–7)
+ * for a single academic unit. Enforces Dean tenant scope via `assertUnitAccess`.
+ */
 export class ValidationEngineController {
   constructor(private readonly service: ValidationEngineService) {}
 

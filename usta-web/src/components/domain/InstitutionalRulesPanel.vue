@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Panel for toggling sectional validation rules (`40108` postgraduate PSE inclusion, Annex 6
+ * `20502` faculty cap, blocking-alert submission lock, and `40104` teaching thresholds).
+ */
 import { usePayrollStore } from '@/stores/payroll.store';
 import { eventChecked, eventNumber } from '@/utils/dom-events';
 

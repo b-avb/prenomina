@@ -80,6 +80,10 @@ interface HttpCallResult<T> {
   payload: ApiSuccess<T> | ApiFailure | null;
 }
 
+/**
+ * End-to-end integration suite exercising the HTTP router, controllers, services,
+ * JWT RBAC guards, and MariaDB repositories against a live ephemeral loopback server.
+ */
 async function runProductionE2ESuite(): Promise<void> {
   const db = createDatabase(ENV_CONFIG.database);
   await migrateToLatest(db);
@@ -238,7 +242,7 @@ async function runProductionE2ESuite(): Promise<void> {
     console.log(' USTA TUNJA — PRODUCTION E2E SUITE (REAL HTTP + REAL MARIADB, 0 MOCKS)');
     console.log('====================================================================\n');
 
-    // Ensure clean canonical database seed before starting the full lifecycle
+    // Reset tables to a deterministic baseline with a known initial temporary password hash.
     await seedDatabaseWithOfficialData(tx, repos, ids, {
       forceTruncate: true,
       overridePasswordHash: hashPassword(E2E_INITIAL_TEMP_PASSWORD),
@@ -249,9 +253,7 @@ async function runProductionE2ESuite(): Promise<void> {
     });
     assert.equal(seededAuditCount.length, 0);
 
-    // -------------------------------------------------------------------------
-    // UC-0: System Health, Auth Config & Mandatory First-Login Password Change
-    // -------------------------------------------------------------------------
+    // Health probe, hybrid auth discovery, and mandatory first-login password rotation.
     const healthRes = await request<HealthResponse>({ path: '/api/health' });
     const health = expectData(healthRes, 200, 'GET /api/health');
     assert.equal(health.status, 'ok');
@@ -266,6 +268,10 @@ async function runProductionE2ESuite(): Promise<void> {
       `UC-0.2 Hybrid Auth & Microsoft Entra ID configuration verified (domain: @${authConfig.microsoftEntra.institutionalDomain})`,
     );
 
+    /**
+     * Logs in with a temporary password, verifies `PASSWORD_CHANGE_REQUIRED` enforcement on
+     * business routes, rotates the password, and confirms immediate `pwdChangedAt` token revocation.
+     */
     async function authenticateAndActivateAccount(
       username: string,
       newPersonalPassword: string,
@@ -279,7 +285,6 @@ async function runProductionE2ESuite(): Promise<void> {
       const initialSession = expectData(loginRes, 200, `POST /api/auth/login (${username})`);
       assert.equal(initialSession.user.mustChangePassword, true);
 
-      // Verify protected routes reject JWT while mustChangePassword is true
       const blockedStateRes = await request<PayrollSnapshot>({
         path: '/api/state',
         token: initialSession.token,
@@ -291,7 +296,6 @@ async function runProductionE2ESuite(): Promise<void> {
       );
       assert.equal(blockedErr.code, 'PASSWORD_CHANGE_REQUIRED');
 
-      // Change password via real HTTP endpoint
       const changeRes = await request<AuthSessionResponse>({
         method: 'POST',
         path: '/api/auth/change-password',
@@ -308,14 +312,12 @@ async function runProductionE2ESuite(): Promise<void> {
       );
       assert.equal(activeSession.user.mustChangePassword, false);
 
-      // Verify old JWT is immediately revoked via pwdRev mismatch
       const oldTokenCheck = await request<AuthUser>({
         path: '/api/auth/me',
         token: initialSession.token,
       });
       expectError(oldTokenCheck, 401, `Revoked old JWT after password change (${username})`);
 
-      // Verify new JWT works on /api/auth/me
       const meCheck = await request<AuthUser>({
         path: '/api/auth/me',
         token: activeSession.token,
@@ -335,7 +337,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-0.3 Director (@dir.ensenanza) first-time login, mandatory password change & JWT rotation verified',
     );
 
-    // Verify clean initial audit trail (only @dir.ensenanza's real password change, 0 demo logs) & exact 22 official institutional accounts
+    // Confirm baseline seed produces zero synthetic audit entries and the 22 institutional accounts.
     const initialAuditRes = await request<AuditLogEntry[]>({
       path: '/api/audit-logs?period=2026-2&limit=50',
       token: directorSession.token,
@@ -369,7 +371,6 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-0.5 Vice-Rector (@viceacademica) first-time login & mandatory password change verified',
     );
 
-    // Provision Research account via Director with auto-generated cryptographic temporary password
     const provisionResearchRes = await request<ResetUserPasswordResponse>({
       method: 'POST',
       path: '/api/users',
@@ -398,9 +399,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-0.6 Research account provisioned with random temporary password, logged in & activated',
     );
 
-    // -------------------------------------------------------------------------
-    // UC-1: Zero-Trust Security, Header Forgery Rejection & Multi-Tenant RBAC
-    // -------------------------------------------------------------------------
+    // Bearer-token authentication, header-forgery rejection, and multi-tenant RBAC isolation.
     const unauthRes = await request<PayrollSnapshot>({ path: '/api/state' });
     expectError(unauthRes, 401, 'Unauthenticated GET /api/state');
 
@@ -469,9 +468,7 @@ async function runProductionE2ESuite(): Promise<void> {
     expectError(researchCreateSacRes, 403, 'Research attempting POST /api/sac-codes');
     recordStep('UC-1.2 Multi-tenant unit isolation and role-based access control enforced (HTTP 403)');
 
-    // -------------------------------------------------------------------------
-    // UC-2: Full State Hydration, Periods & Institutional Users Directory
-    // -------------------------------------------------------------------------
+    // Snapshot hydration, unstarted-unit submission guard, periods, and user directory.
     const stateRes = await request<PayrollSnapshot>({
       path: '/api/state',
       token: directorSession.token,
@@ -546,9 +543,7 @@ async function runProductionE2ESuite(): Promise<void> {
     assert.equal(usersList.length, 23);
     recordStep('UC-2.2 Active period (2026-2 only) and 22+1 institutional user accounts verified');
 
-    // -------------------------------------------------------------------------
-    // UC-3: Academic Units, Auto-Provisioned Dean Login & Annex 5 Program Quotas
-    // -------------------------------------------------------------------------
+    // Academic unit lifecycle, auto-provisioned Dean account, and Annex 5 program quota rollups.
     const createUnitRes = await request<UnitWithDirectorResponse>({
       method: 'POST',
       path: '/api/units',
@@ -580,7 +575,6 @@ async function runProductionE2ESuite(): Promise<void> {
       `UC-3.1 Created Academic Unit (${createdUnitId}) + clean 0h Director teacher (expected=210h) + Dean account (@elena.vargas)`,
     );
 
-    // Log in with the newly provisioned Dean account and change password via HTTP
     const newDeanSession = await authenticateAndActivateAccount(
       'elena.vargas',
       'ElenaBiomed2026*Ok',
@@ -676,9 +670,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-3.4 Annex 5 Program CRUD and automatic faculty bag quota recalculation verified',
     );
 
-    // -------------------------------------------------------------------------
-    // UC-4: SAC Catalog (Annex 4), Institutional Rules Config & Schedule Phases
-    // -------------------------------------------------------------------------
+    // Annex 4 SAC catalog CRUD, primary-key code rename, business rules, and schedule phases.
     const createSacRes = await request<SacCode>({
       method: 'POST',
       path: '/api/sac-codes',
@@ -814,9 +806,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-4.2 Institutional Business Rules & Schedule Phases configuration persistence verified',
     );
 
-    // -------------------------------------------------------------------------
-    // UC-5: Faculty Workload, Academic Spaces & Automatic PSE (Annex 2, 5, 6)
-    // -------------------------------------------------------------------------
+    // Faculty teacher roster CRUD, academic space assignments, and 25% PSE derivation.
     const createTeacherRes = await request<FacultyTeacher>({
       method: 'POST',
       path: '/api/teachers',
@@ -864,7 +854,7 @@ async function runProductionE2ESuite(): Promise<void> {
     assert.equal(
       WorkloadCalculatorDomain.getEffectivePse(teacherWithSpace, originalRules),
       12,
-    ); // Automatic PSE = 25% of 48h = 12h
+    );
 
     const spaceId = teacherWithSpace.academicSpaces[0]!.id;
     const updateSpaceRes = await request<FacultyTeacher>({
@@ -884,7 +874,7 @@ async function runProductionE2ESuite(): Promise<void> {
     assert.equal(
       WorkloadCalculatorDomain.getEffectivePse(teacherWithUpdatedSpace, originalRules),
       16,
-    ); // Automatic PSE = 25% of 64h = 16h
+    );
     recordStep(
       'UC-5.2 Academic Space CRUD & automatic PSE (40108 = 25% of 40104) calculation verified',
     );
@@ -921,9 +911,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-5.3 SAC code allocation (40109) and real-time Annex 5/6 unit normative validation verified',
     );
 
-    // -------------------------------------------------------------------------
-    // UC-6: Vice-Rectorate Approvals Workflow — Annex 3
-    // -------------------------------------------------------------------------
+    // Annex 3 Vice-Rectorate special approval workflow and RBAC decision guard.
     const createApprovalRes = await request<ApprovalRequestAnnex3>({
       method: 'POST',
       path: '/api/approvals',
@@ -954,7 +942,6 @@ async function runProductionE2ESuite(): Promise<void> {
     const createdApproval = expectData(createApprovalRes, 201, 'POST /api/approvals');
     assert.equal(createdApproval.status, 'Pendiente');
 
-    // Verify Dean cannot decide an Annex 3 approval
     const deanDecideAttempt = await request<ApprovalRequestAnnex3>({
       method: 'PATCH',
       path: `/api/approvals/${createdApproval.id}/decision`,
@@ -967,7 +954,6 @@ async function runProductionE2ESuite(): Promise<void> {
     });
     expectError(deanDecideAttempt, 403, 'Dean attempting PATCH /api/approvals/:id/decision');
 
-    // Vice-Rector decides the approval
     const decideApprovalRes = await request<ApprovalRequestAnnex3>({
       method: 'PATCH',
       path: `/api/approvals/${createdApproval.id}/decision`,
@@ -989,9 +975,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-6.1 Annex 3 Vice-Rectorate Approval request (by Dean) and official decision (by Vice-Rector) verified',
     );
 
-    // -------------------------------------------------------------------------
-    // UC-7: Confidential Research Matrix — Annex 7
-    // -------------------------------------------------------------------------
+    // Annex 7 research allocation CRUD and bidirectional teacher allocation synchronization.
     const listResearchRes = await request<ResearchAllocationAnnex7[]>({
       path: '/api/research',
       token: researchSession.token,
@@ -1058,7 +1042,6 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-7.1 Annex 7 Confidential Research CRUD & real-time synchronization with teacher SAC allocations verified',
     );
 
-    // Clean up test space and test teacher via HTTP
     const removeSpaceRes = await request<FacultyTeacher>({
       method: 'DELETE',
       path: `/api/teachers/${createdTeacher.id}/spaces/${spaceId}`,
@@ -1075,9 +1058,7 @@ async function runProductionE2ESuite(): Promise<void> {
     assert.equal(deletedTeacher.deletedId, createdTeacher.id);
     recordStep('UC-7.2 Teacher academic space removal and teacher deletion verified');
 
-    // -------------------------------------------------------------------------
-    // UC-8: Payroll Workflow, Version Snapshot & Semester Period Cloning
-    // -------------------------------------------------------------------------
+    // Unit version baselines, workflow transitions, and semester period cloning.
     const snapshotVersionRes = await request<UnitVersionSnapshotResponse>({
       method: 'POST',
       path: '/api/units/ing-industrial/version-snapshot',
@@ -1137,9 +1118,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-8.2 Semester period cloning (2026-2 -> 2027-1) with status reset & roster migration verified',
     );
 
-    // -------------------------------------------------------------------------
-    // UC-9: User Account Provisioning, Password Reset & Immutable Audit Trail
-    // -------------------------------------------------------------------------
+    // User account provisioning, administrative password reset, audit trail, and idempotent re-seeding.
     const createUserRes = await request<ResetUserPasswordResponse>({
       method: 'POST',
       path: '/api/users',
@@ -1184,7 +1163,7 @@ async function runProductionE2ESuite(): Promise<void> {
       `UC-9.1 User provisioning, password reset & immutable audit trail (${auditLogs.length} entries) verified`,
     );
 
-    // Verify idempotent non-destructive re-seed preserves changed personal passwords
+    // Ensure non-destructive startup reconciliation preserves activated user password hashes.
     await seedDatabaseWithOfficialData(tx, repos, ids, {
       forceTruncate: false,
     });
@@ -1203,7 +1182,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-9.2 Idempotent production re-seed (deploy.sh path) preserves activated user passwords',
     );
 
-    // ─── UC-10: Reverse-Proxy Method Tunneling, Official Nomenclature & Per-Program Allocations ──
+    // Reverse-proxy HTTP verb tunneling, Acuerdo No. 48 nomenclature, and per-program allocations.
     const stateAfterReseedRes = await request<PayrollSnapshot>({
       path: '/api/state?period=2026-2',
       token: reloginDirector.token,
@@ -1232,7 +1211,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-10.1 Official Acuerdo No. 48 de 2025 divisions and Dirección de Ciencias Básicas / Humanidades verified',
     );
 
-    // Create a new unit with hasPostgraduates=false + dedicated Dean account, then add a Posgrado program -> hasPostgraduates must become true
+    // Verify that adding an active Posgrado program automatically flips `unit.hasPostgraduates` to true.
     const newUnitNoPostgradRes = await request<UnitWithDirectorResponse>({
       method: 'POST',
       path: '/api/units',
@@ -1304,7 +1283,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'POST /api/teachers (TC teacher in Inteligencia de Negocios Test)',
     );
 
-    // Test POST method tunneling (?_method=PUT + X-HTTP-Method-Override: PUT) for per-program allocation in matching unit
+    // Exercise `POST` verb tunneling (`?_method=PUT` + `X-HTTP-Method-Override: PUT`) for per-program allocations.
     const tunneledAllocRes = await request<FacultyTeacher>({
       method: 'POST',
       path: `/api/teachers/${encodeURIComponent(unitTcTeacher.id)}/allocations/30411?_method=PUT`,
@@ -1331,7 +1310,6 @@ async function runProductionE2ESuite(): Promise<void> {
       'MAESTRÍA EN ANALÍTICA DE NEGOCIOS',
     );
 
-    // Verify cross-unit programId assignment is rejected with HTTP 400
     const activePeriodStateRes = await request<PayrollSnapshot>({
       path: '/api/state',
       token: reloginDirector.token,
@@ -1363,7 +1341,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-10.2 Apache/WAF POST method tunneling (?_method=PUT), per-program ANEXO 5 allocation & cross-unit programId guard verified',
     );
 
-    // ─── UC-11: Multi-Unit Dean, Workflow Locking, Binary PDF Annex 3 & CATEDRA Guards ──
+    // Multi-unit Dean scope (`managedUnitIds`), workflow edit locks, binary PDF attachments, and `CATEDRA` guards.
     const resetLenguasRes = await request<ResetUserPasswordResponse>({
       method: 'POST',
       path: '/api/users/user-dean-lic-lenguas/reset-password',
@@ -1463,7 +1441,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'Multi-unit Dean blocked from GET /api/units/derecho/validation',
     );
 
-    // Verify Dean is rejected with HTTP 403 if attempting to set directorNote, succeeds without it, and Director persists directorNote
+    // Ensure `directorNote` is reserved exclusively for `director` actors.
     const deanSpoofNoteRes = await request<FacultyTeacher>({
       method: 'PUT',
       path: `/api/teachers/${infantilTeacher.id}/allocations/40109`,
@@ -1517,7 +1495,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-11.1 Multi-unit Dean (@licenciaturaenlenguas -> lic-lenguas + lic-infantil), tenant-scoped state/audit & directorNote guard verified',
     );
 
-    // UC-11.2: Dean workflow submission ('Enviada'), edit lock while submitted, withdraw ('Borrador'), and review lock
+    // Dean submission (`Enviada`), mutation lock while submitted, withdrawal to `Borrador`, and `En Revisión` lock.
     const intelDeanSession = await authenticateAndActivateAccount(
       'dec.inteligencia',
       'DeanIntel2026*Ok',
@@ -1627,7 +1605,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-11.2 Dean workflow submission (Enviada), mutation lock while submitted/in-review & withdraw-to-Borrador verified',
     );
 
-    // UC-11.3: Annex 3 real PDF binary upload, magic-bytes check & multi-tenant binary download
+    // Annex 3 binary PDF upload, `%PDF-` header signature verification, and tenant-scoped download.
     const spoofedPdfRes = await request<ApprovalAttachmentResponse>({
       method: 'POST',
       path: '/api/approvals/attachments',
@@ -1718,7 +1696,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-11.3 Annex 3 real PDF binary upload, %PDF- magic-bytes check & authenticated multi-tenant download verified',
     );
 
-    // UC-11.4: Research Hora Cátedra (CATEDRA) rejection & destructive state-reset production guard
+    // Annex 7 `CATEDRA` teacher exclusion and `ALLOW_DESTRUCTIVE_STATE_RESET` production guard.
     const catedraTeacherRes = await request<FacultyTeacher>({
       method: 'POST',
       path: '/api/teachers',
@@ -1787,7 +1765,7 @@ async function runProductionE2ESuite(): Promise<void> {
     for (const filePath of uploadedTestFiles) {
       await fs.unlink(filePath).catch(() => undefined);
     }
-    // Restore canonical official seed data so the database stays clean after tests
+    // Restore baseline seed data so local MariaDB state remains clean after suite teardown.
     await seedDatabaseWithOfficialData(tx, repos, ids, {
       forceTruncate: true,
     });

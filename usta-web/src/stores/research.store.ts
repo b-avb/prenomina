@@ -14,6 +14,10 @@ import { useWorkloadStore } from './workload.store';
 
 export type ResearchAllocationPatch = Omit<UpdateResearchAllocationDto, 'id'>;
 
+/**
+ * Manages Annex 7 research and SICDDI allocations, reconciling returned teacher records
+ * into `useWorkloadStore` whenever research hours are created, updated, or removed.
+ */
 export const useResearchStore = defineStore('research', () => {
   const orgStore = useOrganizationStore();
   const workloadStore = useWorkloadStore();

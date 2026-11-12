@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Sectional executive dashboard for Teaching & Learning Directorate and Academic Vice-Rectory
+ * oversight, KPI tracking, process schedule management, and consolidated Excel export.
+ */
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { cloneState } from '@/composables/useMutation';
@@ -106,7 +110,6 @@ function handleExportSectionalConsolidated() {
 
 <template>
   <div>
-    <!-- COMPACT HEADER -->
     <div class="page-top">
       <div>
         <div class="eyebrow-tag" style="margin-bottom: 3px">
@@ -137,7 +140,6 @@ function handleExportSectionalConsolidated() {
       </div>
     </div>
 
-    <!-- EXECUTIVE KPI STRIP -->
     <div class="grid cols-4" style="margin-bottom: 16px; gap: 12px">
       <div class="card stat" style="padding: 14px 18px">
         <div class="num" style="font-size: 24px">{{ kpis.approved }} / {{ kpis.total }}</div>
@@ -173,7 +175,6 @@ function handleExportSectionalConsolidated() {
       </div>
     </div>
 
-    <!-- OFFICIAL PROCESS SCHEDULE STRIP -->
     <div
       style="display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 8px; align-items: center; margin-bottom: 14px; background: var(--surface-soft); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; font-size: 11px"
     >
@@ -204,7 +205,6 @@ function handleExportSectionalConsolidated() {
       </button>
     </div>
 
-    <!-- TABS -->
     <div class="tabs" style="margin-bottom: 14px">
       <button
         type="button"
@@ -232,20 +232,16 @@ function handleExportSectionalConsolidated() {
       </button>
     </div>
 
-    <!-- TAB 1: ACADEMIC UNITS INBOX -->
     <ExecutiveUnitsInboxTab
       v-if="activeTab === 'inbox'"
       @open-review="openFacultyReview"
       @return-unit="(unit) => (unitToReturn = unit)"
     />
 
-    <!-- TAB 2: SECTIONAL ANALYTICS -->
     <SectionalAnalyticsPanel v-else-if="activeTab === 'analytics'" />
 
-    <!-- TAB 3: AUDIT LOG -->
     <AuditLogPanel v-else />
 
-    <!-- Return Payroll Modal -->
     <UstaModal
       :open="!!unitToReturn"
       title="Devolver prenómina"
@@ -272,7 +268,6 @@ function handleExportSectionalConsolidated() {
       </template>
     </UstaModal>
 
-    <!-- Configure Schedule Modal -->
     <UstaModal
       :open="isScheduleModalOpen"
       title="Cronograma del proceso"

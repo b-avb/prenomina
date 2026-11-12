@@ -2,6 +2,10 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { INSTITUTIONAL_EMAIL_DOMAIN, type AuthMode } from '@usta/domain';
 
+/**
+ * Loads `.env` key-value pairs from the workspace or package root without overriding
+ * variables already injected by the host process environment.
+ */
 function loadDotEnvIfPresent(): void {
   const candidates = [
     resolve(process.cwd(), '.env'),
@@ -29,13 +33,14 @@ function loadDotEnvIfPresent(): void {
         }
       }
     } catch {
-      // Ignore unreadable .env file
+      // Environment variables may be supplied directly by systemd or container runtimes without a readable local .env file.
     }
   }
 }
 
 loadDotEnvIfPresent();
 
+/** MariaDB connection pool parameters. */
 export interface DatabaseConfig {
   readonly host: string;
   readonly port: number;
@@ -45,6 +50,7 @@ export interface DatabaseConfig {
   readonly poolLimit: number;
 }
 
+/** Authentication mode and Microsoft Entra ID (Azure AD) tenant parameters. */
 export interface AuthEnvConfig {
   readonly mode: AuthMode;
   readonly azureTenantId: string;
@@ -56,6 +62,7 @@ export interface AuthEnvConfig {
   readonly msalCacheLocation: 'sessionStorage' | 'localStorage';
 }
 
+/** Resolved runtime configuration for the HTTP server, MariaDB pool, and authentication subsystem. */
 export interface AppConfig {
   readonly port: number;
   readonly host: string;
@@ -94,6 +101,11 @@ const DEFAULT_INSTITUTIONAL_DOMAINS = [
   'usantoto.edu.co',
 ] as const;
 
+/**
+ * Resolves authentication settings across backend (`AZURE_*`, `ENTRA_*`, `MSAL_*`) and shared
+ * frontend (`VITE_*`) variable aliases. Defaults to `'hybrid'` when Entra ID credentials are
+ * present and `'local'` otherwise unless `AUTH_MODE` overrides it explicitly.
+ */
 export function resolveAuthEnvConfig(): AuthEnvConfig {
   const azureTenantId = readFirstString([
     'AZURE_TENANT_ID',
@@ -159,6 +171,7 @@ export function resolveAuthEnvConfig(): AuthEnvConfig {
   };
 }
 
+/** Singleton process configuration evaluated at startup after optional `.env` hydration. */
 export const ENV_CONFIG: AppConfig = {
   port: readPositiveInt('PORT', 4301),
   host: readString('HOST', '0.0.0.0'),
@@ -169,7 +182,8 @@ export const ENV_CONFIG: AppConfig = {
     process.cwd(),
     readString('UPLOADS_DIR', 'uploads'),
   ),
-  maxBodySizeBytes: 25 * 1024 * 1024, // 25 MB
+  // Sized above the 12 MB binary attachment limit to accommodate base64 JSON envelope overhead on Annex 3 uploads.
+  maxBodySizeBytes: 25 * 1024 * 1024,
   database: {
     host: readString('DB_HOST', '127.0.0.1'),
     port: readPositiveInt('DB_PORT', 3307),
@@ -181,5 +195,6 @@ export const ENV_CONFIG: AppConfig = {
   auth: resolveAuthEnvConfig(),
 };
 
+/** Returns `true` when running under `NODE_ENV=development` (enables diagnostic error messages). */
 export const isDevelopment = (config: AppConfig = ENV_CONFIG): boolean =>
   config.nodeEnv === 'development';

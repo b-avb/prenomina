@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Academic units and Deans directory table with inline Annex 6 cap editing, temporary password
+ * resets, and quick navigation to unit programs or pre-payroll.
+ */
 import { computed, onMounted, toRef } from 'vue';
 import type { AcademicUnitSummary } from '@usta/domain';
 import { usePayrollStore } from '@/stores/payroll.store';

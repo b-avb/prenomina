@@ -8,6 +8,7 @@ import type {
 import { WorkloadCalculatorDomain } from './workload-calculator.domain.js';
 import type { IdGenerator } from './ports/id-generator.js';
 
+/** Contractual monthly hour targets per teacher dedication category. */
 export const EXPECTED_WORKLOAD_BY_DEDICATION: Readonly<Record<TeacherDedication, number>> = {
   TC: 160,
   MT: 80,
@@ -37,7 +38,15 @@ export interface CreateTeacherPayload {
   sharedUnitName?: string;
 }
 
+/**
+ * Assists Deans in reconciling a teacher's allocated monthly hours with their
+ * contractual `expectedWorkload` and maintains derived postgraduate/snapshot fields.
+ */
 export class WorkloadBalancerDomain {
+  /**
+   * Computes up to five ranked adjustment candidates to close a teacher's hour deficit or surplus,
+   * prioritizing PSE (`40108`) alignment, remaining Annex 5/6 unit bag capacity, and general SAC caps.
+   */
   public static suggestTeacherHourBalance(
     teacher: FacultyTeacher,
     unit: AcademicUnitSummary | undefined,
@@ -52,7 +61,7 @@ export class WorkloadBalancerDomain {
 
     const suggestions: HourBalanceSuggestion[] = [];
 
-    // 1. Check if PSE (40108) is misaligned and helps balance
+    // Reconcile manual PSE overrides when restoring the 25% formula moves total hours toward expectedWorkload.
     const exactPse = WorkloadCalculatorDomain.computeExactPse25(teacher, rulesConfig);
     const currentPse = WorkloadCalculatorDomain.getEffectivePse(teacher, rulesConfig);
     if (teacher.dedication !== 'CATEDRA' && Math.abs(exactPse - currentPse) > 0.1) {
@@ -73,7 +82,7 @@ export class WorkloadBalancerDomain {
     }
 
     if (diff > 0) {
-      // Missing hours (diff > 0): Check unit bags with available balance
+      // Prefer unallocated headroom in unit-level Annex 5/6 hour bags before generic SAC activities.
       const bags = WorkloadCalculatorDomain.computeUnitBagIndicators(
         unit,
         allTeachers,
@@ -106,7 +115,6 @@ export class WorkloadBalancerDomain {
         }
       }
 
-      // Recommended complementary SAC activities
       const fallbackCodes = ['40107', '10410', '20222', '30411', '40106', '40127'];
       for (const code of fallbackCodes) {
         if (suggestions.some((s) => s.code === code)) continue;
@@ -133,7 +141,7 @@ export class WorkloadBalancerDomain {
         }
       }
     } else {
-      // Excess hours (diff < 0): Suggest reducing active SAC codes
+      // Exclude 40104 and 40108 from direct reduction candidates because they derive from academic spaces.
       const excess = Math.abs(diff);
       for (const alloc of Object.values(teacher.allocations)) {
         if (
@@ -166,6 +174,7 @@ export class WorkloadBalancerDomain {
     return suggestions.slice(0, 5);
   }
 
+  /** Instantiates a clean `0 h` teacher record; generates a synthetic `VACANTE-*` document ID when provisional. */
   public static buildNewTeacher(
     unitId: string,
     payload: CreateTeacherPayload,
@@ -193,6 +202,10 @@ export class WorkloadBalancerDomain {
     };
   }
 
+  /**
+   * Synchronizes SAC code `40006` with the sum of `Posgrado` space monthly hours and clears
+   * `pseManualOverride` so PSE (`40108`) reflects the updated direct teaching load.
+   */
   public static syncPostgraduateAllocations(
     teacher: FacultyTeacher,
     options?: { clearWhenNoPostgradSpaces?: boolean },
@@ -213,6 +226,10 @@ export class WorkloadBalancerDomain {
     teacher.pseManualOverride = null;
   }
 
+  /**
+   * Records `version1Total` and per-code `version1Hours` baselines on unit teachers so
+   * curriculum review adjustments made in v2+ can be compared against the initial submission.
+   */
   public static snapshotTeachersVersion1(
     unitTeachers: FacultyTeacher[],
     rulesConfig: BusinessRulesConfig,

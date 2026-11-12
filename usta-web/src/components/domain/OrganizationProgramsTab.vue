@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Filterable Annex 5 academic programs directory supporting unit/level search, inline cap
+ * adjustments, and cohort activation toggles.
+ */
 import { computed, ref, watch } from 'vue';
 import type { ProgramQuotaAnnex5 } from '@usta/domain';
 import UstaModal from '@/components/ui/UstaModal.vue';

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Consolidated Annex 2 spreadsheet view for the active academic unit, bucketing teacher hours
+ * across dedicated quota columns (`40104`–`20502`), research codes, and remaining SAC activities.
+ */
 import { computed } from 'vue';
 import type { FacultyTeacher } from '@usta/domain';
 import { usePayrollStore } from '@/stores/payroll.store';

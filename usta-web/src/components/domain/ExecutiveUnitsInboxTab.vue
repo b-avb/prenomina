@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Executive review inbox listing academic unit pre-payrolls with Annex 5/6 quota compliance
+ * indicators, alert counts, and status filters.
+ */
 import { computed, ref } from 'vue';
 import type { AcademicUnitSummary, PayrollStatus } from '@usta/domain';
 import { usePayrollStore } from '@/stores/payroll.store';

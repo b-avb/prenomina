@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Interactive strip of Annex 5 and Annex 6 unit quota pills showing allocated vs. cap hours and
+ * toggling teacher-list filtering by SAC code.
+ */
 import type { FacultyBagIndicator } from '@usta/domain';
 
 defineProps<{

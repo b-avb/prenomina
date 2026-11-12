@@ -7,8 +7,8 @@ interface AttemptBucket {
   blockedUntil: number;
 }
 
-const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
-const BLOCK_DURATION_MS = 5 * 60 * 1000; // 5 minutes lockout after max failures
+const WINDOW_MS = 10 * 60 * 1000;
+const BLOCK_DURATION_MS = 5 * 60 * 1000;
 const MAX_FAILED_ATTEMPTS = 10;
 const MAX_BUCKETS = 5000;
 
@@ -17,6 +17,10 @@ function isLoopbackAddress(addr: string | undefined): boolean {
   return addr === '127.0.0.1' || addr === '::1' || addr === '::ffff:127.0.0.1';
 }
 
+/**
+ * Resolves the originating client IP address. Honors the leftmost `X-Forwarded-For` hop only
+ * when `TRUST_PROXY=true` or when the TCP peer is a local reverse proxy on loopback.
+ */
 export function extractClientIp(req: IncomingMessage): string {
   const socketIp = req.socket?.remoteAddress || 'unknown-ip';
   const trustForwarded =
@@ -32,6 +36,11 @@ export function extractClientIp(req: IncomingMessage): string {
   return socketIp;
 }
 
+/**
+ * In-memory brute-force throttle keyed by `(clientIp, identifier)` pairs.
+ * Locks out repeated authentication failures (`>= 10` within 10 minutes) for 5 minutes and caps
+ * active bucket cardinality at `5000` with expired-first, oldest-fallback eviction to bound memory use.
+ */
 export class AuthRateLimiter {
   private readonly buckets = new Map<string, AttemptBucket>();
 
@@ -53,6 +62,7 @@ export class AuthRateLimiter {
     }
   }
 
+  /** Throws `TooManyRequestsError` (`429`) if the `(clientIp, identifier)` bucket is currently under lockout. */
   public assertNotBlocked(req: IncomingMessage, identifier: string): void {
     const now = Date.now();
     this.pruneExpired(now);
@@ -72,6 +82,7 @@ export class AuthRateLimiter {
     }
   }
 
+  /** Increments the failure counter for `(clientIp, identifier)` and activates a lockout once `MAX_FAILED_ATTEMPTS` is reached. */
   public recordFailure(req: IncomingMessage, identifier: string): void {
     const now = Date.now();
     this.pruneExpired(now);
@@ -93,6 +104,7 @@ export class AuthRateLimiter {
     }
   }
 
+  /** Clears accumulated failure state upon successful authentication. */
   public recordSuccess(req: IncomingMessage, identifier: string): void {
     const key = this.buildKey(extractClientIp(req), identifier);
     this.buckets.delete(key);

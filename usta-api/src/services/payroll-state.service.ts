@@ -17,8 +17,13 @@ import { ConflictError, ForbiddenError, NotFoundError } from '../utils/app-error
 import type { AuditService } from './audit.service.js';
 import type { PeriodContextService } from './period-context.service.js';
 
+/** Maximum number of recent audit entries bundled into a period snapshot payload. */
 const SNAPSHOT_AUDIT_LIMIT = 200;
 
+/**
+ * Orchestrates academic period lifecycles, read-model snapshots for the SPA,
+ * liveness probes, and non-production seed resets.
+ */
 export class PayrollStateService {
   constructor(
     private readonly tx: TransactionRunner,
@@ -28,6 +33,7 @@ export class PayrollStateService {
     private readonly ids: IdGenerator,
   ) {}
 
+  /** Probes database connectivity and reports process uptime without throwing on DB failure. */
   public async getHealth(): Promise<HealthResponse> {
     let dbOk = true;
     try {
@@ -43,6 +49,11 @@ export class PayrollStateService {
     };
   }
 
+  /**
+   * Assembles the period-scoped payroll state snapshot.
+   * For `dean` actors, filters units, program quotas, teachers, approvals, research, and audit logs
+   * to the caller's authorized academic units.
+   */
   public async getSnapshot(
     requestedPeriod?: string,
     actor?: ActorContext,
@@ -119,6 +130,12 @@ export class PayrollStateService {
     return this.repos.periods.listAll(this.tx.executor);
   }
 
+  /**
+   * Opens a new academic period cloned from `dto.sourcePeriod` inside a single transaction,
+   * marking the new period as current. When `dto.resetStatuses` is enabled, unit cycles revert
+   * to `Borrador` v1, version-1 baselines and director notes are stripped from allocations,
+   * and Annex 3 approval requests are omitted; otherwise approvals are cloned with remapped `teacherId`s.
+   */
   public async createOrClonePeriod(
     actor: ActorContext,
     dto: CreatePeriodDto,
@@ -255,6 +272,10 @@ export class PayrollStateService {
     });
   }
 
+  /**
+   * Truncates payroll tables and reloads institutional seed data.
+   * Disabled in `production` and unless `ALLOW_DESTRUCTIVE_STATE_RESET === 'true'`.
+   */
   public async resetToSeed(actor?: ActorContext): Promise<PayrollSnapshot> {
     if (
       ENV_CONFIG.nodeEnv === 'production' ||

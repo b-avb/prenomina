@@ -8,6 +8,7 @@ import type {
   SacCode,
 } from '@usta/domain';
 
+/** Institutional baseline seed datasets for USTA Seccional Tunja (Annexes 4, 5, and faculty rosters). */
 export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
   {
     "code": "40104",

@@ -7,6 +7,7 @@ import type {
 } from '../../../database/database.types.js';
 import { fromFlag, toDateOnly, toFlag } from './mapper.utils.js';
 
+/** Parses an ISO date/timestamp prefix (`YYYY-MM-DD`) into a UTC midnight `Date` for `DATE` columns. */
 const parseDateOnly = (value: string): Date => new Date(`${value.slice(0, 10)}T00:00:00.000Z`);
 
 export function toAcademicPeriod(row: Selectable<AcademicPeriodsTable>): AcademicPeriod {

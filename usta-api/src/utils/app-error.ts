@@ -26,6 +26,7 @@ export interface FieldViolation {
   message: string;
 }
 
+/** Aggregates one or more per-field request schema violations into a single `400 VALIDATION_FAILED` response. */
 export class ValidationError extends AppError {
   constructor(violations: FieldViolation[]) {
     super('Algunos datos del formulario requieren revisión.', 400, 'VALIDATION_FAILED', violations);
@@ -38,6 +39,7 @@ export class UnauthorizedError extends AppError {
   }
 }
 
+/** Blocks access (`403 PASSWORD_CHANGE_REQUIRED`) until the user rotates an initial or reset temporary password. */
 export class PasswordChangeRequiredError extends AppError {
   constructor(
     message = 'Actualice su contraseña temporal antes de continuar en la plataforma.',
@@ -80,12 +82,14 @@ export class PayloadTooLargeError extends AppError {
   }
 }
 
+/** Signals a domain invariant or institutional regulation violation (`422 BUSINESS_RULE_VIOLATION`). */
 export class BusinessRuleError extends AppError {
   constructor(message: string, details?: unknown) {
     super(message, 422, 'BUSINESS_RULE_VIOLATION', details);
   }
 }
 
+/** Signals brute-force rate-limiter lockout (`429 TOO_MANY_REQUESTS`). */
 export class TooManyRequestsError extends AppError {
   constructor(
     message = 'Se registraron demasiados intentos fallidos consecutivos. Espere unos minutos antes de volver a intentar.',

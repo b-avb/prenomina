@@ -4,6 +4,7 @@ import type { AcademicProgramsTable } from '../../../database/database.types.js'
 import type { AcademicProgramRecord } from '../../../models/persistence.models.js';
 import { definedProps, fromFlag, nullable, toFlag } from './mapper.utils.js';
 
+/** Row-to-domain and domain-to-row mappers for `academic_programs` (Anexo 5). */
 export type AcademicProgramRow = Selectable<AcademicProgramsTable> & { unit_name: string };
 
 export function toAcademicProgram(row: AcademicProgramRow): ProgramQuotaAnnex5 {

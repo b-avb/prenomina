@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Filterable audit trail table displaying period status transitions, hour allocation diffs, and
+ * executive review observations.
+ */
 import { computed, ref } from 'vue';
 import { usePayrollStore } from '@/stores/payroll.store';
 

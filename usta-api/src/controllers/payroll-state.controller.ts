@@ -8,6 +8,10 @@ import { type RouteParams, readJsonBody, sendSuccess } from '../utils/http.utils
 import { PayloadReader } from '../validation/payload-reader.js';
 import { optionalQueryParam } from '../validation/query-params.js';
 
+/**
+ * HTTP handlers for MariaDB connectivity health checks, consolidated period state snapshots,
+ * academic period cloning/activation, and gated non-production database resets.
+ */
 export class PayrollStateController {
   constructor(
     private readonly service: PayrollStateService,
@@ -19,6 +23,7 @@ export class PayrollStateController {
     sendSuccess(res, 200, health);
   };
 
+  /** Returns the consolidated state snapshot for `?period=` (or the active period), filtered to the caller's unit scope. */
   public getState = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -40,6 +45,7 @@ export class PayrollStateController {
     sendSuccess(res, 200, periods);
   };
 
+  /** Activates an existing academic period or clones a new period (`YYYY-1`/`YYYY-2`) from `sourcePeriod`. */
   public createPeriod = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -60,6 +66,10 @@ export class PayrollStateController {
     sendSuccess(res, 201, created);
   };
 
+  /**
+   * Truncates and reseeds the database to baseline institutional catalogs.
+   * Unconditionally rejected in `NODE_ENV=production` and unless `ALLOW_DESTRUCTIVE_STATE_RESET=true`.
+   */
   public resetState = async (
     req: IncomingMessage,
     res: ServerResponse,

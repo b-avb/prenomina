@@ -20,6 +20,10 @@ import { ACADEMIC_LEVELS, TEACHER_DEDICATIONS } from '../validation/domain-enums
 import { PayloadReader } from '../validation/payload-reader.js';
 import { optionalQueryParam, requirePathParam } from '../validation/query-params.js';
 
+/**
+ * HTTP handlers for Annex 2 faculty teacher rosters, assigned academic spaces, SAC code
+ * hour allocations, and bulk roster imports.
+ */
 export class FacultyTeachersController {
   constructor(
     private readonly service: FacultyTeachersService,
@@ -53,6 +57,10 @@ export class FacultyTeachersController {
     sendSuccess(res, 200, teacher);
   };
 
+  /**
+   * Registers a teacher in the target period and unit.
+   * Permits an empty `documentId` only when `isProvisional === true` (generates a placeholder document ID).
+   */
   public create = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -159,6 +167,10 @@ export class FacultyTeachersController {
     sendSuccess(res, 200, updated);
   };
 
+  /**
+   * Appends an academic space to a teacher and recalculates teaching (`40001`/`40006`) and 25% PSE (`40108`) allocations.
+   * `hours` denotes monthly hours for `Pregrado` spaces and total module hours (divided by 4 in the service) for `Posgrado`.
+   */
   public addAcademicSpace = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -227,6 +239,7 @@ export class FacultyTeachersController {
     sendSuccess(res, 200, updated);
   };
 
+  /** Sets or clears (`hours === 0`) a teacher's monthly hour allocation for a single SAC code. */
   public updateCodeAllocation = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -265,6 +278,7 @@ export class FacultyTeachersController {
     sendSuccess(res, 200, updated);
   };
 
+  /** Upserts a batch of Annex 2 teacher records for `:id` (`unitId`), matching existing rows by `documentId`. */
   public importRoster = async (
     req: IncomingMessage,
     res: ServerResponse,

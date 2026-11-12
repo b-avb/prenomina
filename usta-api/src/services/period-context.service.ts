@@ -8,6 +8,7 @@ import type { AcademicUnitRecord, UnitPayrollCycle } from '../models/persistence
 import type { Repositories } from '../repositories/repositories.js';
 import { NotFoundError } from '../utils/app-error.js';
 
+/** Baseline institutional business rules applied when a period has no persisted configuration row. */
 export const DEFAULT_BUSINESS_RULES: BusinessRulesConfig = {
   includePostgraduateInPse125: false,
   enforceAnnex6CapOnGraduates: true,
@@ -23,6 +24,10 @@ export const DEFAULT_BUSINESS_RULES: BusinessRulesConfig = {
 export class PeriodContextService {
   constructor(private readonly repos: Repositories) {}
 
+  /**
+   * Resolves an explicit period code (throwing `NotFoundError` if unknown) or falls back
+   * to the active `is_current` period, the most recent period, or `'2026-2'`.
+   */
   public async resolvePeriod(db: DbExecutor, requestedPeriod?: string): Promise<string> {
     if (requestedPeriod) {
       const period = await this.repos.periods.findByCode(db, requestedPeriod);
@@ -38,6 +43,7 @@ export class PeriodContextService {
     return '2026-2';
   }
 
+  /** Returns the persisted `BusinessRulesConfig` for `periodCode`, or a copy of `DEFAULT_BUSINESS_RULES`. */
   public async getRulesForPeriod(
     db: DbExecutor,
     periodCode: string,
@@ -46,6 +52,10 @@ export class PeriodContextService {
     return stored ?? { ...DEFAULT_BUSINESS_RULES };
   }
 
+  /**
+   * Hydrates all academic units for `periodCode` by joining static unit metadata with
+   * period workflow cycles, teacher counts, pending Annex 3 requests, and validation alert totals.
+   */
   public async hydrateUnitsForPeriod(
     db: DbExecutor,
     periodCode: string,
@@ -96,6 +106,7 @@ export class PeriodContextService {
     });
   }
 
+  /** Hydrates a single academic unit summary for `periodCode` or throws `NotFoundError`. */
   public async hydrateSingleUnit(
     db: DbExecutor,
     unitId: string,

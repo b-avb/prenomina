@@ -4,6 +4,10 @@ import type { AuditLogQuery, AuditLogRecord } from '../../models/audit.models.js
 import type { AuditLogRepository } from '../audit-log.repository.js';
 import { toAuditLogEntry, toAuditLogRow } from './mappers/audit-log.mapper.js';
 
+/**
+ * MariaDB adapter for append-only `audit_logs`, ordering reads by `(occurred_at DESC, insertion_order DESC)`
+ * for deterministic ordering across sub-second batch writes.
+ */
 export class MariaDbAuditLogRepository implements AuditLogRepository {
   public async insertMany(db: DbExecutor, records: AuditLogRecord[]): Promise<void> {
     if (records.length === 0) return;

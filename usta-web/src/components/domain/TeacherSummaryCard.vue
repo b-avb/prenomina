@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Teacher workload summary header displaying 40104/40108/SAC hour gauges, validation alerts with
+ * quick-fix actions, and quota-aware hour balancing suggestions.
+ */
 import { computed, ref, watch } from 'vue';
 import type { FacultyTeacher, SacCode, ValidationAlert } from '@usta/domain';
 import { usePayrollStore } from '@/stores/payroll.store';
@@ -49,7 +53,6 @@ function findSacCode(code: string): SacCode | undefined {
 </script>
 
 <template>
-  <!-- 1. TEACHER SUMMARY CARD -->
   <div class="docente-summary-card">
     <div class="docente-summary-card__top">
       <div class="docente-summary-card__identity">
@@ -155,7 +158,6 @@ function findSacCode(code: string): SacCode | undefined {
     </div>
   </div>
 
-  <!-- SMART HOUR BALANCER PANEL -->
   <div
     v-if="!readonly && showHourBalancerPanel && totalHours !== teacher.expectedWorkload"
     class="card"
@@ -226,7 +228,6 @@ function findSacCode(code: string): SacCode | undefined {
     </div>
   </div>
 
-  <!-- 2. TEACHER ALERTS & TRACEABILITY -->
   <div
     v-if="teacher.generalNote || alerts.length > 0"
     class="alertas-compact-bar"

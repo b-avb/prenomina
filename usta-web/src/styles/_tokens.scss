@@ -1,5 +1,4 @@
-// Design tokens del prototipo aprobado (gestion_docente_v2).
-// Único lugar donde se definen estos valores — todo lo demás los referencia por var(--token).
+// Global CSS custom properties referenced via var(--token) across all stylesheets.
 :root {
   --bg: #f6f8fa;
   --surface: #ffffff;

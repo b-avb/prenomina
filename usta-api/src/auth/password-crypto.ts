@@ -4,7 +4,7 @@ import type { AuthUser, PayrollRole } from '@usta/domain';
 import { isOneOf, PAYROLL_ROLES } from '../validation/domain-enums.js';
 
 const SCRYPT_KEYLEN = 64;
-const DEFAULT_TOKEN_TTL_SECONDS = 12 * 60 * 60; // 12 hours
+const DEFAULT_TOKEN_TTL_SECONDS = 12 * 60 * 60;
 const JWT_ISSUER = 'usta-tunja-prenomina-api';
 const DEV_FALLBACK_SECRET = 'usta-tunja-prenomina-dev-only-secret-key';
 
@@ -25,6 +25,10 @@ function resolveTokenSecret(): string {
   return DEV_FALLBACK_SECRET;
 }
 
+/**
+ * Halts process startup in `NODE_ENV=production` if `AUTH_TOKEN_SECRET` (or `AUTH_JWT_SECRET`)
+ * is unset, matches the development fallback, or contains fewer than 32 characters of entropy.
+ */
 export function assertProductionAuthSecret(): void {
   if (process.env.NODE_ENV !== 'production') return;
   const configured =
@@ -36,6 +40,11 @@ export function assertProductionAuthSecret(): void {
   }
 }
 
+/**
+ * Signed RFC 7519 HS256 session token payload.
+ * `pwdChangedAt` snapshots `users.password_changed_at` at issuance so `JwtActorResolver` can
+ * invalidate pre-existing tokens immediately after a password rotation or administrative reset.
+ */
 export interface AuthTokenClaims {
   iss: string;
   sub: string;
@@ -49,12 +58,14 @@ export interface AuthTokenClaims {
   exp: number;
 }
 
+/** Derives a `scrypt:<hex-salt>:<hex-key>` password hash using a 16-byte random salt and 64-byte key length. */
 export function hashPassword(plainPassword: string): string {
   const salt = randomBytes(16).toString('hex');
   const derived = scryptSync(plainPassword, salt, SCRYPT_KEYLEN).toString('hex');
   return `scrypt:${salt}:${derived}`;
 }
 
+/** Verifies a plaintext password against a stored `scrypt:<salt>:<hash>` record in constant time. */
 export function verifyPassword(plainPassword: string, storedHash: string): boolean {
   const parts = storedHash.split(':');
   if (parts.length !== 3 || parts[0] !== 'scrypt') return false;
@@ -70,6 +81,7 @@ export function verifyPassword(plainPassword: string, storedHash: string): boole
   }
 }
 
+/** Issues an HS256-signed platform JWT valid for `ttlSeconds` (default 12 hours). */
 export function signAuthToken(
   user: Pick<
     AuthUser,
@@ -132,6 +144,10 @@ function validateParsedClaims(raw: unknown): AuthTokenClaims | null {
   };
 }
 
+/**
+ * Verifies the HMAC-SHA256 signature, algorithm header (`alg === 'HS256'`), issuer, expiration,
+ * and structural claim schema of a platform JWT. Returns `null` on any verification failure.
+ */
 export function verifyAuthToken(token: string): AuthTokenClaims | null {
   const parts = token.split('.');
   if (parts.length !== 3) return null;

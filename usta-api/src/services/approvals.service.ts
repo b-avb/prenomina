@@ -36,6 +36,10 @@ const ALLOWED_ATTACHMENT_MIME_BY_EXT: Readonly<Record<string, string>> = {
   '.jpeg': 'image/jpeg',
 };
 
+/**
+ * Validates binary header signatures (`%PDF-`, PNG, JPEG, OOXML PKZIP, and OLE2 Compound Document)
+ * against the declared file extension so spoofed MIME types or renamed executables are rejected.
+ */
 function verifyAttachmentMagicBytes(ext: string, buffer: Buffer): boolean {
   if (buffer.length < 4) return false;
   if (ext === '.pdf') {
@@ -71,6 +75,11 @@ function verifyAttachmentMagicBytes(ext: string, buffer: Buffer): boolean {
   return false;
 }
 
+/**
+ * Manages Annex 3 Academic Vice-Rectorate pre-approval requests and supporting document attachments.
+ * Enforces an 8 MB binary size ceiling, header-byte signature checks (`%PDF-`, PNG/JPEG, Office),
+ * filesystem path confinement under `UPLOADS_DIR/annex3`, and faculty tenant isolation.
+ */
 export class ApprovalsService {
   constructor(
     private readonly tx: TransactionRunner,
@@ -106,6 +115,7 @@ export class ApprovalsService {
     return items;
   }
 
+  /** Decodes, validates binary header bytes and size (`<= 8 MB`), and stores an Annex 3 attachment on disk. */
   public async uploadAttachment(
     _actor: ActorContext,
     dto: UploadApprovalAttachmentDto,
@@ -163,6 +173,10 @@ export class ApprovalsService {
     };
   }
 
+  /**
+   * Reads a stored Annex 3 attachment after rejecting path separators, confining resolution to
+   * `UPLOADS_DIR/annex3`, and verifying that a Dean caller owns the referencing `approval_requests` unit.
+   */
   public async readAttachment(
     storedFileName: string,
     actor?: ActorContext,
@@ -206,6 +220,11 @@ export class ApprovalsService {
     }
   }
 
+  /**
+   * Upserts an Annex 3 pre-approval request keyed by `(teacherId, code)` under a `FOR UPDATE` row lock
+   * and resets its status to `'Pendiente'`. Blocks Dean submissions when the unit's payroll cycle is
+   * locked in `'Enviada'`, `'En Revisión'`, or `'Avalada'`.
+   */
   public async create(
     actor: ActorContext,
     dto: CreateApprovalRequestDto,
@@ -305,6 +324,7 @@ export class ApprovalsService {
     });
   }
 
+  /** Records the Academic Vice-Rectorate decision (`Avalado`, `Con Observaciones`, `Rechazado`) under `FOR UPDATE` lock. */
   public async decide(
     actor: ActorContext,
     dto: DecideApprovalDto,

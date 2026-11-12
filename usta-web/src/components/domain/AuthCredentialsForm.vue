@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Login form supporting Microsoft Entra ID SSO, local username/password credentials, or dual-mode
+ * authentication based on backend auth configuration.
+ */
 import { ref } from 'vue';
 
 const props = defineProps<{
@@ -19,6 +23,7 @@ const passwordInput = ref('');
 const showLoginPassword = ref(false);
 
 function onFormSubmit(): void {
+  // Strip any pasted @ustadistancia.edu.co suffix so the backend receives the bare local username.
   const cleanUser = usernameInput.value.trim().toLowerCase().split('@')[0] ?? '';
   emit('submitLocal', {
     username: cleanUser,

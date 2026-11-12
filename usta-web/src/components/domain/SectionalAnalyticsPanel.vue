@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Sectional analytics panel aggregating monthly faculty hours by substantive function and comparing
+ * allocated totals against Annex 5 and Annex 6 institutional caps.
+ */
 import { computed } from 'vue';
 import { usePayrollStore } from '@/stores/payroll.store';
 

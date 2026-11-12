@@ -11,6 +11,7 @@ import { MariaDbSchedulePhaseRepository } from './schedule-phase.mariadb-reposit
 import { MariaDbTeacherRepository } from './teacher.mariadb-repository.js';
 import { MariaDbUserRepository } from './user.mariadb-repository.js';
 
+/** Instantiates Kysely/MariaDB adapters for all persistence ports. */
 export function createMariaDbRepositories(): Repositories {
   return {
     periods: new MariaDbPeriodRepository(),

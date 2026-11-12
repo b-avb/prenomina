@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Modal form for creating or editing Annex 7 research allocations on career faculty (`TC`/`MT`),
+ * enforcing Agreement 3 of 2025 fixed hour tiers (`20`/`80`/`136` h/month) for SICDDI code `10226`.
+ */
 import { computed, ref, watch } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import { usePayrollStore } from '@/stores/payroll.store';

@@ -24,6 +24,10 @@ import type { AuditService } from './audit.service.js';
 import type { AuthService } from './auth.service.js';
 import type { PeriodContextService } from './period-context.service.js';
 
+/**
+ * Orchestrates academic unit governance, Dean assignment and `DIRECTIVO` roster synchronization,
+ * period payroll workflow state transitions, and Version 1 workload baseline snapshots.
+ */
 export class AcademicUnitsService {
   constructor(
     private readonly tx: TransactionRunner,
@@ -34,6 +38,7 @@ export class AcademicUnitsService {
     private readonly auth?: AuthService,
   ) {}
 
+  /** Lists hydrated academic units for a period, restricting Dean callers to their `managedUnitIds`. */
   public async list(
     requestedPeriod?: string,
     division?: string,
@@ -63,6 +68,11 @@ export class AcademicUnitsService {
     return this.periodContext.hydrateSingleUnit(db, id, periodCode);
   }
 
+  /**
+   * Creates an academic unit, initializes `Borrador` payroll cycles across all registered periods,
+   * inserts the unit's `DIRECTIVO` teacher record in the target period, and provisions or links
+   * the corresponding Dean user account within a single transaction.
+   */
   public async create(
     actor: ActorContext,
     dto: CreateAcademicUnitDto,
@@ -141,6 +151,7 @@ export class AcademicUnitsService {
     });
   }
 
+  /** Updates global unit metadata and Annex 5/6 SAC hour caps under a `FOR UPDATE` row lock. */
   public async update(
     actor: ActorContext,
     dto: UpdateAcademicUnitDto,
@@ -194,6 +205,10 @@ export class AcademicUnitsService {
     });
   }
 
+  /**
+   * Updates the titular Dean of a unit, upserts the unit's `DIRECTIVO` teacher entry in the
+   * active period, and synchronizes or rotates the Dean's login credentials.
+   */
   public async updateDean(
     actor: ActorContext,
     dto: UpdateUnitDeanDto,
@@ -271,6 +286,18 @@ export class AcademicUnitsService {
     });
   }
 
+  /**
+   * Transitions a unit's period payroll workflow status.
+   *
+   * Workflow invariants:
+   * - Deans may only submit (`Borrador` | `Devuelta con Observaciones` -> `Enviada`) or withdraw
+   *   a submission (`Enviada` -> `Borrador`) before review begins; `En Revisión`, `Devuelta con Observaciones`,
+   *   and `Avalada` require institutional governance roles.
+   * - Submission to `Enviada` rejects unstarted rosters and (when `blockSubmissionWithBlockingAlerts` is true)
+   *   any unresolved `blocking` alert under `enforceSubmissionReadiness`.
+   * - Submitting from Version 1 snapshots `version1Total` and `version1Hours` across unit teachers and
+   *   advances `currentVersion` to `2`.
+   */
   public async changePayrollStatus(
     actor: ActorContext,
     dto: ChangeUnitStatusDto,
@@ -405,6 +432,7 @@ export class AcademicUnitsService {
     });
   }
 
+  /** Explicitly captures a new Version 1 reference snapshot across all teachers in the unit and sets `currentVersion = 2`. */
   public async snapshotUnitVersion(
     actor: ActorContext,
     dto: SnapshotUnitVersionDto,
@@ -464,6 +492,7 @@ export class AcademicUnitsService {
     });
   }
 
+  /** Deletes an academic unit and deactivates (or re-homes) any Dean user account bound exclusively to it. */
   public async remove(
     actor: ActorContext,
     unitId: string,

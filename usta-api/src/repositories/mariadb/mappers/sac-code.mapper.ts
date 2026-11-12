@@ -10,6 +10,7 @@ import {
   toNullableFlag,
 } from './mapper.utils.js';
 
+/** Joined `sac_faculty_rules` row enriched with `academic_units.name` (Anexo 4). */
 export type SacFacultyRuleRow = Selectable<SacFacultyRulesTable> & { unit_name: string };
 
 export function toFacultySpecificRule(row: SacFacultyRuleRow): FacultySpecificRule {

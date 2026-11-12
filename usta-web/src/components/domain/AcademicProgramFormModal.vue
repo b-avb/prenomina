@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Modal form for creating or updating Annex 5 academic programs (`30411`/`40106`/`40109`/`40127`
+ * hour caps, cohort activation, and parent unit postgraduate flag synchronization).
+ */
 import { ref, watch } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import { usePayrollStore } from '@/stores/payroll.store';
@@ -73,6 +77,7 @@ async function handleSave() {
     return;
   }
   const unit = store.units.find((u) => u.id === form.value.unitId);
+  // Automatically enable postgraduate SAC caps on the parent unit when registering a graduate program.
   if (unit && form.value.level !== 'Pregrado' && !unit.hasPostgraduates) {
     await store.updateUnit(unit.id, { hasPostgraduates: true });
   }

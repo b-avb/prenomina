@@ -29,6 +29,20 @@ import {
 import type { AuditService } from './audit.service.js';
 import type { PeriodContextService } from './period-context.service.js';
 
+/**
+ * Manages Annex 2 faculty teacher rosters, undergraduate/postgraduate academic spaces, and SAC
+ * code hour allocations (`Acuerdo No. 48 de 2025`).
+ *
+ * Domain invariants:
+ * - Workflow mutation lock: Deans may only modify teachers while the unit cycle is in `'Borrador'`
+ *   or `'Devuelta con Observaciones'`; `'Enviada'`, `'En Revisión'`, and `'Avalada'` reject Dean writes.
+ * - Postgraduate normalization: `Posgrado` module hours are divided by 4 (`Math.round((hours / 4) * 10) / 10`)
+ *   to obtain monthly hours synchronized onto SAC `40006`, while `Pregrado` spaces map 1:1 to monthly hours (`40104`).
+ * - PSE derivation (`40108`): defaults to 25% of eligible direct teaching hours; manual edits store
+ *   `pseManualOverride = null` whenever the value matches exact 25% PSE within `0.01 h`.
+ * - Research authority: SAC codes marked `lockedByResearch` cannot be altered by Deans and are hydrated
+ *   from Annex 7 SICDDI records for all non-`CATEDRA` teachers.
+ */
 export class FacultyTeachersService {
   constructor(
     private readonly tx: TransactionRunner,
@@ -38,6 +52,7 @@ export class FacultyTeachersService {
     private readonly ids: IdGenerator,
   ) {}
 
+  /** Rejects Dean mutations when the unit's payroll cycle is locked in `Enviada`, `En Revisión`, or `Avalada`. */
   private async assertUnitEditableByActor(
     trx: DbExecutor,
     actor: ActorContext,
@@ -54,6 +69,10 @@ export class FacultyTeachersService {
     }
   }
 
+  /**
+   * Overlays Annex 7 research allocations matching `(unitId, documentId)` onto non-`CATEDRA` teachers,
+   * preserving `version1Hours` and `exceptionJustification` across roster updates and imports.
+   */
   private async hydrateResearchAllocationsOntoTeacher(
     trx: DbExecutor,
     periodCode: string,
@@ -127,6 +146,7 @@ export class FacultyTeachersService {
     return scoped.entity;
   }
 
+  /** Registers a teacher in `(periodCode, unitId)`, enforcing per-unit `documentId` uniqueness and hydrating Annex 7 research hours. */
   public async create(
     actor: ActorContext,
     dto: CreateTeacherDto,
@@ -175,6 +195,7 @@ export class FacultyTeachersService {
     });
   }
 
+  /** Updates a teacher's profile and contractual dedication under `FOR UPDATE` lock, deriving `expectedWorkload` when omitted. */
   public async update(
     actor: ActorContext,
     dto: UpdateTeacherDto,
@@ -256,6 +277,10 @@ export class FacultyTeachersService {
     });
   }
 
+  /**
+   * Appends an academic space under `FOR UPDATE` lock. Converts `Posgrado` total module hours into
+   * monthly hours (`/ 4`) and synchronizes SAC `40006`.
+   */
   public async addAcademicSpace(
     actor: ActorContext,
     dto: AddAcademicSpaceDto,
@@ -306,6 +331,7 @@ export class FacultyTeachersService {
     });
   }
 
+  /** Updates an assigned academic space and re-normalizes `Posgrado` monthly hours (`40006`) if level or hours changed. */
   public async updateAcademicSpace(
     actor: ActorContext,
     dto: UpdateAcademicSpaceDto,
@@ -373,6 +399,7 @@ export class FacultyTeachersService {
     });
   }
 
+  /** Removes an academic space and clears SAC `40006` if the removed space was the teacher's last `Posgrado` module. */
   public async removeAcademicSpace(
     actor: ActorContext,
     teacherId: string,
@@ -419,6 +446,12 @@ export class FacultyTeachersService {
     });
   }
 
+  /**
+   * Updates a teacher's SAC hour allocation under `FOR UPDATE` lock.
+   * Handles PSE (`40108`) manual override toggling, blocks Dean edits to `directorNote` or
+   * `lockedByResearch` codes, validates SICDDI `10226` tiers (`20`/`80`/`136` h), verifies
+   * Annex 5 `programId` unit membership, and derives `unitCount` from `hoursPerUnitFactor`.
+   */
   public async updateCodeAllocation(
     actor: ActorContext,
     dto: UpdateCodeAllocationDto,
@@ -582,6 +615,11 @@ export class FacultyTeachersService {
     });
   }
 
+  /**
+   * Replaces a unit's period teacher roster atomically under `FOR UPDATE` unit lock.
+   * Reuses teacher IDs, `version1Total`, `version1Hours`, and research-locked allocations when
+   * `documentId` matches an existing roster entry, and deletes omitted teachers.
+   */
   public async importRoster(
     actor: ActorContext,
     dto: ImportTeachersDto,

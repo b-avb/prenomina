@@ -2,6 +2,7 @@ import type { ProgramQuotaAnnex5 } from '@usta/domain';
 import type { DbExecutor } from '../database/database.types.js';
 import type { AcademicProgramRecord } from '../models/persistence.models.js';
 
+/** Persistence port for Annex 5 academic programs and their semi-annual CATEDRA hour quotas. */
 export interface AcademicProgramRepository {
   list(db: DbExecutor, filter?: { unitId?: string }): Promise<ProgramQuotaAnnex5[]>;
   findById(db: DbExecutor, id: string): Promise<ProgramQuotaAnnex5 | undefined>;

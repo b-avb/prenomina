@@ -26,6 +26,7 @@ export interface MigrationReport {
   applied: string[];
 }
 
+/** Executes all unapplied migrations in lexicographical key order and returns applied migration names. */
 export async function migrateToLatest(db: Kysely<Database>): Promise<MigrationReport> {
   const migrator = new Migrator({ db, provider: new StaticMigrationProvider() });
   const { error, results = [] } = await migrator.migrateToLatest();

@@ -1,5 +1,11 @@
 import { sql, type Kysely } from 'kysely';
 
+/**
+ * Adds optional `program_id` and `program_name` columns to `teacher_code_allocations`
+ * so Annex 5 coordination/tutoring SAC hours (`30411`, `40106`, `40109`, `40127`) can be
+ * attributed to a specific academic program. Guards DDL with `INFORMATION_SCHEMA` checks
+ * for idempotency across pre-patched environments.
+ */
 async function hasColumn(db: Kysely<unknown>, columnName: string): Promise<boolean> {
   const res = await sql<{ cnt: number }>`
     SELECT COUNT(*) AS cnt

@@ -32,6 +32,11 @@ export interface UpdateUnitDeanPayload {
   expectedWorkload?: number;
 }
 
+/**
+ * Common Colombian middle given names used to disambiguate 3-token full names
+ * (`<firstGiven> <secondGiven> <firstSurname>` vs `<firstGiven> <firstSurname> <secondSurname>`)
+ * when deriving `firstGiven.firstSurname` institutional usernames.
+ */
 const COMMON_SECOND_GIVEN_NAMES = new Set([
   'fernando',
   'andres',
@@ -58,6 +63,10 @@ const COMMON_SECOND_GIVEN_NAMES = new Set([
   'luis',
 ]);
 
+/**
+ * Strips diacritics and ecclesiastical/academic prefixes (`Fr.`, `O.P.`, `Mg.`, `Ph.D.`, etc.)
+ * so Dean names on academic units can be matched deterministically against roster entries.
+ */
 function normalizePersonName(value: string): string {
   return value
     .normalize('NFD')
@@ -69,7 +78,12 @@ function normalizePersonName(value: string): string {
     .toLowerCase();
 }
 
+/**
+ * Domain rules governing academic units, Annex 5 program-to-unit quota rollups,
+ * and synchronization between unit Deans and `DIRECTIVO` roster records.
+ */
 export class AcademicOrganizationDomain {
+  /** Derives a lowercase `given.surname` login identifier from a full Spanish name. */
   public static deriveUsernameFromFullName(fullName: string): string {
     const cleaned = normalizePersonName(fullName);
     const tokens = cleaned.split(/\s+/).filter((t) => t.length >= 2);
@@ -85,6 +99,11 @@ export class AcademicOrganizationDomain {
     return `${tokens[0]}.${tokens[tokens.length - 2]}`;
   }
 
+  /**
+   * Recomputes `hasPostgraduates` and Annex 5 bag caps (`30411`, `40106`, `40109`, `40127`)
+   * on `unit` by summing its active programs. Leaves `graduatesCap20502` (Annex 6) untouched,
+   * and preserves manual unit caps when the unit has zero registered programs unless forced.
+   */
   public static recalculateUnitCapsFromPrograms(
     unit: AcademicUnitSummary,
     programQuotas: ProgramQuotaAnnex5[],
@@ -118,6 +137,7 @@ export class AcademicOrganizationDomain {
     return true;
   }
 
+  /** Creates a `Borrador` v1 academic unit together with its initial `0 h` `DIRECTIVO` teacher record. */
   public static buildNewUnitAndDirector(
     payload: CreateAcademicUnitPayload,
     _currentUnitsCount: number,
@@ -158,8 +178,9 @@ export class AcademicOrganizationDomain {
   }
 
   /**
-   * Applies a dean change. Returns the newly created director teacher when the
-   * unit had none, so the caller can persist it explicitly.
+   * Updates `unit.deanName` and reconciles the corresponding `DIRECTIVO` teacher row in `teachers`.
+   * Matches by `documentId`, previous/next normalized name, or existing `DIRECTIVO` slot; creates a
+   * new `DIRECTIVO` teacher (`created: true`) only when no candidate exists in the unit.
    */
   public static updateDeanAndDirectorTeacher(
     unit: AcademicUnitSummary,

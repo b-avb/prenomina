@@ -6,7 +6,8 @@ import { useAuthStore } from '@/stores/auth.store';
 import { useOrganizationStore } from '@/stores/organization.store';
 
 /**
- * Wires the authenticated session Bearer token and active academic period header into every API request.
+ * Registers outbound `Authorization` and URL-encoded `X-USTA-Period` headers on `apiClient`,
+ * plus a global `401` interceptor that clears expired credentials and redirects to `/login`.
  */
 export function registerActorHeaders(pinia: Pinia): void {
   const authStore = useAuthStore(pinia);

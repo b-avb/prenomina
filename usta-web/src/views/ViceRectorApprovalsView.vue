@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Annex 3 Vice-Rectorate approval inbox scoped to managed units for Deans and
+ * open across all faculties for executive review, attachment inspection, and PDF printing.
+ */
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import UstaModal from '@/components/ui/UstaModal.vue';

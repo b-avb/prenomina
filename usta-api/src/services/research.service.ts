@@ -15,6 +15,10 @@ import { BusinessRuleError, NotFoundError } from '../utils/app-error.js';
 import type { AuditService } from './audit.service.js';
 import type { PeriodContextService } from './period-context.service.js';
 
+/**
+ * Manages Annex 7 research allocations (Dirección de Investigación) and synchronizes
+ * aggregated monthly hours back onto matching full-time/half-time faculty teacher workloads.
+ */
 export class ResearchService {
   constructor(
     private readonly tx: TransactionRunner,
@@ -46,6 +50,10 @@ export class ResearchService {
     return items;
   }
 
+  /**
+   * Registers an Annex 7 research allocation, rejecting `CATEDRA` teachers and invalid
+   * SICDDI `10226` tiers, then recomputes the matching teacher's SAC allocation.
+   */
   public async create(
     actor: ActorContext,
     dto: CreateResearchAllocationDto,
@@ -119,6 +127,10 @@ export class ResearchService {
     });
   }
 
+  /**
+   * Updates an Annex 7 research row under `FOR UPDATE` row lock and resynchronizes both the
+   * prior `(unitId, documentId, code)` teacher bucket (if reassigned) and the target bucket.
+   */
   public async update(
     actor: ActorContext,
     dto: UpdateResearchAllocationDto,
@@ -222,6 +234,7 @@ export class ResearchService {
     });
   }
 
+  /** Deletes an Annex 7 research row and recalculates the affected teacher's SAC allocation. */
   public async remove(
     actor: ActorContext,
     id: string,
@@ -265,6 +278,10 @@ export class ResearchService {
     });
   }
 
+  /**
+   * Enforces Acuerdo 3 (19 March 2025) on SAC `10226` (SICDDI), allowing only fixed
+   * monthly hour tiers of `20` (Nivel I), `80` (Nivel II), or `136` (Nivel III).
+   */
   private validateSicddiHours(code: string, monthlyHours: number): void {
     if (code === '10226' && monthlyHours > 0 && ![20, 80, 136].includes(monthlyHours)) {
       throw new BusinessRuleError(
@@ -273,6 +290,10 @@ export class ResearchService {
     }
   }
 
+  /**
+   * Aggregates all Annex 7 monthly hours for `(periodCode, unitId, documentId, code)` and writes
+   * the resulting allocation (or removes it when zero) onto the locked non-`CATEDRA` teacher record.
+   */
   private async syncTeacherAllocationFromResearch(
     trx: DbExecutor,
     periodCode: string,

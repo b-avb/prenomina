@@ -4,6 +4,7 @@ import type {
   FacultyTeacher,
 } from './types/payroll.types.js';
 
+/** Summary of an academic unit's monthly hour consumption against an Annex 5 or Annex 6 bag quota. */
 export interface FacultyBagIndicator {
   code: string;
   title: string;
@@ -14,13 +15,22 @@ export interface FacultyBagIndicator {
   status: 'ok' | 'warn' | 'error' | 'pending';
 }
 
+/**
+ * Deterministic monthly workload calculator for Annex 2 faculty rosters and
+ * Annex 5/6 unit-level bag indicators.
+ */
 export class WorkloadCalculatorDomain {
+  /** Sums direct undergraduate teaching hours (`40104`) across assigned `Pregrado` academic spaces. */
   public static computeHours40104(teacher: FacultyTeacher): number {
     return teacher.academicSpaces
       .filter((s) => s.level === 'Pregrado')
       .reduce((acc, item) => acc + (Number(item.monthlyHours) || 0), 0);
   }
 
+  /**
+   * Resolves monthly postgraduate teaching hours (`40006`). Prefers itemized `Posgrado`
+   * spaces when present and falls back to a direct `40006` code allocation otherwise.
+   */
   public static computeHours40006(teacher: FacultyTeacher): number {
     const fromSpaces = teacher.academicSpaces
       .filter((s) => s.level === 'Posgrado')
@@ -29,6 +39,11 @@ export class WorkloadCalculatorDomain {
     return fromSpaces > 0 ? fromSpaces : fromCode;
   }
 
+  /**
+   * Computes normative Preparation, Monitoring, and Evaluation (`40108`) monthly hours:
+   * 25% of undergraduate teaching (`40104`) plus an optional 12.5% of postgraduate teaching (`40006`).
+   * Adjunct (`CATEDRA`) teachers are excluded from PSE allocation under institutional rules.
+   */
   public static computeExactPse25(
     teacher: FacultyTeacher,
     rules: BusinessRulesConfig,
@@ -39,6 +54,7 @@ export class WorkloadCalculatorDomain {
     return Math.round((h40104 * 0.25 + h40006 * 0.125) * 10) / 10;
   }
 
+  /** Returns `pseManualOverride` when set, or the formula-derived PSE (`40108`) otherwise. */
   public static getEffectivePse(
     teacher: FacultyTeacher,
     rules: BusinessRulesConfig,
@@ -50,6 +66,10 @@ export class WorkloadCalculatorDomain {
     return this.computeExactPse25(teacher, rules);
   }
 
+  /**
+   * Sums monthly hours across all SAC allocations except `40104` and `40108`,
+   * which are derived from `academicSpaces` and `getEffectivePse` to prevent double counting.
+   */
   public static computeOtherSacHours(teacher: FacultyTeacher): number {
     return Object.values(teacher.allocations).reduce((acc, a) => {
       if (a.code === '40104' || a.code === '40108') return acc;
@@ -57,6 +77,7 @@ export class WorkloadCalculatorDomain {
     }, 0);
   }
 
+  /** Computes total monthly hours committed by a teacher within their primary unit. */
   public static computeTeacherTotalHours(
     teacher: FacultyTeacher,
     rules: BusinessRulesConfig,
@@ -67,6 +88,7 @@ export class WorkloadCalculatorDomain {
     return h40104 + pse + otherCodes;
   }
 
+  /** Aggregates total monthly hours allocated to `code` across all teachers belonging to `unitId`. */
   public static sumCodeInUnit(
     teachers: FacultyTeacher[],
     unitId: string,
@@ -82,6 +104,11 @@ export class WorkloadCalculatorDomain {
     }, 0);
   }
 
+  /**
+   * Returns true when a teacher has zero spaces, zero SAC allocations, zero shared hours,
+   * and no positive PSE override—used to suppress premature Day-1 incomplete-workload alerts
+   * while a `Borrador` unit has not started data entry.
+   */
   public static isTeacherUnstarted(teacher: FacultyTeacher): boolean {
     const hasSpaces = teacher.academicSpaces.some((s) => (Number(s.monthlyHours) || 0) > 0);
     if (hasSpaces) return false;
@@ -100,11 +127,17 @@ export class WorkloadCalculatorDomain {
     return true;
   }
 
+  /** Returns true when every teacher in `unitId` is unstarted (`0 h`). */
   public static isUnitUnstarted(teachers: FacultyTeacher[], unitId: string): boolean {
     const unitTeachers = teachers.filter((t) => t.unitId === unitId);
     return unitTeachers.every((t) => this.isTeacherUnstarted(t));
   }
 
+  /**
+   * Evaluates consumption against the five unit-level hour bags (Annex 5: `30411`, `40106`,
+   * `40109`, `40127`; Annex 6: `20502`). Marks bags as `pending` rather than `warn` when an
+   * unstarted `Borrador` unit is still at `0 h`.
+   */
   public static computeUnitBagIndicators(
     unit: AcademicUnitSummary | undefined,
     teachers: FacultyTeacher[],

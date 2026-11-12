@@ -14,6 +14,10 @@ import { ACADEMIC_LEVELS, PROGRAM_MODALITIES } from '../validation/domain-enums.
 import { PayloadReader } from '../validation/payload-reader.js';
 import { optionalQueryParam, requirePathParam } from '../validation/query-params.js';
 
+/**
+ * HTTP handlers for Academic Programs and Annex 5 coordination/tutoring quotas (`30411`, `40106`, `40109`, `40127`).
+ * Read access is available to all authenticated users; mutations require institutional `management` roles.
+ */
 export class AcademicProgramsController {
   constructor(
     private readonly service: AcademicProgramsService,
@@ -30,6 +34,7 @@ export class AcademicProgramsController {
     sendSuccess(res, 200, programs);
   };
 
+  /** Creates an academic program and synchronizes its parent unit's Annex 5 aggregate caps. */
   public create = async (
     req: IncomingMessage,
     res: ServerResponse,

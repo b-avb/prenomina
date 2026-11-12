@@ -18,13 +18,13 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 /**
- * Lightweight, dependency-free request payload validator.
+ * Accumulating JSON request body validator with zero external runtime dependencies.
  *
  * Usage: `PayloadReader.parse(body, (r) => ({ name: r.requiredString('name') }))`.
- * Every accessor records violations instead of throwing, so the client receives all
- * invalid fields at once (`400 VALIDATION_FAILED` with `details: FieldViolation[]`).
- * Strings are trimmed. Placeholder values returned for invalid fields are never used
- * because `parse` throws before returning.
+ * Accessors collect all field violations instead of failing on the first error, surfacing the
+ * complete violation set as `400 VALIDATION_FAILED` (`details: FieldViolation[]`). Strings are
+ * trimmed automatically; placeholder values returned on invalid fields are never observed by
+ * callers because `parse` throws before returning when `violations.length > 0`.
  */
 export class PayloadReader {
   private readonly source: Record<string, unknown>;

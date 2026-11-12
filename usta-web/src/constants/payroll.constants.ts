@@ -1,9 +1,8 @@
 import type { AcademicUnitSummary, BusinessRulesConfig } from '@usta/domain';
 
 /**
- * Lightweight client-side placeholders used strictly before the initial
- * hydration from the backend REST API (`GET /api/state`) resolves.
- * All authoritative institutional data lives exclusively in `usta-api`.
+ * Client-side fallback unit rendered only until initial hydration from
+ * `GET /api/state` completes. Authoritative institutional data resides in `usta-api`.
  */
 export const FALLBACK_ACADEMIC_UNIT: Readonly<AcademicUnitSummary> = Object.freeze({
   id: '',
@@ -25,6 +24,7 @@ export const FALLBACK_ACADEMIC_UNIT: Readonly<AcademicUnitSummary> = Object.free
   pendingApprovals: 0,
 });
 
+/** Default validation parameters used prior to loading persisted institutional rules from `usta-api`. */
 export const DEFAULT_RULES_CONFIG: Readonly<BusinessRulesConfig> = Object.freeze({
   includePostgraduateInPse125: false,
   enforceAnnex6CapOnGraduates: true,

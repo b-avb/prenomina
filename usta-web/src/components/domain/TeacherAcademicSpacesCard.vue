@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Card for managing a teacher's undergraduate (`40104`) and postgraduate (`40006`) academic spaces
+ * with automatic 25% PSE (`40108`) calculation.
+ */
 import { computed, nextTick, ref } from 'vue';
 import type { AssignedAcademicSpace, FacultyTeacher } from '@usta/domain';
 import { usePayrollStore } from '@/stores/payroll.store';

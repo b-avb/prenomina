@@ -2,7 +2,7 @@
 @use './fonts';
 @use './base';
 
-// ================= EXTENSIONES PRENÓMINA DOCENTE (UI/UX COMPACTA Y EJECUTIVA) =================
+// Payroll workspace layout overrides and domain-specific UI primitives.
 
 .app-header {
   padding: 10px 22px;
@@ -111,7 +111,7 @@
   flex-wrap: wrap;
 }
 
-// ================= CINTA INTEGRADA DE BOLSAS DE FACULTAD (ANEXOS 5 Y 6) =================
+// Faculty quota pill strip summarizing Annex 5 and Annex 6 hour caps.
 .bolsas-strip {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -217,7 +217,7 @@
   }
 }
 
-// ================= WORKSPACE MAESTRO-DETALLE POR DOCENTE =================
+// Master-detail teacher workload workspace (sticky roster sidebar + detail pane).
 .prenomina-workspace {
   display: grid;
   grid-template-columns: 270px 1fr;
@@ -306,7 +306,6 @@
   }
 }
 
-// ================= CABECERA COMPACTA DEL DOCENTE SELECCIONADO =================
 .docente-summary-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -405,7 +404,6 @@
   }
 }
 
-// ================= BARRA COMPACTA DE ALERTAS EN LÍNEA =================
 .alertas-compact-bar {
   margin-bottom: 16px;
   display: flex;
@@ -442,7 +440,6 @@
   }
 }
 
-// ================= SECCIONES DE CARGA DEL DOCENTE (ESPACIOS + CÓDIGOS SAC) =================
 .docente-split-grid {
   display: flex;
   flex-direction: column;
@@ -511,7 +508,7 @@
   }
 }
 
-// Cuadro de lineamiento contextual compacto
+// Contextual SAC guideline callout shown inside workload assignment cards.
 .lineamiento-popover {
   background: #f4f9fe;
   border: 1px solid #cbe3fa;
@@ -605,7 +602,7 @@
   }
 }
 
-// Tablas más compactas para aprovechar mejor el espacio vertical y ajustarse al ancho sin overflow
+// Dense table spacing for high-column payroll and catalog grids.
 table.compact-table {
   width: 100%;
   table-layout: auto;
@@ -643,10 +640,7 @@ table.compact-table {
   }
 }
 
-// ================= CONTROLES UNIFICADOS DE BARRA DE HERRAMIENTAS Y TABLAS =================
-// Garantiza que buscadores, filtros y celdas editables fuera de `.field`
-// compartan tipografía, bordes, radios, flecha SVG y foco institucional.
-
+// Compact toolbar and inline-table controls matching .field typography, borders, and focus rings.
 .control-sm {
   height: 34px;
   padding: 6px 11px;

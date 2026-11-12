@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Modal form for updating an academic unit's Dean, executive workload profile (`DIRECTIVO`), and
+ * local institutional account credentials.
+ */
 import { ref, watch } from 'vue';
 import {
   AcademicOrganizationDomain,

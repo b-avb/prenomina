@@ -1,5 +1,9 @@
 import { sql, type Kysely } from 'kysely';
 
+/**
+ * Creates the `users` table for local `scrypt` authentication, RBAC role assignment,
+ * optional academic unit binding, and `password_changed_at` JWT revocation tracking.
+ */
 const TABLE_OPTIONS = sql.raw('ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
 
 export async function up(db: Kysely<unknown>): Promise<void> {

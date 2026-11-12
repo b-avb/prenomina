@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Primary faculty pre-payroll workspace supporting per-teacher SAC allocation, Annex 2 matrix
+ * editing, version-1 comparison, cap exception justification, and Annex 3 pre-approval authoring.
+ */
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { cloneState } from '@/composables/useMutation';
@@ -43,6 +47,7 @@ const canEditWorkload = computed<boolean>(() => {
     return true;
   }
   if (store.activeRole === 'dean') {
+    // Deans may edit only managed units while the pre-payroll is in Draft or Returned status.
     const status = store.activeUnit.payrollStatus;
     const isEditableStatus =
       status === 'Borrador' || status === 'Devuelta con Observaciones';
@@ -183,6 +188,7 @@ function tryAssignHoursWithCapControl(
   const cap = store.getEffectiveCodeCap(definition, store.activeUnit, selectedProgram);
 
   if (hours > 0 && cap !== null && hours > cap) {
+    // Blocking caps clamp immediately for Deans; justifiable caps open the 3-step exception modal.
     if (definition.severity === 'blocking' && store.activeRole === 'dean') {
       void store.updateCodeAllocation(
         activeTeacher.value.id,
@@ -250,7 +256,6 @@ function openExceptionModal(codeItem: SacCode) {
   };
 }
 
-// Teacher Profile & Removal Modals
 const isTeacherModalOpen = ref(false);
 const editingTeacherModel = ref<FacultyTeacher | null>(null);
 const teacherToDelete = ref<FacultyTeacher | null>(null);
@@ -288,7 +293,6 @@ async function confirmRemoveTeacher(): Promise<void> {
   }
 }
 
-// Annex 3 Approval Modal
 const annex3ModalState = ref<Annex3ModalState | null>(null);
 
 function getTeacherCodeApprovalStatus(teacherId: string, code: string) {
@@ -334,7 +338,6 @@ function openAnnex3ApprovalModal(codeItem: SacCode) {
   };
 }
 
-// Excel Export / Import
 const excelFileInput = ref<HTMLInputElement | null>(null);
 
 function handleExportAnnex2Xlsx() {
@@ -380,7 +383,6 @@ async function handleImportExcelFile(event: Event) {
 
 <template>
   <div>
-    <!-- INTEGRATED EXECUTIVE HEADER -->
     <div class="page-top" style="margin-bottom: 14px">
       <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
         <div>
@@ -547,14 +549,12 @@ async function handleImportExcelFile(event: Event) {
       <div>{{ readonlyBannerMessage }}</div>
     </div>
 
-    <!-- ANNEX 5 & 6 QUOTA STRIP -->
     <Annex5QuotaStrip
       :bags="store.activeUnitBagIndicators"
       :active-code="bagCodeFilter"
       @select="toggleBagFilter"
     />
 
-    <!-- MODE 1: TEACHER WORKSPACE -->
     <div v-if="viewMode === 'teacher'" class="prenomina-workspace">
       <TeacherSidebarPanel
         v-model:search-query="teacherSearchQuery"
@@ -612,7 +612,6 @@ async function handleImportExcelFile(event: Event) {
       </section>
     </div>
 
-    <!-- MODE 2: ANNEX 2 CONSOLIDATED MATRIX VIEW -->
     <Annex2MatrixSheet
       v-else
       @select-teacher="
@@ -624,7 +623,6 @@ async function handleImportExcelFile(event: Event) {
       @export-excel="handleExportAnnex2Xlsx"
     />
 
-    <!-- MODALS -->
     <TeacherProfileModal
       :open="isTeacherModalOpen"
       :editing-teacher="editingTeacherModel"

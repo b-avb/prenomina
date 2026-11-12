@@ -4,6 +4,7 @@ import type { LockOptions } from '../../models/persistence.models.js';
 import type { ResearchAllocationRepository } from '../research-allocation.repository.js';
 import { toResearchAllocation, toResearchAllocationRow } from './mappers/research-allocation.mapper.js';
 
+/** MariaDB adapter for Annex 7 `research_allocations`, joining `academic_units` for `unitName`. */
 export class MariaDbResearchAllocationRepository implements ResearchAllocationRepository {
   public async listByPeriod(
     db: DbExecutor,

@@ -7,6 +7,10 @@ import {
   optionalQueryParam,
 } from '../validation/query-params.js';
 
+/**
+ * Read-only HTTP handler for querying the append-only audit trail.
+ * Caps page size at 1,000 entries and delegates Dean unit scoping to `AuditService`.
+ */
 export class AuditLogsController {
   constructor(private readonly service: AuditService) {}
 

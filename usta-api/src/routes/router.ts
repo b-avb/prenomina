@@ -43,6 +43,11 @@ const MIME_TYPES: Readonly<Record<string, string>> = {
   '.woff2': 'font/woff2',
 };
 
+/**
+ * Serves compiled frontend assets from `usta-web/dist` when present on disk.
+ * Confines resolved paths to `WEB_DIST_DIR` to prevent directory traversal and falls back to
+ * `index.html` for extensionless client-side SPA routes.
+ */
 async function tryServeWebSpa(pathname: string, res: ServerResponse): Promise<boolean> {
   try {
     let cleanPathname = pathname;
@@ -89,6 +94,12 @@ async function tryServeWebSpa(pathname: string, res: ServerResponse): Promise<bo
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
+/**
+ * Authentication enforcement tier for an API route:
+ * - `'public'`: Unauthenticated access permitted.
+ * - `'pending_password_allowed'`: Requires a valid session token even if `mustChangePassword` is true.
+ * - `'authenticated'`: Requires a valid session token with `mustChangePassword === false`.
+ */
 export type RouteAccessPolicy =
   | 'public'
   | 'pending_password_allowed'
@@ -150,6 +161,10 @@ function matchPathSegments(
   return params;
 }
 
+/**
+ * Central HTTP request dispatcher enforcing route matching, reverse-proxy verb/path normalization,
+ * JWT authentication, RBAC role guards, and uniform JSON error serialization.
+ */
 export class ApiRouter {
   private readonly routes: CompiledRoute[];
 
@@ -158,7 +173,7 @@ export class ApiRouter {
     private readonly actorResolver: ActorResolver,
   ) {
     const definitions: RouteDefinition[] = [
-      // 0. Authentication & User Credentials (Local Temporary Password + Microsoft Entra ID AD SSO)
+      // Authentication and institutional user management (local scrypt credentials and Entra ID SSO)
       {
         method: 'GET',
         path: '/api/auth/config',
@@ -211,7 +226,7 @@ export class ApiRouter {
         handler: controllers.auth.resetUserPassword,
       },
 
-      // 1. System Health, Read Snapshot & Academic Periods
+      // System health, aggregate state snapshots, and academic periods
       {
         method: 'GET',
         path: '/api/health',
@@ -245,7 +260,7 @@ export class ApiRouter {
         handler: controllers.payrollState.createPeriod,
       },
 
-      // 2. Academic Units, Deans, Workflow & Validation
+      // Academic units, Dean assignments, payroll workflow transitions, and validation
       {
         method: 'GET',
         path: '/api/units',
@@ -314,7 +329,7 @@ export class ApiRouter {
         handler: controllers.academicUnits.remove,
       },
 
-      // 3. Academic Programs & Annex 5 Quotas
+      // Academic programs and Annex 5 coordination/tutoring quotas
       {
         method: 'GET',
         path: '/api/programs',
@@ -343,7 +358,7 @@ export class ApiRouter {
         handler: controllers.academicPrograms.remove,
       },
 
-      // 4. SAC Catalog (Annex 4), Institutional Rules Config & Schedule Phases
+      // SAC catalog (Annex 4), institutional business rules, and schedule phases
       {
         method: 'GET',
         path: '/api/sac-codes',
@@ -405,7 +420,7 @@ export class ApiRouter {
         handler: controllers.sacCatalog.updateSchedulePhase,
       },
 
-      // 5. Faculty Teachers, Academic Spaces & SAC Allocations (Annex 2)
+      // Faculty teachers, academic spaces, and SAC hour allocations (Annex 2)
       {
         method: 'GET',
         path: '/api/teachers',
@@ -468,7 +483,7 @@ export class ApiRouter {
         handler: controllers.facultyTeachers.updateCodeAllocation,
       },
 
-      // 6. Vice-Rectorate Approvals & Document Attachments (Annex 3)
+      // Vice-Rectorate pre-approvals and PDF supporting attachments (Annex 3)
       {
         method: 'GET',
         path: '/api/approvals',
@@ -503,7 +518,7 @@ export class ApiRouter {
         handler: controllers.approvals.decide,
       },
 
-      // 7. Research Matrix (Annex 7)
+      // SICDDI research allocations (Annex 7)
       {
         method: 'GET',
         path: '/api/research',
@@ -532,7 +547,7 @@ export class ApiRouter {
         handler: controllers.research.remove,
       },
 
-      // 8. Immutable Server-Side Audit Trail
+      // Append-only audit trail
       {
         method: 'GET',
         path: '/api/audit-logs',
@@ -547,6 +562,13 @@ export class ApiRouter {
     }));
   }
 
+  /**
+   * Dispatches an incoming HTTP request.
+   *
+   * Institutional Apache/WAF gateways may block `PUT`, `PATCH`, and `DELETE` verbs; `POST` requests
+   * carrying `X-HTTP-Method-Override` or `?_method=` are upgraded to the target mutating verb before
+   * matching. Sub-path mount prefixes (`/prenomina` and `/app/prenomina`) are stripped automatically.
+   */
   public dispatch = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
     if (req.method === 'OPTIONS') {
       sendNoContent(res);

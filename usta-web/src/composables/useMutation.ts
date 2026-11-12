@@ -48,12 +48,17 @@ export function onMutationSucceeded(listener: () => void): () => void {
   return () => successListeners.delete(listener);
 }
 
+/** Normalizes unknown thrown values into a structured `ApiError` for toast feedback and callers. */
 export function toApiError(error: unknown): ApiError {
   if (error instanceof ApiError) return error;
   const message = error instanceof Error ? error.message : 'Error inesperado en la aplicación';
   return new ApiError(0, 'UNEXPECTED_ERROR', message, '');
 }
 
+/**
+ * Coordinates store mutations with global in-flight tracking, toast notifications,
+ * optimistic state capture/rollback, and post-commit audit log listeners.
+ */
 export function useMutation() {
   const { showToast } = useToast();
 

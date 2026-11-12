@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Inline-editable grid of Annex 6 semester hour caps (`30411`/`40106`/`40109`/`40127`/`20502`),
+ * postgraduate status flags, and Dean assignments per academic unit.
+ */
 import { computed, ref } from 'vue';
 import { usePayrollStore } from '@/stores/payroll.store';
 import { eventChecked, eventNumber, eventValue } from '@/utils/dom-events';

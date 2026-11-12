@@ -11,6 +11,7 @@ const pinia = createPinia();
 app.use(pinia);
 app.use(router);
 
+// Register outbound auth/period headers and 401 session teardown before background session revalidation.
 registerActorHeaders(pinia);
 void useAuthStore(pinia).refreshSession();
 

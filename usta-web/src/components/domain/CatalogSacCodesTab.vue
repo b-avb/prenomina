@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Annex 4 SAC activity catalog table supporting substantive-function filtering, inline
+ * base/cap/severity edits, and modal configuration launch.
+ */
 import { computed, ref } from 'vue';
 import type { RuleSeverity, SacCode } from '@usta/domain';
 import { usePayrollStore } from '@/stores/payroll.store';

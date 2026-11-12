@@ -23,6 +23,11 @@ import { AUTH_PROVIDERS, PAYROLL_ROLES } from '../validation/domain-enums.js';
 import { PayloadReader } from '../validation/payload-reader.js';
 import { requirePathParam } from '../validation/query-params.js';
 
+/**
+ * Peeks at an unverified Entra JWT payload solely to partition rate-limiter buckets by principal
+ * (`ms:<username|oid>`) before JWKS signature verification, preventing a single malformed/expired
+ * client loop behind a shared campus NAT IP from locking out other Microsoft SSO users.
+ */
 function extractUnverifiedTokenSubjectHint(rawToken: string | undefined): string {
   if (!rawToken) return 'microsoft-entra-sso';
   const parts = rawToken.split('.');
@@ -37,11 +42,15 @@ function extractUnverifiedTokenSubjectHint(rawToken: string | undefined): string
       return `ms:${candidate.trim().toLowerCase().slice(0, 80)}`;
     }
   } catch {
-    // Ignore malformed JWT hint before signature verification
+    // Non-JSON payload segments fall back to the shared SSO rate-limit bucket key and fail later during token verification.
   }
   return 'microsoft-entra-sso';
 }
 
+/**
+ * HTTP handlers for authentication discovery, local `scrypt` login, Microsoft Entra ID SSO
+ * token exchange, mandatory first-login password rotation, and institutional account administration.
+ */
 export class AuthController {
   constructor(
     private readonly service: AuthService,
@@ -78,6 +87,7 @@ export class AuthController {
     }
   };
 
+  /** Exchanges a verified Microsoft Entra ID `idToken` or `accessToken` for a platform session JWT. */
   public loginWithMicrosoft = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -105,6 +115,7 @@ export class AuthController {
     }
   };
 
+  /** Returns the authenticated user's profile; accessible even when `mustChangePassword` is pending. */
   public me = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -121,6 +132,7 @@ export class AuthController {
     sendSuccess(res, 200, user);
   };
 
+  /** Rotates the caller's local password, revoking prior JWTs via `passwordChangedAt` and issuing a fresh session token. */
   public changePassword = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -203,6 +215,7 @@ export class AuthController {
     sendSuccess(res, 201, created);
   };
 
+  /** Resets a user's password to a temporary credential (`mustChangePassword = true`), invalidating active tokens. */
   public resetUserPassword = async (
     req: IncomingMessage,
     res: ServerResponse,

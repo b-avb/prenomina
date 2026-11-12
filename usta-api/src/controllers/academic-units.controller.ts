@@ -18,6 +18,10 @@ import { PAYROLL_STATUSES, UNIT_TYPES } from '../validation/domain-enums.js';
 import { PayloadReader } from '../validation/payload-reader.js';
 import { optionalQueryParam, requirePathParam } from '../validation/query-params.js';
 
+/**
+ * HTTP handlers for Academic Units, Dean assignment and account provisioning, period-scoped
+ * payroll workflow status transitions, and Version 1 workload baseline snapshots.
+ */
 export class AcademicUnitsController {
   constructor(
     private readonly service: AcademicUnitsService,
@@ -52,6 +56,7 @@ export class AcademicUnitsController {
     sendSuccess(res, 200, unit);
   };
 
+  /** Creates an academic unit along with its initial period cycle, optional Dean login account, and `DIRECTIVO` roster record. */
   public create = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -141,6 +146,7 @@ export class AcademicUnitsController {
     sendSuccess(res, 200, updated);
   };
 
+  /** Reassigns a unit's Dean, reconciling the unit's `DIRECTIVO` teacher entry and Dean user credentials. */
   public updateDean = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -183,6 +189,7 @@ export class AcademicUnitsController {
     sendSuccess(res, 200, updated);
   };
 
+  /** Advances or returns a unit's payroll workflow state (`Borrador` -> `Enviada` -> `En Revisión` -> `Avalada` / `Devuelta con Observaciones`). */
   public changeStatus = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -207,6 +214,7 @@ export class AcademicUnitsController {
     sendSuccess(res, 200, updated);
   };
 
+  /** Freezes current teacher totals as the Version 1 baseline and increments `currentVersion` to 2. */
   public snapshotVersion = async (
     req: IncomingMessage,
     res: ServerResponse,

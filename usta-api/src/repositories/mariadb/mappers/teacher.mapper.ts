@@ -14,6 +14,7 @@ import {
   toNullableFlag,
 } from './mapper.utils.js';
 
+/** `teachers` table write payload excluding database-managed sequence and timestamp columns. */
 type TeacherProfileRow = Omit<Insertable<TeachersTable>, 'insertion_order' | 'created_at' | 'updated_at'>;
 
 export function toAssignedAcademicSpace(row: Selectable<TeacherAcademicSpacesTable>): AssignedAcademicSpace {
@@ -42,6 +43,7 @@ export function toTeacherCodeAllocation(row: Selectable<TeacherCodeAllocationsTa
   };
 }
 
+/** Assembles a `FacultyTeacher` aggregate, indexing child `TeacherCodeAllocation` rows by SAC `code`. */
 export function toFacultyTeacher(
   row: Selectable<TeachersTable>,
   academicSpaces: AssignedAcademicSpace[],

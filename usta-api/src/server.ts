@@ -1,3 +1,7 @@
+/**
+ * HTTP entry point and dependency composition root for the USTA Tunja payroll pre-liquidation API.
+ * Wires Kysely/MariaDB repositories, domain services, JWT actor resolution, and ordered pool shutdown.
+ */
 import { ENV_CONFIG } from './config/env.config.js';
 import http from 'node:http';
 import { JwtActorResolver } from './auth/actor-resolver.js';
@@ -121,6 +125,10 @@ const router = new ApiRouter(
 
 const server = http.createServer(router.dispatch);
 
+/**
+ * Applies pending schema migrations and idempotent institutional user seeds before binding the HTTP socket.
+ * Startup migration/seed errors are logged without aborting socket bind so health endpoints remain reachable for diagnostics.
+ */
 async function bootstrap(): Promise<void> {
   try {
     const { applied } = await migrateToLatest(db);
@@ -147,6 +155,7 @@ async function bootstrap(): Promise<void> {
 
 void bootstrap();
 
+/** Stops accepting new HTTP connections and drains the MariaDB connection pool on process termination signals. */
 async function shutdown(signal: string): Promise<void> {
   console.log(`[USTA-API-TS] Received ${signal}. Closing server and MariaDB pool...`);
   server.close(async () => {

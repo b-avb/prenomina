@@ -3,6 +3,7 @@ import type { AcademicUnitsTable, UnitPayrollCyclesTable } from '../../../databa
 import type { AcademicUnitRecord, UnitPayrollCycle } from '../../../models/persistence.models.js';
 import { fromFlag, toFlag, toIsoString } from './mapper.utils.js';
 
+/** Maps `academic_units` and `unit_payroll_cycles` rows to persistence records and back. */
 export function toAcademicUnitRecord(row: Selectable<AcademicUnitsTable>): AcademicUnitRecord {
   return {
     id: row.id,

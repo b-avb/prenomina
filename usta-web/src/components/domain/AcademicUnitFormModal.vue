@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Modal form for registering an academic unit, deriving its Dean's institutional username,
+ * optionally seeding an initial Annex 5 program, and emitting one-time temporary credentials.
+ */
 import { ref, watch } from 'vue';
 import {
   AcademicOrganizationDomain,

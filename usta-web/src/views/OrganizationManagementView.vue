@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Academic organization workspace for managing faculties and departments, assigning Deans with
+ * one-time temporary credential issuance, and maintaining Annex 5 academic programs.
+ */
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { usePayrollStore } from '@/stores/payroll.store';
@@ -87,7 +91,6 @@ async function copyIssuedCredentials() {
 
 <template>
   <div>
-    <!-- MODULE HEADER -->
     <div class="page-top">
       <div>
         <div class="eyebrow-tag" style="margin-bottom: 3px">
@@ -111,7 +114,6 @@ async function copyIssuedCredentials() {
       </div>
     </div>
 
-    <!-- KPI STRIP -->
     <div class="grid cols-4" style="margin-bottom: 16px; gap: 12px">
       <div class="card stat" style="padding: 14px 18px">
         <div class="num" style="font-size: 24px">{{ store.units.length }}</div>
@@ -137,7 +139,6 @@ async function copyIssuedCredentials() {
       </div>
     </div>
 
-    <!-- TABS -->
     <div class="tabs" style="margin-bottom: 14px">
       <button
         type="button"
@@ -177,7 +178,6 @@ async function copyIssuedCredentials() {
       @edit-program="openEditProgramModal"
     />
 
-    <!-- MODALS -->
     <AcademicUnitFormModal
       :open="isNewUnitModalOpen"
       @close="isNewUnitModalOpen = false"
@@ -196,7 +196,6 @@ async function copyIssuedCredentials() {
       @close="closeProgramModal"
     />
 
-    <!-- PERSISTENT CREDENTIALS MODAL -->
     <UstaModal
       :open="!!issuedCredentials"
       :title="issuedCredentials?.title ?? 'Credenciales temporales'"

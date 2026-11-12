@@ -39,6 +39,7 @@ function readStoredUser(): AuthUser | null {
   }
 }
 
+/** Maps each institutional role to its default landing route after authentication. */
 export function getHomeRouteForRole(role: PayrollRole): string {
   switch (role) {
     case 'director':
@@ -52,6 +53,10 @@ export function getHomeRouteForRole(role: PayrollRole): string {
   }
 }
 
+/**
+ * Manages authenticated user session persistence, local and Microsoft Entra ID login flows,
+ * mandatory temporary-password rotation gating, user provisioning, and Dean unit scoping.
+ */
 export const useAuthStore = defineStore('auth', () => {
   const initialToken = readStoredToken();
   const initialUser = readStoredUser();

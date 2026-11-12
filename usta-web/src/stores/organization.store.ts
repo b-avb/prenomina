@@ -35,6 +35,10 @@ function isSamePhase(a: SchedulePhase, b: SchedulePhase): boolean {
   );
 }
 
+/**
+ * Manages academic periods, institutional schedule phases, academic units, and Annex 5 program quotas,
+ * recomputing live unit cap previews whenever linked program quotas change.
+ */
 export const useOrganizationStore = defineStore('organization', () => {
   const authStore = useAuthStore();
   const { showToast } = useToast();

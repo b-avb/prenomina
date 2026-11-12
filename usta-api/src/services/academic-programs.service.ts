@@ -19,6 +19,11 @@ import { NotFoundError } from '../utils/app-error.js';
 import type { AuditService } from './audit.service.js';
 import type { PeriodContextService } from './period-context.service.js';
 
+/**
+ * Manages Academic Programs and Annex 5 coordination/tutoring quotas (`30411`, `40106`, `40109`, `40127`).
+ * Mutations lock the parent `academic_units` row (`FOR UPDATE`) inside the transaction so concurrent
+ * program edits serialize their recalculation of aggregate unit caps and `hasPostgraduates`.
+ */
 export class AcademicProgramsService {
   constructor(
     private readonly tx: TransactionRunner,
@@ -35,6 +40,7 @@ export class AcademicProgramsService {
     );
   }
 
+  /** Inserts an academic program and recalculates the parent unit's Annex 5 SAC caps atomically. */
   public async create(
     actor: ActorContext,
     dto: CreateAcademicProgramDto,
@@ -92,6 +98,10 @@ export class AcademicProgramsService {
     });
   }
 
+  /**
+   * Updates an academic program, propagates `programName` renames to denormalized
+   * `teacher_code_allocations` rows, and recomputes the parent unit's Annex 5 caps.
+   */
   public async update(
     actor: ActorContext,
     dto: UpdateAcademicProgramDto,
@@ -167,6 +177,10 @@ export class AcademicProgramsService {
     });
   }
 
+  /**
+   * Deletes an academic program, clears `program_id`/`program_name` references on affected
+   * teacher SAC allocations, and zeroes the parent unit's Annex 5 caps if no active programs remain.
+   */
   public async remove(
     actor: ActorContext,
     id: string,

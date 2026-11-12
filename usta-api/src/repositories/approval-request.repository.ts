@@ -2,6 +2,7 @@ import type { ApprovalRequestAnnex3, ApprovalStatus } from '@usta/domain';
 import type { DbExecutor } from '../database/database.types.js';
 import type { LockOptions } from '../models/persistence.models.js';
 
+/** Persistence port for Annex 3 Vice-Rectorate special approval requests and resolution metadata. */
 export interface ApprovalRequestRepository {
   listByPeriod(
     db: DbExecutor,

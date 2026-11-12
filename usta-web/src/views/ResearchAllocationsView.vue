@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Annex 7 research and SICDDI allocation management view for the Research Directorate,
+ * supporting XLSX matrix import/export and synchronized teacher workload updates.
+ */
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import UstaModal from '@/components/ui/UstaModal.vue';
@@ -91,6 +95,7 @@ async function handleImportAnnex7Excel(event: Event): Promise<void> {
     let count = 0;
     for (const item of items) {
       const teacher = store.teachers.find((t) => t.documentId === item.documentId);
+      // Adjunct (CATEDRA) contracts are ineligible for Annex 7 research and SICDDI hour allocations.
       if (teacher && teacher.dedication === 'CATEDRA') continue;
       const unit = teacher
         ? store.units.find((u) => u.id === teacher.unitId)

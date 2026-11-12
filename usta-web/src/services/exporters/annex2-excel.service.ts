@@ -29,7 +29,12 @@ export interface ExportAnnex2Params {
   }[];
 }
 
+/** Client-side XLSX exporter and heuristic importer for faculty Annex 2 payroll workbooks. */
 export class Annex2ExcelService {
+  /**
+   * Generates and downloads a three-sheet Annex 2 workbook (`Proyección de Nómina`,
+   * `Espacios Académicos`, and `Resumen`) for the active academic unit and period.
+   */
   public static exportFacultyAnnex2Xlsx(params: ExportAnnex2Params): void {
     const {
       period,
@@ -46,7 +51,6 @@ export class Annex2ExcelService {
     const wb = XLSX.utils.book_new();
     const extraCodes = sacCodes.filter((c) => c.code !== '40104' && c.code !== '40108');
 
-    // ==================== SHEET 1: PAYROLL PROJECTION ====================
     const headerMeta = [
       ['UNIVERSIDAD SANTO TOMÁS - SECCIONAL TUNJA'],
       ['VICERRECTORÍA ACADÉMICA · DIRECCIÓN DE ENSEÑANZA Y APRENDIZAJE'],
@@ -146,7 +150,6 @@ export class Annex2ExcelService {
     ];
     XLSX.utils.book_append_sheet(wb, ws1, 'Proyección de Nómina');
 
-    // ==================== SHEET 2: ACADEMIC SPACES ====================
     const ws2Headers = [
       'N° DOCENTE',
       'DOCUMENTO / CC',
@@ -211,7 +214,6 @@ export class Annex2ExcelService {
     ];
     XLSX.utils.book_append_sheet(wb, ws2, 'Espacios Académicos');
 
-    // ==================== SHEET 3: SUMMARY ====================
     let sumTeaching =
       sumCodeInUnit(unit.id, '40104') + sumCodeInUnit(unit.id, '40108');
     let sumOutreach = 0;
@@ -301,7 +303,10 @@ export class Annex2ExcelService {
     XLSX.writeFile(wb, `ANEXO_2_Prenomina_${unit.id}_${period}.xlsx`);
   }
 
-  /** Parses an Annex 2 workbook into id-less rows; identifiers are assigned by the server. */
+  /**
+   * Parses an uploaded Annex 2 workbook into id-less teacher DTOs by scanning the first 20 rows
+   * for SAC code column headers and joining any companion `Espacios Académicos` worksheet by name.
+   */
   public static async importAnnex2FromXlsx(
     file: File,
     catalogCodes: SacCode[],
@@ -430,6 +435,7 @@ export class Annex2ExcelService {
         }
       }
 
+      // Positive 30222 academic-administrative hours classify the row under DIRECTIVO (160 h/month).
       const has30222 = (allocations['30222']?.hours ?? 0) > 0;
       const rawDed = String(row[colDedication] ?? '').toUpperCase();
       const dedication: TeacherDedication = has30222
@@ -449,6 +455,7 @@ export class Annex2ExcelService {
         });
       }
 
+      // Persist a manual PSE override only when imported 40108 diverges from the default 25% of 40104.
       const pse25 = Math.round(h40104 * 0.25 * 10) / 10;
       const pseManualOverride =
         h40108 !== null && Math.abs(h40108 - pse25) > 0.01 ? h40108 : null;

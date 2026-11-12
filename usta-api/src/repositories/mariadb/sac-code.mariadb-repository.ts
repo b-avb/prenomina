@@ -8,6 +8,9 @@ import {
   toSacFacultyRuleRows,
 } from './mappers/sac-code.mapper.js';
 
+/**
+ * MariaDB adapter for `sac_codes` and child `sac_faculty_rules`.
+ */
 export class MariaDbSacCodeRepository implements SacCodeRepository {
   public async listAll(db: DbExecutor): Promise<SacCode[]> {
     const rows = await db.selectFrom('sac_codes').selectAll().orderBy('insertion_order').execute();
@@ -28,6 +31,10 @@ export class MariaDbSacCodeRepository implements SacCodeRepository {
     await this.insertFacultyRules(db, codes);
   }
 
+  /**
+   * Updates the `sac_codes` row (supporting primary-key renames via `previousCode` and `ON UPDATE CASCADE`),
+   * synchronizes denormalized `activity_name` in `research_allocations`, and replaces `sac_faculty_rules`.
+   */
   public async update(db: DbExecutor, code: SacCode, previousCode?: string): Promise<void> {
     const targetKey = previousCode ?? code.code;
     const row = toSacCodeRow(code);
@@ -50,6 +57,7 @@ export class MariaDbSacCodeRepository implements SacCodeRepository {
     await db.deleteFrom('sac_codes').where('code', '=', code).execute();
   }
 
+  /** Checks whether any allocation, approval request, or research row references `code` before deletion. */
   public async isInUse(db: DbExecutor, code: string): Promise<boolean> {
     const allocation = await db
       .selectFrom('teacher_code_allocations')

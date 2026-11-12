@@ -34,6 +34,7 @@ import type { PeriodContextService } from './period-context.service.js';
 
 const USERNAME_PATTERN = /^[a-z0-9._-]{3,60}$/;
 
+/** Normalizes a username or institutional email local-part into ASCII `[a-z0-9._-]` form. */
 export function sanitizeUsernameInput(raw: string): string {
   const withoutDomain = raw.trim().toLowerCase().split('@')[0] ?? '';
   return withoutDomain
@@ -43,6 +44,7 @@ export function sanitizeUsernameInput(raw: string): string {
     .replace(/[^a-z0-9._-]/g, '');
 }
 
+/** Constructs an institutional email address from a sanitized username and authorized campus domain. */
 export function buildInstitutionalEmail(
   username: string,
   domain = resolveAuthEnvConfig().institutionalDomain || INSTITUTIONAL_EMAIL_DOMAIN,
@@ -61,9 +63,9 @@ export interface OfficialInstitutionalAccountSeed {
 }
 
 /**
- * Cuentas institucionales oficiales de la Seccional Tunja (Gobernanza + Decanaturas y Direcciones).
- * Las contraseñas temporales iniciales están almacenadas únicamente como hashes criptográficos scrypt
- * irreversibles (nunca en texto plano dentro del repositorio).
+ * Canonical institutional user accounts for the Tunja campus (governance roles, Deans, and Department Directors).
+ * Initial temporary credentials are stored exclusively as one-way `scrypt` hashes so plaintext passwords
+ * never reside in source control.
  */
 export const OFFICIAL_INSTITUTIONAL_ACCOUNTS: readonly OfficialInstitutionalAccountSeed[] = [
   {
@@ -288,10 +290,12 @@ export const OFFICIAL_INSTITUTIONAL_ACCOUNTS: readonly OfficialInstitutionalAcco
   },
 ];
 
+/** Generates a random 17-character alphanumeric temporary password satisfying letter-and-digit complexity rules. */
 export function generateSecureTemporaryPassword(): string {
   return `Usta-${randomBytes(5).toString('hex')}1A`;
 }
 
+/** Materializes `UserRecord` rows from `OFFICIAL_INSTITUTIONAL_ACCOUNTS` with `mustChangePassword = true`. */
 export function buildDefaultSeedUsers(
   _units?: AcademicUnitRecord[],
   overridePasswordHash?: string,
@@ -316,6 +320,10 @@ export function buildDefaultSeedUsers(
   }));
 }
 
+/**
+ * Manages institutional authentication, session token issuance, Microsoft Entra ID SSO account
+ * linking, password rotation/revocation, and Dean account synchronization.
+ */
 export class AuthService {
   constructor(
     private readonly tx: TransactionRunner,
@@ -377,6 +385,7 @@ export class AuthService {
     };
   }
 
+  /** Returns public authentication mode and MSAL client configuration consumed by the SPA login screen. */
   public getAuthConfig(): AuthConfigResponse {
     const cfg = resolveAuthEnvConfig();
     const hasEntraCredentials = Boolean(cfg.azureTenantId && cfg.azureClientId);
@@ -467,6 +476,7 @@ export class AuthService {
     });
   }
 
+  /** Authenticates a user by username or institutional email against their `scrypt` password hash and signs a JWT. */
   public async login(dto: LoginDto): Promise<AuthSessionResponse> {
     const authConfig = this.getAuthConfig();
     if (!authConfig.allowLocalLogin) {
@@ -513,6 +523,11 @@ export class AuthService {
     return { token, user };
   }
 
+  /**
+   * Verifies a Microsoft Entra ID JWT and resolves the corresponding pre-provisioned platform account
+   * in `entraOid -> email -> username` order under `FOR UPDATE` lock. Binds `entraOid` on first SSO
+   * login, clears `mustChangePassword`, and rejects directory principals without an active platform profile.
+   */
   public async loginWithMicrosoft(dto: MicrosoftLoginDto): Promise<AuthSessionResponse> {
     const rawToken = (dto.idToken || dto.accessToken || '').trim();
     if (!rawToken) {
@@ -602,6 +617,10 @@ export class AuthService {
     return this.toAuthUser(userRecord, unitsCtx);
   }
 
+  /**
+   * Verifies `currentPassword` under `FOR UPDATE` lock, stores the new `scrypt` hash, clears
+   * `mustChangePassword`, and advances `passwordChangedAt` to revoke all previously issued JWTs.
+   */
   public async changePassword(
     userId: string,
     dto: ChangePasswordDto,
@@ -692,6 +711,7 @@ export class AuthService {
     return records.map((r) => this.toAuthUser(r, unitsCtx));
   }
 
+  /** Provisions an institutional user account with a temporary password (`mustChangePassword = true`). */
   public async createUser(
     actor: ActorContext,
     dto: CreateUserAccountDto,
@@ -773,6 +793,10 @@ export class AuthService {
     });
   }
 
+  /**
+   * Resets a user's password to a temporary credential (`mustChangePassword = true`,
+   * `passwordChangedAt = null`), revoking any active sessions issued prior to the reset.
+   */
   public async resetPasswordToTemporary(
     actor: ActorContext,
     dto: ResetUserPasswordDto,
@@ -823,6 +847,10 @@ export class AuthService {
     });
   }
 
+  /**
+   * Re-homes a Dean user to another unit they still oversee (by normalized `deanName`) when their
+   * primary unit is deleted, or deactivates the account if they manage no remaining units.
+   */
   public async deactivateExclusiveDeanForDeletedUnit(
     trx: DbExecutor,
     unitId: string,
@@ -920,7 +948,7 @@ export class AuthService {
       };
     }
 
-    // Multi-unit Dean support: if an active Dean already matches fullName and no custom username was requested, reuse their account!
+    // Reuse an existing active Dean account when normalized fullName matches and no distinct username was requested.
     if (!options?.username?.trim()) {
       const allUsers = await this.repos.users.listAll(trx);
       const normalizedTarget = normalizeComparableName(unit.deanName);

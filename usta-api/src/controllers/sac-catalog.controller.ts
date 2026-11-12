@@ -25,6 +25,7 @@ import {
 import { PayloadReader } from '../validation/payload-reader.js';
 import { optionalQueryParam, requirePathParam } from '../validation/query-params.js';
 
+/** Parses optional per-unit SAC hour bounds and faculty bag caps attached to a SAC code payload. */
 function readFacultyRules(r: PayloadReader): FacultySpecificRule[] | undefined {
   return r.optionalObjectArray('facultyRules', (item) => ({
     unitId: item.requiredString('unitId', { maxLength: 64 }),
@@ -37,6 +38,10 @@ function readFacultyRules(r: PayloadReader): FacultySpecificRule[] | undefined {
   }));
 }
 
+/**
+ * HTTP handlers for the Annex 4 SAC activity catalog, faculty-specific SAC rule overrides,
+ * period-scoped institutional business rules (`Acuerdo No. 48 de 2025`), and schedule phases.
+ */
 export class SacCatalogController {
   constructor(
     private readonly service: SacCatalogService,

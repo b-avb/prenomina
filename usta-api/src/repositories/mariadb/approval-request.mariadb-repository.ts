@@ -10,6 +10,10 @@ import {
   toApprovalRequestRow,
 } from './mappers/approval-request.mapper.js';
 
+/**
+ * MariaDB adapter for `approval_requests` and child `approval_request_projects`,
+ * joining unit, teacher, and SAC catalog tables for read projections.
+ */
 export class MariaDbApprovalRequestRepository implements ApprovalRequestRepository {
   public async listByPeriod(
     db: DbExecutor,
@@ -77,6 +81,7 @@ export class MariaDbApprovalRequestRepository implements ApprovalRequestReposito
     }
   }
 
+  /** Batch-loads child `approval_request_projects` ordered by `sort_order` to avoid N+1 queries. */
   private async hydrateMany(
     db: DbExecutor,
     rows: ApprovalRequestRow[],

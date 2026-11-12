@@ -3,6 +3,7 @@ import { ACTOR_HEADERS } from '@usta/domain';
 import { ValidationError } from '../utils/app-error.js';
 import type { RouteParams } from '../utils/http.utils.js';
 
+/** Reads a required route parameter (e.g. `:id`), enforcing non-empty content and an upper length bound. */
 export function requirePathParam(
   params: RouteParams,
   name: string,
@@ -23,6 +24,7 @@ export function requirePathParam(
   return value;
 }
 
+/** Reads a required non-empty URL query parameter (`?name=...`), throwing `ValidationError` when missing. */
 export function requireQueryParam(url: URL, name: string): string {
   const value = url.searchParams.get(name)?.trim();
   if (!value) {
@@ -33,6 +35,10 @@ export function requireQueryParam(url: URL, name: string): string {
   return value;
 }
 
+/**
+ * Reads an optional trimmed URL query parameter. When `name === 'period'` and `?period=` is absent,
+ * falls back to the URL-decoded `X-Payroll-Period` (`ACTOR_HEADERS.period`) request header.
+ */
 export function optionalQueryParam(
   url: URL,
   name: string,
@@ -56,6 +62,7 @@ export function optionalQueryParam(
   return undefined;
 }
 
+/** Parses an optional integer query parameter constrained to the inclusive `[bounds.min, bounds.max]` range. */
 export function optionalIntQueryParam(
   url: URL,
   name: string,

@@ -106,6 +106,7 @@ export const PHASE_STATUSES = keysOf<SchedulePhase['status']>({
   Programada: true,
 });
 
+/** Type guard checking whether an unknown runtime value belongs to a finite string literal tuple. */
 export function isOneOf<T extends string>(value: unknown, allowed: readonly T[]): value is T {
   return typeof value === 'string' && (allowed as readonly string[]).includes(value);
 }

@@ -22,6 +22,10 @@ import {
 import { PayloadReader } from '../validation/payload-reader.js';
 import { optionalQueryParam, requirePathParam } from '../validation/query-params.js';
 
+/**
+ * HTTP handlers for Annex 3 Vice-Rectorate pre-approval requests, supporting PDF attachments,
+ * and approval decisions (`Avalado`, `Con Observaciones`, `Rechazado`).
+ */
 export class ApprovalsController {
   constructor(
     private readonly service: ApprovalsService,
@@ -46,6 +50,7 @@ export class ApprovalsController {
     sendSuccess(res, 200, items);
   };
 
+  /** Accepts a base64-encoded PDF payload (`<= 15M` characters / `12 MB` decoded) and stores it under `UPLOADS_DIR/annex3`. */
   public uploadAttachment = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -66,6 +71,7 @@ export class ApprovalsController {
     sendSuccess(res, 201, uploaded);
   };
 
+  /** Streams a stored Annex 3 PDF attachment after verifying the actor's unit access to any referencing approval request. */
   public getAttachment = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -79,6 +85,7 @@ export class ApprovalsController {
     sendBinary(res, 200, file.buffer, file.mimeType, file.fileName);
   };
 
+  /** Submits or updates an Annex 3 pre-approval request for `(teacherId, code)`. */
   public create = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -117,6 +124,7 @@ export class ApprovalsController {
     sendSuccess(res, 201, created);
   };
 
+  /** Records the Academic Vice-Rectorate decision on an Annex 3 request; synchronizes teacher SAC hours when `Avalado`. */
   public decide = async (
     req: IncomingMessage,
     res: ServerResponse,

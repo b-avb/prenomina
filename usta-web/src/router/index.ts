@@ -83,7 +83,6 @@ const routes: RouteRecordRaw[] = [
   { path: '/directora/codigos', redirect: '/director/catalog' },
   { path: '/vicerrector/avales', redirect: '/vice-rector/approvals' },
   { path: '/investigacion/asignaciones', redirect: '/research/allocations' },
-  // Catch-all fallback
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ];
 
@@ -92,6 +91,13 @@ export const router = createRouter({
   routes,
 });
 
+/**
+ * Enforces four navigation invariants before rendering any route:
+ * - Unauthenticated sessions are redirected to `/login`.
+ * - Sessions flagged with `mustChangePassword` remain gated on `/login` until rotation succeeds.
+ * - Deans are pinned to an academic unit within their `managedUnitIds` scope.
+ * - Routes declaring `meta.allowedRoles` redirect unauthorized roles to their default home route.
+ */
 router.beforeEach((to) => {
   const authStore = useAuthStore();
 
@@ -102,7 +108,6 @@ router.beforeEach((to) => {
     return true;
   }
 
-  // Mandatory password change on first login with a temporary password
   if (authStore.mustChangePassword) {
     if (to.path !== '/login') {
       return '/login';
@@ -110,12 +115,10 @@ router.beforeEach((to) => {
     return true;
   }
 
-  // Already authenticated and password is changed: redirect /login to home route
   if (to.path === '/login') {
     return getHomeRouteForRole(authStore.activeRole);
   }
 
-  // Keep Deans scoped to their assigned academic unit(s)
   if (authStore.currentUser?.role === 'dean') {
     const allowed = authStore.managedUnitIds;
     if (allowed.length > 0 && !allowed.includes(authStore.activeUnitId)) {

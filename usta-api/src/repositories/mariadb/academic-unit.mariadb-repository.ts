@@ -12,6 +12,7 @@ import {
   toUnitPayrollCycleRow,
 } from './mappers/academic-unit.mapper.js';
 
+/** MariaDB adapter for `academic_units` and period-scoped `unit_payroll_cycles`. */
 export class MariaDbAcademicUnitRepository implements AcademicUnitRepository {
   public async listAll(db: DbExecutor): Promise<AcademicUnitRecord[]> {
     const rows = await db.selectFrom('academic_units').selectAll().orderBy('insertion_order').execute();
@@ -74,6 +75,7 @@ export class MariaDbAcademicUnitRepository implements AcademicUnitRepository {
     return row ? toUnitPayrollCycle(row) : undefined;
   }
 
+  /** Batch-upserts unit workflow cycles keyed by `(unit_id, period_code)` via `ON DUPLICATE KEY UPDATE`. */
   public async saveCycles(db: DbExecutor, cycles: UnitPayrollCycle[]): Promise<void> {
     if (cycles.length === 0) return;
     await db

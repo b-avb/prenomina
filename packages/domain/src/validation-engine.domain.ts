@@ -22,9 +22,14 @@ export interface ValidationAlert {
 }
 
 export interface ValidationOptions {
+  /**
+   * When true (used before transitioning a unit to `Enviada` or `Avalada`),
+   * disables Day-1 `Borrador` alert suppression so unstarted `0 h` teachers block submission.
+   */
   enforceSubmissionReadiness?: boolean;
 }
 
+/** Annex 4 SAC activity codes restricted to specific faculties or academic institutes. */
 const EXCLUSIVE_UNIT_RESTRICTIONS: Readonly<
   Record<string, { ids: string[]; label: string }>
 > = {
@@ -58,7 +63,12 @@ export interface ValidationContext {
   programQuotas?: ProgramQuotaAnnex5[];
 }
 
+/**
+ * Normative validation engine implementing USTA Tunja payroll rules (RN-01 through RN-22)
+ * across Annex 2 rosters, Annex 3 approvals, Annex 4 SAC caps, and Annex 5/6 bags.
+ */
 export class ValidationEngineDomain {
+  /** Maps an Annex 5 bag SAC code (`30411`, `40106`, `40109`, `40127`) to its program-level cap. */
   public static getProgramCapForSacCode(
     program: Pick<
       ProgramQuotaAnnex5,
@@ -80,6 +90,15 @@ export class ValidationEngineDomain {
     }
   }
 
+  /**
+   * Resolves the effective per-teacher monthly hour cap for a SAC code by precedence:
+   * - Bound Annex 5 program quota (`program`)
+   * - Unit-specific Annex 4 override (`facultyRules`)
+   * - `postgraduateCapHours` when the unit offers active postgraduate programs
+   * - Base Annex 4 `capHours`
+   *
+   * For `20502` (Alumni Management), raises the ceiling to `unit.graduatesCap20502` when Annex 6 enforcement is enabled.
+   */
   public static resolveEffectiveCodeCap(
     definition: SacCode,
     unit?: Pick<AcademicUnitSummary, 'id' | 'hasPostgraduates' | 'graduatesCap20502'>,
@@ -129,6 +148,7 @@ export class ValidationEngineDomain {
     }
   }
 
+  /** Evaluates individual teacher rules (RN-01..RN-22). Suppresses non-duplicate alerts on unstarted `Borrador` teachers unless `enforceSubmissionReadiness` is set. */
   public static validateTeacher(
     teacher: FacultyTeacher,
     ctx: ValidationContext,
@@ -142,7 +162,7 @@ export class ValidationEngineDomain {
     const exactPse = WorkloadCalculatorDomain.computeExactPse25(teacher, ctx.rulesConfig);
     const effectivePse = WorkloadCalculatorDomain.getEffectivePse(teacher, ctx.rulesConfig);
 
-    // RN-22: Duplicate document ID
+    // RN-22: Duplicate document ID within the same academic unit.
     const duplicates = ctx.teachers.filter(
       (t) =>
         t.unitId === teacher.unitId &&
@@ -170,7 +190,7 @@ export class ValidationEngineDomain {
       return alerts;
     }
 
-    // RN-01: Expected monthly workload
+    // RN-01: Contractual monthly workload target.
     if (total > teacher.expectedWorkload) {
       alerts.push({
         id: `${teacher.id}-rn01-over`,
@@ -462,6 +482,10 @@ export class ValidationEngineDomain {
     return alerts;
   }
 
+  /**
+   * Aggregates teacher-level alerts with unit-level bag, faculty cap, single-leader,
+   * and per-program Annex 5 quota validations for `unitId`.
+   */
   public static getUnitAlerts(
     unitId: string,
     ctx: ValidationContext,
@@ -481,6 +505,7 @@ export class ValidationEngineDomain {
       unit.payrollStatus === 'Borrador' &&
       WorkloadCalculatorDomain.isUnitUnstarted(ctx.teachers, unitId);
 
+    // RN-04: Standard Annex 5/6 unit-level hour bags.
     for (const bag of WorkloadCalculatorDomain.computeUnitBagIndicators(
       unit,
       ctx.teachers,
@@ -501,6 +526,7 @@ export class ValidationEngineDomain {
       }
     }
 
+    // RN-07: Faculty of Law aggregate monthly caps and headcount limits (Annex 4).
     const sum40105 = WorkloadCalculatorDomain.sumCodeInUnit(
       ctx.teachers,
       unitId,
@@ -550,6 +576,7 @@ export class ValidationEngineDomain {
       });
     }
 
+    // RN-07: Single-leader SAC activities restricted to at most one teacher per unit.
     for (const singleCode of ['20502', '20225']) {
       const countSingle = unitTeachers.filter(
         (t) => (t.allocations[singleCode]?.hours ?? 0) > 0,
@@ -567,6 +594,7 @@ export class ValidationEngineDomain {
       }
     }
 
+    // RN-04: Custom unit-level bag caps configured on individual SAC codes via `facultyRules`.
     for (const codeItem of ctx.sacCodes) {
       const unitRule = codeItem.facultyRules?.find((r) => r.unitId === unitId);
       if (
@@ -593,6 +621,7 @@ export class ValidationEngineDomain {
       }
     }
 
+    // RN-04: Per-program Annex 5 quota caps when allocations explicitly bind `programId`.
     if (ctx.programQuotas && ctx.programQuotas.length > 0) {
       const unitPrograms = ctx.programQuotas.filter(
         (p) => p.unitId === unitId && p.isActive,

@@ -3,6 +3,7 @@ import type { DbExecutor } from '../../database/database.types.js';
 import type { PeriodRepository } from '../period.repository.js';
 import { toAcademicPeriod, toAcademicPeriodRow } from './mappers/period.mapper.js';
 
+/** MariaDB adapter for `academic_periods`, maintaining at most one `is_current = 1` row via `markCurrent`. */
 export class MariaDbPeriodRepository implements PeriodRepository {
   public async listAll(db: DbExecutor): Promise<AcademicPeriod[]> {
     const rows = await db.selectFrom('academic_periods').selectAll().orderBy('code', 'desc').execute();

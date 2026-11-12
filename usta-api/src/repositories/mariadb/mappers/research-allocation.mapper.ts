@@ -3,6 +3,7 @@ import type { ResearchAllocationAnnex7 } from '@usta/domain';
 import type { ResearchAllocationsTable } from '../../../database/database.types.js';
 import { definedProps, fromFlag, nullable, toFlag } from './mapper.utils.js';
 
+/** Joined `research_allocations` row enriched with `academic_units.name` (Anexo 7). */
 export type ResearchAllocationRow = Selectable<ResearchAllocationsTable> & { unit_name: string };
 
 export function toResearchAllocation(row: ResearchAllocationRow): ResearchAllocationAnnex7 {

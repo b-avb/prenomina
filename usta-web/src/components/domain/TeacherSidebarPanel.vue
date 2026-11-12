@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Master-detail teacher list sidebar supporting name/document search, alert/compliance filters,
+ * Annex 5/6 quota-code filtering, and version-1 diff badges.
+ */
 import { usePayrollStore } from '@/stores/payroll.store';
 import type { FacultyTeacher } from '@usta/domain';
 

@@ -18,6 +18,7 @@ export interface AuditLogRecord extends AuditEntryDraft {
   actorRole: string;
 }
 
+/** Filter criteria for querying the append-only audit trail. `unitIds` scopes multi-unit Dean reads. */
 export interface AuditLogQuery {
   periodCode?: string;
   unitId?: string;

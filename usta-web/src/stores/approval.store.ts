@@ -12,6 +12,7 @@ import { approvalsApi } from '@/services/api';
 import { useOrganizationStore } from './organization.store';
 import { replaceById, upsertById } from './utils/collection.utils';
 
+/** Encodes a browser `File` into a raw Base64 payload stripped of its `data:*;base64,` prefix. */
 function readFileAsBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -25,11 +26,13 @@ function readFileAsBase64(file: File): Promise<string> {
   });
 }
 
+/** Extracts the stored filename when `url` targets the authenticated `/api/approvals/attachments/:fileName` endpoint. */
 function extractInternalAttachmentFileName(url: string): string | null {
   const match = /\/api\/approvals\/attachments\/([^/?#]+)$/.exec(url.trim());
   return match?.[1] ? decodeURIComponent(match[1]) : null;
 }
 
+/** Manages Annex 3 Vice-Rectorate approval requests, authenticated attachment downloads, and review decisions. */
 export const useApprovalStore = defineStore('approval', () => {
   const orgStore = useOrganizationStore();
   const { showToast } = useToast();

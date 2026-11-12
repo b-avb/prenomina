@@ -15,6 +15,11 @@ import { SICDDI_LEVELS } from '../validation/domain-enums.js';
 import { PayloadReader } from '../validation/payload-reader.js';
 import { optionalQueryParam, requirePathParam } from '../validation/query-params.js';
 
+/**
+ * HTTP handlers for Annex 7 SICDDI research allocations.
+ * Mutations are restricted to `research`, `director`, and `vice_rector` roles and synchronize
+ * matching teacher SAC allocations (`lockedByResearch`) automatically.
+ */
 export class ResearchController {
   constructor(
     private readonly service: ResearchService,

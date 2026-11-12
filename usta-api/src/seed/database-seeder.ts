@@ -18,6 +18,7 @@ import {
 } from '../services/auth.service.js';
 import { DEFAULT_BUSINESS_RULES } from '../services/period-context.service.js';
 
+/** Baseline four-phase semester schedule seeded for a newly opened academic period. */
 export const DEFAULT_SCHEDULE_PHASES_SEED: SchedulePhase[] = [
   {
     id: 'fase-1',
@@ -49,11 +50,13 @@ export const DEFAULT_SCHEDULE_PHASES_SEED: SchedulePhase[] = [
   },
 ];
 
+/** Controls destructive truncation and optional pre-computed password hash injection for test harnesses. */
 export interface SeedOptions {
   forceTruncate?: boolean;
   overridePasswordHash?: string;
 }
 
+/** Reports whether the database was populated from scratch (`ts-seed`) or reconciled in place (`synced`). */
 export interface SeedResult {
   seeded: boolean;
   source: 'ts-seed' | 'synced';
@@ -64,12 +67,17 @@ const LEGACY_DEMO_RESEARCH_IDS = ['inv-1', 'inv-2', 'inv-3', 'inv-4', 'inv-5'] a
 const LEGACY_DEMO_AUDIT_IDS = ['b-1', 'b-2', 'b-3'] as const;
 const LEGACY_DEMO_CLOSED_PERIODS = ['2026-1', '2025-2'] as const;
 
+/**
+ * Reconciles an already-populated database idempotently on startup: removes synthetic fixture IDs,
+ * aligns division and unit titles with Acuerdo No. 48, synchronizes unactivated institutional accounts,
+ * and backfills missing catalog or program records without overwriting administrator edits recorded in `audit_logs`.
+ */
 async function cleanupAndSyncExistingDatabase(
   trx: DbExecutor,
   repos: Repositories,
   options?: SeedOptions,
 ): Promise<void> {
-  // 1. Purge legacy demo Annex 3 approvals, Annex 7 research rows, and demo audit logs
+  // Remove synthetic fixture rows if present from pre-production dumps.
   await trx
     .deleteFrom('approval_requests')
     .where('id', 'in', [...LEGACY_DEMO_APPROVAL_IDS])
@@ -83,7 +91,7 @@ async function cleanupAndSyncExistingDatabase(
     .where('id', 'in', [...LEGACY_DEMO_AUDIT_IDS])
     .execute();
 
-  // 2. Purge empty closed demo periods ('2026-1', '2025-2') if they have no teachers
+  // Prune placeholder closed periods only when no teacher rosters reference them.
   for (const periodCode of LEGACY_DEMO_CLOSED_PERIODS) {
     const teacherInPeriod = await trx
       .selectFrom('teachers')
@@ -96,7 +104,7 @@ async function cleanupAndSyncExistingDatabase(
     }
   }
 
-  // 3. Sync official institutional unit names, Acuerdo No. 48 division names, Deans, and user accounts
+  // Align unit and division nomenclature with Acuerdo No. 48 and synchronize postgraduate flags.
   await trx
     .updateTable('academic_units')
     .set({ name: 'Dirección de Ciencias Básicas' })
@@ -246,7 +254,7 @@ async function cleanupAndSyncExistingDatabase(
     }
   }
 
-  // 3b. Insert any newly added official Annex 5 program rows if not already present or edited
+  // Backfill missing Annex 5 programs unless explicitly deleted in the audit log.
   const seed = await import('./usta-seed.data.js');
   const programDeletedAudits = await trx
     .selectFrom('audit_logs')
@@ -285,7 +293,7 @@ async function cleanupAndSyncExistingDatabase(
     .where('sea_cap_40109', '=', 8)
     .execute();
 
-  // 4. Replace stale former Deans on Directivo teacher rows if untouched
+  // Reconcile Directivo and vacancy teacher roster entries that still match unedited baseline IDs.
   const ind1 = await trx
     .selectFrom('teachers')
     .select(['id', 'document_id'])
@@ -359,13 +367,13 @@ async function cleanupAndSyncExistingDatabase(
     .where('full_name', '=', 'INDUSTRIAL PENDIENTE 2 (Gestor Virtual MT)')
     .execute();
 
-  // Always purge legacy seed-generated academic spaces ('%-esp-%') from old demo dumps
+  // Remove synthetic academic space rows (`%-esp-%`) carried over from fixture dumps.
   await trx
     .deleteFrom('teacher_academic_spaces')
     .where('id', 'like', '%-esp-%')
     .execute();
 
-  // 5. Check specifically for real teacher workload / payroll cycle audit entries (so admin catalog/user edits don't block cleaning legacy demo hours)
+  // Reset teacher workloads to zero only when no real workload or workflow mutations exist in `audit_logs`.
   const realWorkloadAudit = await trx
     .selectFrom('audit_logs')
     .select('id')
@@ -420,7 +428,7 @@ async function cleanupAndSyncExistingDatabase(
     }
   }
 
-  // 6. Sync clean official SAC descriptions/guidelines if untouched in audit trail
+  // Refresh Annex 4 SAC catalog descriptions only if no catalog edits are recorded in `audit_logs`.
   const sacEditedAudit = await trx
     .selectFrom('audit_logs')
     .select('id')
@@ -441,7 +449,7 @@ async function cleanupAndSyncExistingDatabase(
     }
   }
 
-  // 7. Sync schedule phases if untouched in audit trail
+  // Refresh schedule phase labels only if no schedule edits are recorded in `audit_logs`.
   const scheduleEditedAudit = await trx
     .selectFrom('audit_logs')
     .select('id')
@@ -455,6 +463,10 @@ async function cleanupAndSyncExistingDatabase(
   }
 }
 
+/**
+ * Seeds the database with institutional baseline data for period `2026-2` when empty (or when
+ * `options.forceTruncate` is true); otherwise runs `cleanupAndSyncExistingDatabase` in a transaction.
+ */
 export async function seedDatabaseWithOfficialData(
   tx: TransactionRunner,
   repos: Repositories,

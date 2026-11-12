@@ -22,6 +22,10 @@ import {
 import type { AuditService } from './audit.service.js';
 import type { PeriodContextService } from './period-context.service.js';
 
+/**
+ * Core SAC activity codes referenced directly by domain formulas (teaching, PSE 25%, postgrad,
+ * SICDDI, Annex 6 graduate caps, academic advising); protected from deletion or code renumbering.
+ */
 const PROTECTED_SAC_CODES = new Set([
   '40104',
   '40108',
@@ -50,6 +54,10 @@ function summarizeBusinessRules(rules: BusinessRulesConfig): string {
   ].join(' · ');
 }
 
+/**
+ * Manages the institutional SAC activity catalog (Anexo 4), period business rules,
+ * and semester schedule phases.
+ */
 export class SacCatalogService {
   constructor(
     private readonly tx: TransactionRunner,
@@ -72,6 +80,7 @@ export class SacCatalogService {
     return item;
   }
 
+  /** Registers a new SAC activity code in the Annex 4 catalog after checking for key collisions. */
   public async create(
     actor: ActorContext,
     dto: CreateSacCodeDto,
@@ -108,6 +117,10 @@ export class SacCatalogService {
     });
   }
 
+  /**
+   * Updates SAC catalog guidelines, caps, faculty overrides, and optional primary-key renumbering
+   * (`dto.newCode`, disallowed for `PROTECTED_SAC_CODES`).
+   */
   public async update(
     actor: ActorContext,
     dto: UpdateSacCodeDto,
@@ -172,6 +185,7 @@ export class SacCatalogService {
     });
   }
 
+  /** Bulk-upserts SAC codes imported from an Annex 4 workbook, preserving existing faculty-specific rules. */
   public async importCatalog(
     actor: ActorContext,
     dto: ImportSacCodesDto,
@@ -261,6 +275,10 @@ export class SacCatalogService {
     });
   }
 
+  /**
+   * Deletes a SAC code only if it is neither in `PROTECTED_SAC_CODES` nor referenced by any
+   * teacher allocation, Annex 3 approval request, or Annex 7 research row.
+   */
   public async remove(
     actor: ActorContext,
     code: string,
@@ -309,6 +327,7 @@ export class SacCatalogService {
     return this.periodContext.getRulesForPeriod(db, periodCode);
   }
 
+  /** Merges a partial patch into the period's `BusinessRulesConfig` and records an audit entry. */
   public async updateRulesConfig(
     actor: ActorContext,
     patch: UpdateRulesConfigDto,
@@ -338,6 +357,7 @@ export class SacCatalogService {
     });
   }
 
+  /** Updates a semester schedule phase's label, title, date range, or execution status. */
   public async updateSchedulePhase(
     actor: ActorContext,
     dto: UpdateSchedulePhaseDto,

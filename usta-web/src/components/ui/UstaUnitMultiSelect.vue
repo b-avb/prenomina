@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Multi-select dropdown that serializes selected academic unit names into a comma-separated
+ * `appliesTo` string and collapses empty or full selections to `'Todas las unidades académicas'`.
+ */
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import type { AcademicUnitSummary } from '@usta/domain';
 

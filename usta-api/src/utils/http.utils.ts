@@ -18,6 +18,10 @@ export type RouteHandler = (
   actor?: ActorContext,
 ) => Promise<void>;
 
+/**
+ * Builds standard CORS, anti-framing, MIME-sniffing, and `no-store` cache headers for API responses.
+ * Permits `X-HTTP-Method-Override` for WAF verb tunneling and the custom period context header.
+ */
 export function buildCorsHeaders(): Record<string, string> {
   return {
     'Access-Control-Allow-Origin': ENV_CONFIG.corsOrigin,
@@ -43,20 +47,27 @@ function writeJson(res: ServerResponse, statusCode: number, payload: unknown): v
   res.end(JSON.stringify(payload));
 }
 
+/** Serializes a typed `{ ok: true, data }` JSON envelope. */
 export function sendSuccess<T>(res: ServerResponse, statusCode: number, data: T): void {
   const body: ApiSuccess<T> = { ok: true, data };
   writeJson(res, statusCode, body);
 }
 
+/** Serializes a typed `{ ok: false, code, error, details? }` JSON error envelope. */
 export function sendFailure(res: ServerResponse, statusCode: number, failure: ApiFailure): void {
   writeJson(res, statusCode, failure);
 }
 
+/** Writes an empty `204 No Content` response with standard CORS/security headers. */
 export function sendNoContent(res: ServerResponse): void {
   res.writeHead(204, buildCorsHeaders());
   res.end();
 }
 
+/**
+ * Streams a binary attachment (such as an Annex 3 PDF) inline with sanitized ASCII disposition
+ * and a sandboxed `Content-Security-Policy` to prevent active content execution in the browser.
+ */
 export function sendBinary(
   res: ServerResponse,
   statusCode: number,

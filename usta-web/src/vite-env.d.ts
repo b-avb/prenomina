@@ -1,5 +1,9 @@
 /// <reference types="vite/client" />
 
+/**
+ * Build-time environment overrides exposed by Vite.
+ * Omitted Microsoft Entra settings fall back at runtime to `GET /api/auth/config`.
+ */
 interface ImportMetaEnv {
   readonly VITE_API_URL?: string;
   readonly VITE_AUTH_MODE?: 'local' | 'hybrid' | 'microsoft';

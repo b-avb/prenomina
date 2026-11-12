@@ -59,6 +59,10 @@ function buildProfileDto(teacherId: string, payload: TeacherProfilePayload): Upd
   };
 }
 
+/**
+ * Manages faculty teacher rosters, assigned academic spaces, and SAC hour allocations,
+ * memoizing per-teacher total hours and validation alerts from `@usta/domain` engines.
+ */
 export const useWorkloadStore = defineStore('workload', () => {
   const authStore = useAuthStore();
   const orgStore = useOrganizationStore();
@@ -88,8 +92,6 @@ export const useWorkloadStore = defineStore('workload', () => {
   function replaceUnitTeachers(unitId: string, unitTeachers: FacultyTeacher[]): void {
     teachers.value = [...teachers.value.filter((t) => t.unitId !== unitId), ...unitTeachers];
   }
-
-  // ─── Calculations & validations (pure domain, live UI feedback) ────────────
 
   function computeHours40104(teacher: FacultyTeacher): number {
     return WorkloadCalculatorDomain.computeHours40104(teacher);
@@ -260,8 +262,6 @@ export const useWorkloadStore = defineStore('workload', () => {
       catalogStore.rulesConfig,
     );
   }
-
-  // ─── Mutations (server is authoritative) ──────────────────────────────────
 
   function rejectMissingTeacher<T>(): Promise<MutationResult<T>> {
     return reject('NOT_FOUND', 'El docente no se encontró en el periodo activo');

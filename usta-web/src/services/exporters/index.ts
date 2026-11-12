@@ -1,3 +1,4 @@
+/** Client-side XLSX workbook importers/exporters and printable Annex 3 document generator. */
 export {
   Annex2ExcelService,
   exportFacultyAnnex2Xlsx,

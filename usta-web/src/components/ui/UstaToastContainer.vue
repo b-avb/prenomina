@@ -1,4 +1,7 @@
 <script setup lang="ts">
+/**
+ * Fixed-position viewport overlay rendering transient toast notifications from `useToast`.
+ */
 import { useToast } from '@/composables/useToast';
 
 const { toasts, dismissToast } = useToast();
