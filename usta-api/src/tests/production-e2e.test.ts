@@ -1,13 +1,14 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
 import http from 'node:http';
 import type { AddressInfo } from 'node:net';
+import path from 'node:path';
 import {
-  ACTOR_HEADERS,
-  DEFAULT_TEMPORARY_PASSWORD,
   type AcademicPeriod,
   type AcademicUnitSummary,
   type ApiFailure,
   type ApiSuccess,
+  type ApprovalAttachmentResponse,
   type ApprovalRequestAnnex3,
   type AuditLogEntry,
   type AuthConfigResponse,
@@ -43,6 +44,7 @@ import { ResearchController } from '../controllers/research.controller.js';
 import { SacCatalogController } from '../controllers/sac-catalog.controller.js';
 import { ValidationEngineController } from '../controllers/validation-engine.controller.js';
 import { createDatabase } from '../database/connection.js';
+import { migrateToLatest } from '../database/migrations/index.js';
 import { KyselyTransactionRunner } from '../database/transaction-runner.js';
 import { UuidIdGenerator } from '../infrastructure/uuid-id-generator.js';
 import { createMariaDbRepositories } from '../repositories/mariadb/index.js';
@@ -63,6 +65,8 @@ import {
   type UnitValidationEvaluation,
 } from '../services/validation-engine.service.js';
 
+const E2E_INITIAL_TEMP_PASSWORD = 'E2eInitPassword2026*';
+
 interface HttpCallOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   path: string;
@@ -78,10 +82,11 @@ interface HttpCallResult<T> {
 
 async function runProductionE2ESuite(): Promise<void> {
   const db = createDatabase(ENV_CONFIG.database);
+  await migrateToLatest(db);
   const tx = new KyselyTransactionRunner(db);
   const repos = createMariaDbRepositories();
   const ids = new UuidIdGenerator();
-  const actorResolver = new JwtActorResolver(tx.executor, repos.users);
+  const actorResolver = new JwtActorResolver(tx.executor, repos.users, repos.units);
 
   const periodContext = new PeriodContextService(repos);
   const auditService = new AuditService(tx, repos, ids);
@@ -226,6 +231,8 @@ async function runProductionE2ESuite(): Promise<void> {
     console.log(`  ✔ [${passedAssertions.toString().padStart(2, '0')}] ${label}`);
   }
 
+  const uploadedTestFiles: string[] = [];
+
   try {
     console.log('\n====================================================================');
     console.log(' USTA TUNJA — PRODUCTION E2E SUITE (REAL HTTP + REAL MARIADB, 0 MOCKS)');
@@ -234,7 +241,7 @@ async function runProductionE2ESuite(): Promise<void> {
     // Ensure clean canonical database seed before starting the full lifecycle
     await seedDatabaseWithOfficialData(tx, repos, ids, {
       forceTruncate: true,
-      overridePasswordHash: hashPassword(DEFAULT_TEMPORARY_PASSWORD),
+      overridePasswordHash: hashPassword(E2E_INITIAL_TEMP_PASSWORD),
     });
     const seededAuditCount = await repos.auditLogs.list(tx.executor, {
       periodCode: '2026-2',
@@ -262,7 +269,7 @@ async function runProductionE2ESuite(): Promise<void> {
     async function authenticateAndActivateAccount(
       username: string,
       newPersonalPassword: string,
-      initialPassword: string = DEFAULT_TEMPORARY_PASSWORD,
+      initialPassword: string = E2E_INITIAL_TEMP_PASSWORD,
     ): Promise<{ token: string; user: AuthUser }> {
       const loginRes = await request<AuthSessionResponse>({
         method: 'POST',
@@ -380,7 +387,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'POST /api/users (@investigacion)',
     );
     assert.ok(provisionedResearch.temporaryPassword.length >= 10);
-    assert.notEqual(provisionedResearch.temporaryPassword, DEFAULT_TEMPORARY_PASSWORD);
+    assert.notEqual(provisionedResearch.temporaryPassword, E2E_INITIAL_TEMP_PASSWORD);
 
     const researchSession = await authenticateAndActivateAccount(
       'investigacion',
@@ -400,8 +407,8 @@ async function runProductionE2ESuite(): Promise<void> {
     const forgedRes = await request<PayrollSnapshot>({
       path: '/api/state',
       headers: {
-        [ACTOR_HEADERS.name]: 'Forged Director',
-        [ACTOR_HEADERS.role]: 'director',
+        'X-Actor-Name': 'Forged Director',
+        'X-Actor-Role': 'director',
       },
     });
     expectError(forgedRes, 401, 'Forged actor headers without Bearer token');
@@ -474,14 +481,34 @@ async function runProductionE2ESuite(): Promise<void> {
     assert.equal(snapshot.units.length, 21);
     assert.equal(snapshot.teachers.length, 291);
     assert.equal(snapshot.sacCodes.length, 51);
-    assert.equal(snapshot.programQuotas.length, 21);
+    assert.ok(snapshot.programQuotas.length >= 28);
     assert.equal(snapshot.approvalRequests.length, 0);
     assert.equal(snapshot.researchAllocations.length, 0);
     assert.ok(
       snapshot.units.every(
-        (u) => u.payrollStatus === 'Borrador' && u.currentVersion === 1,
+        (u) =>
+          u.payrollStatus === 'Borrador' &&
+          u.currentVersion === 1 &&
+          u.pendingAlerts === 0 &&
+          u.pendingApprovals === 0,
       ),
     );
+    assert.ok(
+      snapshot.teachers.every(
+        (t) => t.academicSpaces.length === 0 && Object.keys(t.allocations).length === 0,
+      ),
+    );
+    const prematureSubmitRes = await request<UnitVersionSnapshotResponse>({
+      method: 'PATCH',
+      path: '/api/units/ing-industrial/status',
+      token: deanSession.token,
+      body: {
+        unitId: 'ing-industrial',
+        status: 'Enviada',
+        observation: 'Intento de envío en 0 horas',
+      },
+    });
+    expectError(prematureSubmitRes, 422, 'Dean attempting to submit unstarted 0h unit');
     assert.equal(
       snapshot.units.find((u) => u.id === 'ing-industrial')?.deanName,
       'Juan Camilo Ernesto Valderrama Balaguera',
@@ -500,7 +527,7 @@ async function runProductionE2ESuite(): Promise<void> {
       ),
     );
     recordStep(
-      `UC-2.1 Clean production state verified (${snapshot.units.length} units in Borrador v1, ${snapshot.teachers.length} preloaded teachers, ${snapshot.sacCodes.length} official SAC codes, 0 test approvals/research/logs)`,
+      `UC-2.1 Clean Day-1 production state verified (${snapshot.units.length} units in Borrador v1, ${snapshot.teachers.length} preloaded teachers at 0h, 0 Day-1 alerts, 0 test approvals/research/logs, premature 0h submission blocked)`,
     );
 
     const periodsRes = await request<AcademicPeriod[]>({
@@ -533,7 +560,7 @@ async function runProductionE2ESuite(): Promise<void> {
         hasPostgraduates: true,
         deanName: 'Dra. Elena Vargas Soto',
         username: 'elena.vargas',
-        temporaryPassword: DEFAULT_TEMPORARY_PASSWORD,
+        temporaryPassword: E2E_INITIAL_TEMP_PASSWORD,
         qualityCap30411: 20,
         curriculumCap40106: 20,
         seaCap40109: 20,
@@ -545,11 +572,12 @@ async function runProductionE2ESuite(): Promise<void> {
     const createdUnitId = createdUnitBundle.unit.id;
     assert.ok(createdUnitId.length > 0);
     assert.equal(createdUnitBundle.directorTeacher.expectedWorkload, 210);
-    assert.equal(createdUnitBundle.directorTeacher.allocations['30222']?.hours, 190);
+    assert.deepEqual(createdUnitBundle.directorTeacher.allocations, {});
     assert.ok(createdUnitBundle.deanUser);
     assert.equal(createdUnitBundle.deanUser.username, 'elena.vargas');
+    assert.equal(createdUnitBundle.temporaryPassword, E2E_INITIAL_TEMP_PASSWORD);
     recordStep(
-      `UC-3.1 Created Academic Unit (${createdUnitId}) + Director teacher (30222=190h, total=210h) + Dean account (@elena.vargas)`,
+      `UC-3.1 Created Academic Unit (${createdUnitId}) + clean 0h Director teacher (expected=210h) + Dean account (@elena.vargas)`,
     );
 
     // Log in with the newly provisioned Dean account and change password via HTTP
@@ -1175,12 +1203,590 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-9.2 Idempotent production re-seed (deploy.sh path) preserves activated user passwords',
     );
 
+    // ─── UC-10: Reverse-Proxy Method Tunneling, Official Nomenclature & Per-Program Allocations ──
+    const stateAfterReseedRes = await request<PayrollSnapshot>({
+      path: '/api/state?period=2026-2',
+      token: reloginDirector.token,
+    });
+    const stateAfterReseed = expectData(
+      stateAfterReseedRes,
+      200,
+      'GET /api/state after re-seed',
+    );
+
+    const cienciasBasicas = stateAfterReseed.units.find((u) => u.id === 'ciencias-basicas');
+    const humanidades = stateAfterReseed.units.find((u) => u.id === 'humanidades');
+    assert.equal(cienciasBasicas?.name, 'Dirección de Ciencias Básicas');
+    assert.equal(humanidades?.name, 'Dirección de Humanidades');
+    assert.ok(
+      stateAfterReseed.units.some(
+        (u) => u.division === 'División de Ingenierías y Arquitectura',
+      ),
+    );
+    assert.ok(
+      stateAfterReseed.units.some(
+        (u) => u.division === 'División de Ciencias Económicas y Administrativas',
+      ),
+    );
+    recordStep(
+      'UC-10.1 Official Acuerdo No. 48 de 2025 divisions and Dirección de Ciencias Básicas / Humanidades verified',
+    );
+
+    // Create a new unit with hasPostgraduates=false + dedicated Dean account, then add a Posgrado program -> hasPostgraduates must become true
+    const newUnitNoPostgradRes = await request<UnitWithDirectorResponse>({
+      method: 'POST',
+      path: '/api/units',
+      token: reloginDirector.token,
+      body: {
+        name: 'Inteligencia de Negocios Test',
+        division: 'División de Ciencias Económicas y Administrativas',
+        unitType: 'Facultad',
+        deanName: 'Dra. Prueba Inteligencia',
+        username: 'dec.inteligencia',
+        temporaryPassword: E2E_INITIAL_TEMP_PASSWORD,
+        hasPostgraduates: false,
+        qualityCap30411: 16,
+        curriculumCap40106: 16,
+        seaCap40109: 8,
+        saberProCap40127: 12,
+        graduatesCap20502: 12,
+      },
+    });
+    const newUnitNoPostgrad = expectData(
+      newUnitNoPostgradRes,
+      201,
+      'POST /api/units (Inteligencia de Negocios Test)',
+    );
+    assert.equal(newUnitNoPostgrad.unit.hasPostgraduates, false);
+
+    const addPostgradProgRes = await request<ProgramMutationResponse>({
+      method: 'POST',
+      path: '/api/programs',
+      token: reloginDirector.token,
+      body: {
+        unitId: newUnitNoPostgrad.unit.id,
+        programName: 'MAESTRÍA EN ANALÍTICA DE NEGOCIOS',
+        level: 'Posgrado',
+        modality: 'Híbrida',
+        accreditationStatus: 'Registro Calificado Vigente',
+        quality30411: 12,
+        curriculum40106: 12,
+        sea40109: 4,
+        saberPro40127: 0,
+        isActive: true,
+      },
+    });
+    const addedPostgradProg = expectData(
+      addPostgradProgRes,
+      201,
+      'POST /api/programs (Posgrado auto-enables hasPostgraduates)',
+    );
+    assert.equal(addedPostgradProg.unit.hasPostgraduates, true);
+    assert.ok(addedPostgradProg.program);
+
+    const createUnitTcTeacherRes = await request<FacultyTeacher>({
+      method: 'POST',
+      path: '/api/teachers',
+      token: reloginDirector.token,
+      body: {
+        unitId: newUnitNoPostgrad.unit.id,
+        fullName: 'Dra. Natalia Andrea Gómez',
+        documentId: '1052987654',
+        dedication: 'TC',
+        rank: 'Asociado',
+        education: 'Doctora en Analítica de Negocios',
+        isProvisional: false,
+      },
+    });
+    const unitTcTeacher = expectData(
+      createUnitTcTeacherRes,
+      201,
+      'POST /api/teachers (TC teacher in Inteligencia de Negocios Test)',
+    );
+
+    // Test POST method tunneling (?_method=PUT + X-HTTP-Method-Override: PUT) for per-program allocation in matching unit
+    const tunneledAllocRes = await request<FacultyTeacher>({
+      method: 'POST',
+      path: `/api/teachers/${encodeURIComponent(unitTcTeacher.id)}/allocations/30411?_method=PUT`,
+      token: reloginDirector.token,
+      headers: { 'X-HTTP-Method-Override': 'PUT' },
+      body: {
+        hours: 12,
+        programId: addedPostgradProg.program.id,
+        programName: addedPostgradProg.program.programName,
+      },
+    });
+    const tunneledTeacher = expectData(
+      tunneledAllocRes,
+      200,
+      'POST ?_method=PUT /api/teachers/:id/allocations/30411 (tunneled PUT + programId)',
+    );
+    assert.equal(tunneledTeacher.allocations['30411']?.hours, 12);
+    assert.equal(
+      tunneledTeacher.allocations['30411']?.programId,
+      addedPostgradProg.program.id,
+    );
+    assert.equal(
+      tunneledTeacher.allocations['30411']?.programName,
+      'MAESTRÍA EN ANALÍTICA DE NEGOCIOS',
+    );
+
+    // Verify cross-unit programId assignment is rejected with HTTP 400
+    const activePeriodStateRes = await request<PayrollSnapshot>({
+      path: '/api/state',
+      token: reloginDirector.token,
+    });
+    const activePeriodState = expectData(
+      activePeriodStateRes,
+      200,
+      'GET /api/state (active period)',
+    );
+    const otherUnitTeacher = activePeriodState.teachers.find(
+      (t) => t.unitId === 'ing-civil' && t.dedication === 'TC',
+    );
+    assert.ok(otherUnitTeacher, 'Expected TC teacher in ing-civil');
+    const crossUnitProgramAllocRes = await request<FacultyTeacher>({
+      method: 'PUT',
+      path: `/api/teachers/${encodeURIComponent(otherUnitTeacher.id)}/allocations/30411`,
+      token: reloginDirector.token,
+      body: {
+        hours: 8,
+        programId: addedPostgradProg.program.id,
+      },
+    });
+    expectError(
+      crossUnitProgramAllocRes,
+      400,
+      'Reject cross-unit programId on SAC allocation',
+    );
+    recordStep(
+      'UC-10.2 Apache/WAF POST method tunneling (?_method=PUT), per-program ANEXO 5 allocation & cross-unit programId guard verified',
+    );
+
+    // ─── UC-11: Multi-Unit Dean, Workflow Locking, Binary PDF Annex 3 & CATEDRA Guards ──
+    const resetLenguasRes = await request<ResetUserPasswordResponse>({
+      method: 'POST',
+      path: '/api/users/user-dean-lic-lenguas/reset-password',
+      token: reloginDirector.token,
+      body: { id: 'user-dean-lic-lenguas' },
+    });
+    const resetLenguas = expectData(
+      resetLenguasRes,
+      200,
+      'POST /api/users/user-dean-lic-lenguas/reset-password',
+    );
+    const licLenguasSession = await authenticateAndActivateAccount(
+      'licenciaturaenlenguas',
+      'DeanLenguas2026*Ok',
+      resetLenguas.temporaryPassword,
+    );
+    assert.ok(licLenguasSession.user.managedUnitIds?.includes('lic-lenguas'));
+    assert.ok(licLenguasSession.user.managedUnitIds?.includes('lic-infantil'));
+
+    const scopedDeanStateRes = await request<PayrollSnapshot>({
+      path: '/api/state',
+      token: licLenguasSession.token,
+    });
+    const scopedDeanState = expectData(
+      scopedDeanStateRes,
+      200,
+      'GET /api/state (scoped to multi-unit Dean)',
+    );
+    const scopedUnitIds = new Set(scopedDeanState.units.map((u) => u.id));
+    assert.equal(scopedUnitIds.size, 2);
+    assert.ok(scopedUnitIds.has('lic-lenguas') && scopedUnitIds.has('lic-infantil'));
+    assert.ok(scopedDeanState.teachers.every((t) => scopedUnitIds.has(t.unitId)));
+    assert.equal(scopedDeanState.researchAllocations.length, 0);
+
+    const scopedAuditRes = await request<AuditLogEntry[]>({
+      path: '/api/audit-logs?limit=50',
+      token: licLenguasSession.token,
+    });
+    const scopedAuditLogs = expectData(
+      scopedAuditRes,
+      200,
+      'GET /api/audit-logs (scoped to multi-unit Dean)',
+    );
+    const scopedUnitNames = new Set(scopedDeanState.units.map((u) => u.name));
+    assert.ok(
+      scopedAuditLogs.every((l) => !l.unitName || scopedUnitNames.has(l.unitName)),
+      'Dean audit logs must only contain allowed units',
+    );
+
+    const lenguasTeacherRes = await request<FacultyTeacher>({
+      method: 'POST',
+      path: '/api/teachers',
+      token: licLenguasSession.token,
+      body: {
+        unitId: 'lic-lenguas',
+        fullName: 'Mg. Laura Sofía Castellanos',
+        documentId: '1053112233',
+        dedication: 'TC',
+        rank: 'Auxiliar',
+        education: 'Magíster en Didáctica de Lenguas',
+        isProvisional: false,
+      },
+    });
+    const lenguasTeacher = expectData(
+      lenguasTeacherRes,
+      201,
+      'POST /api/teachers in lic-lenguas by multi-unit Dean',
+    );
+
+    const infantilTeacherRes = await request<FacultyTeacher>({
+      method: 'POST',
+      path: '/api/teachers',
+      token: licLenguasSession.token,
+      body: {
+        unitId: 'lic-infantil',
+        fullName: 'Mg. Paula Daniela Rincón',
+        documentId: '1053445566',
+        dedication: 'TC',
+        rank: 'Auxiliar',
+        education: 'Magíster en Educación Infantil',
+        isProvisional: false,
+      },
+    });
+    const infantilTeacher = expectData(
+      infantilTeacherRes,
+      201,
+      'POST /api/teachers in lic-infantil by multi-unit Dean',
+    );
+
+    const crossValidationRes = await request<UnitValidationEvaluation>({
+      path: '/api/units/derecho/validation',
+      token: licLenguasSession.token,
+    });
+    expectError(
+      crossValidationRes,
+      403,
+      'Multi-unit Dean blocked from GET /api/units/derecho/validation',
+    );
+
+    // Verify Dean is rejected with HTTP 403 if attempting to set directorNote, succeeds without it, and Director persists directorNote
+    const deanSpoofNoteRes = await request<FacultyTeacher>({
+      method: 'PUT',
+      path: `/api/teachers/${infantilTeacher.id}/allocations/40109`,
+      token: licLenguasSession.token,
+      body: {
+        hours: 8,
+        directorNote: 'Intento de nota falsificada por Decano',
+      },
+    });
+    expectError(
+      deanSpoofNoteRes,
+      403,
+      'Dean blocked with HTTP 403 when attempting to set directorNote',
+    );
+
+    const deanValidAllocRes = await request<FacultyTeacher>({
+      method: 'PUT',
+      path: `/api/teachers/${infantilTeacher.id}/allocations/40109`,
+      token: licLenguasSession.token,
+      body: {
+        hours: 8,
+      },
+    });
+    const afterDeanValidAlloc = expectData(
+      deanValidAllocRes,
+      200,
+      'PUT allocation by Dean without directorNote succeeds',
+    );
+    assert.equal(afterDeanValidAlloc.allocations['40109']?.hours, 8);
+    assert.equal(afterDeanValidAlloc.allocations['40109']?.directorNote, undefined);
+
+    const directorNoteRes = await request<FacultyTeacher>({
+      method: 'PUT',
+      path: `/api/teachers/${infantilTeacher.id}/allocations/40109`,
+      token: reloginDirector.token,
+      body: {
+        hours: 8,
+        directorNote: 'Ajustado por Dirección E&A en comité técnico',
+      },
+    });
+    const afterDirectorNote = expectData(
+      directorNoteRes,
+      200,
+      'PUT allocation by Director persists directorNote',
+    );
+    assert.equal(
+      afterDirectorNote.allocations['40109']?.directorNote,
+      'Ajustado por Dirección E&A en comité técnico',
+    );
+    recordStep(
+      'UC-11.1 Multi-unit Dean (@licenciaturaenlenguas -> lic-lenguas + lic-infantil), tenant-scoped state/audit & directorNote guard verified',
+    );
+
+    // UC-11.2: Dean workflow submission ('Enviada'), edit lock while submitted, withdraw ('Borrador'), and review lock
+    const intelDeanSession = await authenticateAndActivateAccount(
+      'dec.inteligencia',
+      'DeanIntel2026*Ok',
+    );
+    await request<FacultyTeacher>({
+      method: 'POST',
+      path: `/api/teachers/${newUnitNoPostgrad.directorTeacher.id}/spaces`,
+      token: intelDeanSession.token,
+      body: { level: 'Posgrado', name: 'Seminario Directivo Analítica', hours: 16 },
+    });
+    await request<FacultyTeacher>({
+      method: 'PUT',
+      path: `/api/teachers/${newUnitNoPostgrad.directorTeacher.id}/allocations/30222`,
+      token: intelDeanSession.token,
+      body: { hours: 160 },
+    });
+    await request<FacultyTeacher>({
+      method: 'POST',
+      path: `/api/teachers/${unitTcTeacher.id}/spaces`,
+      token: intelDeanSession.token,
+      body: { level: 'Pregrado', name: 'Modelos Predictivos Empresariales', hours: 64 },
+    });
+
+    const submitUnitRes = await request<UnitVersionSnapshotResponse>({
+      method: 'PATCH',
+      path: `/api/units/${newUnitNoPostgrad.unit.id}/status`,
+      token: intelDeanSession.token,
+      body: {
+        unitId: newUnitNoPostgrad.unit.id,
+        status: 'Enviada',
+        observation: 'Prenómina diligenciada y radicada por Decanatura',
+      },
+    });
+    const submittedUnit = expectData(
+      submitUnitRes,
+      200,
+      'PATCH /api/units/:id/status (Dean submits Borrador -> Enviada)',
+    );
+    assert.equal(submittedUnit.unit.payrollStatus, 'Enviada');
+    assert.equal(submittedUnit.unit.currentVersion, 2);
+
+    const lockedEditWhileSubmitted = await request<FacultyTeacher>({
+      method: 'PUT',
+      path: `/api/teachers/${unitTcTeacher.id}/allocations/40109`,
+      token: intelDeanSession.token,
+      body: { hours: 4 },
+    });
+    expectError(
+      lockedEditWhileSubmitted,
+      422,
+      'Dean blocked from editing teacher while unit is Enviada',
+    );
+
+    const withdrawUnitRes = await request<UnitVersionSnapshotResponse>({
+      method: 'PATCH',
+      path: `/api/units/${newUnitNoPostgrad.unit.id}/status`,
+      token: intelDeanSession.token,
+      body: {
+        unitId: newUnitNoPostgrad.unit.id,
+        status: 'Borrador',
+        observation: 'Retiro de envío para ajuste previo a revisión',
+      },
+    });
+    const withdrawnUnit = expectData(
+      withdrawUnitRes,
+      200,
+      'PATCH /api/units/:id/status (Dean withdraws Enviada -> Borrador)',
+    );
+    assert.equal(withdrawnUnit.unit.payrollStatus, 'Borrador');
+
+    const editAfterWithdrawRes = await request<FacultyTeacher>({
+      method: 'PUT',
+      path: `/api/teachers/${unitTcTeacher.id}/allocations/40109`,
+      token: intelDeanSession.token,
+      body: { hours: 4 },
+    });
+    expectData(
+      editAfterWithdrawRes,
+      200,
+      'Dean can edit teacher again after withdrawing to Borrador',
+    );
+
+    await request<UnitVersionSnapshotResponse>({
+      method: 'PATCH',
+      path: `/api/units/${newUnitNoPostgrad.unit.id}/status`,
+      token: reloginDirector.token,
+      body: {
+        unitId: newUnitNoPostgrad.unit.id,
+        status: 'En Revisión',
+      },
+    });
+    const withdrawInReviewAttempt = await request<UnitVersionSnapshotResponse>({
+      method: 'PATCH',
+      path: `/api/units/${newUnitNoPostgrad.unit.id}/status`,
+      token: intelDeanSession.token,
+      body: {
+        unitId: newUnitNoPostgrad.unit.id,
+        status: 'Borrador',
+      },
+    });
+    expectError(
+      withdrawInReviewAttempt,
+      422,
+      'Dean cannot withdraw unit once Director moved it to En Revisión',
+    );
+    recordStep(
+      'UC-11.2 Dean workflow submission (Enviada), mutation lock while submitted/in-review & withdraw-to-Borrador verified',
+    );
+
+    // UC-11.3: Annex 3 real PDF binary upload, magic-bytes check & multi-tenant binary download
+    const spoofedPdfRes = await request<ApprovalAttachmentResponse>({
+      method: 'POST',
+      path: '/api/approvals/attachments',
+      token: licLenguasSession.token,
+      body: {
+        fileName: 'acta-falsa.pdf',
+        mimeType: 'application/pdf',
+        contentBase64: Buffer.from('THIS_IS_NOT_A_PDF_FILE', 'utf8').toString('base64'),
+      },
+    });
+    expectError(spoofedPdfRes, 400, 'Reject spoofed PDF failing %PDF- magic bytes');
+
+    const realPdfBytes = Buffer.from(
+      '%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF\n',
+      'utf8',
+    );
+    const uploadPdfRes = await request<ApprovalAttachmentResponse>({
+      method: 'POST',
+      path: '/api/approvals/attachments',
+      token: licLenguasSession.token,
+      body: {
+        fileName: 'Acta Comite Curricular Lenguas 2027.pdf',
+        mimeType: 'application/pdf',
+        contentBase64: realPdfBytes.toString('base64'),
+      },
+    });
+    const uploadedPdf = expectData(
+      uploadPdfRes,
+      201,
+      'POST /api/approvals/attachments (valid %PDF-1.4)',
+    );
+    uploadedTestFiles.push(
+      path.resolve(ENV_CONFIG.uploadsDir, 'annex3', uploadedPdf.fileName),
+    );
+    assert.ok(uploadedPdf.url.startsWith('/api/approvals/attachments/'));
+    assert.ok(uploadedPdf.fileName.endsWith('.pdf'));
+
+    const linkedApprovalRes = await request<ApprovalRequestAnnex3>({
+      method: 'POST',
+      path: '/api/approvals',
+      token: licLenguasSession.token,
+      body: {
+        unitId: 'lic-lenguas',
+        unitName: 'Licenciatura en Español y Lenguas Extranjeras',
+        teacherId: lenguasTeacher.id,
+        teacherName: lenguasTeacher.fullName,
+        teacherDocumentId: lenguasTeacher.documentId,
+        code: '10212',
+        codeName: 'Dirección de Trabajos de Grado',
+        requestedHours: 8,
+        formatType: '10212',
+        programName: 'Licenciatura en Español y Lenguas Extranjeras',
+        projectDetails: [
+          {
+            title: 'Bilingüismo Crítico en Contextos Rurales',
+            projectType: 'Trabajo de Grado Pregrado',
+            studentsOrCourse: '2 estudiantes',
+            committeeApprovalMinute: 'Acta No. 03-2027',
+            hours: 8,
+          },
+        ],
+        attachmentUrl: uploadedPdf.url,
+      },
+    });
+    expectData(linkedApprovalRes, 201, 'POST /api/approvals with uploaded PDF URL');
+
+    const unauthPdfFetch = await fetch(`${baseUrl}${uploadedPdf.url}`);
+    assert.equal(unauthPdfFetch.status, 401, 'Unauthenticated PDF download must return 401');
+
+    const crossDeanPdfFetch = await fetch(`${baseUrl}${uploadedPdf.url}`, {
+      headers: { Authorization: `Bearer ${deanSession.token}` },
+    });
+    assert.equal(
+      crossDeanPdfFetch.status,
+      403,
+      'Cross-unit Dean PDF download must return 403',
+    );
+
+    const vrPdfFetch = await fetch(`${baseUrl}${uploadedPdf.url}`, {
+      headers: { Authorization: `Bearer ${viceRectorSession.token}` },
+    });
+    assert.equal(vrPdfFetch.status, 200, 'Vice-Rector PDF download must return 200');
+    assert.ok(vrPdfFetch.headers.get('content-type')?.includes('application/pdf'));
+    const downloadedBytes = Buffer.from(await vrPdfFetch.arrayBuffer());
+    assert.equal(downloadedBytes.subarray(0, 8).toString('ascii'), '%PDF-1.4');
+    assert.equal(downloadedBytes.length, realPdfBytes.length);
+    recordStep(
+      'UC-11.3 Annex 3 real PDF binary upload, %PDF- magic-bytes check & authenticated multi-tenant download verified',
+    );
+
+    // UC-11.4: Research Hora Cátedra (CATEDRA) rejection & destructive state-reset production guard
+    const catedraTeacherRes = await request<FacultyTeacher>({
+      method: 'POST',
+      path: '/api/teachers',
+      token: reloginDirector.token,
+      body: {
+        unitId: 'ing-industrial',
+        fullName: 'Ing. Jorge Enrique Cátedra',
+        documentId: '1053998877',
+        dedication: 'CATEDRA',
+        rank: 'Auxiliar',
+        education: 'Especialista en Logística',
+        isProvisional: true,
+      },
+    });
+    const catedraTeacher = expectData(
+      catedraTeacherRes,
+      201,
+      'POST /api/teachers (CATEDRA teacher)',
+    );
+
+    const catedraResearchRes = await request<ResearchMutationResponse>({
+      method: 'POST',
+      path: '/api/research',
+      token: researchSession.token,
+      body: {
+        unitId: 'ing-industrial',
+        unitName: 'Ingeniería Industrial',
+        documentId: catedraTeacher.documentId,
+        teacherName: catedraTeacher.fullName,
+        code: '20222',
+        activityName: 'Investigación en Proyectos FODEIN',
+        projectOrGroup: 'Intento Investigación Cátedra',
+        role: 'Coinvestigador',
+        sicddiLevel: 'Nivel I (20h)',
+        weeklyHours: 5,
+        monthlyHours: 20,
+        isSicddiLocked: false,
+      },
+    });
+    expectError(
+      catedraResearchRes,
+      422,
+      'Reject Annex 7 research allocation for CATEDRA teacher',
+    );
+
+    const resetBlockedRes = await request<PayrollSnapshot>({
+      method: 'POST',
+      path: '/api/state/reset',
+      token: reloginDirector.token,
+    });
+    expectError(
+      resetBlockedRes,
+      403,
+      'Block POST /api/state/reset when ALLOW_DESTRUCTIVE_STATE_RESET is disabled',
+    );
+    recordStep(
+      'UC-11.4 Hora Cátedra (CATEDRA) research exclusion & production destructive-reset lock verified',
+    );
+
     console.log('\n====================================================================');
     console.log(
       ` ALL ${passedAssertions} PRODUCTION E2E VERIFICATION STEPS PASSED WITH ZERO ERRORS`,
     );
     console.log('====================================================================\n');
   } finally {
+    for (const filePath of uploadedTestFiles) {
+      await fs.unlink(filePath).catch(() => undefined);
+    }
     // Restore canonical official seed data so the database stays clean after tests
     await seedDatabaseWithOfficialData(tx, repos, ids, {
       forceTruncate: true,

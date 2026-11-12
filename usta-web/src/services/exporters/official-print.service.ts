@@ -1,4 +1,14 @@
 import type { ApprovalRequestAnnex3 } from '@usta/domain';
+import { useToast } from '@/composables/useToast';
+
+function escapeHtml(value: unknown): string {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 export class OfficialPrintService {
   public static printOfficialAnnex3Format(
@@ -6,18 +16,37 @@ export class OfficialPrintService {
     _period?: string,
   ): void {
     const win = window.open('', '_blank', 'width=920,height=780');
-    if (!win) return;
+    if (!win) {
+      useToast().showToast(
+        'El navegador bloqueó la ventana de impresión. Permita las ventanas emergentes en este sitio e intente de nuevo.',
+        'error',
+      );
+      return;
+    }
+
+    const badgeBg =
+      request.status === 'Avalado'
+        ? '#dff5e8'
+        : request.status === 'Rechazado'
+          ? '#fde8e8'
+          : '#fff3cd';
+    const badgeColor =
+      request.status === 'Avalado'
+        ? '#1d7a4a'
+        : request.status === 'Rechazado'
+          ? '#b3413a'
+          : '#8a5b00';
 
     const rowsHtml = request.projectDetails
       .map(
         (d, idx) => `
       <tr>
         <td style="text-align:center">${idx + 1}</td>
-        <td><b>${d.title}</b></td>
-        <td>${d.projectType}</td>
-        <td>${d.studentsOrCourse}</td>
-        <td>${d.committeeApprovalMinute}</td>
-        <td style="text-align:center; font-weight:700">${d.hours} h</td>
+        <td><b>${escapeHtml(d.title)}</b></td>
+        <td>${escapeHtml(d.projectType)}</td>
+        <td>${escapeHtml(d.studentsOrCourse)}</td>
+        <td>${escapeHtml(d.committeeApprovalMinute)}</td>
+        <td style="text-align:center; font-weight:700">${escapeHtml(d.hours)} h</td>
       </tr>
     `,
       )
@@ -28,7 +57,7 @@ export class OfficialPrintService {
     <html lang="es">
     <head>
       <meta charset="UTF-8" />
-      <title>ANEXO 3 - Solicitud de Aval ${request.code} - ${request.teacherName}</title>
+      <title>Anexo 3 · Solicitud de aval ${escapeHtml(request.code)} · ${escapeHtml(request.teacherName)}</title>
       <style>
         body {
           font-family: 'Segoe UI', Arial, sans-serif;
@@ -105,8 +134,8 @@ export class OfficialPrintService {
           border-radius: 6px;
           font-weight: 700;
           font-size: 12px;
-          background: ${request.status === 'Avalado' ? '#dff5e8' : '#fff3cd'};
-          color: ${request.status === 'Avalado' ? '#1d7a4a' : '#8a5b00'};
+          background: ${badgeBg};
+          color: ${badgeColor};
         }
         @media print {
           .no-print { display: none; }
@@ -117,7 +146,7 @@ export class OfficialPrintService {
     <body>
       <div class="no-print" style="margin-bottom: 16px; text-align: right;">
         <button onclick="window.print()" style="background:#00336a;color:#fff;border:none;padding:9px 18px;border-radius:6px;font-weight:700;cursor:pointer;">
-          🖨 Imprimir / Guardar como PDF Oficial
+          Imprimir o guardar PDF
         </button>
       </div>
 
@@ -127,81 +156,81 @@ export class OfficialPrintService {
             UNIVERSIDAD SANTO TOMÁS<br/>SECCIONAL TUNJA
           </td>
           <td style="width: 56%;">
-            <div class="title">ANEXO 3. FORMATO DE SOLICITUD DE AVAL ANTE VICERRECTORÍA ACADÉMICA</div>
-            <div class="subtitle">DIRECCIÓN DE ENSEÑANZA Y APRENDIZAJE · PERIODO ACADÉMICO ${request.period}</div>
+            <div class="title">ANEXO 3. SOLICITUD DE AVAL ANTE VICERRECTORÍA ACADÉMICA</div>
+            <div class="subtitle">DIRECCIÓN DE ENSEÑANZA Y APRENDIZAJE · PERIODO ACADÉMICO ${escapeHtml(request.period)}</div>
           </td>
           <td style="width: 22%; font-size: 11px;">
-            <b>Código SAC:</b> ${request.code}<br/>
-            <b>Radicado:</b> ${request.id.toUpperCase()}<br/>
-            <b>Fecha:</b> ${request.requestedAt}
+            <b>Código SAC:</b> ${escapeHtml(request.code)}<br/>
+            <b>Radicado:</b> ${escapeHtml(request.id.toUpperCase())}<br/>
+            <b>Fecha:</b> ${escapeHtml(request.requestedAt)}
           </td>
         </tr>
       </table>
 
       <div class="meta-grid">
-        <div><b>Facultad / Unidad Académica:</b> ${request.unitName}</div>
-        <div><b>Programa Académico:</b> ${request.programName}</div>
-        <div><b>Nombre del Docente:</b> ${request.teacherName}</div>
-        <div><b>Documento de Identidad:</b> CC ${request.teacherDocumentId}</div>
-        <div><b>Actividad Solicitada:</b> ${request.code} — ${request.codeName}</div>
-        <div><b>Total Horas Solicitadas al Mes:</b> ${request.requestedHours} horas/mes</div>
+        <div><b>Unidad académica:</b> ${escapeHtml(request.unitName)}</div>
+        <div><b>Programa académico:</b> ${escapeHtml(request.programName)}</div>
+        <div><b>Docente:</b> ${escapeHtml(request.teacherName)}</div>
+        <div><b>Documento:</b> CC ${escapeHtml(request.teacherDocumentId)}</div>
+        <div><b>Actividad:</b> ${escapeHtml(request.code)} — ${escapeHtml(request.codeName)}</div>
+        <div><b>Horas solicitadas:</b> ${escapeHtml(request.requestedHours)} h/mes</div>
       </div>
 
       <h3 style="color:#00336a; font-size:13px; text-transform:uppercase; margin-bottom:8px;">
-        Relación Detallada de Proyectos / Cursos / Consultorios y Soporte Curricular
+        Detalle de proyectos, cursos o actividades y soporte curricular
       </h3>
 
       <table class="items">
         <thead>
           <tr>
             <th style="width:40px">#</th>
-            <th>Denominación del Proyecto / Curso / Actividad</th>
-            <th>Tipo / Modalidad</th>
-            <th>Estudiantes / Curso / Créditos</th>
-            <th>Acta Comité Curricular / Aval</th>
-            <th style="width:90px; text-align:center">Horas/Mes</th>
+            <th>Proyecto, curso o actividad</th>
+            <th>Modalidad</th>
+            <th>Estudiantes o curso</th>
+            <th>Acta de comité curricular</th>
+            <th style="width:90px; text-align:center">Horas/mes</th>
           </tr>
         </thead>
         <tbody>
           ${rowsHtml}
           <tr style="background:#f1f5f9; font-weight:700;">
-            <td colspan="5" style="text-align:right">TOTAL HORAS MENSUALES SOLICITADAS EN CÓDIGO ${request.code}:</td>
-            <td style="text-align:center">${request.requestedHours} h</td>
+            <td colspan="5" style="text-align:right">TOTAL HORAS MENSUALES SOLICITADAS (${escapeHtml(request.code)}):</td>
+            <td style="text-align:center">${escapeHtml(request.requestedHours)} h</td>
           </tr>
         </tbody>
       </table>
 
       <div style="margin-bottom: 14px; font-size: 12px;">
-        <b>Soporte Digital Adjunto en Plataforma:</b> ${request.attachmentUrl}
+        <b>Soporte adjunto:</b> ${escapeHtml(request.attachmentUrl || 'Sin archivo adjunto')}
       </div>
 
       <div class="stamp-box">
         <div class="sign-card">
           <div style="font-size:11px; text-transform:uppercase; color:#445164; font-weight:700;">
-            Radicación Digital por Decanatura
+            Radicación por decanatura
           </div>
-          <p style="margin:8px 0 4px;"><b>Unidad:</b> ${request.unitName}</p>
+          <p style="margin:8px 0 4px;"><b>Unidad:</b> ${escapeHtml(request.unitName)}</p>
           <p style="margin:0; font-size:11.5px; color:#445164;">
-            Fecha de radicación en plataforma: ${request.requestedAt}
+            Fecha de radicación: ${escapeHtml(request.requestedAt)}
           </p>
         </div>
 
         <div class="sign-card">
           <div style="font-size:11px; text-transform:uppercase; color:#445164; font-weight:700;">
-            Decisión de Pre-Aval — Vicerrectoría Académica / Dirección E&A
+            Decisión de aval — Vicerrectoría Académica
           </div>
           <p style="margin:8px 0 6px;">
-            Estado: <span class="badge-status">${request.status.toUpperCase()}</span>
+            Estado: <span class="badge-status">${escapeHtml(request.status.toUpperCase())}</span>
           </p>
           <p style="margin:0; font-size:12px;">
-            <b>Firmado digitalmente por:</b> ${request.decidedBy ?? 'En trámite de revisión'}
+            <b>Decidido por:</b> ${escapeHtml(request.decidedBy ?? 'Pendiente de revisión')}
           </p>
           <p style="margin:3px 0 0; font-size:11.5px; color:#445164;">
-            Fecha decisión: ${request.decidedAt ?? 'Pendiente'}
+            Fecha de decisión: ${escapeHtml(request.decidedAt ?? 'Pendiente')}
           </p>
           ${
             request.viceRectorNote
-              ? `<p style="margin:6px 0 0; font-size:11.5px; color:#00336a;"><b>Observación:</b> ${request.viceRectorNote}</p>`
+              ? `<p style="margin:6px 0 0; font-size:11.5px; color:#00336a;"><b>Observación:</b> ${escapeHtml(request.viceRectorNote)}</p>`
               : ''
           }
         </div>

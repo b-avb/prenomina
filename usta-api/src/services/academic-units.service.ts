@@ -2,6 +2,7 @@ import {
   AcademicOrganizationDomain,
   ValidationEngineDomain,
   WorkloadBalancerDomain,
+  WorkloadCalculatorDomain,
   type AcademicUnitSummary,
   type ActorContext,
   type ChangeUnitStatusDto,
@@ -14,7 +15,7 @@ import {
   type UpdateAcademicUnitDto,
   type UpdateUnitDeanDto,
 } from '@usta/domain';
-import { assertUnitAccess } from '../auth/actor-resolver.js';
+import { assertUnitAccess, getActorAllowedUnitIds } from '../auth/actor-resolver.js';
 import type { TransactionRunner } from '../database/transaction-runner.js';
 import type { AcademicUnitRecord } from '../models/persistence.models.js';
 import type { Repositories } from '../repositories/repositories.js';
@@ -36,10 +37,15 @@ export class AcademicUnitsService {
   public async list(
     requestedPeriod?: string,
     division?: string,
+    actor?: ActorContext,
   ): Promise<AcademicUnitSummary[]> {
     const db = this.tx.executor;
     const periodCode = await this.periodContext.resolvePeriod(db, requestedPeriod);
-    const units = await this.periodContext.hydrateUnitsForPeriod(db, periodCode);
+    let units = await this.periodContext.hydrateUnitsForPeriod(db, periodCode);
+    if (actor?.role === 'dean') {
+      const allowed = new Set(getActorAllowedUnitIds(actor));
+      units = units.filter((u) => allowed.has(u.id));
+    }
     if (!division) return units;
     return units.filter((u) => u.division.toLowerCase() === division.toLowerCase());
   }
@@ -47,7 +53,11 @@ export class AcademicUnitsService {
   public async getById(
     id: string,
     requestedPeriod?: string,
+    actor?: ActorContext,
   ): Promise<AcademicUnitSummary> {
+    if (actor) {
+      assertUnitAccess(actor, id);
+    }
     const db = this.tx.executor;
     const periodCode = await this.periodContext.resolvePeriod(db, requestedPeriod);
     return this.periodContext.hydrateSingleUnit(db, id, periodCode);
@@ -100,7 +110,7 @@ export class AcademicUnitsService {
 
       await this.repos.teachers.insertMany(trx, periodCode, [directorTeacher]);
 
-      const deanUser = this.auth
+      const syncedDean = this.auth
         ? await this.auth.syncUnitDeanUserInTransaction(trx, record, {
             ...(dto.username !== undefined ? { username: dto.username } : {}),
             ...(dto.temporaryPassword !== undefined
@@ -108,15 +118,17 @@ export class AcademicUnitsService {
               : {}),
           })
         : undefined;
+      const deanUser = syncedDean?.user;
+      const temporaryPassword = syncedDean?.temporaryPassword;
 
       await this.audit.record(trx, actor, {
         periodCode,
         unitId: unit.id,
         unitName: unit.name,
         teacherName: directorTeacher.fullName,
-        action: 'Creación de Unidad Académica y Directivo',
-        newValue: `${unit.name} (${unit.division}) · Decano/Director: ${unit.deanName}${deanUser ? ` · Usuario: @${deanUser.username}` : ''}`,
-        reason: 'Registro organizacional desde maestro de facultades',
+        action: 'Creación de unidad académica y directivo',
+        newValue: `${unit.name} (${unit.division}) · Directivo: ${unit.deanName}${deanUser ? ` · Usuario: ${deanUser.username}` : ''}`,
+        reason: 'Registro desde el directorio de facultades y unidades',
       });
 
       const hydrated = await this.periodContext.hydrateSingleUnit(trx, unit.id, periodCode);
@@ -124,6 +136,7 @@ export class AcademicUnitsService {
         unit: hydrated,
         directorTeacher,
         ...(deanUser ? { deanUser } : {}),
+        ...(temporaryPassword ? { temporaryPassword } : {}),
       };
     });
   }
@@ -137,7 +150,7 @@ export class AcademicUnitsService {
       const periodCode = await this.periodContext.resolvePeriod(trx, requestedPeriod);
       const existing = await this.repos.units.findById(trx, dto.id, { forUpdate: true });
       if (!existing) {
-        throw new NotFoundError(`La unidad académica '${dto.id}' no existe.`);
+        throw new NotFoundError('La unidad académica seleccionada no existe.');
       }
 
       const nowIso = new Date().toISOString();
@@ -171,10 +184,10 @@ export class AcademicUnitsService {
         periodCode,
         unitId: updated.id,
         unitName: updated.name,
-        action: 'Actualización de Unidad Académica y Topes',
+        action: 'Actualización de unidad académica y cupos',
         previousValue: existing.name,
-        newValue: `${updated.name} (30411:${updated.qualityCap30411}h, 40106:${updated.curriculumCap40106}h, 40109:${updated.seaCap40109}h, 40127:${updated.saberProCap40127}h, 20502:${updated.graduatesCap20502}h)`,
-        reason: 'Edición desde gestión de facultades y unidades',
+        newValue: `${updated.name} (Calidad: ${updated.qualityCap30411} h, Currículo: ${updated.curriculumCap40106} h, SEA: ${updated.seaCap40109} h, Saber Pro: ${updated.saberProCap40127} h, Graduados: ${updated.graduatesCap20502} h)`,
+        reason: 'Edición en la configuración de unidades académicas',
       });
 
       return this.periodContext.hydrateSingleUnit(trx, updated.id, periodCode);
@@ -190,7 +203,7 @@ export class AcademicUnitsService {
       const periodCode = await this.periodContext.resolvePeriod(trx, requestedPeriod);
       const record = await this.repos.units.findById(trx, dto.unitId, { forUpdate: true });
       if (!record) {
-        throw new NotFoundError(`La unidad académica '${dto.unitId}' no existe.`);
+        throw new NotFoundError('La unidad académica seleccionada no existe.');
       }
 
       const [unitSummary, unitTeachers, totalUnits] = await Promise.all([
@@ -222,7 +235,7 @@ export class AcademicUnitsService {
         await this.repos.teachers.save(trx, directorTeacher);
       }
 
-      const deanUser = this.auth
+      const syncedDean = this.auth
         ? await this.auth.syncUnitDeanUserInTransaction(trx, updatedRecord, {
             ...(dto.username !== undefined ? { username: dto.username } : {}),
             ...(dto.temporaryPassword !== undefined
@@ -230,16 +243,18 @@ export class AcademicUnitsService {
               : {}),
           })
         : undefined;
+      const deanUser = syncedDean?.user;
+      const temporaryPassword = syncedDean?.temporaryPassword;
 
       await this.audit.record(trx, actor, {
         periodCode,
         unitId: dto.unitId,
         unitName: updatedRecord.name,
         teacherName: directorTeacher.fullName,
-        action: 'Actualización de Decano(a) / Director(a) de Unidad',
+        action: 'Actualización de Decano o Director de Unidad',
         previousValue: previousDeanName,
-        newValue: `${updatedRecord.deanName}${deanUser ? ` (@${deanUser.username})` : ''}`,
-        reason: 'Actualización administrativa del directivo de unidad',
+        newValue: `${updatedRecord.deanName}${deanUser ? ` (${deanUser.username})` : ''}`,
+        reason: 'Actualización del directivo titular de la unidad',
       });
 
       const hydrated = await this.periodContext.hydrateSingleUnit(
@@ -251,6 +266,7 @@ export class AcademicUnitsService {
         unit: hydrated,
         directorTeacher,
         ...(deanUser ? { deanUser } : {}),
+        ...(temporaryPassword ? { temporaryPassword } : {}),
       };
     });
   }
@@ -263,14 +279,14 @@ export class AcademicUnitsService {
     assertUnitAccess(actor, dto.unitId);
     if (actor.role === 'dean' && dto.status !== 'Enviada' && dto.status !== 'Borrador') {
       throw new ForbiddenError(
-        `El rol 'dean' solo puede marcar la prenómina como 'Borrador' o 'Enviada' (estado solicitado: '${dto.status}').`,
+        'La decanatura solo puede enviar la prenómina a revisión o retirar el envío mientras no haya iniciado la revisión.',
       );
     }
     return this.tx.run(async (trx) => {
       const periodCode = await this.periodContext.resolvePeriod(trx, requestedPeriod);
       const record = await this.repos.units.findById(trx, dto.unitId, { forUpdate: true });
       if (!record) {
-        throw new NotFoundError(`La unidad académica '${dto.unitId}' no existe.`);
+        throw new NotFoundError('La unidad académica seleccionada no existe.');
       }
 
       const [cycle, rulesConfig, unitTeachers] = await Promise.all([
@@ -279,33 +295,73 @@ export class AcademicUnitsService {
         this.repos.teachers.listByPeriod(trx, periodCode, { unitId: dto.unitId }),
       ]);
 
-      if (dto.status === 'Enviada' && rulesConfig.blockSubmissionWithBlockingAlerts) {
-        const [allUnits, allTeachers, sacCodes, approvalRequests] = await Promise.all([
-          this.periodContext.hydrateUnitsForPeriod(trx, periodCode),
-          this.repos.teachers.listByPeriod(trx, periodCode),
-          this.repos.sacCodes.listAll(trx),
-          this.repos.approvals.listByPeriod(trx, periodCode),
-        ]);
-        const alerts = ValidationEngineDomain.getUnitAlerts(dto.unitId, {
-          units: allUnits,
-          teachers: allTeachers,
-          sacCodes,
-          approvalRequests,
-          rulesConfig,
-        });
-        const blockingCount = alerts.filter((a) => a.severity === 'blocking').length;
-        if (blockingCount > 0) {
+      const previousStatus = cycle?.payrollStatus ?? 'Borrador';
+      const previousVersion = cycle?.currentVersion ?? 1;
+
+      if (actor.role === 'dean') {
+        if (
+          dto.status === 'Enviada' &&
+          previousStatus !== 'Borrador' &&
+          previousStatus !== 'Devuelta con Observaciones'
+        ) {
           throw new BusinessRuleError(
-            `No se puede enviar la prenómina de ${record.name}: existen ${blockingCount} alerta(s) bloqueante(s) activa(s).`,
+            `La prenómina de ${record.name} ya se encuentra en estado ${previousStatus} y no admite un nuevo envío.`,
+          );
+        }
+        if (dto.status === 'Borrador' && previousStatus !== 'Enviada') {
+          throw new BusinessRuleError(
+            `No es posible reabrir la prenómina de ${record.name} porque ya se encuentra en estado ${previousStatus}.`,
           );
         }
       }
 
-      const previousStatus = cycle?.payrollStatus ?? 'Borrador';
-      let nextVersion = cycle?.currentVersion ?? 1;
+      if (dto.status === 'Enviada') {
+        if (
+          unitTeachers.length > 0 &&
+          unitTeachers.every((t) => WorkloadCalculatorDomain.isTeacherUnstarted(t))
+        ) {
+          throw new BusinessRuleError(
+            `No se puede enviar la prenómina de ${record.name} porque aún no se han registrado horas académicas.`,
+          );
+        }
+        if (rulesConfig.blockSubmissionWithBlockingAlerts) {
+          const [allUnits, allTeachers, sacCodes, approvalRequests, programQuotas] =
+            await Promise.all([
+              this.periodContext.hydrateUnitsForPeriod(trx, periodCode),
+              this.repos.teachers.listByPeriod(trx, periodCode),
+              this.repos.sacCodes.listAll(trx),
+              this.repos.approvals.listByPeriod(trx, periodCode),
+              this.repos.programs.list(trx),
+            ]);
+          const alerts = ValidationEngineDomain.getUnitAlerts(
+            dto.unitId,
+            {
+              units: allUnits,
+              teachers: allTeachers,
+              sacCodes,
+              approvalRequests,
+              programQuotas,
+              rulesConfig,
+            },
+            { enforceSubmissionReadiness: true },
+          );
+          const blockingCount = alerts.filter((a) => a.severity === 'blocking').length;
+          if (blockingCount > 0) {
+            throw new BusinessRuleError(
+              blockingCount === 1
+                ? `No se puede enviar la prenómina de ${record.name}: queda 1 alerta bloqueante pendiente por resolver.`
+                : `No se puede enviar la prenómina de ${record.name}: quedan ${blockingCount} alertas bloqueantes pendientes por resolver.`,
+            );
+          }
+        }
+      }
+
+      let nextVersion = previousVersion;
 
       if (dto.status === 'Enviada') {
-        WorkloadBalancerDomain.snapshotTeachersVersion1(unitTeachers, rulesConfig);
+        WorkloadBalancerDomain.snapshotTeachersVersion1(unitTeachers, rulesConfig, {
+          forceOverwrite: previousVersion === 1,
+        });
         for (const teacher of unitTeachers) {
           await this.repos.teachers.save(trx, teacher);
         }
@@ -334,7 +390,7 @@ export class AcademicUnitsService {
         action: `Cambio de estado de prenómina (${previousStatus} → ${dto.status})`,
         previousValue: previousStatus,
         newValue: dto.status,
-        reason: dto.observation || `Transición de flujo ejecutada por ${actor.name}`,
+        reason: dto.observation || `Actualización de estado registrada por ${actor.name}`,
       });
 
       const hydrated = await this.periodContext.hydrateSingleUnit(
@@ -359,7 +415,7 @@ export class AcademicUnitsService {
       const periodCode = await this.periodContext.resolvePeriod(trx, requestedPeriod);
       const record = await this.repos.units.findById(trx, dto.unitId, { forUpdate: true });
       if (!record) {
-        throw new NotFoundError(`La unidad académica '${dto.unitId}' no existe.`);
+        throw new NotFoundError('La unidad académica seleccionada no existe.');
       }
 
       const [cycle, rulesConfig, unitTeachers] = await Promise.all([
@@ -368,7 +424,9 @@ export class AcademicUnitsService {
         this.repos.teachers.listByPeriod(trx, periodCode, { unitId: dto.unitId }),
       ]);
 
-      WorkloadBalancerDomain.snapshotTeachersVersion1(unitTeachers, rulesConfig);
+      WorkloadBalancerDomain.snapshotTeachersVersion1(unitTeachers, rulesConfig, {
+        forceOverwrite: true,
+      });
       for (const teacher of unitTeachers) {
         await this.repos.teachers.save(trx, teacher);
       }
@@ -388,10 +446,10 @@ export class AcademicUnitsService {
         periodCode,
         unitId: dto.unitId,
         unitName: record.name,
-        action: 'Congelamiento de Línea Base (Versión 1 → Versión 2)',
+        action: 'Registro de versión inicial de revisión',
         previousValue: `Versión ${cycle?.currentVersion ?? 1}`,
-        newValue: 'Versión 2 (Jornada de Revisión)',
-        reason: `Se guardó instantánea v1 para ${unitTeachers.length} docentes de la unidad`,
+        newValue: 'Versión 2 (Jornada de revisión)',
+        reason: `Se guardó la versión inicial de referencia para ${unitTeachers.length} docentes`,
       });
 
       const hydrated = await this.periodContext.hydrateSingleUnit(
@@ -415,19 +473,20 @@ export class AcademicUnitsService {
       const periodCode = await this.periodContext.resolvePeriod(trx, requestedPeriod);
       const record = await this.repos.units.findById(trx, unitId, { forUpdate: true });
       if (!record) {
-        throw new NotFoundError(`La unidad académica '${unitId}' no existe.`);
+        throw new NotFoundError('La unidad académica seleccionada no existe.');
       }
 
+      await this.auth?.deactivateExclusiveDeanForDeletedUnit(trx, unitId);
       await this.repos.units.delete(trx, unitId);
 
       await this.audit.record(trx, actor, {
         periodCode,
         unitId: null,
         unitName: record.name,
-        action: 'Eliminación de Unidad Académica',
+        action: 'Retiro de unidad académica',
         previousValue: `${record.name} (${record.division})`,
-        newValue: 'Eliminada',
-        reason: 'Retiro administrativo de unidad académica',
+        newValue: 'Retirada',
+        reason: 'Retiro administrativo en el directorio institucional',
       });
 
       return { deletedId: unitId };

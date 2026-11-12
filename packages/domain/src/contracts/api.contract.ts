@@ -60,8 +60,6 @@ export type ApiErrorCode =
   | 'INTERNAL_ERROR';
 
 export const ACTOR_HEADERS = {
-  name: 'X-Actor-Name',
-  role: 'X-Actor-Role',
   period: 'X-Academic-Period',
 } as const;
 
@@ -71,11 +69,11 @@ export interface ActorContext {
   userId?: string;
   username?: string;
   unitId?: string | null;
+  managedUnitIds?: string[];
 }
 
 // ─── Authentication & Users ──────────────────────────────────────────────────
 
-export const DEFAULT_TEMPORARY_PASSWORD = 'Usta2026*';
 export const INSTITUTIONAL_EMAIL_DOMAIN = 'santototunja.edu.co';
 
 /** GET /api/auth/config */
@@ -183,6 +181,7 @@ export interface UnitWithDirectorResponse {
   unit: AcademicUnitSummary;
   directorTeacher: FacultyTeacher;
   deanUser?: AuthUser;
+  temporaryPassword?: string;
 }
 
 /** PUT /api/units/:id — profile and quota caps edition. */
@@ -316,6 +315,8 @@ export interface UpdateCodeAllocationDto {
   teacherId: string;
   code: string;
   hours: number;
+  programId?: string | null;
+  programName?: string | null;
   exceptionJustification?: string;
   directorNote?: string;
 }
@@ -339,6 +340,21 @@ export type CreateApprovalRequestDto = Omit<
   ApprovalRequestAnnex3,
   'id' | 'period' | 'status' | 'requestedAt' | 'decidedBy' | 'decidedAt' | 'viceRectorNote'
 >;
+
+/** POST /api/approvals/attachments */
+export interface UploadApprovalAttachmentDto {
+  fileName: string;
+  mimeType: string;
+  contentBase64: string;
+}
+
+export interface ApprovalAttachmentResponse {
+  fileName: string;
+  originalName: string;
+  mimeType: string;
+  sizeBytes: number;
+  url: string;
+}
 
 /** PATCH /api/approvals/:id/decision — `decidedBy` is taken from the actor context. */
 export interface DecideApprovalDto {

@@ -96,6 +96,8 @@ export interface AssignedAcademicSpace {
 export interface TeacherCodeAllocation {
   code: string;
   hours: number;
+  programId?: string;
+  programName?: string;
   version1Hours?: number;
   unitCount?: number;
   exceptionJustification?: string;
@@ -243,6 +245,7 @@ export interface AuthUser {
   role: PayrollRole;
   unitId: string | null;
   unitName?: string | null;
+  managedUnitIds?: string[];
   mustChangePassword: boolean;
   isActive: boolean;
   passwordChangedAt: string | null;

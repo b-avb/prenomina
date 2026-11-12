@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { cloneState } from '@/composables/useMutation';
 import { usePayrollStore } from '@/stores/payroll.store';
 import { exportSectionalConsolidatedXlsx } from '@/services/exporters';
 import UstaModal from '@/components/ui/UstaModal.vue';
@@ -20,7 +21,7 @@ const scheduleDrafts = ref<SchedulePhase[]>([]);
 
 watch(isScheduleModalOpen, (isOpen) => {
   if (isOpen) {
-    scheduleDrafts.value = structuredClone(store.schedulePhases);
+    scheduleDrafts.value = cloneState(store.schedulePhases);
   }
 });
 
@@ -37,8 +38,9 @@ const kpis = computed(() => {
   const inReview = store.units.filter(
     (u) => u.payrollStatus === 'En Revisión' || u.payrollStatus === 'Enviada',
   ).length;
-  const pending = store.units.filter(
-    (u) => u.payrollStatus === 'Borrador' || u.payrollStatus === 'Devuelta con Observaciones',
+  const inDraft = store.units.filter((u) => u.payrollStatus === 'Borrador').length;
+  const returned = store.units.filter(
+    (u) => u.payrollStatus === 'Devuelta con Observaciones',
   ).length;
   const pendingVaApprovals = store.approvalRequests.filter((s) => s.status === 'Pendiente').length;
   const totalSectionalTeachers = store.teachers.length;
@@ -50,7 +52,8 @@ const kpis = computed(() => {
     total,
     approved,
     inReview,
-    pending,
+    inDraft,
+    returned,
     pendingVaApprovals,
     totalSectionalTeachers,
     totalSectionalHours,
@@ -63,15 +66,24 @@ function openFacultyReview(unit: AcademicUnitSummary, compareVersion1 = false) {
   router.push('/dean/payroll');
 }
 
-function confirmUnitReturn() {
+const headerGovernanceLabel = computed(() =>
+  store.activeRole === 'vice_rector'
+    ? 'VICERRECTORÍA ACADÉMICA'
+    : 'DIRECCIÓN DE ENSEÑANZA Y APRENDIZAJE',
+);
+
+async function confirmUnitReturn() {
   if (!unitToReturn.value) return;
-  store.changePayrollStatus(
+  const res = await store.changePayrollStatus(
     unitToReturn.value.id,
     'Devuelta con Observaciones',
-    returnObservations.value || 'Observaciones registradas en jornada de revisión de prenómina.',
+    returnObservations.value.trim() ||
+      'Observaciones registradas en jornada de revisión de prenómina.',
   );
-  unitToReturn.value = null;
-  returnObservations.value = '';
+  if (res.ok) {
+    unitToReturn.value = null;
+    returnObservations.value = '';
+  }
 }
 
 function handleExportSectionalConsolidated() {
@@ -88,9 +100,7 @@ function handleExportSectionalConsolidated() {
     computeTeacherTotalHours: store.computeTeacherTotalHours,
     sumCodeInUnit: store.sumCodeInUnit,
   });
-  store.showToast(
-    'Consolidado Maestro Seccional (.xlsx con 5 hojas para SAC) descargado exitosamente',
-  );
+  store.showToast('Consolidado seccional descargado');
 }
 </script>
 
@@ -100,28 +110,29 @@ function handleExportSectionalConsolidated() {
     <div class="page-top">
       <div>
         <div class="eyebrow-tag" style="margin-bottom: 3px">
-          DIRECCIÓN DE ENSEÑANZA Y APRENDIZAJE · SECCIONAL TUNJA · {{ store.activePeriod }}
+          {{ headerGovernanceLabel }} · SECCIONAL TUNJA · {{ store.activePeriod }}
         </div>
         <h1 class="screen-title" style="margin: 0; font-size: 22px">
-          Tablero de Control y Bandeja de Prenóminas Académicas
+          Seguimiento seccional de prenómina
         </h1>
       </div>
       <div class="page-actions">
         <button
+          type="button"
           class="btn accent small"
-          :title="`Exporta el libro Excel maestro de toda la Seccional Tunja (${store.units.length} unidades, Sábana SAC, Avales, Investigación y Bitácora)`"
+          :title="`Descargar consolidado seccional (${store.units.length} unidades)`"
           @click="handleExportSectionalConsolidated"
         >
-          ↓ Exportar Consolidado Seccional (.xlsx)
+          Exportar consolidado
         </button>
         <button class="btn ghost small" @click="router.push('/director/organization')">
-          + Decanos y Programas
+          Unidades y programas
         </button>
         <button class="btn ghost small" @click="router.push('/director/catalog')">
-          ⚙ Configurar Catálogo y Topes (ANEXOS 4, 5 y 6)
+          Catálogo SAC y cupos
         </button>
         <button class="btn primary small" @click="router.push('/vice-rector/approvals')">
-          Pre-Avales V.A. ({{ kpis.pendingVaApprovals }} pendientes)
+          Solicitudes de aval ({{ kpis.pendingVaApprovals }})
         </button>
       </div>
     </div>
@@ -130,27 +141,39 @@ function handleExportSectionalConsolidated() {
     <div class="grid cols-4" style="margin-bottom: 16px; gap: 12px">
       <div class="card stat" style="padding: 14px 18px">
         <div class="num" style="font-size: 24px">{{ kpis.approved }} / {{ kpis.total }}</div>
-        <div class="lbl">Unidades con prenómina avalada</div>
+        <div class="lbl">Unidades avaladas</div>
       </div>
       <div class="card stat" style="padding: 14px 18px">
         <div class="num" style="font-size: 24px; color: var(--blue)">{{ kpis.inReview }}</div>
-        <div class="lbl">En jornada de revisión / Enviadas</div>
+        <div class="lbl">Enviadas o en revisión</div>
       </div>
       <div class="card stat" style="padding: 14px 18px">
-        <div class="num" style="font-size: 24px; color: var(--warning)">{{ kpis.pending }}</div>
-        <div class="lbl">En borrador o devueltas con ajustes</div>
+        <div
+          class="num"
+          style="font-size: 24px"
+          :style="{ color: kpis.returned > 0 ? 'var(--danger)' : 'var(--ink-soft)' }"
+        >
+          {{ kpis.returned > 0 ? kpis.returned : kpis.inDraft }}
+        </div>
+        <div class="lbl">
+          {{
+            kpis.returned > 0
+              ? `Devueltas (${kpis.inDraft} en borrador)`
+              : 'En borrador'
+          }}
+        </div>
       </div>
       <div class="card stat" style="padding: 14px 18px">
         <div class="num" style="font-size: 24px; color: var(--navy)">
-          {{ kpis.totalSectionalTeachers }} doc.
+          {{ kpis.totalSectionalTeachers }}
         </div>
         <div class="lbl">
-          {{ kpis.totalSectionalHours.toLocaleString('es-CO') }} h/mes proyectadas en seccional
+          Docentes · {{ kpis.totalSectionalHours.toLocaleString('es-CO') }} h/mes
         </div>
       </div>
     </div>
 
-    <!-- OFFICIAL PROCESS SCHEDULE STRIP (RF-38) -->
+    <!-- OFFICIAL PROCESS SCHEDULE STRIP -->
     <div
       style="display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 8px; align-items: center; margin-bottom: 14px; background: var(--surface-soft); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; font-size: 11px"
     >
@@ -171,37 +194,41 @@ function handleExportSectionalConsolidated() {
         <b style="color: var(--navy)">{{ phase.title }}:</b> {{ phase.dateRange }}
       </div>
       <button
+        type="button"
         class="btn ghost small"
         style="padding: 3px 8px; font-size: 11px"
-        title="Configurar fechas del cronograma semestral (RF-38)"
+        title="Editar fechas del cronograma"
         @click="isScheduleModalOpen = true"
       >
-        ✎ Cronograma
+        Editar cronograma
       </button>
     </div>
 
     <!-- TABS -->
     <div class="tabs" style="margin-bottom: 14px">
       <button
+        type="button"
         class="tab"
         :class="{ active: activeTab === 'inbox' }"
         @click="activeTab = 'inbox'"
       >
-        1. Bandeja de Unidades Académicas ({{ store.units.length }})
+        Unidades académicas ({{ store.units.length }})
       </button>
       <button
+        type="button"
         class="tab"
         :class="{ active: activeTab === 'analytics' }"
         @click="activeTab = 'analytics'"
       >
-        2. Analítica de Horas por Función Sustantiva
+        Distribución por función sustantiva
       </button>
       <button
+        type="button"
         class="tab"
         :class="{ active: activeTab === 'audit' }"
         @click="activeTab = 'audit'"
       >
-        3. Bitácora de Auditoría y Versiones ({{ store.auditLogs.length }})
+        Historial de cambios ({{ store.auditLogs.length }})
       </button>
     </div>
 
@@ -221,35 +248,35 @@ function handleExportSectionalConsolidated() {
     <!-- Return Payroll Modal -->
     <UstaModal
       :open="!!unitToReturn"
-      title="Devolver Prenómina con Observaciones"
+      title="Devolver prenómina"
       @close="unitToReturn = null"
     >
       <template v-if="unitToReturn">
         <p class="sub" style="margin-top: 0">
           Se devolverá la prenómina de <b>{{ unitToReturn.name }}</b> a
-          <b>{{ unitToReturn.deanName }}</b> para que realice los ajustes solicitados.
+          <b>{{ unitToReturn.deanName }}</b> para realizar ajustes.
         </p>
         <div class="field">
-          <label>Observaciones generales de la Directora</label>
+          <label>Observaciones</label>
           <textarea
             v-model="returnObservations"
             rows="5"
             style="min-height: 150px"
-            placeholder="Ej: Ajustar las horas faltantes en Gestión de Graduados (20502) según ANEXO 6 y completar la solicitud de pre-aval del código 10212…"
+            placeholder="Indique los ajustes requeridos antes de avalar la prenómina…"
           ></textarea>
         </div>
       </template>
       <template #actions>
-        <button class="btn ghost" @click="unitToReturn = null">Cancelar</button>
-        <button class="btn danger" @click="confirmUnitReturn">Devolver al Decano</button>
+        <button type="button" class="btn ghost" @click="unitToReturn = null">Cancelar</button>
+        <button type="button" class="btn danger" @click="confirmUnitReturn">Devolver prenómina</button>
       </template>
     </UstaModal>
 
-    <!-- Configure Schedule Modal (RF-38) -->
+    <!-- Configure Schedule Modal -->
     <UstaModal
       :open="isScheduleModalOpen"
-      title="Configurar Cronograma Oficial del Proceso (RF-38)"
-      :subtitle="`Define las fechas y estados de cada fase para el periodo académico ${store.activePeriod}.`"
+      title="Cronograma del proceso"
+      :subtitle="`Fechas de referencia para el periodo ${store.activePeriod}.`"
       @close="isScheduleModalOpen = false"
     >
       <div
@@ -262,7 +289,7 @@ function handleExportSectionalConsolidated() {
           <input v-model="phase.label" type="text" />
         </div>
         <div class="field" style="margin: 0">
-          <label>Fase del Proceso</label>
+          <label>Etapa</label>
           <input v-model="phase.title" type="text" />
         </div>
         <div class="field" style="margin: 0">
@@ -280,8 +307,8 @@ function handleExportSectionalConsolidated() {
       </div>
 
       <template #actions>
-        <button class="btn primary" @click="handleSaveSchedule">
-          Guardar Cronograma
+        <button type="button" class="btn primary" @click="handleSaveSchedule">
+          Guardar cambios
         </button>
       </template>
     </UstaModal>

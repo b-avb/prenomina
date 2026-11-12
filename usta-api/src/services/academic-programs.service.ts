@@ -46,7 +46,7 @@ export class AcademicProgramsService {
         forUpdate: true,
       });
       if (!unitRecord) {
-        throw new NotFoundError(`La unidad académica '${dto.unitId}' no existe.`);
+        throw new NotFoundError('La unidad académica seleccionada no existe.');
       }
 
       const id = this.ids.next();
@@ -75,9 +75,9 @@ export class AcademicProgramsService {
         periodCode,
         unitId: unitRecord.id,
         unitName: unitRecord.name,
-        action: `Creación de Programa Académico: ${record.programName}`,
-        newValue: `${record.level} (${record.modality}) · 30411:${record.quality30411}h, 40106:${record.curriculum40106}h, 40109:${record.sea40109}h, 40127:${record.saberPro40127}h`,
-        reason: 'Registro en ANEXO 5 y recálculo automático de bolsas de facultad',
+        action: `Creación de programa académico: ${record.programName}`,
+        newValue: `${record.level} (${record.modality}) · Calidad: ${record.quality30411} h, Currículo: ${record.curriculum40106} h, SEA: ${record.sea40109} h, Saber Pro: ${record.saberPro40127} h`,
+        reason: 'Registro en Anexo 5 y actualización de cupos de la unidad',
       });
 
       const [program, unit] = await Promise.all([
@@ -101,14 +101,14 @@ export class AcademicProgramsService {
       const periodCode = await this.periodContext.resolvePeriod(trx, requestedPeriod);
       const existing = await this.repos.programs.findById(trx, dto.id);
       if (!existing) {
-        throw new NotFoundError(`El programa académico '${dto.id}' no existe.`);
+        throw new NotFoundError('El programa académico seleccionado no existe.');
       }
 
       const unitRecord = await this.repos.units.findById(trx, existing.unitId, {
         forUpdate: true,
       });
       if (!unitRecord) {
-        throw new NotFoundError(`La unidad académica '${existing.unitId}' no existe.`);
+        throw new NotFoundError('La unidad académica asociada no existe.');
       }
 
       const { unitName: _unitName, ...existingRecord } = existing;
@@ -136,16 +136,23 @@ export class AcademicProgramsService {
       };
 
       await this.repos.programs.update(trx, updatedRecord);
+      if (updatedRecord.programName !== existing.programName) {
+        await trx
+          .updateTable('teacher_code_allocations')
+          .set({ program_name: updatedRecord.programName })
+          .where('program_id', '=', dto.id)
+          .execute();
+      }
       await this.recalculateAndPersistUnitCaps(trx, unitRecord);
 
       await this.audit.record(trx, actor, {
         periodCode,
         unitId: unitRecord.id,
         unitName: unitRecord.name,
-        action: `Actualización de Programa Académico: ${updatedRecord.programName}`,
-        previousValue: `${existing.programName} (30411:${existing.quality30411}h, 40106:${existing.curriculum40106}h, 40109:${existing.sea40109}h, 40127:${existing.saberPro40127}h)`,
-        newValue: `${updatedRecord.programName} (30411:${updatedRecord.quality30411}h, 40106:${updatedRecord.curriculum40106}h, 40109:${updatedRecord.sea40109}h, 40127:${updatedRecord.saberPro40127}h)`,
-        reason: 'Edición en ANEXO 5 y sincronización de bolsas de facultad',
+        action: `Actualización de programa académico: ${updatedRecord.programName}`,
+        previousValue: `${existing.programName} (Calidad: ${existing.quality30411} h, Currículo: ${existing.curriculum40106} h, SEA: ${existing.sea40109} h, Saber Pro: ${existing.saberPro40127} h)`,
+        newValue: `${updatedRecord.programName} (Calidad: ${updatedRecord.quality30411} h, Currículo: ${updatedRecord.curriculum40106} h, SEA: ${updatedRecord.sea40109} h, Saber Pro: ${updatedRecord.saberPro40127} h)`,
+        reason: 'Edición en Anexo 5 y actualización de cupos de la unidad',
       });
 
       const [program, unit] = await Promise.all([
@@ -169,18 +176,25 @@ export class AcademicProgramsService {
       const periodCode = await this.periodContext.resolvePeriod(trx, requestedPeriod);
       const existing = await this.repos.programs.findById(trx, id);
       if (!existing) {
-        throw new NotFoundError(`El programa académico '${id}' no existe.`);
+        throw new NotFoundError('El programa académico seleccionado no existe.');
       }
 
       const unitRecord = await this.repos.units.findById(trx, existing.unitId, {
         forUpdate: true,
       });
       if (!unitRecord) {
-        throw new NotFoundError(`La unidad académica '${existing.unitId}' no existe.`);
+        throw new NotFoundError('La unidad académica asociada no existe.');
       }
 
+      await trx
+        .updateTable('teacher_code_allocations')
+        .set({ program_id: null, program_name: null })
+        .where('program_id', '=', id)
+        .execute();
       await this.repos.programs.delete(trx, id);
-      await this.recalculateAndPersistUnitCaps(trx, unitRecord);
+      await this.recalculateAndPersistUnitCaps(trx, unitRecord, {
+        forceZeroWhenNoPrograms: true,
+      });
 
       await this.audit.record(trx, actor, {
         periodCode,
@@ -188,8 +202,8 @@ export class AcademicProgramsService {
         unitName: unitRecord.name,
         action: `Eliminación de Programa Académico: ${existing.programName}`,
         previousValue: existing.programName,
-        newValue: 'Eliminado',
-        reason: 'Retiro de programa en ANEXO 5 y recálculo de bolsas de facultad',
+        newValue: 'Retirado',
+        reason: 'Retiro de programa en Anexo 5 y actualización de cupos de la unidad',
       });
 
       const unit = await this.periodContext.hydrateSingleUnit(
@@ -207,6 +221,7 @@ export class AcademicProgramsService {
   private async recalculateAndPersistUnitCaps(
     trx: DbExecutor,
     unitRecord: AcademicUnitRecord,
+    options?: { forceZeroWhenNoPrograms?: boolean },
   ): Promise<void> {
     const unitPrograms = await this.repos.programs.list(trx, {
       unitId: unitRecord.id,
@@ -222,10 +237,12 @@ export class AcademicProgramsService {
     const changed = AcademicOrganizationDomain.recalculateUnitCapsFromPrograms(
       draftSummary,
       unitPrograms,
+      options,
     );
     if (changed) {
       await this.repos.units.update(trx, {
         ...unitRecord,
+        hasPostgraduates: draftSummary.hasPostgraduates,
         qualityCap30411: draftSummary.qualityCap30411,
         curriculumCap40106: draftSummary.curriculumCap40106,
         seaCap40109: draftSummary.seaCap40109,

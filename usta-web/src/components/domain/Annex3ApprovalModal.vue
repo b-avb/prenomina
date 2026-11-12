@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import { usePayrollStore } from '@/stores/payroll.store';
 import type { SacCode, FacultyTeacher, ApprovalProjectDetail } from '@usta/domain';
@@ -21,6 +21,8 @@ const emit = defineEmits<{
 }>();
 
 const store = usePayrollStore();
+const isUploading = ref(false);
+const isSubmitting = ref(false);
 
 const totalModalHours = computed(() => {
   if (!props.state) return 0;
@@ -48,45 +50,86 @@ function removeRow(index: number) {
   props.state.rows.splice(index, 1);
 }
 
+async function handleFileSelected(event: Event): Promise<void> {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  if (!file || !props.state) return;
+  isUploading.value = true;
+  try {
+    const res = await store.uploadApprovalAttachment(file);
+    if (res.ok && props.state) {
+      props.state.attachmentUrl = res.data.url;
+    }
+  } finally {
+    isUploading.value = false;
+    input.value = '';
+  }
+}
+
 async function handleSubmit() {
   if (!props.teacher || !props.state) return;
   const s = props.state;
   const totalHours = totalModalHours.value;
-  await store.updateCodeAllocation(props.teacher.id, s.codeItem.code, totalHours);
-  const res = await store.registerApprovalRequest({
-    unitId: store.activeUnit.id,
-    unitName: store.activeUnit.name,
-    teacherId: props.teacher.id,
-    teacherName: props.teacher.fullName,
-    teacherDocumentId: props.teacher.documentId,
-    code: s.codeItem.code,
-    codeName: s.codeItem.name,
-    requestedHours: totalHours,
-    formatType: s.codeItem.annex3Format || '10212',
-    programName: s.programName,
-    projectDetails: s.rows.map((r, idx) => ({
-      title: r.title || `Ítem #${idx + 1} — ${s.codeItem.name}`,
-      projectType: r.projectType,
-      studentsOrCourse: r.studentsOrCourse || 'Según listado adjunto',
-      committeeApprovalMinute: r.committeeApprovalMinute,
-      hours: Number(r.hours) || 0,
-    })),
-    attachmentUrl: s.attachmentUrl,
-  });
-  if (res.ok) emit('close');
+  if (totalHours <= 0) {
+    store.showToast('Indique un total de horas mayor a cero para radicar la solicitud.', 'error');
+    return;
+  }
+  if (!s.programName.trim()) {
+    store.showToast('Indique el programa académico o la unidad solicitante.', 'error');
+    return;
+  }
+
+  const targetUnit =
+    store.units.find((u) => u.id === props.teacher!.unitId) ?? store.activeUnit;
+
+  isSubmitting.value = true;
+  try {
+    const allocRes = await store.updateCodeAllocation(
+      props.teacher.id,
+      s.codeItem.code,
+      totalHours,
+    );
+    if (!allocRes.ok) return;
+
+    const res = await store.registerApprovalRequest({
+      unitId: targetUnit.id,
+      unitName: targetUnit.name,
+      teacherId: props.teacher.id,
+      teacherName: props.teacher.fullName,
+      teacherDocumentId: props.teacher.documentId,
+      code: s.codeItem.code,
+      codeName: s.codeItem.name,
+      requestedHours: totalHours,
+      formatType: s.codeItem.annex3Format || '10212',
+      programName: s.programName.trim(),
+      projectDetails: s.rows.map((r, idx) => ({
+        title: r.title.trim() || `Ítem #${idx + 1} — ${s.codeItem.name}`,
+        projectType: r.projectType.trim() || 'Actividad Especial',
+        studentsOrCourse: r.studentsOrCourse.trim() || 'Según listado en soporte',
+        committeeApprovalMinute:
+          r.committeeApprovalMinute.trim() ||
+          `Acta Comité Curricular — ${store.activePeriod}`,
+        hours: Number(r.hours) || 0,
+      })),
+      attachmentUrl: s.attachmentUrl.trim(),
+    });
+    if (res.ok) emit('close');
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 </script>
 
 <template>
   <UstaModal
     :open="!!state"
-    title="Formato Digital de Solicitud de Pre-Aval V.A. (ANEXO 3)"
+    title="Solicitud de aval de Vicerrectoría Académica (Anexo 3)"
     wide
     @close="emit('close')"
   >
     <template v-if="state">
       <p class="sub" style="margin-top: 0">
-        Estructura oficial del formato <b>ANEXO 3 ({{ state.codeItem.code }})</b> para
+        Solicitud en formato <b>Anexo 3 ({{ state.codeItem.code }})</b> para
         <b>{{ teacher?.fullName }}</b>.
       </p>
 
@@ -95,7 +138,7 @@ async function handleSubmit() {
           <span>
             Código {{ state.codeItem.code }} · {{ state.codeItem.name }}
           </span>
-          <span class="code-chip">Total calculado: {{ totalModalHours }} h/mes</span>
+          <span class="code-chip">Total: {{ totalModalHours }} h/mes</span>
         </div>
         <div class="lineamiento-popover__body">
           {{ state.codeItem.guideline }}
@@ -104,27 +147,45 @@ async function handleSubmit() {
 
       <div class="grid cols-2">
         <div class="field">
-          <label>Programa Académico / Departamento</label>
-          <input v-model="state.programName" type="text" />
+          <label>Programa académico o unidad solicitante</label>
+          <input
+            v-model="state.programName"
+            type="text"
+            placeholder="Ej.: Ingeniería Industrial"
+          />
         </div>
         <div class="field">
-          <label>Soporte Adjunto (Acta de Comité / Aval Campus Virtual)</label>
-          <div style="display: flex; gap: 6px">
-            <input v-model="state.attachmentUrl" type="text" style="flex: 1" />
-            <label class="btn ghost small" style="cursor: pointer; white-space: nowrap; margin: 0">
-              📎 Subir PDF
+          <label>Soporte documental (archivo o enlace institucional)</label>
+          <div style="display: flex; gap: 6px; align-items: center">
+            <input
+              v-model="state.attachmentUrl"
+              type="text"
+              placeholder="Suba un archivo o pegue un enlace https://…"
+              style="flex: 1"
+            />
+            <label
+              class="btn ghost"
+              style="display: inline-flex; align-items: center; height: 42px; padding: 0 12px; font-size: 12px; cursor: pointer; white-space: nowrap; margin: 0"
+            >
+              {{ isUploading ? 'Subiendo…' : 'Subir archivo' }}
               <input
                 type="file"
-                accept=".pdf,.doc,.docx,.xlsx"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
                 style="display: none"
-                @change="
-                  (ev) => {
-                    const f = (ev.target as HTMLInputElement).files?.[0];
-                    if (f && state) state.attachmentUrl = f.name;
-                  }
-                "
+                :disabled="isUploading"
+                @change="handleFileSelected"
               />
             </label>
+            <button
+              v-if="state.attachmentUrl.trim()"
+              type="button"
+              class="btn ghost small"
+              style="height: 42px"
+              title="Abrir soporte adjunto"
+              @click="store.openApprovalAttachment(state.attachmentUrl)"
+            >
+              Ver
+            </button>
           </div>
         </div>
       </div>
@@ -133,10 +194,11 @@ async function handleSubmit() {
         style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0"
       >
         <b style="color: var(--navy); font-size: 12.5px">
-          Relación de Proyectos / Consultorios / Cursos ({{ state.rows.length }} registro(s))
+          Proyectos, consultorios o cursos ({{ state.rows.length }}
+          {{ state.rows.length === 1 ? 'registro' : 'registros' }})
         </b>
-        <button class="btn ghost small" @click="addRow">
-          + Agregar Proyecto / Ítem
+        <button type="button" class="btn ghost small" @click="addRow">
+          Agregar registro
         </button>
       </div>
 
@@ -151,6 +213,7 @@ async function handleSubmit() {
           <b style="font-size: 12px; color: var(--navy)">Registro #{{ idx + 1 }}</b>
           <button
             v-if="state.rows.length > 1"
+            type="button"
             class="btn danger small"
             @click="removeRow(idx)"
           >
@@ -158,20 +221,30 @@ async function handleSubmit() {
           </button>
         </div>
         <div class="field" style="margin-bottom: 8px">
-          <label>Denominación del Proyecto / Consultorio / Curso / Área</label>
+          <label>Nombre del proyecto, consultorio, curso o área</label>
           <input
             v-model="row.title"
             type="text"
-            placeholder="Título del proyecto de grado, consultorio, curso de extensión o módulo a virtualizar…"
+            placeholder="Título del proyecto, consultorio, curso de extensión o módulo…"
           />
         </div>
-        <div class="grid cols-3">
+        <div class="grid cols-2" style="margin-bottom: 8px">
           <div class="field" style="margin-bottom: 0">
-            <label>Tipo / Modalidad</label>
+            <label>Tipo o modalidad</label>
             <input v-model="row.projectType" type="text" />
           </div>
           <div class="field" style="margin-bottom: 0">
-            <label>Estudiantes / Créditos / Acta</label>
+            <label>Acta de Comité Curricular o aval</label>
+            <input
+              v-model="row.committeeApprovalMinute"
+              type="text"
+              placeholder="Ej.: Acta Comité Curricular No. 08-2026"
+            />
+          </div>
+        </div>
+        <div class="grid cols-2">
+          <div class="field" style="margin-bottom: 0">
+            <label>Estudiantes, créditos o cohorte</label>
             <input
               v-model="row.studentsOrCourse"
               type="text"
@@ -179,7 +252,7 @@ async function handleSubmit() {
             />
           </div>
           <div class="field" style="margin-bottom: 0">
-            <label>Horas/Mes</label>
+            <label>Horas/mes</label>
             <input v-model.number="row.hours" type="number" min="1" max="80" />
           </div>
         </div>
@@ -187,9 +260,18 @@ async function handleSubmit() {
     </template>
 
     <template #actions>
-      <button class="btn ghost" @click="emit('close')">Cancelar</button>
-      <button class="btn primary" @click="handleSubmit">
-        Radicar Solicitud ({{ totalModalHours }} h/mes) a Vicerrectoría
+      <button type="button" class="btn ghost" @click="emit('close')">Cancelar</button>
+      <button
+        type="button"
+        class="btn primary"
+        :disabled="isSubmitting || isUploading"
+        @click="handleSubmit"
+      >
+        {{
+          isSubmitting
+            ? 'Radicando…'
+            : `Radicar solicitud (${totalModalHours} h/mes)`
+        }}
       </button>
     </template>
   </UstaModal>

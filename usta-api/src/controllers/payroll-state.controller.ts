@@ -1,10 +1,10 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { CreatePeriodDto } from '@usta/domain';
+import type { ActorContext, CreatePeriodDto } from '@usta/domain';
 import { ROLE_PERMISSIONS, type ActorResolver } from '../auth/actor-resolver.js';
 import { ENV_CONFIG } from '../config/env.config.js';
 import type { PayrollStateService } from '../services/payroll-state.service.js';
 import { ForbiddenError } from '../utils/app-error.js';
-import { readJsonBody, sendSuccess } from '../utils/http.utils.js';
+import { type RouteParams, readJsonBody, sendSuccess } from '../utils/http.utils.js';
 import { PayloadReader } from '../validation/payload-reader.js';
 import { optionalQueryParam } from '../validation/query-params.js';
 
@@ -20,12 +20,15 @@ export class PayrollStateController {
   };
 
   public getState = async (
-    _req: IncomingMessage,
+    req: IncomingMessage,
     res: ServerResponse,
     url: URL,
+    _params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const period = optionalQueryParam(url, 'period');
-    const snapshot = await this.service.getSnapshot(period);
+    const actor = resolvedActor ?? (await this.actorResolver.resolve(req));
+    const period = optionalQueryParam(url, 'period', req);
+    const snapshot = await this.service.getSnapshot(period, actor);
     sendSuccess(res, 200, snapshot);
   };
 
@@ -40,8 +43,13 @@ export class PayrollStateController {
   public createPeriod = async (
     req: IncomingMessage,
     res: ServerResponse,
+    _url: URL,
+    _params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management));
     const raw = await readJsonBody(req);
     const dto = PayloadReader.parse<CreatePeriodDto>(raw, (r) => ({
       code: r.requiredString('code', { maxLength: 16 }),
@@ -55,14 +63,22 @@ export class PayrollStateController {
   public resetState = async (
     req: IncomingMessage,
     res: ServerResponse,
+    _url: URL,
+    _params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    if (ENV_CONFIG.nodeEnv === 'production') {
+    if (
+      ENV_CONFIG.nodeEnv === 'production' ||
+      process.env.ALLOW_DESTRUCTIVE_STATE_RESET !== 'true'
+    ) {
       throw new ForbiddenError(
-        'El reinicio completo de la base de datos está deshabilitado en producción.',
+        'El reinicio destructivo de la base de datos está deshabilitado por seguridad.',
       );
     }
-    await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management);
-    const snapshot = await this.service.resetToSeed();
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management));
+    const snapshot = await this.service.resetToSeed(actor);
     sendSuccess(res, 200, snapshot);
   };
 }

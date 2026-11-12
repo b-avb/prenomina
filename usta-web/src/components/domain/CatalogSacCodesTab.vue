@@ -46,42 +46,51 @@ const filteredCodes = computed(() =>
         <button
           v-for="fn in filterOptions"
           :key="fn"
+          type="button"
           class="dia-chip"
           style="height: 28px; font-size: 11.5px"
           :class="{ active: functionFilter === fn }"
           @click="functionFilter = fn"
         >
-          {{ fn }}
+          {{ fn === 'TODAS' ? 'Todas' : fn }}
         </button>
       </div>
       <input
         v-model="codeSearchQuery"
         type="text"
+        class="control-sm"
         placeholder="Buscar por código (ej. 40106) o actividad…"
-        style="padding: 6px 11px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 12px; min-width: 250px"
+        style="min-width: 250px"
       />
     </div>
 
     <table class="compact-table">
       <thead>
         <tr>
-          <th>Código</th>
-          <th>Función Sustantiva</th>
-          <th>Actividad y Lineamiento (ANEXO 4)</th>
-          <th>Base (Mín)</th>
-          <th>Tope (Máx)</th>
-          <th>Pre-Aval V.A.</th>
-          <th>Severidad del Tope</th>
-          <th style="text-align: right">Detalle</th>
+          <th class="col-center">Código</th>
+          <th class="col-center">Función sustantiva</th>
+          <th>Actividad y lineamiento (Anexo 4)</th>
+          <th class="col-center">Base</th>
+          <th class="col-center">Tope</th>
+          <th class="col-center">Aval V.A.</th>
+          <th class="col-center">Control del tope</th>
+          <th class="col-right">Acciones</th>
         </tr>
       </thead>
       <tbody>
+        <tr v-if="filteredCodes.length === 0">
+          <td colspan="8" class="empty-note" style="padding: 24px 16px; text-align: center">
+            Sin códigos SAC para el filtro seleccionado.
+          </td>
+        </tr>
         <tr v-for="codeItem in filteredCodes" :key="codeItem.code">
-          <td data-label="Código">
+          <td data-label="Código" class="col-center">
             <span class="code-chip">{{ codeItem.code }}</span>
           </td>
-          <td data-label="Función">
-            <span class="badge inscrito">{{ codeItem.substantiveFunction }}</span>
+          <td data-label="Función" class="col-center">
+            <span class="badge inscrito" style="white-space: nowrap">
+              {{ codeItem.substantiveFunction }}
+            </span>
           </td>
           <td data-label="Actividad">
             <b style="color: var(--navy); font-size: 12px">
@@ -111,7 +120,7 @@ const filteredCodes = computed(() =>
                 class="badge observado"
                 style="font-size: 10px"
               >
-                ANEXO 7 · Investigación
+                Anexo 7 · Investigación
               </span>
               <span
                 v-if="codeItem.hoursPerUnitFactor"
@@ -126,7 +135,7 @@ const filteredCodes = computed(() =>
                 class="badge aprobado"
                 style="font-size: 10px"
               >
-                🎯 {{ rf.unitName }}: {{ rf.minTeacherHours ?? 0 }}–{{
+                {{ rf.unitName }}: {{ rf.minTeacherHours ?? 0 }}–{{
                   rf.maxTeacherHours ?? '∞'
                 }}h
                 <template v-if="rf.facultyBagCap">
@@ -135,7 +144,7 @@ const filteredCodes = computed(() =>
               </span>
             </div>
           </td>
-          <td data-label="Base (Mín)">
+          <td data-label="Base" class="col-center">
             <span
               v-if="codeItem.code === '40108'"
               style="font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint)"
@@ -150,7 +159,8 @@ const filteredCodes = computed(() =>
               max="240"
               placeholder="—"
               title="Horas mínimas base (dejar vacío si no aplica mínimo fijo)"
-              style="width: 62px; padding: 4px 6px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 12px"
+              class="table-input table-input--num"
+              style="width: 54px"
               @change="
                 store.updateSacCode(codeItem.code, {
                   baseHours: eventNullableNumber($event),
@@ -158,7 +168,7 @@ const filteredCodes = computed(() =>
               "
             />
           </td>
-          <td data-label="Tope (Máx)">
+          <td data-label="Tope" class="col-center">
             <span
               v-if="codeItem.code === '40108'"
               style="font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint)"
@@ -173,7 +183,8 @@ const filteredCodes = computed(() =>
               max="240"
               placeholder="Aval"
               title="Tope máximo mensual (dejar vacío cuando el tope dependa del aval o resolución)"
-              style="width: 62px; padding: 4px 6px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 12px"
+              class="table-input table-input--num"
+              style="width: 54px"
               @change="
                 store.updateSacCode(codeItem.code, {
                   capHours: eventNullableNumber($event),
@@ -182,12 +193,12 @@ const filteredCodes = computed(() =>
             />
             <div
               v-if="codeItem.postgraduateCapHours"
-              style="font-size: 10px; color: var(--blue); font-weight: 700"
+              style="font-size: 10px; color: var(--blue); font-weight: 700; margin-top: 2px"
             >
               Posgrado: {{ codeItem.postgraduateCapHours }}h
             </div>
           </td>
-          <td data-label="Pre-Aval V.A.">
+          <td data-label="Aval V.A." class="col-center">
             <label class="toggle">
               <input
                 :checked="codeItem.requiresViceRectorApproval"
@@ -199,15 +210,15 @@ const filteredCodes = computed(() =>
                 "
               />
               <span class="toggle__track"></span>
-              <span style="font-size: 11px; font-weight: 700">
-                {{ codeItem.requiresViceRectorApproval ? 'ANEXO 3' : 'No' }}
+              <span style="font-size: 11px; font-weight: 700; white-space: nowrap">
+                {{ codeItem.requiresViceRectorApproval ? 'Anexo 3' : 'No' }}
               </span>
             </label>
           </td>
-          <td data-label="Severidad">
+          <td data-label="Control del tope" class="col-center">
             <select
               :value="codeItem.severity"
-              style="padding: 4px 7px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 11px; font-weight: 600"
+              class="table-select"
               @change="
                 store.updateSacCode(codeItem.code, {
                   severity: eventValue($event) as RuleSeverity,
@@ -219,8 +230,8 @@ const filteredCodes = computed(() =>
               <option value="informative">Informativa</option>
             </select>
           </td>
-          <td data-label="Detalle" style="text-align: right">
-            <button class="btn ghost small" @click="emit('editCode', codeItem)">
+          <td data-label="Acciones" class="col-right">
+            <button type="button" class="btn ghost small" @click="emit('editCode', codeItem)">
               Editar
             </button>
           </td>

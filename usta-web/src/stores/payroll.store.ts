@@ -45,6 +45,7 @@ export const usePayrollStore = defineStore('payroll', () => {
     isAuthenticated,
     mustChangePassword,
     activeRole,
+    managedUnitIds,
     activeUnitId,
     versionComparisonMode,
   } = storeToRefs(authStore);
@@ -85,7 +86,7 @@ export const usePayrollStore = defineStore('payroll', () => {
   }
 
   function rejectMissingUnit<T>(): Promise<MutationResult<T>> {
-    return reject('NOT_FOUND', 'La unidad académica ya no existe en el periodo activo');
+    return reject('NOT_FOUND', 'La unidad académica no se encontró en el periodo activo');
   }
 
   function addAcademicUnit(
@@ -94,7 +95,7 @@ export const usePayrollStore = defineStore('payroll', () => {
     return runPessimistic({
       request: () => unitsApi.create(payload),
       commit: commitUnitWithDirector,
-      successMessage: ({ unit }) => `Unidad académica "${unit.name}" registrada en el sistema`,
+      successMessage: ({ unit }) => `Unidad "${unit.name}" creada`,
     });
   }
 
@@ -112,7 +113,7 @@ export const usePayrollStore = defineStore('payroll', () => {
       commit: commitUnitWithDirector,
       rollback: orgStore.upsertUnit,
       successMessage: ({ unit: saved }) =>
-        `Decano(a) / Director(a) de ${saved.name} actualizado a "${saved.deanName}"`,
+        `Responsable de ${saved.name}: ${saved.deanName}`,
     });
   }
 
@@ -125,19 +126,25 @@ export const usePayrollStore = defineStore('payroll', () => {
     if (!unit) return rejectMissingUnit();
 
     // UX pre-check only: the server enforces the same rule and its message wins on 422.
-    if (
-      nextStatus === 'Enviada' &&
-      activeRole.value === 'dean' &&
-      rulesConfig.value.blockSubmissionWithBlockingAlerts
-    ) {
-      const blocking = workloadStore
-        .getUnitAlerts(unitId)
-        .filter((a) => a.severity === 'blocking');
-      if (blocking.length > 0) {
+    if (nextStatus === 'Enviada' && activeRole.value === 'dean') {
+      if (workloadStore.countUnitTeachers(unitId) > 0 && workloadStore.isUnitUnstarted(unitId)) {
         return reject(
           'BUSINESS_RULE_VIOLATION',
-          `No se puede enviar: hay ${blocking.length} bloqueo(s) normativo(s) en ${unit.name} (${blocking[0].title})`,
+          `No se puede enviar la prenómina de ${unit.name}: aún no tiene horas registradas`,
         );
+      }
+      if (rulesConfig.value.blockSubmissionWithBlockingAlerts) {
+        const blocking = workloadStore
+          .getUnitAlerts(unitId, { enforceSubmissionReadiness: true })
+          .filter((a) => a.severity === 'blocking');
+        if (blocking.length > 0) {
+          return reject(
+            'BUSINESS_RULE_VIOLATION',
+            blocking.length === 1
+              ? `No se puede enviar: hay 1 alerta bloqueante en ${unit.name} (${blocking[0].title})`
+              : `No se puede enviar: hay ${blocking.length} alertas bloqueantes en ${unit.name} (${blocking[0].title})`,
+          );
+        }
       }
     }
 
@@ -157,7 +164,7 @@ export const usePayrollStore = defineStore('payroll', () => {
         workloadStore.replaceUnitTeachers(saved.id, unitTeachers);
       },
       rollback: orgStore.upsertUnit,
-      successMessage: ({ unit: saved }) => `Prenómina de ${saved.name} marcada como "${nextStatus}"`,
+      successMessage: ({ unit: saved }) => `Estado de ${saved.name}: ${nextStatus}`,
     });
   }
 
@@ -178,7 +185,7 @@ export const usePayrollStore = defineStore('payroll', () => {
       teacherId,
       suggestion.code,
       suggestion.proposedHours,
-      `Cuadre asistido de carga horaria: ${suggestion.explanation}`,
+      `Ajuste sugerido: ${suggestion.explanation}`,
     );
   }
 
@@ -200,6 +207,7 @@ export const usePayrollStore = defineStore('payroll', () => {
     isAuthenticated,
     mustChangePassword,
     activeRole,
+    managedUnitIds,
     activeUnitId,
     versionComparisonMode,
     backendConnected,
@@ -225,7 +233,6 @@ export const usePayrollStore = defineStore('payroll', () => {
     fetchUsersDirectory: authStore.fetchUsersDirectory,
     createUserAccount: authStore.createUserAccount,
     resetUserPassword: authStore.resetUserPassword,
-    selectRole: authStore.setRole,
     selectUnit: authStore.setActiveUnit,
     setVersionComparisonMode: authStore.setVersionComparisonMode,
 
@@ -248,6 +255,8 @@ export const usePayrollStore = defineStore('payroll', () => {
     countPendingApprovals: approvalStore.countPendingApprovals,
     countActiveUnitAlerts: workloadStore.countActiveUnitAlerts,
     getUnitBagIndicators: workloadStore.getUnitBagIndicators,
+    isTeacherUnstarted: workloadStore.isTeacherUnstarted,
+    isUnitUnstarted: workloadStore.isUnitUnstarted,
     getUnitAlerts: workloadStore.getUnitAlerts,
     validateTeacher: workloadStore.validateTeacher,
     suggestTeacherHourBalance: workloadStore.suggestTeacherHourBalance,
@@ -305,6 +314,8 @@ export const usePayrollStore = defineStore('payroll', () => {
     removeProgram: orgStore.removeProgram,
 
     // Approvals & Research Mutations
+    uploadApprovalAttachment: approvalStore.uploadApprovalAttachment,
+    openApprovalAttachment: approvalStore.openApprovalAttachment,
     registerApprovalRequest: approvalStore.registerApprovalRequest,
     decideApprovalRequest: approvalStore.decideApprovalRequest,
     registerResearchAllocation: researchStore.registerResearchAllocation,

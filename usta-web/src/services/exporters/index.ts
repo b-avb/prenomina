@@ -9,11 +9,14 @@ export {
   CatalogExcelService,
   exportSectionalConsolidatedXlsx,
   exportCatalogAnnexes456Xlsx,
-  importCatalogAnnex4FromXlsx,
+  importCatalogAnnexes456FromXlsx,
   exportResearchMatrixAnnex7Xlsx,
   importResearchMatrixAnnex7FromXlsx,
   type ExportSectionalConsolidatedParams,
   type ExportCatalogAnnexes456Params,
+  type ImportedAnnex5ProgramRow,
+  type ImportedAnnex6UnitQuotaRow,
+  type ImportedCatalogAnnexes456Result,
 } from './catalog-excel.service';
 
 export {

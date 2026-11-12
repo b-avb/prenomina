@@ -62,8 +62,19 @@ export const useAuthStore = defineStore('auth', () => {
   const pendingTemporaryPassword = ref<string>('');
   const authConfig = ref<AuthConfigResponse | null>(null);
 
-  const activeRole = ref<PayrollRole>(initialUser?.role ?? 'director');
-  const activeUnitId = ref<string>(initialUser?.unitId || '');
+  const activeRole = computed<PayrollRole>(() => currentUser.value?.role ?? 'dean');
+  const managedUnitIds = computed<string[]>(() => {
+    const u = currentUser.value;
+    if (!u) return [];
+    if (u.managedUnitIds && u.managedUnitIds.length > 0) {
+      return [...u.managedUnitIds];
+    }
+    return u.unitId ? [u.unitId] : [];
+  });
+
+  const activeUnitId = ref<string>(
+    initialUser?.managedUnitIds?.[0] || initialUser?.unitId || '',
+  );
   const versionComparisonMode = ref(false);
 
   const isAuthenticated = computed(() => Boolean(token.value && currentUser.value));
@@ -96,12 +107,29 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function applyAuthenticatedUser(session: AuthSessionResponse): void {
-    persistSession(session.token, session.user);
-    activeRole.value = session.user.role;
-    if (session.user.unitId) {
-      activeUnitId.value = session.user.unitId;
+  function syncActiveUnitForUser(user: AuthUser): void {
+    if (user.role === 'dean') {
+      const allowed =
+        user.managedUnitIds && user.managedUnitIds.length > 0
+          ? user.managedUnitIds
+          : user.unitId
+            ? [user.unitId]
+            : [];
+      if (!allowed.includes(activeUnitId.value)) {
+        activeUnitId.value = allowed[0] || '';
+      }
+    } else if (user.unitId && !activeUnitId.value) {
+      activeUnitId.value = user.unitId;
     }
+  }
+
+  function applyAuthenticatedUser(session: AuthSessionResponse): void {
+    const previousUserId = currentUser.value?.id;
+    if (previousUserId && previousUserId !== session.user.id) {
+      useStateSyncStore().reset();
+    }
+    persistSession(session.token, session.user);
+    syncActiveUnitForUser(session.user);
     upsertUserInDirectory(session.user);
     if (!session.user.mustChangePassword) {
       void useStateSyncStore().initialize();
@@ -214,14 +242,9 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const freshUser = await authApi.me();
       persistSession(token.value, freshUser);
-      if (freshUser.role !== 'director') {
-        activeRole.value = freshUser.role;
-      }
-      if (freshUser.unitId && freshUser.role === 'dean') {
-        activeUnitId.value = freshUser.unitId;
-      }
+      syncActiveUnitForUser(freshUser);
       if (!freshUser.mustChangePassword) {
-        void useStateSyncStore().initialize();
+        await useStateSyncStore().initialize();
         if (freshUser.role === 'director' || freshUser.role === 'vice_rector') {
           void fetchUsersDirectory();
         }
@@ -234,22 +257,19 @@ export const useAuthStore = defineStore('auth', () => {
   function logout(): void {
     pendingTemporaryPassword.value = '';
     usersDirectory.value = [];
+    activeUnitId.value = '';
+    versionComparisonMode.value = false;
+    useStateSyncStore().reset();
     persistSession(null, null);
-    useStateSyncStore().clearCache();
-  }
-
-  function setRole(role: PayrollRole): void {
-    if (currentUser.value && currentUser.value.role !== 'director') {
-      activeRole.value = currentUser.value.role;
-      return;
-    }
-    activeRole.value = role;
   }
 
   function setActiveUnit(unitId: string): void {
-    if (currentUser.value?.role === 'dean' && currentUser.value.unitId) {
-      activeUnitId.value = currentUser.value.unitId;
-      return;
+    if (currentUser.value?.role === 'dean') {
+      const allowed = managedUnitIds.value;
+      if (allowed.length > 0 && !allowed.includes(unitId)) {
+        activeUnitId.value = allowed[0]!;
+        return;
+      }
     }
     activeUnitId.value = unitId;
   }
@@ -270,6 +290,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     mustChangePassword,
     activeRole,
+    managedUnitIds,
     activeUnitId,
     versionComparisonMode,
     fetchAuthConfig,
@@ -284,7 +305,6 @@ export const useAuthStore = defineStore('auth', () => {
     resetUserPassword,
     refreshSession,
     logout,
-    setRole,
     setActiveUnit,
     setVersionComparisonMode,
   };

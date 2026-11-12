@@ -32,6 +32,10 @@ const resetGlobalStatuses = ref(true);
 
 const isChangePasswordModalOpen = ref(false);
 
+const canManageInstitutionalPeriods = computed(
+  () => store.activeRole === 'director' || store.activeRole === 'vice_rector',
+);
+
 function openNewPeriodModal(): void {
   newPeriodCodeInput.value = suggestNextPeriodCode(store.activePeriod);
   isNewPeriodModalOpen.value = true;
@@ -39,7 +43,7 @@ function openNewPeriodModal(): void {
 
 async function handleSaveNewGlobalPeriod(): Promise<void> {
   if (!newPeriodCodeInput.value.trim()) {
-    store.showToast('Debes ingresar el código del nuevo periodo (ej. 2027-1)', 'error');
+    store.showToast('Indique el código del nuevo periodo (p. ej., 2027-1)', 'error');
     return;
   }
   const result = await store.createPeriod(
@@ -51,16 +55,11 @@ async function handleSaveNewGlobalPeriod(): Promise<void> {
 
 async function handleLogout(): Promise<void> {
   store.logout();
-  store.showToast('Has cerrado sesión correctamente', 'info');
+  store.showToast('Sesión finalizada', 'info');
   await router.push('/login');
 }
 
-const isFullscreenAuthRoute = computed(
-  () =>
-    route.path === '/login' ||
-    route.path === '/role-selection' ||
-    route.path === '/seleccionar-vista',
-);
+const isFullscreenAuthRoute = computed(() => route.path === '/login');
 
 const pendingApprovalsCount = computed(
   () => store.approvalRequests.filter((r) => r.status === 'Pendiente').length,
@@ -70,36 +69,36 @@ const navItems = computed<NavItem[]>(() => {
   const allItems: NavItem[] = [
     {
       to: '/director/dashboard',
-      shortLabel: 'Tablero E&A',
-      label: 'Tablero y Bandeja de Revisión E&A',
+      shortLabel: 'Inicio',
+      label: 'Seguimiento seccional',
       icon: 'dashboard',
       roles: ['director', 'vice_rector'],
     },
     {
       to: '/dean/payroll',
       shortLabel: 'Prenómina',
-      label: 'Prenómina por Docente y Sábana (ANEXO 2)',
+      label: 'Prenómina docente',
       icon: 'prenomina',
-      roles: ['director', 'dean', 'research'],
+      roles: ['director', 'vice_rector', 'dean', 'research'],
     },
     {
       to: '/director/organization',
-      shortLabel: 'Decanos y Prog.',
-      label: 'Gestión de Decanos, Facultades y Programas Académicos',
+      shortLabel: 'Unidades',
+      label: 'Unidades y programas',
       icon: 'facultades',
-      roles: ['director'],
+      roles: ['director', 'vice_rector'],
     },
     {
       to: '/director/catalog',
       shortLabel: 'Catálogo SAC',
-      label: 'Catálogo y Topes (ANEXOS 4, 5 y 6)',
+      label: 'Catálogo SAC y cupos',
       icon: 'codigos',
-      roles: ['director'],
+      roles: ['director', 'vice_rector'],
     },
     {
       to: '/vice-rector/approvals',
-      shortLabel: 'Pre-Avales',
-      label: 'Pre-Avales Vicerrectoría (ANEXO 3)',
+      shortLabel: 'Avales',
+      label: 'Solicitudes de aval',
       icon: 'avales',
       badge: pendingApprovalsCount.value > 0 ? pendingApprovalsCount.value : undefined,
       roles: ['director', 'vice_rector', 'dean'],
@@ -107,9 +106,9 @@ const navItems = computed<NavItem[]>(() => {
     {
       to: '/research/allocations',
       shortLabel: 'Investigación',
-      label: 'Investigación Confidencial (ANEXO 7)',
+      label: 'Asignación de investigación',
       icon: 'investigacion',
-      roles: ['director', 'research'],
+      roles: ['director', 'vice_rector', 'research'],
     },
   ];
   return allItems.filter((item) => item.roles.includes(store.activeRole));
@@ -124,13 +123,13 @@ const navItems = computed<NavItem[]>(() => {
       <div class="app-header__brand">
         <img :src="logoUrl" class="brand-mark" alt="USTA" />
         <div class="brand-word">
-          <b>Gestión Docente · Prenómina</b>
-          <span>Santo Tomás · Tunja</span>
+          <b>Prenómina docente</b>
+          <span>Universidad Santo Tomás · Tunja</span>
         </div>
         <div
           class="period-pill"
           style="margin-left: 6px; padding: 3px 6px 3px 10px; gap: 6px"
-          title="Cambiar periodo académico activo o crear nuevo semestre"
+          title="Periodo académico activo"
         >
           <span class="period-pill__dot"></span>
           <select
@@ -149,9 +148,9 @@ const navItems = computed<NavItem[]>(() => {
             </option>
           </select>
           <button
-            v-if="store.currentUser?.role === 'director'"
+            v-if="canManageInstitutionalPeriods"
             type="button"
-            title="Crear / Clonar nuevo periodo semestral (ej. 2027-1)"
+            title="Abrir nuevo periodo académico"
             style="background: rgba(255, 255, 255, 0.18); border: none; color: var(--gold); border-radius: 999px; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; line-height: 1; cursor: pointer"
             @click="openNewPeriodModal"
           >
@@ -170,22 +169,17 @@ const navItems = computed<NavItem[]>(() => {
         </div>
 
         <button
-          v-if="store.currentUser?.role === 'director'"
-          class="btn accent small"
-          @click="router.push('/role-selection')"
-        >
-          Cambiar vista
-        </button>
-
-        <button
+          type="button"
           class="btn ghost small"
-          title="Actualizar mi contraseña personal"
+          title="Cambiar contraseña"
           @click="isChangePasswordModalOpen = true"
         >
-          Mi contraseña
+          Cambiar contraseña
         </button>
 
-        <button class="btn ghost small" @click="handleLogout">Cerrar sesión</button>
+        <button type="button" class="btn ghost small" @click="handleLogout">
+          Cerrar sesión
+        </button>
       </div>
     </header>
 
@@ -216,16 +210,16 @@ const navItems = computed<NavItem[]>(() => {
 
     <UstaModal
       :open="isNewPeriodModalOpen"
-      title="Crear / Clonar Nuevo Periodo Semestral"
-      subtitle="Abre un nuevo semestre (por ejemplo <b>2027-1</b> o <b>2027-2</b>) clonando automáticamente el catálogo vigente de códigos SAC, las reglas de validación y las bolsas de horas de las unidades académicas."
+      title="Abrir nuevo periodo"
+      subtitle="Se conservarán el catálogo SAC, los criterios de validación y los cupos de horas vigentes."
       @close="isNewPeriodModalOpen = false"
     >
       <div class="field">
-        <label>Código del Nuevo Periodo Semestral</label>
+        <label>Código del periodo</label>
         <input
           v-model="newPeriodCodeInput"
           type="text"
-          placeholder="Ej: 2027-1 o 2027-2"
+          placeholder="Ej. 2027-1"
           @keyup.enter="handleSaveNewGlobalPeriod"
         />
       </div>
@@ -236,13 +230,15 @@ const navItems = computed<NavItem[]>(() => {
         <input v-model="resetGlobalStatuses" type="checkbox" />
         <span class="toggle__track"></span>
         <span style="font-size: 12.5px; font-weight: 700; color: var(--navy)">
-          Reiniciar estados de radicación de las unidades académicas a "Borrador (v1)"
+          Iniciar todas las unidades en estado Borrador
         </span>
       </label>
       <template #footer>
-        <button class="btn ghost" @click="isNewPeriodModalOpen = false">Cancelar</button>
-        <button class="btn primary" @click="handleSaveNewGlobalPeriod">
-          Clonar y Activar Periodo
+        <button type="button" class="btn ghost" @click="isNewPeriodModalOpen = false">
+          Cancelar
+        </button>
+        <button type="button" class="btn primary" @click="handleSaveNewGlobalPeriod">
+          Abrir periodo
         </button>
       </template>
     </UstaModal>

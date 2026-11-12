@@ -1,14 +1,17 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type {
+  ActorContext,
   ApprovalStatus,
   CreateApprovalRequestDto,
   DecideApprovalDto,
+  UploadApprovalAttachmentDto,
 } from '@usta/domain';
 import { ROLE_PERMISSIONS, type ActorResolver } from '../auth/actor-resolver.js';
 import type { ApprovalsService } from '../services/approvals.service.js';
 import {
   type RouteParams,
   readJsonBody,
+  sendBinary,
   sendSuccess,
 } from '../utils/http.utils.js';
 import {
@@ -29,23 +32,63 @@ export class ApprovalsController {
     req: IncomingMessage,
     res: ServerResponse,
     url: URL,
+    _params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
+    const actor = resolvedActor ?? (await this.actorResolver.resolve(req));
     const period = optionalQueryParam(url, 'period', req);
     const unitId = optionalQueryParam(url, 'unitId');
     const rawStatus = optionalQueryParam(url, 'status');
     const status: ApprovalStatus | undefined = isOneOf(rawStatus, APPROVAL_STATUSES)
       ? rawStatus
       : undefined;
-    const items = await this.service.list(period, unitId, status);
+    const items = await this.service.list(period, unitId, status, actor);
     sendSuccess(res, 200, items);
+  };
+
+  public uploadAttachment = async (
+    req: IncomingMessage,
+    res: ServerResponse,
+    _url: URL,
+    _params: RouteParams,
+    resolvedActor?: ActorContext,
+  ): Promise<void> => {
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.workload));
+    const raw = await readJsonBody(req);
+    const dto = PayloadReader.parse<UploadApprovalAttachmentDto>(raw, (r) => ({
+      fileName: r.requiredString('fileName', { maxLength: 200 }),
+      mimeType: r.optionalString('mimeType', { maxLength: 120 }) ?? '',
+      contentBase64: r.requiredString('contentBase64', { maxLength: 15_000_000 }),
+    }));
+    const uploaded = await this.service.uploadAttachment(actor, dto);
+    sendSuccess(res, 201, uploaded);
+  };
+
+  public getAttachment = async (
+    req: IncomingMessage,
+    res: ServerResponse,
+    _url: URL,
+    params: RouteParams,
+    resolvedActor?: ActorContext,
+  ): Promise<void> => {
+    const actor = resolvedActor ?? (await this.actorResolver.resolve(req));
+    const fileName = requirePathParam(params, 'fileName', { maxLength: 160 });
+    const file = await this.service.readAttachment(fileName, actor);
+    sendBinary(res, 200, file.buffer, file.mimeType, file.fileName);
   };
 
   public create = async (
     req: IncomingMessage,
     res: ServerResponse,
     url: URL,
+    _params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.workload);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.workload));
     const period = optionalQueryParam(url, 'period', req);
     const raw = await readJsonBody(req);
     const dto = PayloadReader.parse<CreateApprovalRequestDto>(raw, (r) => ({
@@ -79,8 +122,11 @@ export class ApprovalsController {
     res: ServerResponse,
     _url: URL,
     params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.approvalDecision);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.approvalDecision));
     const id = requirePathParam(params, 'id', { maxLength: 64 });
     const raw = await readJsonBody(req);
     const dto = PayloadReader.parse<DecideApprovalDto>(raw, (r) => ({

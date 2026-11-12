@@ -12,11 +12,13 @@ import {
   type FacultyTeacher,
   type HourBalanceSuggestion,
   type ImportedTeacherDto,
+  type ProgramQuotaAnnex5,
   type SacCode,
   type UpdateAcademicSpaceDto,
   type UpdateTeacherDto,
   type ValidationAlert,
   type ValidationContext,
+  type ValidationOptions,
 } from '@usta/domain';
 import {
   useMutation,
@@ -32,6 +34,10 @@ import { findIndexById, restoreAt, upsertById } from './utils/collection.utils';
 
 export type TeacherProfilePayload = CreateTeacherPayload & { expectedWorkload: number };
 export type AcademicSpacePatch = Partial<Pick<AssignedAcademicSpace, 'name' | 'level' | 'monthlyHours'>>;
+export interface AllocationProgramRef {
+  programId?: string | null;
+  programName?: string | null;
+}
 
 /** Postgraduate spaces are persisted by module hours (4 weeks per month). */
 function toPersistedSpaceHours(level: AssignedAcademicSpace['level'], monthlyHours: number): number {
@@ -127,11 +133,16 @@ export const useWorkloadStore = defineStore('workload', () => {
     );
   }
 
-  function getEffectiveCodeCap(definition: SacCode, unit?: AcademicUnitSummary): number | null {
+  function getEffectiveCodeCap(
+    definition: SacCode,
+    unit?: AcademicUnitSummary,
+    program?: ProgramQuotaAnnex5 | null,
+  ): number | null {
     return ValidationEngineDomain.resolveEffectiveCodeCap(
       definition,
       unit ?? orgStore.activeUnit,
       catalogStore.rulesConfig,
+      program,
     );
   }
 
@@ -176,6 +187,7 @@ export const useWorkloadStore = defineStore('workload', () => {
       sacCodes: catalogStore.sacCodes,
       approvalRequests: approvalStore.approvalRequests,
       rulesConfig: catalogStore.rulesConfig,
+      programQuotas: orgStore.programQuotas,
     };
   }
 
@@ -197,19 +209,33 @@ export const useWorkloadStore = defineStore('workload', () => {
     return map;
   });
 
-  function validateTeacher(teacher: FacultyTeacher): ValidationAlert[] {
-    const cached = alertsByTeacherId.value.get(teacher.id);
-    if (cached !== undefined && findTeacher(teacher.id) === teacher) {
-      return cached;
-    }
-    return ValidationEngineDomain.validateTeacher(teacher, validationContext());
+  function isTeacherUnstarted(teacher: FacultyTeacher): boolean {
+    return WorkloadCalculatorDomain.isTeacherUnstarted(teacher);
   }
 
-  function getUnitAlerts(unitId: string): ValidationAlert[] {
-    return (
-      unitAlertsByUnitId.value.get(unitId) ??
-      ValidationEngineDomain.getUnitAlerts(unitId, validationContext())
-    );
+  function isUnitUnstarted(unitId: string): boolean {
+    return WorkloadCalculatorDomain.isUnitUnstarted(teachers.value, unitId);
+  }
+
+  function validateTeacher(
+    teacher: FacultyTeacher,
+    options?: ValidationOptions,
+  ): ValidationAlert[] {
+    if (!options) {
+      const cached = alertsByTeacherId.value.get(teacher.id);
+      if (cached !== undefined && findTeacher(teacher.id) === teacher) {
+        return cached;
+      }
+    }
+    return ValidationEngineDomain.validateTeacher(teacher, validationContext(), options);
+  }
+
+  function getUnitAlerts(unitId: string, options?: ValidationOptions): ValidationAlert[] {
+    if (!options) {
+      const cached = unitAlertsByUnitId.value.get(unitId);
+      if (cached !== undefined) return cached;
+    }
+    return ValidationEngineDomain.getUnitAlerts(unitId, validationContext(), options);
   }
 
   function countActiveUnitAlerts(unitId: string): number {
@@ -238,7 +264,7 @@ export const useWorkloadStore = defineStore('workload', () => {
   // ─── Mutations (server is authoritative) ──────────────────────────────────
 
   function rejectMissingTeacher<T>(): Promise<MutationResult<T>> {
-    return reject('NOT_FOUND', 'El docente ya no existe en la prenómina del periodo activo');
+    return reject('NOT_FOUND', 'El docente no se encontró en el periodo activo');
   }
 
   /** Optimistic edit of a single teacher reconciled with the teacher returned by the server. */
@@ -271,7 +297,7 @@ export const useWorkloadStore = defineStore('workload', () => {
       request: () =>
         teachersApi.addSpace({ teacherId, name: name.toUpperCase(), level, hours }),
       commit: upsertTeacher,
-      successMessage: (saved) => `Espacio "${name}" agregado a ${saved.fullName}`,
+      successMessage: (saved) => `Espacio "${name}" asignado a ${saved.fullName}`,
     });
   }
 
@@ -282,6 +308,7 @@ export const useWorkloadStore = defineStore('workload', () => {
   ): Promise<MutationResult<FacultyTeacher>> {
     const space = findTeacher(teacherId)?.academicSpaces.find((item) => item.id === spaceId);
     if (!space) return reject('NOT_FOUND', 'El espacio académico ya no existe');
+    const previousLevel = space.level;
     const level = patch.level ?? space.level;
     const monthlyHours = patch.monthlyHours ?? space.monthlyHours;
     const dto: UpdateAcademicSpaceDto = {
@@ -298,7 +325,9 @@ export const useWorkloadStore = defineStore('workload', () => {
       teacherId,
       (teacher) => {
         Object.assign(space, patch);
-        WorkloadBalancerDomain.syncPostgraduateAllocations(teacher);
+        WorkloadBalancerDomain.syncPostgraduateAllocations(teacher, {
+          clearWhenNoPostgradSpaces: previousLevel === 'Posgrado' && level !== 'Posgrado',
+        });
       },
       () => teachersApi.updateSpace(dto),
     );
@@ -308,11 +337,15 @@ export const useWorkloadStore = defineStore('workload', () => {
     teacherId: string,
     spaceId: string,
   ): Promise<MutationResult<FacultyTeacher>> {
+    const removedWasPostgrad =
+      findTeacher(teacherId)?.academicSpaces.find((s) => s.id === spaceId)?.level === 'Posgrado';
     return mutateTeacher(
       teacherId,
       (teacher) => {
         teacher.academicSpaces = teacher.academicSpaces.filter((s) => s.id !== spaceId);
-        WorkloadBalancerDomain.syncPostgraduateAllocations(teacher);
+        WorkloadBalancerDomain.syncPostgraduateAllocations(teacher, {
+          clearWhenNoPostgradSpaces: removedWasPostgrad,
+        });
       },
       () => teachersApi.removeSpace(teacherId, spaceId),
       'Espacio académico eliminado',
@@ -326,7 +359,7 @@ export const useWorkloadStore = defineStore('workload', () => {
         teacher.pseManualOverride = null;
       },
       () => teachersApi.update({ id: teacherId, pseManualOverride: null }),
-      (saved) => `PSE ajustado automáticamente (${computeExactPse25(saved)} h)`,
+      (saved) => `PSE recalculado (${computeExactPse25(saved)} h)`,
     );
   }
 
@@ -336,6 +369,7 @@ export const useWorkloadStore = defineStore('workload', () => {
     hours: number,
     justification?: string,
     directorNote?: string,
+    programInfo?: AllocationProgramRef,
   ): Promise<MutationResult<FacultyTeacher>> {
     return mutateTeacher(
       teacherId,
@@ -345,10 +379,20 @@ export const useWorkloadStore = defineStore('workload', () => {
           delete teacher.allocations[code];
           return;
         }
+        const resolvedProgramId =
+          programInfo !== undefined
+            ? programInfo.programId || undefined
+            : existing?.programId;
+        const resolvedProgramName =
+          programInfo !== undefined
+            ? programInfo.programName || undefined
+            : existing?.programName;
         teacher.allocations[code] = {
           ...existing,
           code,
           hours,
+          programId: resolvedProgramId,
+          programName: resolvedProgramName,
           exceptionJustification: justification ?? existing?.exceptionJustification,
           directorNote: directorNote ?? existing?.directorNote,
           adjustedByDirector:
@@ -362,6 +406,12 @@ export const useWorkloadStore = defineStore('workload', () => {
           hours,
           exceptionJustification: justification,
           directorNote,
+          ...(programInfo !== undefined
+            ? {
+                programId: programInfo.programId ?? null,
+                programName: programInfo.programName ?? null,
+              }
+            : {}),
         }),
     );
   }
@@ -374,7 +424,7 @@ export const useWorkloadStore = defineStore('workload', () => {
       request: () => teachersApi.create(orgStore.activePeriod, { ...payload, unitId }),
       commit: (created) => teachers.value.push(created),
       successMessage: (created) =>
-        `Docente "${created.fullName}" registrado en ${orgStore.findUnit(unitId)?.name ?? unitId}`,
+        `Docente ${created.fullName} vinculado a ${orgStore.findUnit(unitId)?.name ?? unitId}`,
     });
   }
 
@@ -387,7 +437,7 @@ export const useWorkloadStore = defineStore('workload', () => {
       teacherId,
       (teacher) => Object.assign(teacher, dto),
       () => teachersApi.update(dto),
-      (saved) => `Ficha de ${saved.fullName} actualizada`,
+      (saved) => `Perfil de ${saved.fullName} actualizado`,
     );
   }
 
@@ -400,7 +450,7 @@ export const useWorkloadStore = defineStore('workload', () => {
       apply: () => teachers.value.splice(index, 1),
       request: () => teachersApi.remove(teacherId),
       rollback: (previous) => restoreAt(teachers.value, index, previous),
-      successMessage: `Docente ${teacher.fullName} retirado de la prenómina`,
+      successMessage: `Docente ${teacher.fullName} retirado de la unidad`,
       successType: 'info',
     });
   }
@@ -419,7 +469,9 @@ export const useWorkloadStore = defineStore('workload', () => {
         }),
       commit: (roster) => replaceUnitTeachers(unitId, roster),
       successMessage: (roster) =>
-        `Se importaron ${roster.length} docentes desde "${fileName}" a ${orgStore.findUnit(unitId)?.name ?? unitId}`,
+        roster.length === 1
+          ? `1 docente importado en ${orgStore.findUnit(unitId)?.name ?? unitId}`
+          : `${roster.length} docentes importados en ${orgStore.findUnit(unitId)?.name ?? unitId}`,
     });
   }
 
@@ -444,6 +496,8 @@ export const useWorkloadStore = defineStore('workload', () => {
     sumCodeInUnit,
     countUnitTeachers,
     getUnitBagIndicators,
+    isTeacherUnstarted,
+    isUnitUnstarted,
     validateTeacher,
     getUnitAlerts,
     countActiveUnitAlerts,

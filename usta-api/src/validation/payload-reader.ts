@@ -40,7 +40,7 @@ export class PayloadReader {
   public static parse<T>(payload: unknown, build: (reader: PayloadReader) => T): T {
     const violations: FieldViolation[] = [];
     if (!isPlainObject(payload)) {
-      throw new ValidationError([{ field: '(body)', message: 'Debe ser un objeto JSON.' }]);
+      throw new ValidationError([{ field: '(body)', message: 'El formato de los datos enviados no es válido.' }]);
     }
     const result = build(new PayloadReader(payload, '', violations));
     if (violations.length > 0) throw new ValidationError(violations);
@@ -53,7 +53,7 @@ export class PayloadReader {
 
   public requiredString(key: string, options: StringOptions = {}): string {
     const value = this.source[key];
-    if (value === undefined || value === null) return this.fail(key, 'Campo requerido.', '');
+    if (value === undefined || value === null) return this.fail(key, 'Este campo es obligatorio.', '');
     return this.readString(key, value, options) ?? '';
   }
 
@@ -73,7 +73,7 @@ export class PayloadReader {
 
   public requiredNumber(key: string, options: NumberOptions = {}): number {
     const value = this.source[key];
-    if (value === undefined || value === null) return this.fail(key, 'Campo requerido.', 0);
+    if (value === undefined || value === null) return this.fail(key, 'Este campo es obligatorio.', 0);
     return this.readNumber(key, value, options) ?? 0;
   }
 
@@ -101,14 +101,14 @@ export class PayloadReader {
   public requiredBoolean(key: string): boolean {
     const value = this.source[key];
     if (typeof value === 'boolean') return value;
-    return this.fail(key, value === undefined ? 'Campo requerido.' : 'Debe ser booleano.', false);
+    return this.fail(key, value === undefined ? 'Este campo es obligatorio.' : 'Seleccione Sí o No.', false);
   }
 
   public optionalBoolean(key: string): boolean | undefined {
     const value = this.source[key];
     if (value === undefined || value === null) return undefined;
     if (typeof value === 'boolean') return value;
-    return this.fail(key, 'Debe ser booleano.', undefined);
+    return this.fail(key, 'Seleccione Sí o No.', undefined);
   }
 
   public optionalNullableBoolean(key: string): boolean | null | undefined {
@@ -116,7 +116,7 @@ export class PayloadReader {
     if (value === undefined) return undefined;
     if (value === null) return null;
     if (typeof value === 'boolean') return value;
-    return this.fail(key, 'Debe ser booleano.', undefined);
+    return this.fail(key, 'Seleccione Sí o No.', undefined);
   }
 
   public requiredEnum<T extends string>(key: string, allowed: readonly T[]): T {

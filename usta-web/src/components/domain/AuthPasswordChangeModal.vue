@@ -20,11 +20,11 @@ const isSaving = ref(false);
 
 async function handleSave(): Promise<void> {
   if (newPassInput.value.length < 8) {
-    store.showToast('La nueva contraseña debe tener mínimo 8 caracteres', 'error');
+    store.showToast('La nueva contraseña debe tener al menos 8 caracteres', 'error');
     return;
   }
   if (newPassInput.value !== confirmPassInput.value) {
-    store.showToast('La confirmación de la nueva contraseña no coincide', 'error');
+    store.showToast('Las contraseñas no coinciden', 'error');
     return;
   }
   isSaving.value = true;
@@ -33,11 +33,11 @@ async function handleSave(): Promise<void> {
     currentPassInput.value = '';
     newPassInput.value = '';
     confirmPassInput.value = '';
-    store.showToast('Tu contraseña personal ha sido actualizada', 'success');
+    store.showToast('Contraseña actualizada', 'success');
     emit('close');
   } catch (err) {
     store.showToast(
-      err instanceof Error ? err.message : 'No fue posible actualizar la contraseña',
+      err instanceof Error ? err.message : 'No se pudo actualizar la contraseña',
       'error',
     );
   } finally {
@@ -49,32 +49,32 @@ async function handleSave(): Promise<void> {
 <template>
   <UstaModal
     :open="props.open"
-    title="Actualizar Contraseña Institucional"
-    :subtitle="`Usuario activo: <b>@${store.currentUser?.username ?? store.currentUserProfile.username}</b> (${store.currentUserProfile.fullName})`"
+    title="Cambiar contraseña"
+    :subtitle="store.currentUserProfile.fullName"
     @close="emit('close')"
   >
     <div class="field" style="margin-bottom: 12px">
-      <label>Contraseña Actual</label>
+      <label>Contraseña actual</label>
       <input
         v-model="currentPassInput"
         type="password"
-        placeholder="Ingresa tu contraseña actual"
+        placeholder="Contraseña actual"
       />
     </div>
     <div class="field" style="margin-bottom: 12px">
-      <label>Nueva Contraseña Personal (mín. 8 caracteres, letras y números)</label>
+      <label>Nueva contraseña</label>
       <input
         v-model="newPassInput"
         type="password"
-        placeholder="Nueva contraseña"
+        placeholder="Mínimo 8 caracteres, letras y números"
       />
     </div>
     <div class="field" style="margin-bottom: 6px">
-      <label>Confirmar Nueva Contraseña</label>
+      <label>Confirmar contraseña</label>
       <input
         v-model="confirmPassInput"
         type="password"
-        placeholder="Repite la nueva contraseña"
+        placeholder="Repita la nueva contraseña"
         @keyup.enter="handleSave"
       />
     </div>
@@ -87,7 +87,7 @@ async function handleSave(): Promise<void> {
         :disabled="isSaving"
         @click="handleSave"
       >
-        {{ isSaving ? 'Guardando…' : 'Guardar Nueva Contraseña' }}
+        {{ isSaving ? 'Guardando…' : 'Guardar contraseña' }}
       </button>
     </template>
   </UstaModal>

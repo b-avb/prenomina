@@ -21,5 +21,6 @@ export interface AuditLogRecord extends AuditEntryDraft {
 export interface AuditLogQuery {
   periodCode?: string;
   unitId?: string;
+  unitIds?: readonly string[];
   limit: number;
 }

@@ -9,6 +9,7 @@ import {
   type AuthMode,
   type MicrosoftLoginDto,
 } from '@usta/domain';
+import { detectAppBasePath } from '@/services/api.client';
 
 export interface MsalRuntimeConfig {
   authMode: AuthMode;
@@ -74,11 +75,12 @@ export function resolveMsalRuntimeConfig(
     rawCache === 'localStorage' ? 'localStorage' : 'sessionStorage';
 
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const defaultLoginUrl = `${origin}${detectAppBasePath()}login`;
   const redirectUri =
     readViteEnv(['VITE_AZURE_REDIRECT_URI', 'VITE_MSAL_REDIRECT_URI']) ||
-    `${origin}/login`;
+    defaultLoginUrl;
   const postLogoutRedirectUri =
-    readViteEnv(['VITE_AZURE_POST_LOGOUT_REDIRECT_URI']) || `${origin}/login`;
+    readViteEnv(['VITE_AZURE_POST_LOGOUT_REDIRECT_URI']) || defaultLoginUrl;
 
   const enabled =
     Boolean(tenantId && clientId) &&

@@ -14,6 +14,10 @@ export class MariaDbAuditLogRepository implements AuditLogRepository {
     let select = db.selectFrom('audit_logs').selectAll();
     if (query.periodCode) select = select.where('period_code', '=', query.periodCode);
     if (query.unitId) select = select.where('unit_id', '=', query.unitId);
+    if (query.unitIds) {
+      if (query.unitIds.length === 0) return [];
+      select = select.where('unit_id', 'in', [...query.unitIds]);
+    }
     const rows = await select
       .orderBy('occurred_at', 'desc')
       .orderBy('insertion_order', 'desc')

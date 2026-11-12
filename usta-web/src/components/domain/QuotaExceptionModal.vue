@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import { usePayrollStore } from '@/stores/payroll.store';
 import type { SacCode, FacultyTeacher } from '@usta/domain';
@@ -13,6 +14,8 @@ export interface ExceptionModalState {
   confirmStep3: boolean;
   justification: string;
   directorNote: string;
+  programId?: string | null;
+  programName?: string | null;
 }
 
 const props = defineProps<{
@@ -25,37 +28,53 @@ const emit = defineEmits<{
 }>();
 
 const store = usePayrollStore();
+const isSaving = ref(false);
 
-function handleSave() {
+const canWriteReviewerNote = computed(
+  () => store.activeRole === 'director' || store.activeRole === 'vice_rector',
+);
+
+async function handleSave() {
   if (!props.teacher || !props.state) return;
   const s = props.state;
   if (s.exceedsCap && store.activeRole === 'dean') {
     if (!s.confirmStep1 || !s.confirmStep2 || !s.confirmStep3) {
       store.showToast(
-        'Debes marcar las 3 verificaciones de seguridad para autorizar una excepción de tope (RF-19)',
+        'Marque las tres confirmaciones para registrar la excepción de tope.',
         'error',
       );
       return;
     }
     if (!s.justification.trim()) {
       store.showToast(
-        'La justificación escrita del Decano es obligatoria cuando se supera el tope del ANEXO 4',
+        'Indique la justificación académica para superar el tope del Anexo 4.',
         'error',
       );
       return;
     }
   }
-  store.updateCodeAllocation(
-    props.teacher.id,
-    s.codeItem.code,
-    s.hours,
-    s.justification,
-    s.directorNote,
-  );
-  store.showToast(
-    `Excepción / observación registrada en código ${s.codeItem.code} (${s.hours} h)`,
-  );
-  emit('close');
+  const hasProgramOverride = s.programId !== undefined || s.programName !== undefined;
+  isSaving.value = true;
+  try {
+    const res = await store.updateCodeAllocation(
+      props.teacher.id,
+      s.codeItem.code,
+      s.hours,
+      s.justification,
+      canWriteReviewerNote.value ? s.directorNote : undefined,
+      hasProgramOverride
+        ? { programId: s.programId ?? null, programName: s.programName ?? null }
+        : undefined,
+    );
+    if (res.ok) {
+      store.showToast(
+        `Asignación actualizada en el código ${s.codeItem.code} (${s.hours} h).`,
+      );
+      emit('close');
+    }
+  } finally {
+    isSaving.value = false;
+  }
 }
 </script>
 
@@ -64,11 +83,11 @@ function handleSave() {
     :open="!!state"
     :title="
       state
-        ? store.activeRole === 'director'
-          ? `Revisión y Ajuste Directo — Código ${state.codeItem.code}`
+        ? canWriteReviewerNote
+          ? `Ajuste de revisión — Código ${state.codeItem.code}`
           : state.exceedsCap
-            ? `⚠ Confirmación de Excepción de Tope (RF-19) — Código ${state.codeItem.code}`
-            : `Notas y Justificación de Excepción — Código ${state.codeItem.code}`
+            ? `Excepción de tope — Código ${state.codeItem.code}`
+            : `Observación sobre asignación — Código ${state.codeItem.code}`
         : ''
     "
     @close="emit('close')"
@@ -84,18 +103,18 @@ function handleSave() {
         style="margin-bottom: 12px"
       >
         <div>
-          <b>Superación de Tope Normativo (ANEXO 4):</b> Estás intentando asignar
-          <b>{{ state.hours }} h/mes</b> en el código
-          <b>{{ state.codeItem.code }}</b>, cuyo tope máximo autorizado es de
-          <b>{{ state.referenceCap }} h/mes</b>.
+          <b>Tope del Anexo 4 superado:</b> La asignación de
+          <b>{{ state.hours }} h/mes</b> supera el máximo de
+          <b>{{ state.referenceCap }} h/mes</b> definido para el código
+          <b>{{ state.codeItem.code }}</b>.
         </div>
       </div>
 
       <div class="field">
         <label>
-          Horas mensuales asignadas (Rango ANEXO 4:
+          Horas mensuales asignadas (rango Anexo 4:
           {{ state.codeItem.baseHours ?? 0 }} –
-          {{ state.referenceCap ?? state.codeItem.capHours ?? 'Aval' }} h)
+          {{ state.referenceCap ?? state.codeItem.capHours ?? 'Según aval' }} h)
         </label>
         <input
           v-model.number="state.hours"
@@ -115,16 +134,15 @@ function handleSave() {
         style="background: var(--surface-soft); border: 1.5px solid var(--gold); border-radius: 10px; padding: 12px; margin-bottom: 12px"
       >
         <b style="font-size: 12px; color: var(--navy); display: block; margin-bottom: 8px">
-          Verificación Obligatoria de 3 Pasos para Superar el Tope (RF-19):
+          Confirmaciones requeridas para superar el tope:
         </b>
         <label
           style="display: flex; align-items: flex-start; gap: 8px; font-size: 11.5px; margin-bottom: 6px; cursor: pointer"
         >
           <input v-model="state.confirmStep1" type="checkbox" style="margin-top: 2px" />
           <span>
-            <b>1/3:</b> Confirmo que conozco que el tope máximo del código
-            <b>{{ state.codeItem.code }}</b> es de
-            <b>{{ state.referenceCap }} h/mes</b> según los lineamientos de nómina.
+            Conozco el tope máximo de <b>{{ state.referenceCap }} h/mes</b> establecido para el código
+            <b>{{ state.codeItem.code }}</b>.
           </span>
         </label>
         <label
@@ -132,7 +150,7 @@ function handleSave() {
         >
           <input v-model="state.confirmStep2" type="checkbox" style="margin-top: 2px" />
           <span>
-            <b>2/3:</b> Confirmo que esta excepción responde a una necesidad académica excepcional con soporte verificable del programa.
+            La asignación responde a una necesidad académica con soporte verificable del programa.
           </span>
         </label>
         <label
@@ -140,32 +158,32 @@ function handleSave() {
         >
           <input v-model="state.confirmStep3" type="checkbox" style="margin-top: 2px" />
           <span>
-            <b>3/3:</b> Solicito formalmente que esta excepción quede marcada en la bandeja y bitácora para aval expreso de la Directora de Enseñanza y Aprendizaje.
+            Solicito revisión expresa de esta excepción por parte de la Dirección de Enseñanza y Aprendizaje.
           </span>
         </label>
       </div>
 
       <div class="field">
-        <label>Justificación del Decano (Obligatoria al superar un tope flexible - RF-19)</label>
+        <label>Justificación de la unidad académica</label>
         <textarea
           v-model="state.justification"
-          placeholder="Explica por qué se requiere esta asignación en el semestre…"
+          placeholder="Describa la necesidad académica que respalda esta asignación…"
         ></textarea>
       </div>
 
-      <div v-if="store.activeRole === 'director'" class="field">
-        <label>Observación de Revisión de la Directora E&A (RF-22, RF-24)</label>
+      <div v-if="canWriteReviewerNote" class="field">
+        <label>Observación de revisión</label>
         <textarea
           v-model="state.directorNote"
-          placeholder="Escribe la observación o el motivo del ajuste acordado en la jornada de revisión…"
+          placeholder="Registre la observación o el motivo del ajuste acordado…"
         ></textarea>
       </div>
     </template>
 
     <template #actions>
-      <button class="btn ghost" @click="emit('close')">Cancelar</button>
-      <button class="btn primary" @click="handleSave">
-        Guardar y Registrar en Bitácora
+      <button type="button" class="btn ghost" @click="emit('close')">Cancelar</button>
+      <button type="button" class="btn primary" :disabled="isSaving" @click="handleSave">
+        {{ isSaving ? 'Guardando…' : 'Guardar' }}
       </button>
     </template>
   </UstaModal>

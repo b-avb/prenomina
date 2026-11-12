@@ -53,7 +53,7 @@ function toNullableText(val: unknown): string | null {
 
 async function handleSave() {
   if (!form.value.code.trim() || !form.value.name.trim()) {
-    store.showToast('Debes ingresar el código SAC y el nombre de la actividad', 'error');
+    store.showToast('Indique el código SAC y el nombre de la actividad.', 'error');
     return;
   }
   const res = await store.createSacCode({
@@ -85,8 +85,8 @@ async function handleSave() {
 <template>
   <UstaModal
     :open="open"
-    title="Registrar Nuevo Código SAC y Reglas Normativas"
-    subtitle="Permite incorporar nuevas actividades académicas al catálogo ANEXO 4, definir sus topes y configurar sus condiciones de pre-aval."
+    title="Nuevo código SAC"
+    subtitle="Registra una actividad en el catálogo del Anexo 4 con sus topes y condiciones de aval."
     max-width="760px"
     @close="emit('close')"
   >
@@ -97,12 +97,11 @@ async function handleSave() {
           v-model="form.code"
           type="text"
           maxlength="20"
-          placeholder="Ej: 10418"
-          style="font-family: var(--font-mono); font-weight: 700"
+          placeholder="Ej.: 10418"
         />
       </div>
       <div class="field">
-        <label>Función Sustantiva</label>
+        <label>Función sustantiva</label>
         <select v-model="form.substantiveFunction">
           <option value="Enseñanza-Aprendizaje">Enseñanza-Aprendizaje</option>
           <option value="Proyección Social">Proyección Social</option>
@@ -113,27 +112,27 @@ async function handleSave() {
     </div>
 
     <div class="field">
-      <label>Nombre Oficial de la Actividad</label>
+      <label>Nombre oficial de la actividad</label>
       <input
         v-model="form.name"
         type="text"
         maxlength="200"
-        placeholder="Ej: TUNJA CENTRO DE INNOVACIÓN CITECDES"
+        placeholder="Ej.: CENTRO DE INNOVACIÓN CITECDES"
       />
     </div>
 
     <div class="field">
-      <label>Descripción / Definición de la Actividad</label>
+      <label>Descripción de la actividad</label>
       <textarea
         v-model="form.definition"
         rows="3"
-        placeholder="Describe en qué consiste la función o actividad docente…"
+        placeholder="Describa en qué consiste la actividad docente…"
       ></textarea>
     </div>
 
     <div class="grid cols-4" style="gap: 10px">
       <div class="field">
-        <label>Base Horas (Mín.)</label>
+        <label>Horas mínimas</label>
         <input
           v-model.number="form.baseHours"
           type="number"
@@ -143,7 +142,7 @@ async function handleSave() {
         />
       </div>
       <div class="field">
-        <label>Tope Horas (Máx.)</label>
+        <label>Horas máximas</label>
         <input
           v-model.number="form.capHours"
           type="number"
@@ -153,7 +152,7 @@ async function handleSave() {
         />
       </div>
       <div class="field">
-        <label>Tope c/ Posgrado</label>
+        <label>Tope con posgrado</label>
         <input
           v-model.number="form.postgraduateCapHours"
           type="number"
@@ -163,10 +162,10 @@ async function handleSave() {
         />
       </div>
       <div class="field">
-        <label>Comportamiento</label>
+        <label>Control del tope</label>
         <select v-model="form.severity">
           <option value="blocking">Bloqueante</option>
-          <option value="justifiable_alert">Excepción c/ justificación</option>
+          <option value="justifiable_alert">Alerta justificable</option>
           <option value="informative">Informativa</option>
         </select>
       </div>
@@ -179,7 +178,7 @@ async function handleSave() {
           <input v-model="form.requiresViceRectorApproval" type="checkbox" />
           <span class="toggle__track"></span>
           <span style="font-size: 12px; font-weight: 700">
-            Requiere Pre-Aval de Vicerrectoría (ANEXO 3)
+            Requiere aval de Vicerrectoría (Anexo 3)
           </span>
         </label>
         <label class="toggle">
@@ -193,7 +192,7 @@ async function handleSave() {
           <input v-model="form.lockedByResearch" type="checkbox" />
           <span class="toggle__track"></span>
           <span style="font-size: 12px; font-weight: 700">
-            Cargue exclusivo Investigación (ANEXO 7)
+            Asignación exclusiva de Investigación (Anexo 7)
           </span>
         </label>
       </div>
@@ -201,40 +200,40 @@ async function handleSave() {
 
     <div class="grid cols-3" style="gap: 10px">
       <div v-if="form.requiresViceRectorApproval" class="field">
-        <label>Plantilla ANEXO 3</label>
+        <label>Formato Anexo 3</label>
         <select v-model="form.annex3Format">
-          <option :value="null">Formato General ANEXO 3</option>
-          <option value="10212">10212 · Internacionalización / Movilidad</option>
+          <option :value="null">Formato general Anexo 3</option>
+          <option value="10212">10212 · Internacionalización y movilidad</option>
           <option value="20223_20120">20223 / 20120 · Consultorio Jurídico</option>
-          <option value="20222">20222 · Prácticas y Pasantías</option>
-          <option value="40126">40126 · Tutoría y Consejería</option>
-          <option value="40222">40222 · Proyectos Institucionales</option>
-          <option value="43401">43401 · Actividades Especiales</option>
+          <option value="20222">20222 · Prácticas y pasantías</option>
+          <option value="40126">40126 · Tutoría y consejería</option>
+          <option value="40222">40222 · Proyectos institucionales</option>
+          <option value="43401">43401 · Actividades especiales</option>
         </select>
       </div>
       <div class="field">
-        <label>Factor Horas/Unidad (Opc.)</label>
+        <label>Factor horas/unidad (opc.)</label>
         <input
           v-model.number="form.hoursPerUnitFactor"
           type="number"
           min="0"
           max="240"
-          placeholder="Ej: 4"
+          placeholder="Ej.: 4"
         />
       </div>
       <div class="field">
-        <label>Etiqueta Unidad (Opc.)</label>
+        <label>Unidad de medida (opc.)</label>
         <input
           v-model="form.unitLabel"
           type="text"
           maxlength="80"
-          placeholder="Ej: semillero, proyecto"
+          placeholder="Ej.: semillero, proyecto"
         />
       </div>
     </div>
 
     <div class="field">
-      <label>Lineamiento y Regla de Validación (Visible para el Decano)</label>
+      <label>Lineamiento de asignación</label>
       <textarea
         v-model="form.guideline"
         rows="3"
@@ -243,8 +242,8 @@ async function handleSave() {
     </div>
 
     <template #actions>
-      <button class="btn ghost" @click="emit('close')">Cancelar</button>
-      <button class="btn primary" @click="handleSave">Crear Código SAC</button>
+      <button type="button" class="btn ghost" @click="emit('close')">Cancelar</button>
+      <button type="button" class="btn primary" @click="handleSave">Crear código</button>
     </template>
   </UstaModal>
 </template>

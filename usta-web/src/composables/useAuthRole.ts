@@ -34,29 +34,29 @@ export function useAuthRole(
   const currentUserProfile = computed<InstitutionalUserProfile>(() => {
     const authUser = currentUser?.value ?? null;
     const unit = units.value.find(
-      (u) => u.id === (authUser?.unitId || activeUnitId.value),
+      (u) => u.id === (activeUnitId.value || authUser?.unitId),
     );
     const viewRoleLabel =
       activeRole.value === 'director'
-        ? 'Directora de Enseñanza y Aprendizaje'
+        ? 'Dirección de Enseñanza y Aprendizaje'
         : activeRole.value === 'vice_rector'
-          ? 'Vicerrector Académico'
+          ? 'Vicerrectoría Académica'
           : activeRole.value === 'research'
             ? 'Dirección de Investigación e Innovación'
-            : `Decanatura · ${unit?.name ?? authUser?.unitName ?? 'Unidad Académica'}`;
+            : `Decanatura · ${unit?.name ?? authUser?.unitName ?? 'Unidad académica'}`;
 
     if (authUser) {
       return {
         fullName: authUser.fullName,
         username: authUser.username,
-        jobTitle: `${viewRoleLabel} · @${authUser.username}`,
+        jobTitle: viewRoleLabel,
         email: authUser.email || `${authUser.username}@${INSTITUTIONAL_EMAIL_DOMAIN}`,
         initials: computeInitials(authUser.fullName),
       };
     }
 
     return {
-      fullName: 'Sesión Institucional',
+      fullName: 'Sesión institucional',
       username: 'usuario',
       jobTitle: viewRoleLabel,
       email: `prenomina@${INSTITUTIONAL_EMAIL_DOMAIN}`,

@@ -111,6 +111,7 @@ export class MariaDbUserRepository implements UserRepository {
       .selectFrom('users')
       .selectAll()
       .where('unit_id', '=', unitId)
+      .where('role', '=', 'dean')
       .orderBy('insertion_order');
     if (options.forUpdate) query = query.forUpdate();
     const row = await query.executeTakeFirst();

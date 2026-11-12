@@ -26,9 +26,15 @@ const emit = defineEmits<{
         ×
       </button>
       <div class="modal">
-        <h2>{{ title }}</h2>
-        <p v-if="subtitle" class="sub" v-html="subtitle"></p>
-        <slot />
+        <div class="modal__header">
+          <h2>{{ title }}</h2>
+          <p v-if="subtitle || $slots.subtitle" class="sub">
+            <slot name="subtitle">{{ subtitle }}</slot>
+          </p>
+        </div>
+        <div class="modal__body">
+          <slot />
+        </div>
         <div v-if="$slots.footer || $slots.actions" class="modal-actions">
           <slot name="footer" />
           <slot name="actions" />

@@ -66,7 +66,10 @@ export const useOrganizationStore = defineStore('organization', () => {
       !snapshot.units.some((u) => u.id === authStore.activeUnitId)
     ) {
       authStore.setActiveUnit(
-        authStore.currentUser?.unitId || snapshot.units[0]?.id || '',
+        authStore.managedUnitIds[0] ||
+          authStore.currentUser?.unitId ||
+          snapshot.units[0]?.id ||
+          '',
       );
     }
   }
@@ -92,7 +95,7 @@ export const useOrganizationStore = defineStore('organization', () => {
 
   function updateUnit(unitId: string, patch: UnitPatch): Promise<MutationResult<AcademicUnitSummary>> {
     const unit = findUnit(unitId);
-    if (!unit) return reject('NOT_FOUND', 'La unidad académica ya no existe en el periodo activo');
+    if (!unit) return reject('NOT_FOUND', 'La unidad académica no se encontró en el periodo activo');
     return runOptimistic({
       capture: () => unit,
       apply: () => Object.assign(unit, patch),
@@ -109,7 +112,7 @@ export const useOrganizationStore = defineStore('organization', () => {
       request: () => programsApi.create(dto),
       commit: commitProgramMutation,
       successMessage: ({ unit }) =>
-        `Programa "${dto.programName}" agregado y sincronizado con la bolsa de ${unit.name}`,
+        `Programa "${dto.programName}" vinculado a ${unit.name}`,
     });
   }
 
@@ -150,14 +153,14 @@ export const useOrganizationStore = defineStore('organization', () => {
         restoreAt(programQuotas.value, index, previous.program);
         if (previous.unit) upsertUnit(previous.unit);
       },
-      successMessage: `Programa "${program.programName}" eliminado y bolsa recalculada`,
+      successMessage: `Programa "${program.programName}" eliminado`,
       successType: 'info',
     });
   }
 
   function updateSchedulePhase(draft: SchedulePhase): Promise<MutationResult<SchedulePhase>> {
     const phase = schedulePhases.value.find((item) => item.id === draft.id);
-    if (!phase) return reject('NOT_FOUND', 'La fase del cronograma ya no existe');
+    if (!phase) return reject('NOT_FOUND', 'La etapa del cronograma ya no existe');
     return runOptimistic({
       capture: () => phase,
       apply: () => Object.assign(phase, draft),
@@ -175,7 +178,7 @@ export const useOrganizationStore = defineStore('organization', () => {
     });
     const results = await Promise.all(changed.map(updateSchedulePhase));
     const allSucceeded = results.every((result) => result.ok);
-    if (allSucceeded) showToast('Cronograma del proceso actualizado');
+    if (allSucceeded) showToast('Cronograma actualizado');
     return allSucceeded;
   }
 

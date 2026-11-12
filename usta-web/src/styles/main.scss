@@ -75,42 +75,6 @@
   }
 }
 
-.role-switcher {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--brand-tint);
-  border: 1.5px solid rgba(0, 79, 159, 0.22);
-  padding: 4px 10px;
-  border-radius: 999px;
-
-  &__label {
-    font-size: 10.5px;
-    font-weight: 800;
-    color: var(--navy);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding-left: 4px;
-  }
-
-  select {
-    border: none;
-    background: #fff;
-    color: var(--navy);
-    font-family: var(--font-body);
-    font-size: 12px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 999px;
-    cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0, 51, 106, 0.1);
-
-    &:focus {
-      outline: 2px solid var(--cerulean);
-    }
-  }
-}
-
 .period-pill {
   display: inline-flex;
   align-items: center;
@@ -194,6 +158,10 @@
 
   &.ok {
     border-top: 3px solid var(--success);
+  }
+
+  &.pending {
+    border-top: 3px solid var(--border);
   }
 
   &.warn {
@@ -637,14 +605,206 @@
   }
 }
 
-// Tablas más compactas para aprovechar mejor el espacio vertical
+// Tablas más compactas para aprovechar mejor el espacio vertical y ajustarse al ancho sin overflow
 table.compact-table {
+  width: 100%;
+  table-layout: auto;
+
   th {
-    padding: 7px 8px;
+    padding: 7px 6px;
     font-size: 10px;
+    line-height: 1.25;
+    vertical-align: middle;
   }
+
   td {
-    padding: 8px 8px;
-    font-size: 12.5px;
+    padding: 8px 6px;
+    font-size: 12px;
+    vertical-align: middle;
+  }
+
+  th.col-center,
+  td.col-center {
+    text-align: center;
+  }
+
+  td.col-center .toggle {
+    display: inline-flex;
+    justify-content: center;
+  }
+
+  th.col-right,
+  td.col-right {
+    text-align: right;
+  }
+
+  td:last-child {
+    padding-right: 4px;
+  }
+}
+
+// ================= CONTROLES UNIFICADOS DE BARRA DE HERRAMIENTAS Y TABLAS =================
+// Garantiza que buscadores, filtros y celdas editables fuera de `.field`
+// compartan tipografía, bordes, radios, flecha SVG y foco institucional.
+
+.control-sm {
+  height: 34px;
+  padding: 6px 11px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  background-color: #fff;
+  color: var(--ink);
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--cerulean);
+    box-shadow: 0 0 0 3px rgba(0, 134, 198, 0.12);
+  }
+
+  &:disabled {
+    background-color: var(--surface-soft);
+    color: var(--ink-soft);
+    cursor: not-allowed;
+    opacity: 0.85;
+  }
+
+  &--num {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--navy);
+    padding: 6px 8px;
+  }
+}
+
+select.control-sm {
+  appearance: none;
+  padding-right: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2300336a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  font-weight: 600;
+  color: var(--navy);
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.table-input {
+  height: 30px;
+  padding: 4px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  background-color: #fff;
+  color: var(--ink);
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--cerulean);
+    box-shadow: 0 0 0 2px rgba(0, 134, 198, 0.12);
+  }
+
+  &:disabled {
+    background-color: var(--surface-soft);
+    color: var(--ink-soft);
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+
+  &--num {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--navy);
+    padding: 4px 4px;
+    text-align: center;
+    appearance: textfield;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  &--strong {
+    font-weight: 600;
+    color: var(--navy);
+  }
+}
+
+select.table-select {
+  height: 30px;
+  padding: 4px 26px 4px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  background-color: #fff;
+  color: var(--navy);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%2300336a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--cerulean);
+    box-shadow: 0 0 0 2px rgba(0, 134, 198, 0.12);
+  }
+
+  &:disabled {
+    background-color: var(--surface-soft);
+    color: var(--ink-soft);
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+}
+
+select.unit-title-select {
+  appearance: none;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2300336a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 36px 6px 14px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(0, 51, 106, 0.05);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--cerulean);
+    box-shadow: 0 0 0 3px rgba(0, 134, 198, 0.12);
   }
 }

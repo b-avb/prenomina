@@ -12,14 +12,33 @@ defineProps<{
 
 const emit = defineEmits<{
   (e: 'close'): void;
+  (
+    e: 'issuedCredentials',
+    payload: {
+      title: string;
+      fullName: string;
+      unitName: string;
+      username: string;
+      temporaryPassword: string;
+    },
+  ): void;
 }>();
 
 const store = usePayrollStore();
 const usernameManuallyEdited = ref(false);
 
+const OFFICIAL_DIVISIONS = [
+  'División de Ingenierías y Arquitectura',
+  'División de Ciencias Económicas y Administrativas',
+  'División de Ciencias Jurídicas y Políticas',
+  'División de Ciencias de la Salud',
+  'División de Ciencias Sociales y de la Educación',
+  'Direcciones Académicas Transversales',
+];
+
 const form = ref({
   name: '',
-  division: 'División de Arquitectura e Ingenierías',
+  division: 'División de Ingenierías y Arquitectura',
   unitType: 'Facultad' as 'Facultad' | 'Dirección Académica',
   deanName: '',
   username: '',
@@ -49,17 +68,13 @@ watch(
 async function handleSave() {
   if (!form.value.name.trim() || !form.value.deanName.trim()) {
     store.showToast(
-      'Debes ingresar el nombre de la Facultad/Unidad y el nombre del Decano(a)',
+      'Indique el nombre de la unidad académica y del titular de la decanatura o dirección.',
       'error',
     );
     return;
   }
 
-  const explicitTempPassword =
-    form.value.temporaryPassword.trim() ||
-    (form.value.deanDocumentId.trim().length >= 6
-      ? form.value.deanDocumentId.trim()
-      : undefined);
+  const explicitTempPassword = form.value.temporaryPassword.trim() || undefined;
 
   const createdRes = await store.addAcademicUnit({
     name: form.value.name.trim(),
@@ -103,6 +118,16 @@ async function handleSave() {
     });
   }
 
+  if (createdRes.data.temporaryPassword && createdRes.data.deanUser) {
+    emit('issuedCredentials', {
+      title: 'Credenciales de acceso emitidas',
+      fullName: createdUnit.deanName,
+      unitName: createdUnit.name,
+      username: createdRes.data.deanUser.username,
+      temporaryPassword: createdRes.data.temporaryPassword,
+    });
+  }
+
   form.value.name = '';
   form.value.deanName = '';
   form.value.username = '';
@@ -118,75 +143,77 @@ async function handleSave() {
 <template>
   <UstaModal
     :open="open"
-    title="Crear Nueva Facultad / Unidad Académica y su Decano(a)"
-    subtitle="Registra una nueva unidad académica en el consolidado seccional junto con su Decano(a) titular, su usuario de acceso y su contraseña temporal inicial."
+    title="Nueva unidad académica"
+    subtitle="Registra la unidad, su decanatura o dirección y su cuenta institucional."
     @close="emit('close')"
   >
     <div class="grid cols-2">
       <div class="field">
-        <label>Nombre de la Facultad o Unidad Académica</label>
-        <input v-model="form.name" type="text" placeholder="Ej: Ingeniería Biomédica" />
+        <label>Nombre de la unidad académica</label>
+        <input v-model="form.name" type="text" placeholder="Nombre oficial de la unidad" />
       </div>
       <div class="field">
-        <label>División Académica</label>
+        <label>División académica (Acuerdo 48 de 2025)</label>
         <input
           v-model="form.division"
           type="text"
-          placeholder="Ej: División de Arquitectura e Ingenierías"
+          list="official-divisions-list"
+          placeholder="División académica"
         />
+        <datalist id="official-divisions-list">
+          <option v-for="div in OFFICIAL_DIVISIONS" :key="div" :value="div" />
+        </datalist>
       </div>
     </div>
 
     <div class="grid cols-2">
       <div class="field">
-        <label>Nombre Completo del Decano(a) o Director(a)</label>
+        <label>Titular de la decanatura o dirección</label>
         <input
           v-model="form.deanName"
           type="text"
-          placeholder="Ej: Ing. Carlos Andrés Gómez, M.Sc."
+          placeholder="Nombre completo del titular"
         />
       </div>
       <div class="field">
-        <label>Documento / Cédula del Decano(a)</label>
-        <input v-model="form.deanDocumentId" type="text" placeholder="Ej: 1053812940" />
+        <label>Documento de identidad</label>
+        <input v-model="form.deanDocumentId" type="text" placeholder="Número de documento" />
       </div>
     </div>
 
     <div class="grid cols-2">
       <div class="field">
-        <label>Usuario de Acceso (solo nombre de usuario)</label>
+        <label>Usuario institucional</label>
         <input
           v-model="form.username"
           type="text"
-          placeholder="Ej: carlos.gomez"
-          style="font-family: var(--font-mono); font-weight: 700"
+          placeholder="usuario.institucional"
           @input="usernameManuallyEdited = true"
         />
       </div>
       <div class="field">
-        <label>Contraseña Temporal (opcional · por defecto cédula o autogenerada)</label>
+        <label>Contraseña temporal (opcional)</label>
         <input
           v-model="form.temporaryPassword"
           type="text"
-          placeholder="Dejar vacío para usar cédula o clave aleatoria"
-          style="font-family: var(--font-mono); font-weight: 700"
+          placeholder="Vacío para generar automáticamente"
         />
       </div>
     </div>
 
     <div class="grid cols-2" style="align-items: center">
       <div class="field">
-        <label>Programa Académico Inicial (Opcional)</label>
+        <label>Programa académico inicial (opcional)</label>
         <input
           v-model="form.initialProgramName"
           type="text"
-          placeholder="Ej: INGENIERÍA BIOMÉDICA"
+          placeholder="Ej.: INGENIERÍA BIOMÉDICA"
         />
       </div>
       <label class="toggle" style="margin-top: 14px">
         <input v-model="form.hasPostgraduates" type="checkbox" />
         <span class="toggle__track"></span>
-        <span style="font-size: 12px; font-weight: 700">Cuenta con Posgrados Activos</span>
+        <span style="font-size: 12px; font-weight: 700">Cuenta con posgrados activos</span>
       </label>
     </div>
 
@@ -217,8 +244,8 @@ async function handleSave() {
     </div>
 
     <template #actions>
-      <button class="btn ghost" @click="emit('close')">Cancelar</button>
-      <button class="btn primary" @click="handleSave">Crear Decanatura y Usuario</button>
+      <button type="button" class="btn ghost" @click="emit('close')">Cancelar</button>
+      <button type="button" class="btn primary" @click="handleSave">Crear unidad</button>
     </template>
   </UstaModal>
 </template>

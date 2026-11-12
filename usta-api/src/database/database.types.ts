@@ -176,6 +176,8 @@ export interface TeacherCodeAllocationsTable {
   teacher_id: string;
   code: string;
   hours: number;
+  program_id: string | null;
+  program_name: string | null;
   version1_hours: number | null;
   unit_count: number | null;
   exception_justification: string | null;

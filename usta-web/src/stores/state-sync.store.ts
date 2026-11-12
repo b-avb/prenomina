@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { AcademicPeriod, PayrollSnapshot } from '@usta/domain';
+import { DEFAULT_RULES_CONFIG } from '@/constants/payroll.constants';
 import { toApiError, useMutation, type MutationResult } from '@/composables/useMutation';
 import { useToast } from '@/composables/useToast';
 import { periodsApi, snapshotApi } from '@/services/api';
@@ -12,7 +13,8 @@ import { useOrganizationStore } from './organization.store';
 import { useResearchStore } from './research.store';
 import { useWorkloadStore } from './workload.store';
 
-const SNAPSHOT_CACHE_KEY = 'usta_payroll_snapshot_cache_v8';
+const SNAPSHOT_CACHE_PREFIX = 'usta_payroll_snapshot_cache_v9';
+const LEGACY_CACHE_KEY = 'usta_payroll_snapshot_cache_v8';
 const MIN_VISIBILITY_SYNC_INTERVAL_MS = 30000;
 
 let visibilityListenerRegistered = false;
@@ -34,6 +36,12 @@ export const useStateSyncStore = defineStore('stateSync', () => {
 
   const backendConnected = ref<boolean>(false);
   let lastSyncTimestamp = 0;
+  let inFlightInit: Promise<void> | null = null;
+
+  function cacheKeyForCurrentUser(): string | null {
+    const userId = authStore.currentUser?.id;
+    return userId ? `${SNAPSHOT_CACHE_PREFIX}:${userId}` : null;
+  }
 
   function applySnapshot(snapshot: PayrollSnapshot): void {
     orgStore.hydrate(snapshot);
@@ -44,21 +52,29 @@ export const useStateSyncStore = defineStore('stateSync', () => {
     auditStore.hydrate(snapshot.auditLogs);
   }
 
-  /** The local cache is a best-effort read accelerator, never a source of truth. */
+  /** The local cache is a best-effort read accelerator scoped per authenticated user. */
   function readCachedSnapshot(): PayrollSnapshot | null {
-    const raw = localStorage.getItem(SNAPSHOT_CACHE_KEY);
-    if (!raw) return null;
+    const key = cacheKeyForCurrentUser();
+    if (!key) return null;
     try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
       return JSON.parse(raw) as PayrollSnapshot;
     } catch {
-      localStorage.removeItem(SNAPSHOT_CACHE_KEY);
+      try {
+        localStorage.removeItem(key);
+      } catch {
+        // Ignore storage errors
+      }
       return null;
     }
   }
 
   function writeCachedSnapshot(snapshot: PayrollSnapshot): void {
+    const key = cacheKeyForCurrentUser();
+    if (!key) return;
     try {
-      localStorage.setItem(SNAPSHOT_CACHE_KEY, JSON.stringify(snapshot));
+      localStorage.setItem(key, JSON.stringify(snapshot));
     } catch {
       // Storage quota exceeded: the cache is optional, the fresh snapshot is already applied.
     }
@@ -66,10 +82,43 @@ export const useStateSyncStore = defineStore('stateSync', () => {
 
   function clearCache(): void {
     try {
-      localStorage.removeItem(SNAPSHOT_CACHE_KEY);
+      localStorage.removeItem(LEGACY_CACHE_KEY);
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith(SNAPSHOT_CACHE_PREFIX)) {
+          keysToRemove.push(k);
+        }
+      }
+      for (const k of keysToRemove) {
+        localStorage.removeItem(k);
+      }
     } catch {
       // Ignore storage errors
     }
+  }
+
+  function reset(): void {
+    clearCache();
+    backendConnected.value = false;
+    lastSyncTimestamp = 0;
+    inFlightInit = null;
+    orgStore.hydrate({
+      activePeriod: '',
+      currentPeriod: '',
+      availablePeriods: [],
+      schedulePhases: [],
+      units: [],
+      programQuotas: [],
+    });
+    catalogStore.hydrate({
+      sacCodes: [],
+      rulesConfig: { ...DEFAULT_RULES_CONFIG },
+    });
+    workloadStore.hydrate([]);
+    approvalStore.hydrate([]);
+    researchStore.hydrate([]);
+    auditStore.hydrate([]);
   }
 
   async function loadSnapshot(period?: string): Promise<boolean> {
@@ -90,13 +139,23 @@ export const useStateSyncStore = defineStore('stateSync', () => {
     }
   }
 
-  async function initialize(): Promise<void> {
+  function initialize(): Promise<void> {
     if (!authStore.isAuthenticated || authStore.mustChangePassword) {
-      return;
+      return Promise.resolve();
     }
-    const cached = readCachedSnapshot();
-    if (cached) applySnapshot(cached);
-    await loadSnapshot(cached?.activePeriod);
+    if (inFlightInit) {
+      return inFlightInit;
+    }
+    inFlightInit = (async () => {
+      try {
+        const cached = readCachedSnapshot();
+        if (cached) applySnapshot(cached);
+        await loadSnapshot(cached?.activePeriod);
+      } finally {
+        inFlightInit = null;
+      }
+    })();
+    return inFlightInit;
   }
 
   function switchPeriod(code: string): Promise<boolean> {
@@ -110,13 +169,12 @@ export const useStateSyncStore = defineStore('stateSync', () => {
     resetStatuses: boolean,
   ): Promise<MutationResult<AcademicPeriod>> {
     if (orgStore.availablePeriods.includes(code)) {
-      return reject('CONFLICT', `El periodo académico ${code} ya existe`);
+      return reject('CONFLICT', `El periodo ${code} ya existe`);
     }
     const result = await runPessimistic({
       request: () =>
         periodsApi.create({ code, sourcePeriod: orgStore.activePeriod, resetStatuses }),
-      successMessage: (period) =>
-        `Periodo académico ${period.code} creado y activado con los ${catalogStore.sacCodes.length} códigos SAC`,
+      successMessage: (period) => `Periodo ${period.code} abierto y activo`,
     });
     if (result.ok) await loadSnapshot(result.data.code);
     return result;
@@ -143,6 +201,7 @@ export const useStateSyncStore = defineStore('stateSync', () => {
     backendConnected,
     initialize,
     clearCache,
+    reset,
     switchPeriod,
     createPeriod,
   };

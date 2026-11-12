@@ -36,7 +36,7 @@ onMounted(async () => {
       const redirectSession = await authStore.completeMicrosoftRedirectIfPresent();
       if (redirectSession) {
         payrollStore.showToast(
-          `Sesión institucional Microsoft iniciada como ${redirectSession.user.fullName} (${redirectSession.user.email ?? `@${redirectSession.user.username}`})`,
+          `Sesión iniciada: ${redirectSession.user.fullName}`,
           'success',
         );
         await router.push(getHomeRouteForRole(redirectSession.user.role));
@@ -55,7 +55,7 @@ async function handleMicrosoftLogin(): Promise<void> {
   try {
     const session = await authStore.loginWithMicrosoftPopup();
     payrollStore.showToast(
-      `Sesión institucional Microsoft iniciada como ${session.user.fullName}`,
+      `Sesión iniciada: ${session.user.fullName}`,
       'success',
     );
     await router.push(getHomeRouteForRole(session.user.role));
@@ -81,7 +81,7 @@ async function handleLoginSubmit(payload: {
   password: string;
 }): Promise<void> {
   if (!payload.username || !payload.password) {
-    errorMessage.value = 'Debes ingresar tu nombre de usuario y tu contraseña.';
+    errorMessage.value = 'Ingrese su usuario institucional y su contraseña.';
     return;
   }
 
@@ -92,14 +92,14 @@ async function handleLoginSubmit(payload: {
     const session = await authStore.login(payload.username, payload.password);
     if (session.user.mustChangePassword) {
       payrollStore.showToast(
-        `Bienvenido(a) ${session.user.fullName}. Por seguridad debes cambiar tu contraseña temporal antes de continuar.`,
+        'Por seguridad, defina una contraseña personal antes de continuar.',
         'info',
       );
       return;
     }
 
     payrollStore.showToast(
-      `Sesión iniciada como ${session.user.fullName} (@${session.user.username})`,
+      `Sesión iniciada: ${session.user.fullName}`,
       'success',
     );
     await router.push(getHomeRouteForRole(session.user.role));
@@ -122,10 +122,7 @@ async function handleChangePasswordSubmit(payload: {
       payload.currentPassword,
       payload.newPassword,
     );
-    payrollStore.showToast(
-      'Contraseña actualizada exitosamente. Bienvenido(a) a la plataforma de prenómina.',
-      'success',
-    );
+    payrollStore.showToast('Contraseña actualizada.', 'success');
     await router.push(getHomeRouteForRole(session.user.role));
   } catch (error) {
     errorMessage.value = toApiError(error).message;
@@ -146,19 +143,33 @@ function handleCancelPasswordChange(): void {
       <div class="login-card__brand">
         <img :src="logoUrl" class="login-card__mark" alt="USTA" />
         <div>
-          <b>Gestión Docente · Prenómina</b>
-          <span>Santo Tomás · Seccional Tunja</span>
+          <b>Prenómina docente</b>
+          <span>Universidad Santo Tomás · Tunja</span>
         </div>
       </div>
 
-      <div v-if="errorMessage" class="alert-row" style="margin-bottom: 14px">
-        <span>⚠</span>
+      <div v-if="errorMessage" class="alert-row" role="alert" style="margin-bottom: 14px">
+        <svg
+          viewBox="0 0 24 24"
+          width="16"
+          height="16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          style="flex-shrink: 0; margin-top: 2px"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
         <span><b>{{ errorMessage }}</b></span>
       </div>
 
       <AuthCredentialsForm
         v-if="!isPasswordChangeStep"
-        :users-directory="authStore.usersDirectory"
         :is-microsoft-entra-enabled="authStore.isMicrosoftEntraEnabled"
         :is-local-login-allowed="authStore.isLocalLoginAllowed"
         :institutional-domain="institutionalDomain"

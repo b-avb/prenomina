@@ -27,7 +27,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA ORIENTACIÓN ESPACIOS ACADÉMICOS DE POSGRADO",
     "substantiveFunction": "Enseñanza-Aprendizaje",
     "definition": "Orientación de módulos en programas de especialización, maestría o doctorado.",
-    "guideline": "Cantidad de horas mensuales que multiplicadas por 4 da el total del módulo de posgrado que orientará (Horas mes = Horas módulo ÷ 4). Tope máximo: 48 h/mes.",
+    "guideline": "Horas mensuales equivalentes al total del módulo de posgrado dividido entre cuatro (Horas mes = Horas módulo ÷ 4). Tope máximo: 48 h/mes.",
     "baseHours": 4,
     "capHours": 48,
     "requiresViceRectorApproval": false,
@@ -51,11 +51,11 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "PLANEACIÓN DE PRUEBAS ACADÉMICAS EN EL MARCO DEL SEA",
     "substantiveFunction": "Enseñanza-Aprendizaje",
     "definition": "Diseño, validación y análisis de pruebas del Sistema de Evaluación del Aprendizaje (SEA).",
-    "guideline": "Obligatorio garantizar horas en todos los programas (Lineamiento B-23). Hasta 8 h/mes para pregrado y 4 h/mes para posgrado según ANEXO 5. Mínimo 2 años de antigüedad en la USTA.",
+    "guideline": "Obligatorio garantizar horas en todos los programas (Lineamiento B-23). Hasta 8 h/mes para pregrado y 4 h/mes para posgrado según Anexo 5. Mínimo 2 años de antigüedad en la USTA.",
     "baseHours": 4,
     "capHours": 28,
     "requiresViceRectorApproval": false,
-    "appliesTo": "Todas las unidades académicas (según tope ANEXO 5)",
+    "appliesTo": "Todas las unidades académicas (según tope Anexo 5)",
     "severity": "justifiable_alert",
     "mandatoryInFaculty": true
   },
@@ -64,11 +64,11 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "PLANEACIÓN DE PRUEBAS ACADÉMICAS EN EL MARCO DEL SABER PRO",
     "substantiveFunction": "Enseñanza-Aprendizaje",
     "definition": "Acompañamiento, simulacros y fortalecimiento de competencias genéricas y específicas Saber Pro.",
-    "guideline": "Obligatorio en todos los programas de pregrado (Lineamiento B-23). Según ANEXO 5: 8, 12, 20 o 24 h/mes según número de grupos; hasta 60 h/mes en direcciones académicas.",
+    "guideline": "Obligatorio en todos los programas de pregrado (Lineamiento B-23). Según Anexo 5: 8, 12, 20 o 24 h/mes según número de grupos; hasta 60 h/mes en direcciones académicas.",
     "baseHours": 8,
     "capHours": 24,
     "requiresViceRectorApproval": false,
-    "appliesTo": "Programas de pregrado y direcciones académicas (según ANEXO 5)",
+    "appliesTo": "Programas de pregrado y direcciones académicas (según Anexo 5)",
     "severity": "justifiable_alert",
     "mandatoryInFaculty": true
   },
@@ -101,7 +101,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "DOCENTE DE TUTORÍAS ACADÉMICAS DISCIPLINARES - PROYECTO INTEGRADOR",
     "substantiveFunction": "Enseñanza-Aprendizaje",
     "definition": "Acompañamiento transversal de taller y proyecto integrador en Arquitectura.",
-    "guideline": "Hasta 4 h/mes por docente. Solo aplica para la Facultad de Arquitectura; horas adicionales requieren aval V.A.",
+    "guideline": "Hasta 4 h/mes por docente. Solo aplica para la Facultad de Arquitectura; las horas adicionales requieren aval de la Vicerrectoría Académica.",
     "baseHours": 4,
     "capHours": 4,
     "requiresViceRectorApproval": false,
@@ -139,7 +139,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA DISEÑO DE CURSOS E-LEARNING",
     "substantiveFunction": "Enseñanza-Aprendizaje",
     "definition": "Virtualización y producción de aulas o módulos digitales para pregrado y posgrado.",
-    "guideline": "Entre 8 y 32 h/mes. Solamente se aprueba con proyecto avalado por Dirección de Campus Virtual y pre-aval de la Vicerrectoría Académica (ANEXO 3).",
+    "guideline": "Entre 8 y 32 h/mes. Solamente se aprueba con proyecto avalado por Dirección de Campus Virtual y aval previo de la Vicerrectoría Académica (Anexo 3).",
     "baseHours": 8,
     "capHours": 32,
     "requiresViceRectorApproval": true,
@@ -228,7 +228,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA LÍDER DE GESTIÓN DE RESPONSABILIDAD SOCIAL",
     "substantiveFunction": "Proyección Social",
     "definition": "Liderazgo de procesos de proyección social y responsabilidad social universitaria en la unidad.",
-    "guideline": "Regla condicionada por unidad: Entre 12 y 16 h/mes para facultades SIN posgrados; entre 16 y 20 h/mes para facultades CON posgrados.",
+    "guideline": "Entre 12 y 16 h/mes para facultades sin posgrados; entre 16 y 20 h/mes para facultades con posgrados.",
     "baseHours": 12,
     "capHours": 16,
     "postgraduateCapHours": 20,
@@ -241,7 +241,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA CONSULTORIOS JURÍDICOS",
     "substantiveFunction": "Proyección Social",
     "definition": "Asesoría jurídica gratuita y acompañamiento a estudiantes de Consultorio Jurídico.",
-    "guideline": "Entre 16 y 56 h/mes por docente (exceso justificado ante V.A.); tope agregado de 320 h/mes en la Facultad de Derecho.",
+    "guideline": "Entre 16 y 56 h/mes por docente (las horas adicionales requieren aval de la Vicerrectoría Académica); tope agregado de 320 h/mes en la Facultad de Derecho.",
     "baseHours": 16,
     "capHours": 56,
     "requiresViceRectorApproval": false,
@@ -459,11 +459,11 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "name": "TUNJA DOCENTE SICDDI",
     "substantiveFunction": "Investigación",
     "definition": "Dedicación escalafonada de investigación según el Acuerdo 3 del 19/03/2025.",
-    "guideline": "Horas FIJAS no modificables por el decano según Nivel SICDDI: Nivel I = 20 h/mes, Nivel II = 80 h/mes, Nivel III = 136 h/mes. Todas las demás actividades de investigación del docente quedan incluidas bajo SICDDI.",
+    "guideline": "Horas fijas no modificables por la decanatura según categoría SICDDI: Nivel I = 20 h/mes, Nivel II = 80 h/mes, Nivel III = 136 h/mes. Las demás actividades de investigación del docente quedan incluidas bajo este código.",
     "baseHours": 20,
     "capHours": 136,
     "requiresViceRectorApproval": false,
-    "appliesTo": "Docentes categorizados en SICDDI 2026 (ANEXO 7)",
+    "appliesTo": "Docentes categorizados en SICDDI 2026 (Anexo 7)",
     "severity": "blocking",
     "lockedByResearch": true
   },
@@ -660,13 +660,13 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "ing-industrial",
     "name": "Ingeniería Industrial",
-    "division": "División de Arquitectura e Ingenierías",
+    "division": "División de Ingenierías y Arquitectura",
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Juan Camilo Ernesto Valderrama Balaguera",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 32,
     "curriculumCap40106": 20,
     "seaCap40109": 8,
@@ -679,16 +679,16 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "ing-mecanica",
     "name": "Ingeniería Mecánica",
-    "division": "División de Arquitectura e Ingenierías",
+    "division": "División de Ingenierías y Arquitectura",
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Helver Mauricio Muñoz Barajas",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 44,
     "curriculumCap40106": 24,
-    "seaCap40109": 8,
+    "seaCap40109": 12,
     "saberProCap40127": 12,
     "graduatesCap20502": 12,
     "totalTeachers": 12,
@@ -698,13 +698,13 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "ing-sistemas",
     "name": "Ingeniería de Sistemas",
-    "division": "División de Arquitectura e Ingenierías",
+    "division": "División de Ingenierías y Arquitectura",
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Luz Santamaría Granados",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 28,
     "curriculumCap40106": 44,
     "seaCap40109": 12,
@@ -717,13 +717,13 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "adm-empresas",
     "name": "Administración de Empresas",
-    "division": "División de Ciencias Económicas, Administrativas y Contables",
+    "division": "División de Ciencias Económicas y Administrativas",
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Jean Pierre Anchicoque Cadena",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 80,
     "curriculumCap40106": 60,
     "seaCap40109": 24,
@@ -736,16 +736,16 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "ing-ambiental",
     "name": "Ingeniería Ambiental",
-    "division": "División de Arquitectura e Ingenierías",
+    "division": "División de Ingenierías y Arquitectura",
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Katherine Johana Aguja Herrera",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 28,
     "curriculumCap40106": 24,
-    "seaCap40109": 8,
+    "seaCap40109": 12,
     "saberProCap40127": 12,
     "graduatesCap20502": 8,
     "totalTeachers": 8,
@@ -761,7 +761,7 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "deanName": "Carlos Andrés Aranda Camacho",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 138,
     "curriculumCap40106": 104,
     "seaCap40109": 48,
@@ -774,13 +774,13 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "ing-civil",
     "name": "Ingeniería Civil",
-    "division": "División de Arquitectura e Ingenierías",
+    "division": "División de Ingenierías y Arquitectura",
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Brigid Hiomara Pacheco García",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 132,
     "curriculumCap40106": 68,
     "seaCap40109": 32,
@@ -793,13 +793,13 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "arquitectura",
     "name": "Arquitectura",
-    "division": "División de Arquitectura e Ingenierías",
+    "division": "División de Ingenierías y Arquitectura",
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Felipe Andrés Muñoz Cárdenas",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 32,
     "curriculumCap40106": 24,
     "seaCap40109": 16,
@@ -812,13 +812,13 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "contaduria",
     "name": "Contaduría Pública",
-    "division": "División de Ciencias Económicas, Administrativas y Contables",
+    "division": "División de Ciencias Económicas y Administrativas",
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Adriana Jiménez Herrera",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 32,
     "curriculumCap40106": 44,
     "seaCap40109": 16,
@@ -831,13 +831,13 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "negocios-int",
     "name": "Negocios Internacionales",
-    "division": "División de Ciencias Económicas, Administrativas y Contables",
+    "division": "División de Ciencias Económicas y Administrativas",
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "Esperanza Díaz Casallas",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 32,
     "curriculumCap40106": 44,
     "seaCap40109": 8,
@@ -850,13 +850,13 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "ing-electronica",
     "name": "Ingeniería Electrónica",
-    "division": "División de Arquitectura e Ingenierías",
+    "division": "División de Ingenierías y Arquitectura",
     "unitType": "Facultad",
     "hasPostgraduates": true,
     "deanName": "William Fabián Chaparro Becerra",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 52,
     "curriculumCap40106": 40,
     "seaCap40109": 8,
@@ -869,13 +869,13 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "bioingenieria",
     "name": "Bioingeniería",
-    "division": "División de Arquitectura e Ingenierías",
+    "division": "División de Ingenierías y Arquitectura",
     "unitType": "Facultad",
     "hasPostgraduates": false,
     "deanName": "Yuddy Alejandra Castro Ortegón",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 12,
     "curriculumCap40106": 16,
     "seaCap40109": 8,
@@ -888,13 +888,13 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "ing-datos-ia",
     "name": "Ingeniería de Datos e Inteligencia Artificial",
-    "division": "División de Arquitectura e Ingenierías",
+    "division": "División de Ingenierías y Arquitectura",
     "unitType": "Facultad",
     "hasPostgraduates": false,
     "deanName": "Juan Francisco Mendoza Moreno",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 4,
     "curriculumCap40106": 16,
     "seaCap40109": 8,
@@ -913,7 +913,7 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "deanName": "Luis Rafael Hutchison Salazar",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 10,
     "curriculumCap40106": 16,
     "seaCap40109": 16,
@@ -932,7 +932,7 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "deanName": "Julián Santiago Delgadillo Aponte",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 16,
     "curriculumCap40106": 16,
     "seaCap40109": 8,
@@ -951,7 +951,7 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "deanName": "Gladys Leonor Arias Rodríguez",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 16,
     "curriculumCap40106": 20,
     "seaCap40109": 8,
@@ -970,7 +970,7 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "deanName": "Gladys Leonor Arias Rodríguez",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 0,
     "curriculumCap40106": 8,
     "seaCap40109": 4,
@@ -983,13 +983,13 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   {
     "id": "marketing",
     "name": "Marketing y Transformación Digital",
-    "division": "División de Ciencias Económicas, Administrativas y Contables",
+    "division": "División de Ciencias Económicas y Administrativas",
     "unitType": "Facultad",
     "hasPostgraduates": false,
     "deanName": "Eduardo López Flórez",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 4,
     "curriculumCap40106": 16,
     "seaCap40109": 8,
@@ -1001,14 +1001,14 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   },
   {
     "id": "ciencias-basicas",
-    "name": "Departamento de Ciencias Básicas",
+    "name": "Dirección de Ciencias Básicas",
     "division": "Direcciones Académicas Transversales",
     "unitType": "Dirección Académica",
     "hasPostgraduates": false,
     "deanName": "Ruth Marlene Sandoval Ortiz",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 0,
     "curriculumCap40106": 20,
     "seaCap40109": 8,
@@ -1020,14 +1020,14 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
   },
   {
     "id": "humanidades",
-    "name": "Departamento de Humanidades y Formación Integral",
+    "name": "Dirección de Humanidades",
     "division": "Direcciones Académicas Transversales",
     "unitType": "Dirección Académica",
     "hasPostgraduates": false,
     "deanName": "David Sáenz Guerrero",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 0,
     "curriculumCap40106": 20,
     "seaCap40109": 8,
@@ -1046,7 +1046,7 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "deanName": "José Miguel Fagua Contreras",
     "payrollStatus": "Borrador",
     "currentVersion": 1,
-    "updatedAt": "2026-08-01 08:00",
+    "updatedAt": "",
     "qualityCap30411": 16,
     "curriculumCap40106": 16,
     "seaCap40109": 8,
@@ -1159,7 +1159,7 @@ export const PROGRAM_QUOTAS_ANNEX5_SEED: ProgramQuotaAnnex5[] = [
     "curriculumNotes": "Las funciones de gestión curricular son asumidas por el gestor virtual (40614)",
     "sea40109": 0,
     "saberPro40127": 0,
-    "isActive": false
+    "isActive": true
   },
   {
     "id": "p-mec-1",
@@ -1241,10 +1241,10 @@ export const PROGRAM_QUOTAS_ANNEX5_SEED: ProgramQuotaAnnex5[] = [
     "programName": "MAESTRÍA EN SOSTENIBILIDAD AMBIENTAL",
     "level": "Posgrado",
     "modality": "Presencial",
-    "accreditationStatus": "Asignar solamente si hay cohorte activa",
+    "accreditationStatus": "Registro Calificado Vigente",
     "quality30411": 12,
     "curriculum40106": 8,
-    "curriculumNotes": "Asignar solamente si hay cohorte activa",
+    "curriculumNotes": "Asignar únicamente con cohorte activa",
     "sea40109": 4,
     "saberPro40127": 0,
     "isActive": true
@@ -1361,6 +1361,132 @@ export const PROGRAM_QUOTAS_ANNEX5_SEED: ProgramQuotaAnnex5[] = [
     "sea40109": 8,
     "saberPro40127": 12,
     "isActive": true
+  },
+  {
+    "id": "p-bio-1",
+    "unitId": "bioingenieria",
+    "unitName": "Bioingeniería",
+    "programName": "BIOINGENIERÍA",
+    "level": "Pregrado",
+    "modality": "Presencial",
+    "accreditationStatus": "Registro Calificado Vigente",
+    "quality30411": 12,
+    "curriculum40106": 16,
+    "sea40109": 8,
+    "saberPro40127": 8,
+    "isActive": true
+  },
+  {
+    "id": "p-dat-1",
+    "unitId": "ing-datos-ia",
+    "unitName": "Ingeniería de Datos e Inteligencia Artificial",
+    "programName": "INGENIERÍA DE DATOS E INTELIGENCIA ARTIFICIAL",
+    "level": "Pregrado",
+    "modality": "Presencial",
+    "accreditationStatus": "Registro Calificado Vigente",
+    "quality30411": 4,
+    "curriculum40106": 16,
+    "sea40109": 8,
+    "saberPro40127": 8,
+    "isActive": true
+  },
+  {
+    "id": "p-cul-1",
+    "unitId": "cultura-fisica",
+    "unitName": "Cultura Física, Deporte y Recreación",
+    "programName": "CULTURA FÍSICA, DEPORTE Y RECREACIÓN",
+    "level": "Pregrado",
+    "modality": "Presencial",
+    "accreditationStatus": "Programa Acreditado",
+    "quality30411": 6,
+    "curriculum40106": 12,
+    "sea40109": 12,
+    "saberPro40127": 12,
+    "isActive": true
+  },
+  {
+    "id": "p-cul-2",
+    "unitId": "cultura-fisica",
+    "unitName": "Cultura Física, Deporte y Recreación",
+    "programName": "MAESTRÍA EN ACTIVIDAD FÍSICA PARA LA SALUD",
+    "level": "Posgrado",
+    "modality": "Presencial",
+    "accreditationStatus": "Registro Calificado Vigente",
+    "quality30411": 4,
+    "curriculum40106": 4,
+    "sea40109": 4,
+    "saberPro40127": 0,
+    "isActive": true
+  },
+  {
+    "id": "p-dis-1",
+    "unitId": "diseno-interaccion",
+    "unitName": "Diseño de Interacción",
+    "programName": "DISEÑO DE INTERACCIÓN",
+    "level": "Pregrado",
+    "modality": "Presencial",
+    "accreditationStatus": "Registro Calificado Vigente",
+    "quality30411": 16,
+    "curriculum40106": 16,
+    "sea40109": 8,
+    "saberPro40127": 12,
+    "isActive": true
+  },
+  {
+    "id": "p-len-1",
+    "unitId": "lic-lenguas",
+    "unitName": "Licenciatura en Español y Lenguas Extranjeras",
+    "programName": "LICENCIATURA EN ESPAÑOL Y LENGUAS EXTRANJERAS",
+    "level": "Pregrado",
+    "modality": "Presencial",
+    "accreditationStatus": "Registro Calificado Vigente",
+    "quality30411": 8,
+    "curriculum40106": 12,
+    "sea40109": 8,
+    "saberPro40127": 0,
+    "isActive": true
+  },
+  {
+    "id": "p-len-2",
+    "unitId": "lic-lenguas",
+    "unitName": "Licenciatura en Español y Lenguas Extranjeras",
+    "programName": "MAESTRÍA EN PEDAGOGÍA",
+    "level": "Posgrado",
+    "modality": "Presencial",
+    "accreditationStatus": "Programa Acreditado",
+    "quality30411": 8,
+    "curriculum40106": 8,
+    "sea40109": 0,
+    "saberPro40127": 0,
+    "isActive": true
+  },
+  {
+    "id": "p-inf-1",
+    "unitId": "lic-infantil",
+    "unitName": "Licenciatura en Educación Infantil Bilingüe",
+    "programName": "LICENCIATURA EN EDUCACIÓN INFANTIL BILINGÜE",
+    "level": "Pregrado",
+    "modality": "Presencial",
+    "accreditationStatus": "Registro Calificado Vigente",
+    "quality30411": 0,
+    "curriculum40106": 8,
+    "sea40109": 4,
+    "saberPro40127": 0,
+    "isActive": true
+  },
+  {
+    "id": "p-mkt-1",
+    "unitId": "marketing",
+    "unitName": "Marketing y Transformación Digital",
+    "programName": "MARKETING Y TRANSFORMACIÓN DIGITAL",
+    "level": "Pregrado",
+    "modality": "Presencial",
+    "accreditationStatus": "Registro Calificado Vigente",
+    "quality30411": 4,
+    "curriculum40106": 16,
+    "sea40109": 8,
+    "saberPro40127": 8,
+    "isActive": true
   }
 ];
 
@@ -1372,17 +1498,12 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "fullName": "JUAN CAMILO ERNESTO VALDERRAMA BALAGUERA",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Decano(a) de Facultad",
+    "rank": "Decanatura de Facultad",
     "education": "Ingeniero Industrial · Magíster en Ingeniería",
     "isProvisional": false,
     "seniorityYears": 5,
     "academicSpaces": [],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "allocations": {}
   },
   {
     "id": "ind-2",
@@ -1395,54 +1516,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniera Industrial · Especialista en Finanzas · Magíster en Ingeniería Industrial",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "e1",
-        "name": "ECONOMÍA EMPRESARIAL",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "e2",
-        "name": "INTELIGENCIA DE MERCADOS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "e3",
-        "name": "INGENIERÍA ECONÓMICA",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "e4",
-        "name": "GESTIÓN DE PROYECTOS EN INGENIERÍA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "pseManualOverride": 22,
-    "allocations": {
-      "10212": {
-        "code": "10212",
-        "hours": 8,
-        "unitCount": 2
-      },
-      "10336": {
-        "code": "10336",
-        "hours": 10
-      },
-      "30420": {
-        "code": "30420",
-        "hours": 8
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      }
-    },
-    "sharedHours": 16,
-    "sharedUnitName": "PROYECCIÓN SOCIAL"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ind-3",
@@ -1455,59 +1530,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Industrial · Esp. en Salud Ocupacional y Prevención del Riesgo · Magíster en Ingeniería",
     "isProvisional": false,
     "seniorityYears": 10,
-    "academicSpaces": [
-      {
-        "id": "e5",
-        "name": "MATERIALES PARA INGENIERÍA",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "e6",
-        "name": "EXPRESIÓN GRÁFICA Y MODELACIÓN DIGITAL",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "e7",
-        "name": "INVESTIGACIÓN DE OPERACIONES I",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "e8",
-        "name": "SUPPLY CHAIN MANAGEMENT",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "e9",
-        "name": "PRÁCTICA PROFESIONAL",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      }
-    ],
-    "allocations": {
-      "10212": {
-        "code": "10212",
-        "hours": 4,
-        "unitCount": 1
-      },
-      "20120": {
-        "code": "20120",
-        "hours": 16,
-        "unitCount": 8
-      },
-      "20223": {
-        "code": "20223",
-        "hours": 16,
-        "unitCount": 8
-      },
-      "43401": {
-        "code": "43401",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ind-4",
@@ -1520,60 +1544,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Administrador de Empresas · Esp. en Sistemas Integrados QHSE · Maestría en Sistemas de Gestión",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "e10",
-        "name": "GESTIÓN ORGANIZACIONAL",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "e11",
-        "name": "CONTABILIDAD Y COSTOS",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "e12",
-        "name": "PRESUPUESTOS Y FINANZAS",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "e13",
-        "name": "FINANZAS",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      }
-    ],
-    "pseManualOverride": 18,
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 10
-      },
-      "20223": {
-        "code": "20223",
-        "hours": 16,
-        "unitCount": 8
-      },
-      "20225": {
-        "code": "20225",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      },
-      "43401": {
-        "code": "43401",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ind-5",
@@ -1586,49 +1558,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Industrial · Esp. en Gerencia Logística · Magíster en Salud Ocupacional y Ambiental",
     "isProvisional": false,
     "seniorityYears": 9,
-    "academicSpaces": [
-      {
-        "id": "e14",
-        "name": "GESTIÓN EN SEGURIDAD Y SALUD EN EL TRABAJO",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "e15",
-        "name": "GESTIÓN Y CONTROL DE CALIDAD",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "e16",
-        "name": "LOGÍSTICA DE DISTRIBUCIÓN",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "e17",
-        "name": "GESTIÓN EN SST Y MEDIO AMBIENTE",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10212": {
-        "code": "10212",
-        "hours": 4,
-        "unitCount": 1
-      },
-      "10336": {
-        "code": "10336",
-        "hours": 20
-      },
-      "20220": {
-        "code": "20220",
-        "hours": 16
-      }
-    },
-    "sharedHours": 120,
-    "sharedUnitName": "INGENIERÍA AMBIENTAL (Compartido)"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ind-6",
@@ -1641,58 +1572,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniera Industrial · Magíster en Administración de Empresas",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "e18",
-        "name": "INVESTIGACIÓN DE OPERACIONES II",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "e19",
-        "name": "MODELOS DE OPTIMIZACIÓN",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      },
-      {
-        "id": "e20",
-        "name": "GESTIÓN DE LA PRODUCCIÓN",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "e21",
-        "name": "PLANEACIÓN Y PROGRAMACIÓN DE LA PRODUCCIÓN",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10212": {
-        "code": "10212",
-        "hours": 4,
-        "unitCount": 1
-      },
-      "10318": {
-        "code": "10318",
-        "hours": 4
-      },
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "20223": {
-        "code": "20223",
-        "hours": 4,
-        "unitCount": 2
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 6
-      }
-    },
-    "sharedHours": 110,
-    "sharedUnitName": "ADMINISTRACIÓN / POSGRADOS"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ind-7",
@@ -1705,69 +1586,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Industrial · Esp. en Producción y Operaciones · Magíster en Administración de Organizaciones",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "e22",
-        "name": "PROCESOS INDUSTRIALES",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "e23",
-        "name": "MODELOS PROBABILÍSTICOS",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "e24",
-        "name": "ESTADÍSTICA INDUSTRIAL",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "e25",
-        "name": "FILOSOFÍA LEAN",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "e26",
-        "name": "PLANEACIÓN Y PROGRAMACIÓN DE LA PRODUCCIÓN",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "e27",
-        "name": "NUEVAS TECNOLOGÍAS INDUSTRIALES",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      }
-    ],
-    "allocations": {
-      "10212": {
-        "code": "10212",
-        "hours": 16,
-        "unitCount": 4
-      },
-      "10364": {
-        "code": "10364",
-        "hours": 8,
-        "unitCount": 2
-      },
-      "20223": {
-        "code": "20223",
-        "hours": 5,
-        "unitCount": 3
-      },
-      "30420": {
-        "code": "30420",
-        "hours": 8
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ind-8",
@@ -1780,66 +1600,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniera de Alimentos · Magíster en Tecnología de Alimentos · Doctora en Ingeniería",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "e28",
-        "name": "ELECTIVA: Procesos de transformación en alimentos",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "e29",
-        "name": "METODOLOGÍA DE LA INVESTIGACIÓN",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "e30",
-        "name": "OPCIÓN DE GRADO I",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "e31",
-        "name": "OPCIÓN DE GRADO II",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "e32",
-        "name": "PRODUCCIÓN AGROINDUSTRIAL",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      }
-    ],
-    "allocations": {
-      "10212": {
-        "code": "10212",
-        "hours": 14,
-        "unitCount": 4
-      },
-      "10225": {
-        "code": "10225",
-        "hours": 8
-      },
-      "10336": {
-        "code": "10336",
-        "hours": 36
-      },
-      "10364": {
-        "code": "10364",
-        "hours": 8,
-        "unitCount": 2
-      },
-      "10384": {
-        "code": "10384",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ind-9",
@@ -1852,107 +1614,28 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Industrial · Magíster en Gestión Humana y Desarrollo Organizacional",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "e33",
-        "name": "INGENIERÍA DE MÉTODOS Y TIEMPOS",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "e34",
-        "name": "MÉTODOS INFERENCIALES",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "e35",
-        "name": "CONTROL ESTADÍSTICO DE CALIDAD",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "pseManualOverride": 16,
-    "allocations": {
-      "10226": {
-        "code": "10226",
-        "hours": 48
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ind-10",
     "unitId": "ing-industrial",
     "documentId": "7178217",
-    "fullName": "ORTEGA CELIS PAUL EDUARDO (Antes INDUSTRIAL PENDIENTE 1)",
+    "fullName": "ORTEGA CELIS PAUL EDUARDO",
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
     "education": "Ingeniero Industrial · Magíster en Administración",
-    "isProvisional": true,
+    "isProvisional": false,
     "seniorityYears": 1,
-    "academicSpaces": [
-      {
-        "id": "e36",
-        "name": "INTRODUCCIÓN A LA INGENIERÍA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "e37",
-        "name": "INNOVACIÓN Y DISEÑO",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "e38",
-        "name": "GESTIÓN DE LA CADENA DE SUMINISTRO",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "e39",
-        "name": "CREACIÓN DE EMPRESA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "e40",
-        "name": "GERENCIA DE SERVICIOS",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10212": {
-        "code": "10212",
-        "hours": 16,
-        "unitCount": 4
-      },
-      "20223": {
-        "code": "20223",
-        "hours": 8,
-        "unitCount": 4
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 8
-      },
-      "30312": {
-        "code": "30312",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ind-11",
     "unitId": "ing-industrial",
     "documentId": "VACANTE-IND-02",
-    "fullName": "INDUSTRIAL PENDIENTE 2 (Gestor Virtual MT)",
+    "fullName": "VACANTE GESTOR VIRTUAL MT",
     "dedication": "MT",
     "expectedWorkload": 80,
     "rank": "Medio Tiempo Gestor Virtual",
@@ -1960,12 +1643,7 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "isProvisional": true,
     "seniorityYears": 0,
     "academicSpaces": [],
-    "allocations": {
-      "40614": {
-        "code": "40614",
-        "hours": 80
-      }
-    }
+    "allocations": {}
   },
   {
     "id": "ind-12",
@@ -1975,63 +1653,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) Industrial · Magíster en Ingeniería Industrial",
+    "education": "Ingeniería Industrial · Magíster en Ingeniería Industrial",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ind-12-esp-1",
-        "name": "LOGISTICA DE DISTRIBUCIÓN - IDUUA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ind-12-esp-2",
-        "name": "CONTABILIDAD Y COSTOS - IDUUA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ind-12-esp-3",
-        "name": "CONTROL ESTADISTICO DE CALIDAD - IDUUA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ind-12-esp-4",
-        "name": "CREACIÓN DE EMPRESA - IDU6A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ind-12-esp-5",
-        "name": "PROCESOS INDUSTRIALES - IDUUB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ind-12-esp-6",
-        "name": "GESTION DE LA PRODUCCION - IDUUB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ind-12-esp-7",
-        "name": "SUPPLY CHAIN MANAGEMENT - IDUUA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-1",
@@ -2044,20 +1670,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Mecánico · Magíster en Ingeniería",
     "isProvisional": false,
     "seniorityYears": 9,
-    "academicSpaces": [
-      {
-        "id": "m1",
-        "name": "ELECTIVA DE FORMACIÓN INTEGRAL 2 (Gestión de residuos peligrosos e ionizantes)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-2",
@@ -2070,46 +1684,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Mecánico",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "m2",
-        "name": "DIBUJO DE MÁQUINAS (Grupo 1)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m3",
-        "name": "DIBUJO DE MÁQUINAS (Grupo 2)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m4",
-        "name": "OPTATIVA 2 (Diagnóstico automotor)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m5",
-        "name": "FORMULACIÓN Y EVALUACIÓN DE PROYECTOS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "20220": {
-        "code": "20220",
-        "hours": 20
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 13
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-3",
@@ -2122,46 +1698,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Mecánico",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "m6",
-        "name": "INTRODUCCIÓN A LA INGENIERÍA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m7",
-        "name": "ELECTIVA PROFESIONAL I (Motores de combustión interna)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "m8",
-        "name": "TRABAJO DE GRADO",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "m9",
-        "name": "TALLER DE FABRICACIÓN (BIO)",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 48
-      },
-      "10426": {
-        "code": "10426",
-        "hours": 20
-      },
-      "40222": {
-        "code": "40222",
-        "hours": 7
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-4",
@@ -2174,38 +1712,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Mecánico · Doctor en Ingeniería",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "m4-1",
-        "name": "MECÁNICA DE FLUIDOS",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m4-2",
-        "name": "SISTEMAS DE TRANSFORMACIÓN DE ENERGÍA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "m4-3",
-        "name": "PROYECTO INTEGRADOR",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "m4-4",
-        "name": "ELECTIVA PROFESIONAL 4 (Herramientas CAM para mecanizado)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10226": {
-        "code": "10226",
-        "hours": 80
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-5",
@@ -2218,44 +1726,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniera Metalúrgica · Magíster en Metalurgia y Ciencia de los Materiales",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "m5-1",
-        "name": "CIENCIA DE LOS MATERIALES (G1)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m5-2",
-        "name": "CIENCIA DE LOS MATERIALES (G2)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m5-3",
-        "name": "PROCESOS DE MANUFACTURA 2",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 45
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 8
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 24
-      },
-      "43401": {
-        "code": "43401",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-6",
@@ -2268,38 +1740,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Electrónico / Mecánico · Magíster en Automatización",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "m6-1",
-        "name": "LÓGICA COMPUTACIONAL (G1)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "m6-2",
-        "name": "ELECTRÓNICA INDUSTRIAL",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m6-3",
-        "name": "INSTRUMENTACIÓN Y AUTOMATIZACIÓN",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "m6-4",
-        "name": "LÓGICA COMPUTACIONAL (G2)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10226": {
-        "code": "10226",
-        "hours": 65
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-7",
@@ -2312,52 +1754,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Mecánico · Magíster en Metalurgia",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "m10",
-        "name": "ESTÁTICA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m11",
-        "name": "DINÁMICA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m12",
-        "name": "TURBOMÁQUINAS",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "30420": {
-        "code": "30420",
-        "hours": 8
-      },
-      "40006": {
-        "code": "40006",
-        "hours": 10
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 12
-      },
-      "43401": {
-        "code": "43401",
-        "hours": 11
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-8",
@@ -2370,36 +1768,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Mecánico · Doctor en Ingeniería",
     "isProvisional": false,
     "seniorityYears": 10,
-    "academicSpaces": [
-      {
-        "id": "m8-1",
-        "name": "PROCESOS DE MANUFACTURA 1",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m8-2",
-        "name": "PROCESOS DE MANUFACTURA 2",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m8-3",
-        "name": "OPTATIVA 1 (Selección de Materiales)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      }
-    ],
-    "allocations": {
-      "10226": {
-        "code": "10226",
-        "hours": 80
-      },
-      "43401": {
-        "code": "43401",
-        "hours": 5
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-9",
@@ -2412,44 +1782,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniera Mecánica · Magíster en Ingeniería",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "m9-1",
-        "name": "TRANSFERENCIA DE CALOR",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m9-2",
-        "name": "ELECTIVA PROFESIONAL III (Termografía Industrial)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "m9-3",
-        "name": "PROYECTO INTEGRADOR",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      }
-    ],
-    "allocations": {
-      "10226": {
-        "code": "10226",
-        "hours": 50
-      },
-      "10340": {
-        "code": "10340",
-        "hours": 40
-      },
-      "10384": {
-        "code": "10384",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-10",
@@ -2462,61 +1796,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Mecánico · Magíster en Diseño Mecánico",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "m10-1",
-        "name": "EXPRESIÓN GRÁFICA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m10-2",
-        "name": "RESISTENCIA DE MATERIALES",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m10-3",
-        "name": "MECANISMOS",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m10-4",
-        "name": "DISEÑO DE MÁQUINAS 1",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m10-5",
-        "name": "ELECTIVA DE FORMACIÓN INTEGRAL 1 (Análisis por Elementos Finitos)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10426": {
-        "code": "10426",
-        "hours": 6
-      },
-      "20120": {
-        "code": "20120",
-        "hours": 6,
-        "unitCount": 3
-      },
-      "20225": {
-        "code": "20225",
-        "hours": 16
-      },
-      "30312": {
-        "code": "30312",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-11",
@@ -2529,52 +1810,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Mecánico",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "m13",
-        "name": "INGENIERÍA DE LOS MATERIALES",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m14",
-        "name": "TERMODINÁMICA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m15",
-        "name": "ADMINISTRACIÓN PARA INGENIEROS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "m16",
-        "name": "INGENIERÍA DE LOS MATERIALES (BIO G1)",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "m17",
-        "name": "INGENIERÍA DE LOS MATERIALES (BIO G2)",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "30411": {
-        "code": "30411",
-        "hours": 18
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "43401": {
-        "code": "43401",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "mec-12",
@@ -2587,48 +1824,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Ingeniero Electricista / Mecánico",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "m18",
-        "name": "INSTALACIÓN DE MÁQUINAS ELÉCTRICAS (G1)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m19",
-        "name": "INSTALACIÓN DE MÁQUINAS ELÉCTRICAS (G2)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "m20",
-        "name": "METODOLOGÍA DE LA INVESTIGACIÓN",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "m21",
-        "name": "DISEÑO DE TRANSMISIÓN DE POTENCIA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "m22",
-        "name": "ELECTIVA PROFESIONAL II (Mantenimiento Industrial)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10226": {
-        "code": "10226",
-        "hours": 32
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 18
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-1",
@@ -2638,61 +1835,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-1-esp-1",
-        "name": "CLOUD COMPUTING PARA EL DESARROLLO DE SOFTWARE - IGS8B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-1-esp-2",
-        "name": "CLOUD COMPUTING PARA EL DESARROLLO DE SOFTWARE - INSSA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-1-esp-3",
-        "name": "GERENCIA DE SOFTWARE - IGS6B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-1-esp-4",
-        "name": "SIMULACION - INS7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-1-esp-5",
-        "name": "SIMULACION - INS7B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-1-esp-6",
-        "name": "DISEÑO WEB - IGS1C - SEGUNDO",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-2",
@@ -2702,49 +1849,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-2-esp-1",
-        "name": "INTRODUCCION A LA INGENIERIA SISTEMAS - IGS1A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-2-esp-2",
-        "name": "INTRODUCCION A LA INGENIERIA SISTEMAS - IGS1B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-2-esp-3",
-        "name": "BASES DE DATOS - IGS2B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-2-esp-4",
-        "name": "BASES DE DATOS - IGSHA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 4
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-3",
@@ -2754,55 +1863,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-3-esp-1",
-        "name": "REDES - INS6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-3-esp-2",
-        "name": "PRACTICA EMPRESARIAL - IGS8C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-3-esp-3",
-        "name": "DISEÑO WEB - IGS1B - SEGUNDO",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-3-esp-4",
-        "name": "DISEÑO WEB - IGS1D - SEGUNDO",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-3-esp-5",
-        "name": "DISEÑO WEB - IGS1E -SEGUNDOYTERCE",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-4",
@@ -2812,67 +1877,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-4-esp-1",
-        "name": "LEGISLACION INFORMATICA - IG10A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-4-esp-2",
-        "name": "LEGISLACION INFORMATICA - IG10B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-4-esp-3",
-        "name": "REDES - IGS6B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-4-esp-4",
-        "name": "REDES - IGS6C",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ing-sistemas-4-esp-5",
-        "name": "SISTEMAS OPERATIVOS - IGS5B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ing-sistemas-4-esp-6",
-        "name": "ARQUITECTURA DEL COMPUTADOR - IGS4B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ing-sistemas-4-esp-7",
-        "name": "ARQUITECTURA DEL COMPUTADOR - ISSSA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-5",
@@ -2882,55 +1891,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-5-esp-1",
-        "name": "INTELIGENCIA ARTIFICIAL - IGS8B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-5-esp-2",
-        "name": "INTELIGENCIA ARTIFICIAL - INSSA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-5-esp-3",
-        "name": "INTELIGENCIA ARTIFICIAL GENERATIVA - IGS9D",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-5-esp-4",
-        "name": "INTELIGENCIA ARTIFICIAL GENERATIVA - ISS9B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-5-esp-5",
-        "name": "PRACTICA EMPRESARIAL - INS8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-6",
@@ -2940,49 +1905,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-6-esp-1",
-        "name": "DESARROLLO ORIENTADO A SERVICIOS - IGS6B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-6-esp-2",
-        "name": "DESARROLLO EMPRESARIAL - ISHA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-6-esp-3",
-        "name": "BASES DE DATOS NOSQL - IGSHB",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-6-esp-4",
-        "name": "PROGRAMACION ORIENTADA A OBJETOS - IGS2B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-7",
@@ -2992,61 +1919,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-7-esp-1",
-        "name": "CALIDAD DE SOFTWARE - INS7B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-7-esp-2",
-        "name": "CIBERSEGURIDAD: WHITE HAT & BLUE TEAM STRATEGIES - IGS7B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-7-esp-3",
-        "name": "SISTEMAS OPERATIVOS - ISS5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-7-esp-4",
-        "name": "GERENCIA DE SOFTWARE - IGS6C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-7-esp-5",
-        "name": "TRABAJO DE GRADO I - IGS9B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-7-esp-6",
-        "name": "DISEÑO WEB - IGS1F - PRIMERO",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-8",
@@ -3056,67 +1933,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-8-esp-1",
-        "name": "ARQUITECTURA EMPRESARIAL - IGS5B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-8-esp-2",
-        "name": "ARQUITECTURA EMPRESARIAL - ISS5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-8-esp-3",
-        "name": "AUDITORIA DE SISTEMAS - IGS9B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-8-esp-4",
-        "name": "AUDITORIA DE SISTEMAS - ISS9A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ing-sistemas-8-esp-5",
-        "name": "CALIDAD DE SOFTWARE - IGS7C",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ing-sistemas-8-esp-6",
-        "name": "PRACTICA EMPRESARIAL - IGS8B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ing-sistemas-8-esp-7",
-        "name": "TRABAJO DE GRADO I - IGS9A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-9",
@@ -3126,55 +1947,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-9-esp-1",
-        "name": "DESARROLLO ORIENTADO A SERVICIOS - IGS6C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-9-esp-2",
-        "name": "DESARROLLO ORIENTADO A SERVICIOS - INS6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-9-esp-3",
-        "name": "BIG DATA - IGS7B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-9-esp-4",
-        "name": "DISEÑO WEB - IGS1A - PRIMERO",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-9-esp-5",
-        "name": "PROGRAMACION ORIENTADA A OBJETOS - IGS2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 4
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-10",
@@ -3184,57 +1961,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-10-esp-1",
-        "name": "DEVOPS - DEVOPS 8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-10-esp-2",
-        "name": "DEVOPS - DEVOPS 8B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-10-esp-3",
-        "name": "GERENCIA DE SOFTWARE - INS6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-10-esp-4",
-        "name": "PROGRAMACION ESTRUCTURADA PARA INGENIERIAS - IGS1A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-10-esp-5",
-        "name": "PROGRAMACION ESTRUCTURADA PARA INGENIERIAS - IGS1B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-sistemas-10-esp-6",
-        "name": "PROGRAMACION ORIENTADA A OBJETOS - IGS2C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-11",
@@ -3244,45 +1975,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-11-esp-1",
-        "name": "BIG DATA - INS7A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-11-esp-2",
-        "name": "TRABAJO DE GRADO II - IG10A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-11-esp-3",
-        "name": "TRABAJO DE GRADO II - IG10B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-11-esp-4",
-        "name": "DESARROLLO EMPRESARIAL - IGSHB",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-12",
@@ -3292,45 +1989,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-12-esp-1",
-        "name": "OPTIMIZACION - IGS6B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-12-esp-2",
-        "name": "OPTIMIZACION - IGS6C",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-12-esp-3",
-        "name": "OPTIMIZACION - INS6A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-sistemas-12-esp-4",
-        "name": "ANALISIS NUMERICO - IGSHB",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-sistemas-13",
@@ -3340,51 +2003,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) de Sistemas · Magíster en Ingeniería de Software y Sistemas",
+    "education": "Ingeniería de Sistemas · Magíster en Ingeniería de Software y Sistemas",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ing-sistemas-13-esp-1",
-        "name": "SEGURIDAD EN EL DESARROLLO DE SOFTWARE - DESA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-13-esp-2",
-        "name": "CIBERSEGURIDAD: WHITE HAT & BLUE TEAM STRATEGIES - INS7A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-13-esp-3",
-        "name": "CONSTRUCCION DE SOFTWARE - IGS4B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-13-esp-4",
-        "name": "CONSTRUCCION DE SOFTWARE - IGS4C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-sistemas-13-esp-5",
-        "name": "CONSTRUCCION DE SOFTWARE - ISS4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "adm-empresas-1",
@@ -3393,24 +2016,12 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "fullName": "JEAN PIERRE ANCHICOQUE CADENA",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Decano(a) de Facultad",
-    "education": "Administrador(a) de Empresas · Magíster en Administración y Gestión Empresarial",
+    "rank": "Decanatura de Facultad",
+    "education": "Administración de Empresas · Magíster en Administración y Gestión Empresarial",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "adm-empresas-1-esp-1",
-        "name": "PRACTICA DE RESP. SOCIAL UNIVERSITARIA - PRAC RESP SOCIAL",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "adm-empresas-2",
@@ -3420,49 +2031,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Administrador(a) de Empresas · Magíster en Administración y Gestión Empresarial",
+    "education": "Administración de Empresas · Magíster en Administración y Gestión Empresarial",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "adm-empresas-2-esp-1",
-        "name": "ESTRATEGIA - ESTRATEGIA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-2-esp-2",
-        "name": "EVALUACIÓN INTEGRAL DE PROYECTOS - EVA INT PRO D",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-2-esp-3",
-        "name": "NEGOCIACIÓN INTERNACIONAL - NEG INT D",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-2-esp-4",
-        "name": "NEGOCIACIÓN INTERNACIONAL - NEG INT N",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "30312": {
-        "code": "30312",
-        "hours": 4
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 12
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "adm-empresas-3",
@@ -3472,49 +2045,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Administrador(a) de Empresas · Magíster en Administración y Gestión Empresarial",
+    "education": "Administración de Empresas · Magíster en Administración y Gestión Empresarial",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "adm-empresas-3-esp-1",
-        "name": "SISTEMAS DE INFORMACION GERENCIAL - SIGERENCIAL",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-3-esp-2",
-        "name": "EVALUACIÓN INTEGRAL DE PROYECTOS - EVA INT PRO N",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-3-esp-3",
-        "name": "ADMINISTRACIÓN DE LA PRODUCCIÓN - ADM PRO N",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-3-esp-4",
-        "name": "ANALÍTICA DE DATOS EMPRESARIALES - PROF I DAT EMP",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "30312": {
-        "code": "30312",
-        "hours": 4
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "adm-empresas-4",
@@ -3524,47 +2059,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Administrador(a) de Empresas · Magíster en Administración y Gestión Empresarial",
+    "education": "Administración de Empresas · Magíster en Administración y Gestión Empresarial",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "adm-empresas-4-esp-1",
-        "name": "MICROECONOMIA - MICRO",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "adm-empresas-4-esp-2",
-        "name": "MACROECONOMIA - MACRO",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "adm-empresas-4-esp-3",
-        "name": "ADMINISTRACIÓN DE LA PRODUCCIÓN - ADM PRO D",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 4
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "adm-empresas-5",
@@ -3574,61 +2073,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Administrador(a) de Empresas · Magíster en Administración y Gestión Empresarial",
+    "education": "Administración de Empresas · Magíster en Administración y Gestión Empresarial",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "adm-empresas-5-esp-1",
-        "name": "MARKETING DIGITAL - PROF II MAR DIG",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "adm-empresas-5-esp-2",
-        "name": "CREATIVIDAD E INNOVACIÓN ORGANIZACIONAL - CRE INN ORG",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "adm-empresas-5-esp-3",
-        "name": "HABILIDADES GERENCIALES - HAB GER D",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "adm-empresas-5-esp-4",
-        "name": "HABILIDADES GERENCIALES - HAB GER N",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "adm-empresas-5-esp-5",
-        "name": "BRAND EXPERIENCE - PROF III BRAND",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "adm-empresas-5-esp-6",
-        "name": "HERRAMIENTAS DIGITALES PARA LA GESTIÓN - COC HER DIG GES",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "adm-empresas-6",
@@ -3638,37 +2087,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Administrador(a) de Empresas · Magíster en Administración y Gestión Empresarial",
+    "education": "Administración de Empresas · Magíster en Administración y Gestión Empresarial",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "adm-empresas-6-esp-1",
-        "name": "FUNDAMENTOS DE MERCADEO - FUN MER",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      },
-      {
-        "id": "adm-empresas-6-esp-2",
-        "name": "INVESTIGACIÓN DE MERCADOS - INV MERC",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "adm-empresas-7",
@@ -3678,49 +2101,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Administrador(a) de Empresas · Magíster en Administración y Gestión Empresarial",
+    "education": "Administración de Empresas · Magíster en Administración y Gestión Empresarial",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "adm-empresas-7-esp-1",
-        "name": "DERECHO CONSTITUCIONAL Y ADMINISTRATIVO - DER CONS Y ADM",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-7-esp-2",
-        "name": "DERECHO COMERCIAL Y TRIBUTARIO - DER COM Y TRI",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-7-esp-3",
-        "name": "DERECHO LABORAL Y SEGURIDAD EN EL TRABAJO - DER LAB Y ST D",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-7-esp-4",
-        "name": "DERECHO LABORAL Y SEGURIDAD EN EL TRABAJO - DER LAB Y ST N",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "adm-empresas-8",
@@ -3730,49 +2115,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Administrador(a) de Empresas · Magíster en Administración y Gestión Empresarial",
+    "education": "Administración de Empresas · Magíster en Administración y Gestión Empresarial",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "adm-empresas-8-esp-1",
-        "name": "PENSAMIENTO ADMINISTRATIVO - PEN ADM",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-8-esp-2",
-        "name": "TEORIA DE LAS ORGANIZACIONES - ADM2A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-8-esp-3",
-        "name": "CREACIÓN DE EMPRESAS - CREA EMP D",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "adm-empresas-8-esp-4",
-        "name": "CREACIÓN DE EMPRESAS - CREA EMP N",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "adm-empresas-9",
@@ -3782,55 +2129,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Administrador(a) de Empresas · Magíster en Administración y Gestión Empresarial",
+    "education": "Administración de Empresas · Magíster en Administración y Gestión Empresarial",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "adm-empresas-9-esp-1",
-        "name": "FUNDAMENTOS DE ECONOMIA - FUN ECO",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "adm-empresas-9-esp-2",
-        "name": "COSTOS Y PRESUPUESTOS - COS Y PRES",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "adm-empresas-9-esp-3",
-        "name": "CONTABILIDAD PARA LAS ORGANIZACIONES - CONT ORG",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "adm-empresas-9-esp-4",
-        "name": "ANALISIS FINANCIERO - ADM4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "adm-empresas-9-esp-5",
-        "name": "INGENIERÍA ECONÓMICA - ING ECO",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "adm-empresas-10",
@@ -3840,61 +2143,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Administrador(a) de Empresas · Magíster en Administración y Gestión Empresarial",
+    "education": "Administración de Empresas · Magíster en Administración y Gestión Empresarial",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "adm-empresas-10-esp-1",
-        "name": "GERENCIA DEL TALENTO HUMANO - GTH D",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "adm-empresas-10-esp-2",
-        "name": "GERENCIA DEL TALENTO HUMANO - GTH N",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "adm-empresas-10-esp-3",
-        "name": "RESPONSABILIDAD SOCIAL ORGANIZACIONAL - RES SOC ORG",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "adm-empresas-10-esp-4",
-        "name": "NEGOCIOS INCLUSIVOS Y VALOR COMPARTIDO - NEG INCL",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "adm-empresas-10-esp-5",
-        "name": "GESTIÓN DEL CONOCIMIENTO Y APRENDIZAJE ORGANIZACIONAL - GEST CON APRE ORG",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "adm-empresas-10-esp-6",
-        "name": "PRACTICA PROFESIONAL - PRAC PROF",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-ambiental-1",
@@ -3904,31 +2157,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) Ambiental · Magíster en Gestión y Ciencias Ambientales",
+    "education": "Ingeniería Ambiental · Magíster en Gestión y Ciencias Ambientales",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ing-ambiental-1-esp-1",
-        "name": "ECONOMIA AMBIENTAL - IAM7A",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-ambiental-2",
@@ -3938,37 +2171,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Ambiental · Magíster en Gestión y Ciencias Ambientales",
+    "education": "Ingeniería Ambiental · Magíster en Gestión y Ciencias Ambientales",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ing-ambiental-2-esp-1",
-        "name": "MODELACIÓN Y SIMULACIÓN AMBIENTAL - IAM8A",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      },
-      {
-        "id": "ing-ambiental-2-esp-2",
-        "name": "HIDROCLIMATOLOGÍA - HRIDRO 5-6",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 4
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-ambiental-3",
@@ -3978,49 +2185,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) Ambiental · Magíster en Gestión y Ciencias Ambientales",
+    "education": "Ingeniería Ambiental · Magíster en Gestión y Ciencias Ambientales",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ing-ambiental-3-esp-1",
-        "name": "CLIMATOLOGIA - IAM6A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-ambiental-3-esp-2",
-        "name": "CALIDAD DEL AIRE Y METEOROLOGÍA - AIRE 4-7",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-ambiental-3-esp-3",
-        "name": "INTRODUCCIÓN A LA INGENIERÍA AMBIENTAL - IAM1A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-ambiental-3-esp-4",
-        "name": "TRANSICIÓN ENERGÉTICA - ENERG 5-8",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-ambiental-4",
@@ -4030,49 +2199,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Ambiental · Magíster en Gestión y Ciencias Ambientales",
+    "education": "Ingeniería Ambiental · Magíster en Gestión y Ciencias Ambientales",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ing-ambiental-4-esp-1",
-        "name": "SISTEMAS DE GESTION AMBIENTAL - IAM9A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-ambiental-4-esp-2",
-        "name": "GESTIÓN AMBIENTAL DE PROCESOS - IAM8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-ambiental-4-esp-3",
-        "name": "TRATAMIENTO DE AGUAS RESIDUALES (PD) - IAM8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-ambiental-4-esp-4",
-        "name": "SANEAMIENTO AMBIENTAL - PROF II -III",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-ambiental-5",
@@ -4082,61 +2213,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) Ambiental · Magíster en Gestión y Ciencias Ambientales",
+    "education": "Ingeniería Ambiental · Magíster en Gestión y Ciencias Ambientales",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ing-ambiental-5-esp-1",
-        "name": "LEGISLACION AMBIENTAL - IAM6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-ambiental-5-esp-2",
-        "name": "SEMINARIO DE ACTUALIZACION - IM10A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-ambiental-5-esp-3",
-        "name": "PRODUCCIÓN MÁS LIMPIA - IAM9A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-ambiental-5-esp-4",
-        "name": "GEOCIENCIAS - 1A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-ambiental-5-esp-5",
-        "name": "PROGRAMACIÓN Y ANÁLISIS AMBIENTAL - IAM5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-ambiental-5-esp-6",
-        "name": "INGENIERÍA DE RESIDUOS - RESIDU 5-7",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-ambiental-6",
@@ -4146,31 +2227,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Ambiental · Magíster en Gestión y Ciencias Ambientales",
+    "education": "Ingeniería Ambiental · Magíster en Gestión y Ciencias Ambientales",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ing-ambiental-6-esp-1",
-        "name": "OPCIÓN GRADO - IM10A",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 12
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-ambiental-7",
@@ -4180,56 +2241,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) Ambiental · Magíster en Gestión y Ciencias Ambientales",
+    "education": "Ingeniería Ambiental · Magíster en Gestión y Ciencias Ambientales",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ing-ambiental-7-esp-1",
-        "name": "SEMINARIO DE GRADO III - IC10B (ING. CIVIL)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-ambiental-7-esp-2",
-        "name": "IMPACTO AMBIENTAL - IM10A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-ambiental-7-esp-3",
-        "name": "QUÍMICA AMBIENTAL - IAM3A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-ambiental-7-esp-4",
-        "name": "MANEJO Y REMEDIACI¿N DE SUELOS - IAB4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-ambiental-7-esp-5",
-        "name": "INGENIERÍA AMBIENTAL APLICADA - IM10A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "ING. CIVIL"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-ambiental-8",
@@ -4239,27 +2255,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Ambiental · Magíster en Gestión y Ciencias Ambientales",
+    "education": "Ingeniería Ambiental · Magíster en Gestión y Ciencias Ambientales",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ing-ambiental-8-esp-1",
-        "name": "SEMINARIO DE GRADO - IAM9A",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-1",
@@ -4268,24 +2268,12 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "fullName": "CAROL JULIANA HERREÑO ANGULO",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Secretario(a) de División / General",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "rank": "Secretaría de División",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "derecho-1-esp-1",
-        "name": "SUJETOS DE DERECHO - DER2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-2",
@@ -4294,17 +2282,12 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "fullName": "CARLOS ANDRÉS ARANDA CAMACHO",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Decano(a) de Facultad",
+    "rank": "Decanatura de Facultad",
     "education": "Abogado · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 5,
     "academicSpaces": [],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "allocations": {}
   },
   {
     "id": "derecho-3",
@@ -4313,24 +2296,12 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "fullName": "ELIANA ANDREA COMBARIZA CAMARGO",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Secretario(a) de División / General",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "rank": "Secretaría de División",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "derecho-3-esp-1",
-        "name": "PROYECTO DE INVESTIGACION I - DER4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-4",
@@ -4340,55 +2311,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "derecho-4-esp-1",
-        "name": "PRV IX: DERECHO DE SOCIEDADES Y PROCESOS DE LIQUIDACION - DR10B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-4-esp-2",
-        "name": "LAB II: SISTEMA GENERAL DE SALUD - DER9C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-4-esp-3",
-        "name": "LAB VI: DERECHO INTERNACIONAL DE TRABAJO - DR10C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-4-esp-4",
-        "name": "LAB IX: NEGOCIACION DE CONFLICTOS LABORALES - DR10C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-4-esp-5",
-        "name": "LAB V: REGIMEN DEL TRABAJADOR OFICIAL - DER9C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-5",
@@ -4398,61 +2325,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "derecho-5-esp-1",
-        "name": "POL II: REGIMEN DE SERVICIOS PUBLICOS - DER9A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-5-esp-2",
-        "name": "LABORAL APLICADO - DER8B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-5-esp-3",
-        "name": "LABORAL APLICADO - DEREA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-5-esp-4",
-        "name": "LAB I: SISTEMA GENERAL DE PENSIONES - DER9C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-5-esp-5",
-        "name": "LAB IV: RIESGOS PROFESIONALES - DER9C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-5-esp-6",
-        "name": "LAB VIII: ECONOMIA Y DERECHO LABORAL - DR10C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-6",
@@ -4462,55 +2339,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "derecho-6-esp-1",
-        "name": "FILOSOFIA Y TEORIA DEL DERECHO - DER1A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-6-esp-2",
-        "name": "FILOSOFIA Y TEORIA DEL DERECHO - DER1B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-6-esp-3",
-        "name": "TEORIA DEL ESTADO Y DE LA CONSTITUCION - DER2A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-6-esp-4",
-        "name": "TEORIA DEL ESTADO Y DE LA CONSTITUCION - DER2B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-6-esp-5",
-        "name": "DERECHO CONSTITUCIONAL - DER3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-7",
@@ -4520,67 +2353,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "derecho-7-esp-1",
-        "name": "DERECHO LABORAL INDIVIDUAL - DER LABIND",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-7-esp-2",
-        "name": "DERECHO PROCESAL LABORAL - DERLAB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-7-esp-3",
-        "name": "LAB X: TEORIA DEL TRABAJO - DR10C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-7-esp-4",
-        "name": "SUJETOS DE DERECHO - DER2B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-7-esp-5",
-        "name": "SUJETOS DE DERECHO - DER2C",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-7-esp-6",
-        "name": "MECANISMOS ALTERNATIVOS DE SOLUCION DE CONFLICTOS - DER6A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-7-esp-7",
-        "name": "MECANISMOS ALTERNATIVOS DE SOLUCION DE CONFLICTOS - DER6B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-8",
@@ -4590,49 +2367,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "derecho-8-esp-1",
-        "name": "ANALITICA VIII - DER8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-8-esp-2",
-        "name": "ANALITICA VIII - DER8B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-8-esp-3",
-        "name": "ANALITICA VIII - DER8C",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-8-esp-4",
-        "name": "PNL IX: ARGUMENTACIÓN JURÍDICA - DR10D",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-9",
@@ -4642,61 +2381,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "derecho-9-esp-1",
-        "name": "ANALITICA V - DER5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-9-esp-2",
-        "name": "ANALITICA IX - DER9A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-9-esp-3",
-        "name": "ANALITICA X - DERA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-9-esp-4",
-        "name": "ANALITICA X - DERC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-9-esp-5",
-        "name": "DERECHO PUBLICO ECONOMICO - DER4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-9-esp-6",
-        "name": "DERECHO PUBLICO ECONOMICO - DER4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 14
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 18
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-10",
@@ -4706,31 +2395,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "derecho-10-esp-1",
-        "name": "DERECHO PROCESAL ADMINISTRATIVO Y PROBATORIO - DER4C",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-11",
@@ -4740,43 +2409,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "derecho-11-esp-1",
-        "name": "DERECHO PENAL GENERAL - DER8B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "derecho-11-esp-2",
-        "name": "DERECHO PENAL GENERAL - DER8C",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "derecho-11-esp-3",
-        "name": "PNL X: DERECHO PENAL DE LA INFANCIA Y LA ADOLESCENCIA - DR10D",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-12",
@@ -4786,43 +2423,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "derecho-12-esp-1",
-        "name": "POL V: CONTRATACION ADMINISTRATIVA - DER9A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "derecho-12-esp-2",
-        "name": "NEGOCIO JURIDICO Y OBLIGACIONES - DER5A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "derecho-12-esp-3",
-        "name": "NEGOCIO JURIDICO Y OBLIGACIONES - DER5B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-13",
@@ -4832,37 +2437,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "derecho-13-esp-1",
-        "name": "ANALITICA I - DER1A",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      },
-      {
-        "id": "derecho-13-esp-2",
-        "name": "METODOLOGIA DE LA INVESTIGACION - DER2C",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-14",
@@ -4872,79 +2451,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "derecho-14-esp-1",
-        "name": "DERECHO PROCESAL PENAL - DER8A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-14-esp-2",
-        "name": "DERECHO PROCESAL PENAL - DER8C",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-14-esp-3",
-        "name": "PNL VI: DERECHO PENAL COMPARADO - DR10D",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-14-esp-4",
-        "name": "PNL V: TEORIA DEL DELITO Y LA PENA - DER9D",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-14-esp-5",
-        "name": "DERECHO PENAL ESPECIAL - DER7B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-14-esp-6",
-        "name": "CRIMINOLOGIA Y POLITICA CRIMINAL - DER7A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-14-esp-7",
-        "name": "CRIMINOLOGIA Y POLITICA CRIMINAL - DER7B",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "derecho-14-esp-8",
-        "name": "RESPONSABILIDAD PENAL JUVENIL - DER7A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "derecho-14-esp-9",
-        "name": "DERECHO PENAL INTERNACIONAL - DER7A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-15",
@@ -4954,37 +2465,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "derecho-15-esp-1",
-        "name": "CONTRATOS CIVILES - DER5A",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      },
-      {
-        "id": "derecho-15-esp-2",
-        "name": "CONTRATOS CIVILES - DER5B",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-16",
@@ -4994,49 +2479,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "derecho-16-esp-1",
-        "name": "POL I: ACCIONES CONSTITUCIONALES E INTERPRETACIÓN CONSTITUCIONAL - DER9A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-16-esp-2",
-        "name": "POL III: DERECHO DISCIPLINARIO - DER9A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-16-esp-3",
-        "name": "POL VIII: RESPONSABILIDAD ESTATAL - DR10A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-16-esp-4",
-        "name": "TEORIA DEL ESTADO Y DE LA CONSTITUCION - DER2C",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-17",
@@ -5046,31 +2493,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "derecho-17-esp-1",
-        "name": "DERECHO PUBLICO ECONOMICO - DER4C",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-18",
@@ -5080,31 +2507,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "derecho-18-esp-1",
-        "name": "DERECHO ADMINISTRATIVO - DER3A",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-19",
@@ -5114,67 +2521,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "derecho-19-esp-1",
-        "name": "DERECHO PENAL GENERAL - DER8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-19-esp-2",
-        "name": "DERECHO PROCESAL PENAL - DER8B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-19-esp-3",
-        "name": "PNL III: PRUEBAS PENALES Y CRIMINALÍSTICA - DER9D",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-19-esp-4",
-        "name": "PNL VII: FUNDAMENTOS CONSTITUCIONALES DEL DERECHO PENAL - DR10D",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-19-esp-5",
-        "name": "PNL VIII: JUICIO ORAL - DR10D",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-19-esp-6",
-        "name": "DERECHO PENAL GENERAL - DER7A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-19-esp-7",
-        "name": "DERECHO PENAL GENERAL - DER7B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-20",
@@ -5184,31 +2535,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "derecho-20-esp-1",
-        "name": "DERECHO CONSTITUCIONAL - DER3B",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 12
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-21",
@@ -5218,43 +2549,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "derecho-21-esp-1",
-        "name": "LAB III: DERECHO ADMINISTRATIVO LABORAL - DER9C",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "derecho-21-esp-2",
-        "name": "LAB VII: DERECHO LABORAL CONSTITUCIONAL - DR10C",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "derecho-21-esp-3",
-        "name": "INTRODUCCION AL DERECHO - DER1A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 12
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-22",
@@ -5264,31 +2563,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "derecho-22-esp-1",
-        "name": "POL VI: DERECHO ELECTORAL Y DE LOS PARTIDOS POLITICOS - DR10A",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-23",
@@ -5298,61 +2577,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "derecho-23-esp-1",
-        "name": "PRV VI: CASACION CIVIL - DR10B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-23-esp-2",
-        "name": "TEORIA GENERAL DEL PROCESO - DER2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-23-esp-3",
-        "name": "TEORIA GENERAL DEL PROCESO - DER2B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-23-esp-4",
-        "name": "TEORIA GENERAL DEL PROCESO - DER2C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-23-esp-5",
-        "name": "DERECHO PROCESAL CIVIL Y DERECHO PROBATORIO - DER6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-23-esp-6",
-        "name": "DERECHO PROCESAL CIVIL Y DERECHO PROBATORIO - DER6B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-24",
@@ -5362,91 +2591,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "derecho-24-esp-1",
-        "name": "ANALITICA IV - DER4A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-24-esp-2",
-        "name": "ANALITICA IV - DER4B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-24-esp-3",
-        "name": "ANALITICA VI - DER6A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "derecho-24-esp-4",
-        "name": "ANALITICA VI - DER6B",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "derecho-24-esp-5",
-        "name": "ANALITICA IX - DER9D",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "derecho-24-esp-6",
-        "name": "ANALITICA X - DERD",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "derecho-24-esp-7",
-        "name": "HISTORIA DEL DERECHO Y DE LAS INSTITUCIONES JURIDICAS - DER1A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "derecho-24-esp-8",
-        "name": "HISTORIA DEL DERECHO Y DE LAS INSTITUCIONES JURIDICAS - DER1B",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "derecho-24-esp-9",
-        "name": "ANALITICA III - DER3A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "derecho-24-esp-10",
-        "name": "ANALITICA III - DER3B",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "derecho-24-esp-11",
-        "name": "SOCIOLOGÍA JURÍDICA - DER2A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-25",
@@ -5456,27 +2605,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "derecho-25-esp-1",
-        "name": "POL IV: ENTIDADES TERRITORIALES - DER9A",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-26",
@@ -5486,57 +2619,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "derecho-26-esp-1",
-        "name": "PRV IV: NOTARIADO Y REGISTRO - DER9B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-26-esp-2",
-        "name": "DERECHO COMERCIAL Y BIENES - DER5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-26-esp-3",
-        "name": "DERECHO COMERCIAL Y BIENES - DER5B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-26-esp-4",
-        "name": "SOCIEDADES CIVILES Y COMERCIALES - DER6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-26-esp-5",
-        "name": "SOCIEDADES CIVILES Y COMERCIALES - DER6B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-26-esp-6",
-        "name": "PROCESAL CIVIL Y COMERCIAL ESPECIAL - DER6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-27",
@@ -5546,69 +2633,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "derecho-27-esp-1",
-        "name": "ANALITICA IX - DER9B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-27-esp-2",
-        "name": "ANALITICA X - DERB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-27-esp-3",
-        "name": "PRV VII: PROPIEDAD INTELECTUAL Y NOMBRES DE DOMINIO - DR10B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-27-esp-4",
-        "name": "PRV VIII: COMERCIO ELECTRONICO - DR10B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-27-esp-5",
-        "name": "METODOLOGIA DE LA INVESTIGACION - DER2A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-27-esp-6",
-        "name": "METODOLOGIA DE LA INVESTIGACION - DER2B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-27-esp-7",
-        "name": "SUCESIONES - DER5A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-27-esp-8",
-        "name": "CONTRATOS Y OBLIGACIONES CIVILES - DER6B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-28",
@@ -5618,51 +2647,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "derecho-28-esp-1",
-        "name": "INTRODUCCION AL DERECHO - DER1B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-28-esp-2",
-        "name": "DERECHO INTERNACIONAL PUBLICO Y COMUNITARIO - DER3A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-28-esp-3",
-        "name": "DERECHO INTERNACIONAL PUBLICO Y COMUNITARIO - DER3B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-28-esp-4",
-        "name": "DERECHOS HUMANOS Y DERECHO INTERNACIONAL - DER4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-28-esp-5",
-        "name": "DERECHOS HUMANOS Y DERECHO INTERNACIONAL - DER4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-29",
@@ -5672,63 +2661,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "derecho-29-esp-1",
-        "name": "INVESTIGACION ASISTIDA III - DER8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-29-esp-2",
-        "name": "INVESTIGACION ASISTIDA III - DER8B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-29-esp-3",
-        "name": "INVESTIGACION ASISTIDA III - DER8C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-29-esp-4",
-        "name": "POL X: DERECHO AMBIENTAL - DR10A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-29-esp-5",
-        "name": "PRV I: DERECHO AGRARIO - DER9B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-29-esp-6",
-        "name": "INTERPRETACION Y ARGUMENTACION JURIDICA - DER3A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-29-esp-7",
-        "name": "INTERPRETACION Y ARGUMENTACION JURIDICA - DER3B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-30",
@@ -5738,27 +2675,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "derecho-30-esp-1",
-        "name": "PRV X: DERECHO DE SEGUROS - DR10B",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-31",
@@ -5768,63 +2689,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "derecho-31-esp-1",
-        "name": "ETICA PROFESIONAL - DER8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-31-esp-2",
-        "name": "ETICA PROFESIONAL - DER8B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-31-esp-3",
-        "name": "ETICA PROFESIONAL - DER8C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-31-esp-4",
-        "name": "PNL I: ESCUELAS DE DERECHO PENAL Y ESQUEMAS DEL DELITO - DER9D",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-31-esp-5",
-        "name": "DERECHO POLICIVO - DEREA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-31-esp-6",
-        "name": "DERECHO POLICIVO - DEREB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-31-esp-7",
-        "name": "DERECHO POLICIVO - DEREC",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-32",
@@ -5834,33 +2703,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "derecho-32-esp-1",
-        "name": "DERECHO PENAL ESPECIAL - DER8B",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      },
-      {
-        "id": "derecho-32-esp-2",
-        "name": "DERECHO PENAL ESPECIAL - DER7A",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-33",
@@ -5870,39 +2717,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "derecho-33-esp-1",
-        "name": "PRV II: TÍTULOS VALORES - DER9B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "derecho-33-esp-2",
-        "name": "TITULOS VALORES - DER6A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "derecho-33-esp-3",
-        "name": "TITULOS VALORES - DER6B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-34",
@@ -5912,63 +2731,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "derecho-34-esp-1",
-        "name": "PRACTICA CIVIL - DER8B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-34-esp-2",
-        "name": "PRACTICA CIVIL - DEREA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-34-esp-3",
-        "name": "DERECHO PROCESAL ADMINISTRATIVO Y PROBATORIO - DER4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-34-esp-4",
-        "name": "DERECHO PROCESAL ADMINISTRATIVO Y PROBATORIO - DER4B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-34-esp-5",
-        "name": "CONTRATOS COMERCIALES E INTERNACIONALES - DER6A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-34-esp-6",
-        "name": "CONTRATOS COMERCIALES E INTERNACIONALES - DER6B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "derecho-34-esp-7",
-        "name": "RESPONSABILIDAD DEL ESTADO - DER3A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-35",
@@ -5978,57 +2745,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "derecho-35-esp-1",
-        "name": "ANALITICA IV - DER4C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-35-esp-2",
-        "name": "ANALITICA V - DER5B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-35-esp-3",
-        "name": "ANALITICA VII - DER7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-35-esp-4",
-        "name": "ANALITICA VII - DER7B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-35-esp-5",
-        "name": "SOCIOLOGIA JURIDICA - DER1A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-35-esp-6",
-        "name": "SOCIOLOGIA JURIDICA - DER1B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-36",
@@ -6038,57 +2759,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "derecho-36-esp-1",
-        "name": "POL IX: POLITICAS PUBLICAS - DR10A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-36-esp-2",
-        "name": "PROYECTO DE INVESTIGACION I - DER4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-36-esp-3",
-        "name": "PROYECTO DE INVESTIGACION I - DER4C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-36-esp-4",
-        "name": "PROYECTO DE INVESTIGACION II - DER5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-36-esp-5",
-        "name": "PROYECTO DE INVESTIGACION II - DER5B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-36-esp-6",
-        "name": "POLÍTICAS PÚBLICAS - DER3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-37",
@@ -6098,27 +2773,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "derecho-37-esp-1",
-        "name": "PNL II: MEDICINA LEGAL - DER9D",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-38",
@@ -6128,27 +2787,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "derecho-38-esp-1",
-        "name": "ANALITICA I - DER1B",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-39",
@@ -6158,45 +2801,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "derecho-39-esp-1",
-        "name": "PRV III: REGIMEN PATRIMONIAL DE LA FAMILIA Y SUCESIONES - DER9B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-39-esp-2",
-        "name": "DERECHO DE FAMILIA Y LEGISLACION DEL MENOR - DER5A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-39-esp-3",
-        "name": "DERECHO DE FAMILIA Y LEGISLACION DEL MENOR - DER5B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-39-esp-4",
-        "name": "SUCESIONES - DER5B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-40",
@@ -6206,197 +2815,10 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "derecho-40-esp-1",
-        "name": "CONSULTORIO JURIDICO - CONS JURA",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "derecho-40-esp-2",
-        "name": "CONSULTORIO JURIDICO - CONSU JURB",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-3",
-        "name": "CONSULTORIO JURIDICO - CONSU JURC",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-4",
-        "name": "CONSULTORIO JURIDICO - CONSU JURD",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-5",
-        "name": "CONSULTORIO JURIDICO - CONSU JURE",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-6",
-        "name": "CONSULTORIO JURIDICO - CONSU JURF",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-7",
-        "name": "CONSULTORIO JURIDICO - CONSU JURG",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-8",
-        "name": "CONSULTORIO JURIDICO - CONSU JURH",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-9",
-        "name": "CONSULTORIO JURIDICO - CONSU JURI",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-10",
-        "name": "CONSULTORIO JURIDICO - CONSU JURJ",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-11",
-        "name": "CONSULTORIO JURIDICO - CONS JURB",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-12",
-        "name": "CONSULTORIO JURIDICO - CONS JURC",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-13",
-        "name": "CONSULTORIO JURIDICO - CONS JURD",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-14",
-        "name": "CONSULTORIO JURIDICO - CONS JURE",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-15",
-        "name": "CONSULTORIO JURIDICO - CONS JURF",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-16",
-        "name": "CONSULTORIO JURIDICO - CONS JURG",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-17",
-        "name": "CONSULTORIO JURIDICO - CONS JURH",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-18",
-        "name": "CONSULTORIO JURIDICO - CONS JURI",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-19",
-        "name": "CONSULTORIO JURIDICO - CONS JURJ",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-20",
-        "name": "POL VII: DERECHO TRIBUTARIO Y REGULACION ECONOMICA - DR10A",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-21",
-        "name": "PRV V: DERECHO DEL CONSUMIDOR - DER9B",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-22",
-        "name": "CONSULTORIO JURIDICO I - CONSU JURA",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-23",
-        "name": "CONSULTORIO JURIDICO I - CONSU JURB",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-24",
-        "name": "CONSULTORIO JURIDICO I - CONSU JURC",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-25",
-        "name": "CONSULTORIO JURIDICO I - CONSU JURD",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-26",
-        "name": "CONSULTORIO JURIDICO I - CONSU JURE",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-27",
-        "name": "CONSULTORIO JURIDICO I - CONSU JURF",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-28",
-        "name": "CONSULTORIO JURIDICO I - CONSU JURG",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-29",
-        "name": "CONSULTORIO JURIDICO I - CONSU JURH",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-30",
-        "name": "CONSULTORIO JURIDICO I - CONSU JURI",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      },
-      {
-        "id": "derecho-40-esp-31",
-        "name": "CONSULTORIO JURIDICO I - CONSU JURJ",
-        "level": "Pregrado",
-        "monthlyHours": 4
-      }
-    ],
+    "academicSpaces": [],
     "allocations": {}
   },
   {
@@ -6407,51 +2829,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "derecho-41-esp-1",
-        "name": "TEORIA GENERAL DE LA PRUEBA - DER2A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-41-esp-2",
-        "name": "TEORIA GENERAL DE LA PRUEBA - DER2B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-41-esp-3",
-        "name": "TEORIA GENERAL DE LA PRUEBA - DER2C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-41-esp-4",
-        "name": "DERECHOS HUMANOS Y DERECHO INTERNACIONAL - DER4C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "derecho-41-esp-5",
-        "name": "TEORÍA DE LOS DERECHOS FUNDAMENTALES - DEREA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-42",
@@ -6461,45 +2843,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "derecho-42-esp-1",
-        "name": "DERECHO PENAL ESPECIAL - DER8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-42-esp-2",
-        "name": "DERECHO PENAL ESPECIAL - DER8C",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-42-esp-3",
-        "name": "DERECHO PROCESAL PENAL Y PROBATORIO - DER7A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "derecho-42-esp-4",
-        "name": "DERECHO PROCESAL PENAL Y PROBATORIO - DER7B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-43",
@@ -6509,27 +2857,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "derecho-43-esp-1",
-        "name": "PNL IV: CRIMINOLOGIA - DER9D",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "derecho-44",
@@ -6539,57 +2871,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Abogado(a) · Magíster en Derecho",
+    "education": "Derecho · Magíster en Derecho",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "derecho-44-esp-1",
-        "name": "ANALITICA IX - DER9C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-44-esp-2",
-        "name": "ANALITICA II - DER2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-44-esp-3",
-        "name": "ANALITICA II - DER2B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-44-esp-4",
-        "name": "ANALITICA II - DER2C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-44-esp-5",
-        "name": "PENSAMIENTO LOGICO - DER7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "derecho-44-esp-6",
-        "name": "PENSAMIENTO LOGICO - DER7B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-1",
@@ -6599,49 +2885,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-1-esp-1",
-        "name": "FUNDACIONES - ICVA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-1-esp-2",
-        "name": "ESTRUCTURAS DE CONTENCIÓN Y MODELACIÓN GEOTECNICA APLICADA - IC10A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-1-esp-3",
-        "name": "ESTRUCTURAS DE CONTENCIÓN Y MODELACIÓN GEOTECNICA APLICADA - IC10B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-1-esp-4",
-        "name": "SEMINARIO DE GRADO III - IC10A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-2",
@@ -6651,55 +2899,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-2-esp-1",
-        "name": "ESTATICA - ICV3A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-2-esp-2",
-        "name": "ESTATICA - ICV3B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-2-esp-3",
-        "name": "MAQUINARIA Y EQUIPO - ICV7A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-2-esp-4",
-        "name": "ESTRUCTURAS EN ACERO - ICV9A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-2-esp-5",
-        "name": "ESTRUCTURAS EN ACERO - ICV9B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-3",
@@ -6709,49 +2913,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-3-esp-1",
-        "name": "TUBERIAS Y CANALES - ICV6A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-3-esp-2",
-        "name": "TUBERIAS Y CANALES - ICV6B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-3-esp-3",
-        "name": "MECANICA DE FLUIDOS - ICV4A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-3-esp-4",
-        "name": "MECANICA DE FLUIDOS - ICV4B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-4",
@@ -6761,49 +2927,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-4-esp-1",
-        "name": "MECANICA DE MATERIALES - ICV4A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-4-esp-2",
-        "name": "MECANICA DE MATERIALES - ICV4B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-4-esp-3",
-        "name": "CONSTRUCCION Y COSTOS - ICV8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-4-esp-4",
-        "name": "CONSTRUCCION Y COSTOS - ICV8B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-5",
@@ -6813,43 +2941,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-5-esp-1",
-        "name": "ALCANTARILLADOS - ICV7A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ing-civil-5-esp-2",
-        "name": "DRENAJE URBANO - IC10A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ing-civil-5-esp-3",
-        "name": "DRENAJE URBANO - IC10B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-6",
@@ -6859,49 +2955,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-6-esp-1",
-        "name": "PAVIMENTOS - ICV8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-6-esp-2",
-        "name": "PAVIMENTOS - ICV8B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-6-esp-3",
-        "name": "EVALUACION DE PROYECTOS - ICVVA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-6-esp-4",
-        "name": "DISEÑO GEOMETRICO DE VÍAS - ICVA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-7",
@@ -6911,49 +2969,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-7-esp-1",
-        "name": "ACUEDUCTOS - ICV7A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-7-esp-2",
-        "name": "HIDRAULICA - ICVA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-7-esp-3",
-        "name": "INSTALACIONES HIDRAULICAS Y SANITARIAS PARA EDIFICACIONES - ICV9A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-7-esp-4",
-        "name": "INSTALACIONES HIDRAULICAS Y SANITARIAS PARA EDIFICACIONES - ICV9B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-8",
@@ -6963,49 +2983,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-8-esp-1",
-        "name": "GEOCIENCIAS - IAMIA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-8-esp-2",
-        "name": "GEOCIENCIAS - IAMIB",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-8-esp-3",
-        "name": "FUNDAMENTOS DE GEOTECNIA - ICV4A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-8-esp-4",
-        "name": "FUNDAMENTOS DE GEOTECNIA - ICV4B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-9",
@@ -7015,55 +2997,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-9-esp-1",
-        "name": "CONCRETO REFORZADO - ICV6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-9-esp-2",
-        "name": "CONCRETO REFORZADO - ICV6B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-9-esp-3",
-        "name": "CONCRETO PRE-ESFORZADO - ICV8A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-9-esp-4",
-        "name": "CONCRETO PRE-ESFORZADO - ICV8B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-9-esp-5",
-        "name": "CONCRETO REFORZADO II - ICV7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-10",
@@ -7073,49 +3011,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-10-esp-1",
-        "name": "REPRESENTACION GRAFICA - IAMIA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-10-esp-2",
-        "name": "TECNOLOGÍA DEL CONCRETO - ICV3A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-10-esp-3",
-        "name": "PROCESOS CONSTRUCTIVOS - ICV4A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-10-esp-4",
-        "name": "PROCESOS CONSTRUCTIVOS - ICV4B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-11",
@@ -7125,49 +3025,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-11-esp-1",
-        "name": "DISEÑO VIAL ASISTIDO POR COMPUTADOR AUTOCAD CIVIL 3D - ICV9A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-11-esp-2",
-        "name": "DISEÑO VIAL ASISTIDO POR COMPUTADOR AUTOCAD CIVIL 3D - ICV9B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-11-esp-3",
-        "name": "TRANSITO Y TRANSPORTE - ICV4A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-11-esp-4",
-        "name": "TRANSITO Y TRANSPORTE - ICV4B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-12",
@@ -7177,55 +3039,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-12-esp-1",
-        "name": "INTRODUCCIÓN A LA INGENIERÍA - ICV1A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-12-esp-2",
-        "name": "LEGISLACION PARA INGENIEROS - ICV9A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-12-esp-3",
-        "name": "LEGISLACION PARA INGENIEROS - ICV9B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-12-esp-4",
-        "name": "MODELACIÓN CON SISTEMAS BUILDING INFORMATION MODELING - BIM - ICV9A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-12-esp-5",
-        "name": "MODELACIÓN CON SISTEMAS BUILDING INFORMATION MODELING - BIM - ICV9B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-13",
@@ -7235,31 +3053,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-13-esp-1",
-        "name": "GEOMATICA - ICV6B",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-14",
@@ -7269,43 +3067,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-14-esp-1",
-        "name": "HIDROLOGIA - ICV6A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ing-civil-14-esp-2",
-        "name": "HIDROLOGIA - ICV6B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ing-civil-14-esp-3",
-        "name": "HIDROLOGIA - ICVA",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-15",
@@ -7315,55 +3081,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-15-esp-1",
-        "name": "MECANICA DE SUELOS - ICV6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-15-esp-2",
-        "name": "MECANICA DE SUELOS - ICV6B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-15-esp-3",
-        "name": "FUNDACIONES - ICV7A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-15-esp-4",
-        "name": "SEMINARIO DE GRADO II - ICV9A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-civil-15-esp-5",
-        "name": "SEMINARIO DE GRADO II - ICV9B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-16",
@@ -7373,49 +3095,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-16-esp-1",
-        "name": "GEOMATICA - ICV2B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-16-esp-2",
-        "name": "GEOMATICA - ICV6A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-16-esp-3",
-        "name": "GEOMATICA - ICVVA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-16-esp-4",
-        "name": "SEMINARIO DE GRADO I - ICV8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-17",
@@ -7425,37 +3109,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-17-esp-1",
-        "name": "INGENIERIA APLICADA - IC10A",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      },
-      {
-        "id": "ing-civil-17-esp-2",
-        "name": "INGENIERIA APLICADA - IC10B",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-18",
@@ -7465,45 +3123,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-18-esp-1",
-        "name": "TRATAMIENTO DE AGUAS - ICV8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-18-esp-2",
-        "name": "TRATAMIENTO DE AGUAS - ICV8B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-18-esp-3",
-        "name": "AMBIENTAL - ICV8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-18-esp-4",
-        "name": "AMBIENTAL - ICV8B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-civil-19",
@@ -7513,45 +3137,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) Civil · Magíster en Ingeniería Civil",
+    "education": "Ingeniería Civil · Magíster en Ingeniería Civil",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ing-civil-19-esp-1",
-        "name": "ANALISIS ESTRUCTURAL - ICV5A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-19-esp-2",
-        "name": "ANALISIS ESTRUCTURAL - ICV5B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-19-esp-3",
-        "name": "CASA DE UNO Y DOS PISOS - IC10A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-civil-19-esp-4",
-        "name": "CASA DE UNO Y DOS PISOS - IC10B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-1",
@@ -7561,43 +3151,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-1-esp-1",
-        "name": "PROYECTO I. ARQUITECTURA Y LEGUAJE - ARQ3B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "arquitectura-1-esp-2",
-        "name": "PROYECTO DE GRADO I - ARQ9A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "arquitectura-1-esp-3",
-        "name": "ENFASIS PATRI - TECNICAS Y PROCEDIMIENTOS - ARQ9A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-2",
@@ -7607,50 +3165,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-2-esp-1",
-        "name": "GEOMETRIA DESCRIPTIVA I - ARQ1A (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-2-esp-2",
-        "name": "GEOMETRIA DESCRIPTIVA II - ARQUA (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-2-esp-3",
-        "name": "FUNDAMENTOS DEL PROYECTO I - ARQ1B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-2-esp-4",
-        "name": "PRACTICA PROFESIONAL - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "CIENCIAS BÁSICAS"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-3",
@@ -7660,56 +3179,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-3-esp-1",
-        "name": "GEOMETRIA DESCRIPTIVA II - ARQ2B (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-3-esp-2",
-        "name": "PROYECTO II. SISTEMAS Y ORGANIZACIONES ESPACIALES - ARQ4C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-3-esp-3",
-        "name": "EXPRESION IV. DIBUJO PLANIMÉTRICO ANÁLOGO Y DIGITAL - ARQ4B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-3-esp-4",
-        "name": "EXPRESIÓN V. ADVANCED DIGITAL EXPRESIÓN TOOLS - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-3-esp-5",
-        "name": "BIM - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    },
-    "sharedUnitName": "CIENCIAS BÁSICAS"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-4",
@@ -7719,43 +3193,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-4-esp-1",
-        "name": "PROYECTO I. ARQUITECTURA Y LEGUAJE - ARQ3A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "arquitectura-4-esp-2",
-        "name": "PROYECTO VI. EXPERIMENTAL - ARQ8A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "arquitectura-4-esp-3",
-        "name": "SEMINARIO DE INVESTIGACIÓN - ARQ8B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-5",
@@ -7765,68 +3207,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-5-esp-1",
-        "name": "GEOMETRÍA PLANA Y DEL ESPACIO - ARQ1A (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-5-esp-2",
-        "name": "FUNDAMENTOS DEL PROYECTO II - ARQ2B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-5-esp-3",
-        "name": "CONSTRUCCIÓN II. SISTEMAS Y PROCESOS CONSTRUCTIVOS - ARQ4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-5-esp-4",
-        "name": "ESTRUCTURAS II. SISTEMAS ESTRUCTURALES SISMO RESITENTES - ARQIB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "arquitectura-5-esp-5",
-        "name": "ADMINISTRACIÓN Y LEGISLACIÓN I. ADMINISTRACIÓN DE OBRA - ARQIB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "arquitectura-5-esp-6",
-        "name": "PROCESOS CONSTRUCTIVOS E INTERVENTORÍA DE OBRA - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "arquitectura-5-esp-7",
-        "name": "ELECTIVA - RESIDENCIA DE OBRA - AQ10A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    },
-    "sharedUnitName": "CIENCIAS BÁSICAS"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-6",
@@ -7836,55 +3221,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-6-esp-1",
-        "name": "ESTRUCTURAS II. SISTEMAS ESTRUCTURALES SISMO RESITENTES - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-6-esp-2",
-        "name": "ESTRUCTURAS III. PREDIMENSIONAMIENTO ESTRUCTURAL - ARQ6B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-6-esp-3",
-        "name": "ESTRUCTURAS III. PREDIMENSIONAMIENTO ESTRUCTURAL - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-6-esp-4",
-        "name": "ESTRUCTURAS IV. SIMULACIÓN - ARQIB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-6-esp-5",
-        "name": "ESTRUCTURAS IV. SIMULACIÓN - ARQUA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 4
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-7",
@@ -7894,61 +3235,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-7-esp-1",
-        "name": "FUNDAMENTACIÓN TÉCNICA - ARQ2B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-7-esp-2",
-        "name": "FUNDAMENTACIÓN TÉCNICA - ARQUA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-7-esp-3",
-        "name": "CONSTRUCCIÓN II. SISTEMAS Y PROCESOS CONSTRUCTIVOS - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-7-esp-4",
-        "name": "ESTRUCTURAS I. ELEMENTOS ESTRUCTURALES - ARQ4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-7-esp-5",
-        "name": "PROYECTO VI. EXPERIMENTAL - ARQ8C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-7-esp-6",
-        "name": "INTRODUCCION AL PATRIMONIO ARQUITECTONICO - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-8",
@@ -7958,55 +3249,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-8-esp-1",
-        "name": "PROYECTO IV. HABITAR - ARQ6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-8-esp-2",
-        "name": "TEORIA E HISTORIA VI. HABITAD Y COMPLEJIDAD - ARQ6B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-8-esp-3",
-        "name": "TEORIA E HISTORIA VI. HABITAD Y COMPLEJIDAD - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-8-esp-4",
-        "name": "SEMINARIO DE INVESTIGACIÓN - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-8-esp-5",
-        "name": "I.A. EN EL PROYECTO DE ARQUITECTURA - ARQ9A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-9",
@@ -8016,49 +3263,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-9-esp-1",
-        "name": "FUNDAMENTOS DEL PROYECTO II - ARQ2A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-9-esp-2",
-        "name": "EXPRESIÓN II - ARQUA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-9-esp-3",
-        "name": "EXPRESIÓN III. ILUSTRACIÓN ARQUITECTÓNICA Y PERSPECTIVA - A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-9-esp-4",
-        "name": "EXPRESION I - ARQ1B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-10",
@@ -8068,57 +3277,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-10-esp-1",
-        "name": "PROYECTO II. SISTEMAS Y ORGANIZACIONES ESPACIALES - ARQ4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-10-esp-2",
-        "name": "EXPRESION IV. DIBUJO PLANIMÉTRICO ANÁLOGO Y DIGITAL - ARQ4C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-10-esp-3",
-        "name": "TEORIA E HISTORIA V. LA CONDICIÓN URBANA: CRÍTICA Y UTOPÍA - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-10-esp-4",
-        "name": "BIM - ARQIB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-10-esp-5",
-        "name": "METODOS Y REPRESENTACION I - ARQ3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-10-esp-6",
-        "name": "GERENCIA DE PROYECTOS - ARQ9A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-11",
@@ -8128,39 +3291,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-11-esp-1",
-        "name": "PROYECTO V. LO TECTÓNICO Y ESTEREOTÓMICO - ARQ7A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "arquitectura-11-esp-2",
-        "name": "PROYECTO DE GRADO I - ARQ9C",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "arquitectura-11-esp-3",
-        "name": "PROYECTO DE GRADO II - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-12",
@@ -8170,51 +3305,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-12-esp-1",
-        "name": "URBANO I. LO URBANO COMO SIGNIFICADO: LARELACIÓN SOCIEDAD, ESPCACIO Y SIGNIFICADO - ARQUA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-12-esp-2",
-        "name": "URBANOIII. LO URBANO COMO PREOYECTO.: LOS MODELOS Y RELACIÓN ENTRE TEORÍAS Y TÉCNICAS - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-12-esp-3",
-        "name": "URBANO V. ESTRUCTURA E INFRAESTRUCTURA URBANA - ARQIB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-12-esp-4",
-        "name": "PROYECTO VI. EXPERIMENTAL - ARQ8B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-12-esp-5",
-        "name": "ENFASIS URB AMB - PLANIFICACION URBANA REGIONAL Y MEDIO AMBIENTE - ARQ8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-13",
@@ -8224,39 +3319,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-13-esp-1",
-        "name": "CONSTRUCCIÓN I. MATERIALIDAD - ARQUA",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "arquitectura-13-esp-2",
-        "name": "CONSTRUCCIÓN III. INFRAESTRUCTURA DE REDES - ARQIB",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "arquitectura-13-esp-3",
-        "name": "PROYECTO IV. HABITAR - ARQ6C",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-14",
@@ -8266,57 +3333,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-14-esp-1",
-        "name": "ARQUITECTURA DEL PAISAJE - ARQ3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-14-esp-2",
-        "name": "TEORIA E HISTORIA IV. SISTEMAS SOCILES Y ORGANIZACIÓN ESPACIALES - ARQ4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-14-esp-3",
-        "name": "TEORIA E HISTORIA IV. SISTEMAS SOCILES Y ORGANIZACIÓN ESPACIALES - ARQUA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-14-esp-4",
-        "name": "PROYECTO V. LO TECTÓNICO Y ESTEREOTÓMICO - ARQ7C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-14-esp-5",
-        "name": "URBANO V. ESTRUCTURA E INFRAESTRUCTURA URBANA - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-14-esp-6",
-        "name": "TEORÍA E HISTORIA VII. TÉCNICA + POÉTICA = TÉCTONICA - ARQIB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-15",
@@ -8326,40 +3347,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-15-esp-1",
-        "name": "DISEÑO ASISTIDO POR COMPUTADOR - IAM1A (ING. AMBIENTAL)",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "arquitectura-15-esp-2",
-        "name": "EXPRESIÓN III. ILUSTRACIÓN ARQUITECTÓNICA Y PERSPECTIVA - B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "arquitectura-15-esp-3",
-        "name": "PROYECTO V. LO TECTÓNICO Y ESTEREOTÓMICO - ARQ7B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "ING. AMBIENTAL"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-16",
@@ -8369,45 +3361,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-16-esp-1",
-        "name": "TEORIA E HISTORIA III. ARQUITECTURA Y LEGUAJE - ARQIC",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-16-esp-2",
-        "name": "PROYECTO III. URBANO - ARQ5B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-16-esp-3",
-        "name": "URBANO IV. LO URBANO COMO HABITAD: LA VIVIENDA Y SUS EXTENSIONES - ARQIB",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-16-esp-4",
-        "name": "TEORÍA E HISTORIA VII. TÉCNICA + POÉTICA = TÉCTONICA - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-17",
@@ -8417,51 +3375,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-17-esp-1",
-        "name": "FUNDAMENTOS DEL PROYECTO I - ARQ1A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-17-esp-2",
-        "name": "TEORIA E HISTORIA II - ARQ2A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-17-esp-3",
-        "name": "TEORIA E HISTORIA II - ARQIB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-17-esp-4",
-        "name": "ENFASIS PATRI - HISTORIOGRAFIA, TEORIA ARQUITECTONICA Y URBANA - A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "arquitectura-17-esp-5",
-        "name": "TEORIA E HISTORIA I - ARQUA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-18",
@@ -8471,45 +3389,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-18-esp-1",
-        "name": "FUNDAMENTOS DEL PROYECTO II - ARQ2C",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-18-esp-2",
-        "name": "EXPRESIÓN II - ARQ2B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-18-esp-3",
-        "name": "ESTRUCTURAS I. ELEMENTOS ESTRUCTURALES - ARQUA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-18-esp-4",
-        "name": "INTERIORISMO - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-19",
@@ -8519,45 +3403,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-19-esp-1",
-        "name": "PROYECTO IV. HABITAR - ARQ6B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-19-esp-2",
-        "name": "PROYECTO V. LO TECTÓNICO Y ESTEREOTÓMICO - ARQ7D",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-19-esp-3",
-        "name": "ADMINISTRACIÓN Y LEGISLACIÓN II. LEGISLACIÓN EN CONSTRUCCIÓN - AQ10A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "arquitectura-19-esp-4",
-        "name": "ADMINISTRACIÓN Y LEGISLACIÓN II. LEGISLACIÓN EN CONSTRUCCIÓN - AQ10B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-20",
@@ -8567,63 +3417,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-20-esp-1",
-        "name": "URBANO II. LO URBANO Y EL TERRITORIO COMO ORDEN FISICO-ESPACIAL: SISTEMAS Y ORGANIZACIONES EN EL ESPACIO URBANO - ARQ4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-20-esp-2",
-        "name": "URBANO II. LO URBANO Y EL TERRITORIO COMO ORDEN FISICO-ESPACIAL: SISTEMAS Y ORGANIZACIONES EN EL ESPACIO URBANO - ARQIC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-20-esp-3",
-        "name": "PROYECTO III. URBANO - ARQ5C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-20-esp-4",
-        "name": "URBANOIII. LO URBANO COMO PREOYECTO.: LOS MODELOS Y RELACIÓN ENTRE TEORÍAS Y TÉCNICAS - ARQIB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "arquitectura-20-esp-5",
-        "name": "URBANO IV. LO URBANO COMO HABITAD: LA VIVIENDA Y SUS EXTENSIONES - ARQ6A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "arquitectura-20-esp-6",
-        "name": "VIVIENDA ADECUADA Y ASENTAMIENTOS HUMANOS SOSTENIBLES - ARQ9A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "arquitectura-20-esp-7",
-        "name": "ECOURBANISMO - AQ10A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "arquitectura-21",
@@ -8633,57 +3431,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Arquitecto(a) · Magíster en Arquitectura y Urbanismo",
+    "education": "Arquitectura · Magíster en Arquitectura y Urbanismo",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "arquitectura-21-esp-1",
-        "name": "PROYECTO II. SISTEMAS Y ORGANIZACIONES ESPACIALES - ARQ4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-21-esp-2",
-        "name": "CONSTRUCCIÓN IV. COSTOS Y PRESUPUESTOS - ARQ6B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-21-esp-3",
-        "name": "CONSTRUCCIÓN IV. COSTOS Y PRESUPUESTOS - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-21-esp-4",
-        "name": "CONSTRUCCIÓN V. PROGRAMACIÓN DE OBRA - ARQIA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-21-esp-5",
-        "name": "CONSTRUCCIÓN V. PROGRAMACIÓN DE OBRA - ARQIB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "arquitectura-21-esp-6",
-        "name": "ADMINISTRACIÓN Y LEGISLACIÓN II. LEGISLACIÓN EN CONSTRUCCIÓN - AQ10C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "contaduria-1",
@@ -8693,55 +3445,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Contador(a) Público(a) · Magíster en Ciencias Contables y Financieras",
+    "education": "Contaduría Pública · Magíster en Ciencias Contables y Financieras",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "contaduria-1-esp-1",
-        "name": "AUDITORIA FORENSE - ELEC III AUD FOR",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-1-esp-2",
-        "name": "SISTEMAS DE CONTROL Y RIESGO - SIST CONT RIES",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-1-esp-3",
-        "name": "AUDITING AND ASSURANCE - AUDITING D",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-1-esp-4",
-        "name": "AUDITING AND ASSURANCE - AUDITING N",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-1-esp-5",
-        "name": "GESTIÓN DE IMPUESTOS Y RÉGIMEN TRIBUTARIO ESPECIAL - COC GESIMP RTE",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30312": {
-        "code": "30312",
-        "hours": 4
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 12
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "contaduria-2",
@@ -8751,54 +3459,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Contador(a) Público(a) · Magíster en Ciencias Contables y Financieras",
+    "education": "Contaduría Pública · Magíster en Ciencias Contables y Financieras",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "contaduria-2-esp-1",
-        "name": "SISTEMAS DE INFORMACION GERENCIAL - ELEC I SIG CON",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "contaduria-2-esp-2",
-        "name": "ORGANIZACIONES Y ENTORNO ECONÓMICO - ORG Y ENT ECON",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "contaduria-2-esp-3",
-        "name": "HABILIDADES GERENCIALES - HAB GER CON",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "contaduria-2-esp-4",
-        "name": "PRESUPUESTOS Y COSTOS - MDG4B (MARKETING)",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    },
-    "sharedUnitName": "MARKETING"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "contaduria-3",
@@ -8808,59 +3473,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Contador(a) Público(a) · Magíster en Ciencias Contables y Financieras",
+    "education": "Contaduría Pública · Magíster en Ciencias Contables y Financieras",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "contaduria-3-esp-1",
-        "name": "CONTABILIDAD GUBERNAMENTAL - CONT GUB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-3-esp-2",
-        "name": "CONTABILIDAD FINANCIERA AVANZADA - CONT FIN AVA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-3-esp-3",
-        "name": "TRIBUTARIA II - TRIB II D",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-3-esp-4",
-        "name": "TRIBUTARIA II - TRIB II N",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-3-esp-5",
-        "name": "CONTROL INTERNO Y PRESUPUESTO PÚBLICO Y PRIVADO - ELEC II CON PRES PYP",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 4
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "contaduria-4",
@@ -8870,55 +3487,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Contador(a) Público(a) · Magíster en Ciencias Contables y Financieras",
+    "education": "Contaduría Pública · Magíster en Ciencias Contables y Financieras",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "contaduria-4-esp-1",
-        "name": "CONTABILIDAD AMBIENTAL - PROF I CONT AMB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-4-esp-2",
-        "name": "CONTABILIDAD AMBIENTAL, SOCIAL Y GOBIERNO CORPORATIVO - CON AMB, SOC Y GOB C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-4-esp-3",
-        "name": "COSTOS I - COSTOS I",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-4-esp-4",
-        "name": "COSTOS II - COSTOS II D",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "contaduria-4-esp-5",
-        "name": "COSTOS II - COSTOS II N",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "contaduria-5",
@@ -8928,61 +3501,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Contador(a) Público(a) · Magíster en Ciencias Contables y Financieras",
+    "education": "Contaduría Pública · Magíster en Ciencias Contables y Financieras",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "contaduria-5-esp-1",
-        "name": "SISTEMAS DE INFORMACION CONTABLE - SIS INF CON",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "contaduria-5-esp-2",
-        "name": "CONTABILIDAD DE FENÓMENOS SOCIETARIOS - PROF II CON FEN SOC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "contaduria-5-esp-3",
-        "name": "CONTABILIDAD FINANCIERA BÁSICA - CON FIN BAS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "contaduria-5-esp-4",
-        "name": "CONTABILIDAD FINANCIERA INTERMEDIA - CON FIN INTE",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "contaduria-5-esp-5",
-        "name": "TRIBUTARIA I - TRIB I",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "contaduria-5-esp-6",
-        "name": "FINANZAS BÁSICAS (VIRTUAL) - FIN BAS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "contaduria-6",
@@ -8992,49 +3515,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Contador(a) Público(a) · Magíster en Ciencias Contables y Financieras",
+    "education": "Contaduría Pública · Magíster en Ciencias Contables y Financieras",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "contaduria-6-esp-1",
-        "name": "INVESTIGACIÓN APLICADA BÁSICA - INV APL BAS",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "contaduria-6-esp-2",
-        "name": "INVESTIGACIÓN APLICADA INTERMEDIA - INV APL INT D",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "contaduria-6-esp-3",
-        "name": "INVESTIGACIÓN APLICADA INTERMEDIA - INV APL INT N",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "contaduria-6-esp-4",
-        "name": "OPCION DE GRADO - MONOGRAFIA/OTR",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "contaduria-7",
@@ -9044,61 +3529,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Contador(a) Público(a) · Magíster en Ciencias Contables y Financieras",
+    "education": "Contaduría Pública · Magíster en Ciencias Contables y Financieras",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "contaduria-7-esp-1",
-        "name": "FUNDAMENTOS DE ECONOMIA - FUNDECON",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "contaduria-7-esp-2",
-        "name": "DERECHO DE LOS NEGOCIOS - DER NEG",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "contaduria-7-esp-3",
-        "name": "DERECHO COMERCIAL Y LABORAL - DER COM Y LAB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "contaduria-7-esp-4",
-        "name": "FINANZAS PÚBLICAS - PRO III FIN PUB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "contaduria-7-esp-5",
-        "name": "PENSAMIENTO Y PROCESO ADMINISTRATIVO - PEN PROC ADM",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "contaduria-7-esp-6",
-        "name": "FINANZAS AVANZADAS - FIN AVAN",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 4
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-1",
@@ -9111,40 +3546,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-1-esp-1",
-        "name": "FUNDAMENTOS CONSTITUCIONALES Y ECONÓMICOS - NEG2A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "negocios-int-1-esp-2",
-        "name": "FUNDAMENTOS CONSTITUCIONALES Y ECONÓMICOS - NEG2B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "negocios-int-1-esp-3",
-        "name": "LEGISLACION ADUANERA Y CAMBIARIA - NEG3A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-2",
@@ -9157,46 +3560,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-2-esp-1",
-        "name": "GEOGRAFIA ECONÓMICA - NEG1A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-2-esp-2",
-        "name": "GEOGRAFIA ECONÓMICA - NEG1B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-2-esp-3",
-        "name": "MICROECONOMIA - NEG1B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-2-esp-4",
-        "name": "ADMINISTRACION Y PROCESOS - NEG2A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-3",
@@ -9209,46 +3574,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-3-esp-1",
-        "name": "GESTIÓN DE IMPORTACIONES - NEG3A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-3-esp-2",
-        "name": "COMERCIO INTERNACIONAL - NEG2A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-3-esp-3",
-        "name": "COMERCIO INTERNACIONAL - NEG2B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-3-esp-4",
-        "name": "PROTOCOLO Y ETIQUETA DE ALTA DIRECCION - NEG3B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-4",
@@ -9261,40 +3588,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-4-esp-1",
-        "name": "LOGÍSTICA Y DFI - NEG4A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "negocios-int-4-esp-2",
-        "name": "LOGÍSTICA Y DFI - NEG4B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "negocios-int-4-esp-3",
-        "name": "CONTEXTO DE LOS NEGOCIOS INTERNACIONALES - NEG1B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-5",
@@ -9307,52 +3602,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-5-esp-1",
-        "name": "FINANZAS INTERNACIONALES - NEGEB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-5-esp-2",
-        "name": "ADMINISTRACION Y PROCESOS - NEG2B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-5-esp-3",
-        "name": "FORMULACIÓN Y EVALUACIÓN FINANCIERA DE PROYECTOS - NEG6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-5-esp-4",
-        "name": "FORMULACIÓN Y EVALUACIÓN FINANCIERA DE PROYECTOS - NEG6B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-5-esp-5",
-        "name": "CONTEXTO DE LOS NEGOCIOS INTERNACIONALES - NEG1A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-6",
@@ -9365,46 +3616,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-6-esp-1",
-        "name": "TRADING III - NEGEA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-6-esp-2",
-        "name": "FINANZAS INTERNACIONALES - NEGEA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-6-esp-3",
-        "name": "MERCADOS BURSÁTILES II - NEG7A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-6-esp-4",
-        "name": "INGENIERIA FINACIERA Y DE MERCADOS - NEG3A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-7",
@@ -9417,52 +3630,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-7-esp-1",
-        "name": "OPCIÓN DE GRADO - NEGEA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-7-esp-2",
-        "name": "AMBIENTE CULTURAL ECONÓMICO Y POLÍTICO I (AMÉRICA) - NEG7A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-7-esp-3",
-        "name": "AMBIENTE CULTURAL ECONÓMICO Y POLÍTICO I (AMÉRICA) - NEG7B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-7-esp-4",
-        "name": "INTERNATIONAL BUSINESS MANAGEMENT - NEG8A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-7-esp-5",
-        "name": "INTERNATIONAL BUSINESS MANAGEMENT - NEG8B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-8",
@@ -9475,46 +3644,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-8-esp-1",
-        "name": "CONTABILIDAD EMPRESARIAL - NEG2A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-8-esp-2",
-        "name": "CONTABILIDAD EMPRESARIAL - NEG2B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-8-esp-3",
-        "name": "ANÁLISIS FINANCIERO - NEG4A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-8-esp-4",
-        "name": "ANÁLISIS FINANCIERO - NEG4B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-9",
@@ -9527,48 +3658,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-9-esp-1",
-        "name": "INTEGRACIÓN Y RELACIONES ECONÓMICAS INTERNACIONALES - NEG4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-9-esp-2",
-        "name": "CONTRATACIÓN Y RESOLUCIÓN DE CONTROVERSIAS INTERNACIONALES - NEGEA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-9-esp-3",
-        "name": "AMBIENTE CULTURAL ECONÓMICO Y POLÍTICO: ASIA - NEG8B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-9-esp-4",
-        "name": "AMBIENTE CULTURAL ECONÓMICO Y POLÍTICO: ASIA - NEG8C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-9-esp-5",
-        "name": "INTRODUCCION A LAS RELACCIONES INTERNACIONALES - NEG3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-10",
@@ -9581,48 +3672,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-10-esp-1",
-        "name": "MERCADEO INTERNACIONAL III - NEGEA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-10-esp-2",
-        "name": "MARKETING INTERNACIONAL - NEG6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-10-esp-3",
-        "name": "E-COMMERCE - NEG7A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-10-esp-4",
-        "name": "E-COMMERCE - NEG7B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-10-esp-5",
-        "name": "MERCADEO INTERNACIONAL I - NEG6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-11",
@@ -9635,42 +3686,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-11-esp-1",
-        "name": "MACROECONOMIA - NEG3A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-11-esp-2",
-        "name": "MICROECONOMIA - NEG1A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-11-esp-3",
-        "name": "ECONOMÍA INTERNACIONAL - NEGEA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "negocios-int-11-esp-4",
-        "name": "ECONOMÍA INTERNACIONAL - NEGEB",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-12",
@@ -9683,48 +3700,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-12-esp-1",
-        "name": "INTEGRACIÓN Y RELACIONES ECONÓMICAS INTERNACIONALES - NEG4B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-12-esp-2",
-        "name": "SEMINARIO DE INVESTIGACIÓN EN N.I. - NEGEA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-12-esp-3",
-        "name": "STRATEGIC DECISION MAKING - NEGEA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-12-esp-4",
-        "name": "AMBIENTE CULTURAL ECONÓMICO Y POLÍTICO II (UNIÓN EUROPEA Y ÁFRICA) - NEG6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "negocios-int-12-esp-5",
-        "name": "AMBIENTE CULTURAL ECONÓMICO Y POLÍTICO II (UNIÓN EUROPEA Y ÁFRICA) - NEG6B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "negocios-int-13",
@@ -9737,36 +3714,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Negocios Internacionales · Magíster en Comercio Internacional",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "negocios-int-13-esp-1",
-        "name": "LOGISTICA Y DISTRIBUCION FISICA INTERNACIONAL I - NEG6A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "negocios-int-13-esp-2",
-        "name": "LOGISTICA Y DISTRIBUCION INTERNACIONAL II - NEG7A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "negocios-int-13-esp-3",
-        "name": "LOGISTICA Y DISTRIBUCIÓN FISICA INTERNACIONAL III - NEGEA",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-electronica-1",
@@ -9775,24 +3724,12 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "fullName": "LUIS FREDY SOSA QUINTERO",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Decano(a) de Facultad",
-    "education": "Ingeniero(a) Electrónico(a) · Magíster en Ingeniería Electrónica",
+    "rank": "Decanatura de Facultad",
+    "education": "Ingeniería Electrónica · Magíster en Ingeniería Electrónica",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ing-electronica-1-esp-1",
-        "name": "CIRCUITOS I - IELTA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-electronica-2",
@@ -9801,24 +3738,12 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "fullName": "WILLIAM FABIAN CHAPARRO BECERRA",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Decano(a) de Facultad",
-    "education": "Ingeniero(a) Electrónico(a) · Magíster en Ingeniería Electrónica",
+    "rank": "Decanatura de Facultad",
+    "education": "Ingeniería Electrónica · Magíster en Ingeniería Electrónica",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ing-electronica-2-esp-1",
-        "name": "TRANSMISION DE DATOS - IEL8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-electronica-3",
@@ -9828,49 +3753,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) Electrónico(a) · Magíster en Ingeniería Electrónica",
+    "education": "Ingeniería Electrónica · Magíster en Ingeniería Electrónica",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ing-electronica-3-esp-1",
-        "name": "CONTROL ANALÓGICO - IEL7A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-3-esp-2",
-        "name": "ELECTRÓNICA II - IEL4A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-3-esp-3",
-        "name": "ELECTRÓNICA III - IEL5A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-3-esp-4",
-        "name": "IDENTIFICACIÓN Y MODELADO DE SISTEMAS - IEL6A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-electronica-4",
@@ -9880,49 +3767,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Electrónico(a) · Magíster en Ingeniería Electrónica",
+    "education": "Ingeniería Electrónica · Magíster en Ingeniería Electrónica",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ing-electronica-4-esp-1",
-        "name": "SISTEMAS DIGITALES II - IEL4A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-4-esp-2",
-        "name": "SEÑALES Y SISTEMAS - IEL5A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-4-esp-3",
-        "name": "PROCESAMIENTO DIGITAL DE SEÑALES - IEL6A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-4-esp-4",
-        "name": "MACHINE VISION - IEL8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 8
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-electronica-5",
@@ -9932,55 +3781,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) Electrónico(a) · Magíster en Ingeniería Electrónica",
+    "education": "Ingeniería Electrónica · Magíster en Ingeniería Electrónica",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ing-electronica-5-esp-1",
-        "name": "CIRCUITOS II - IEL4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-electronica-5-esp-2",
-        "name": "CONVERSIÓN ELECTROMAGNÉTICA - IEL6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-electronica-5-esp-3",
-        "name": "ELECTRÓNICA DE POTENCIA - IEL7A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-electronica-5-esp-4",
-        "name": "AUTOMATIZACIÓN INDUSTRIAL - IEL9A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-electronica-5-esp-5",
-        "name": "OPTIMIZACIÓN APLICADA A SISTEMAS ELÉCTRICOS - IE10A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 4
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-electronica-6",
@@ -9990,49 +3795,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Electrónico(a) · Magíster en Ingeniería Electrónica",
+    "education": "Ingeniería Electrónica · Magíster en Ingeniería Electrónica",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ing-electronica-6-esp-1",
-        "name": "PROGRAMACIÓN - IEL5A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-6-esp-2",
-        "name": "CONTROL DIGITAL - IEL8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-6-esp-3",
-        "name": "SISTEMAS DIGITALES I - IELTA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-6-esp-4",
-        "name": "DISEÑO ELECTRÓNICO - IEL9A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-electronica-7",
@@ -10042,43 +3809,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) Electrónico(a) · Magíster en Ingeniería Electrónica",
+    "education": "Ingeniería Electrónica · Magíster en Ingeniería Electrónica",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ing-electronica-7-esp-1",
-        "name": "COMUNICACIONES INALÁMBRICAS - IEL7A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ing-electronica-7-esp-2",
-        "name": "SEMICONDUCTORES - IEL6A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ing-electronica-7-esp-3",
-        "name": "TEORÍA DE LA COMUNICACIÓN - IEL6A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-electronica-8",
@@ -10088,62 +3823,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Electrónico(a) · Magíster en Ingeniería Electrónica",
+    "education": "Ingeniería Electrónica · Magíster en Ingeniería Electrónica",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ing-electronica-8-esp-1",
-        "name": "LOGICA DE PROGRAMACION - ELEC-A (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-electronica-8-esp-2",
-        "name": "LOGICA DE PROGRAMACION - ELEC-B (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-electronica-8-esp-3",
-        "name": "ELECTRÓNICA I - IELTA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-electronica-8-esp-4",
-        "name": "PROYECTO DE INVESTIGACIÓN O DESARROLLO I - IEL8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-electronica-8-esp-5",
-        "name": "PROYECTO DE INVESTIGACIÓN Y DESARROLLO II - IEL9A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-electronica-8-esp-6",
-        "name": "OPCIÓN DE GRADO - IE10A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "CIENCIAS BÁSICAS"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-electronica-9",
@@ -10153,50 +3837,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) Electrónico(a) · Magíster en Ingeniería Electrónica",
+    "education": "Ingeniería Electrónica · Magíster en Ingeniería Electrónica",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ing-electronica-9-esp-1",
-        "name": "ECONOMIA Y CONTABILIDAD - IAMIA (ING. CIVIL)",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-9-esp-2",
-        "name": "ADMINISTRACION DE PROYECTOS - IEL7A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-9-esp-3",
-        "name": "GESTIÓN DE PROYECTOS - IEL8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ing-electronica-9-esp-4",
-        "name": "EMPRENDIMIENTO Y LIDERAZGO - IEL9A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 12
-      }
-    },
-    "sharedUnitName": "ING. CIVIL"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-electronica-10",
@@ -10206,55 +3851,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) Electrónico(a) · Magíster en Ingeniería Electrónica",
+    "education": "Ingeniería Electrónica · Magíster en Ingeniería Electrónica",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ing-electronica-10-esp-1",
-        "name": "FUNDAMENTOS DE CIRCUITOS - IEL2A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-electronica-10-esp-2",
-        "name": "FUNDAMENTOS DE CIRCUITOS - IEL2B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-electronica-10-esp-3",
-        "name": "INSTRUMENTACION INDUSTRIAL - IEL7A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-electronica-10-esp-4",
-        "name": "INTRODUCCIÓN A LA ING. ELECTRÓNICA - IET1A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-electronica-10-esp-5",
-        "name": "GESTIÓN DE LA INNOVACIÓN TECNOLÓGICA - IEL9A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "bioingenieria-1",
@@ -10264,62 +3865,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Bioingeniero(a) · Magíster en Ingeniería Biomédica",
+    "education": "Bioingeniería · Magíster en Ingeniería Biomédica",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "bioingenieria-1-esp-1",
-        "name": "LÓGICA COMPUTACIONAL - CIV-A (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "bioingenieria-1-esp-2",
-        "name": "ELECTRONICA - BIO3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "bioingenieria-1-esp-3",
-        "name": "ELECTRONICA - BIO3B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "bioingenieria-1-esp-4",
-        "name": "FORMULACIÓN Y EVALUACIÓN DE PROYECTOS - BIO7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "bioingenieria-1-esp-5",
-        "name": "INSTRUMENTACIÓN Y AUTOMATIZACIÓN - BIO6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "bioingenieria-1-esp-6",
-        "name": "INSTRUMENTACIÓN Y AUTOMATIZACIÓN - BIO6B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    },
-    "sharedUnitName": "CIENCIAS BÁSICAS"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "bioingenieria-2",
@@ -10329,49 +3879,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Bioingeniero(a) · Magíster en Ingeniería Biomédica",
+    "education": "Bioingeniería · Magíster en Ingeniería Biomédica",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "bioingenieria-2-esp-1",
-        "name": "CIRCUITOS ELÉCTRICOS - BIO2A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "bioingenieria-2-esp-2",
-        "name": "CIRCUITOS ELÉCTRICOS - BIO2B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "bioingenieria-2-esp-3",
-        "name": "CIRCUITOS ELÉCTRICOS - BIO2C",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "bioingenieria-2-esp-4",
-        "name": "ENERGÍAS RENOVABLES - BIO7A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "bioingenieria-3",
@@ -10381,56 +3893,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Bioingeniero(a) · Magíster en Ingeniería Biomédica",
+    "education": "Bioingeniería · Magíster en Ingeniería Biomédica",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "bioingenieria-3-esp-1",
-        "name": "EVALUACION DE PROYECTOS - IAMIB (ING. CIVIL)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-3-esp-2",
-        "name": "BIOMECÁNICA - BIO5A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-3-esp-3",
-        "name": "PROCESAMIENTO DE LA INFORMACIÓN BIOLÓGICA - BIO6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-3-esp-4",
-        "name": "PRÓTESIS Y ORTESIS - BIO7A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-3-esp-5",
-        "name": "IMPLANTES - BIO7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "ING. CIVIL"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "bioingenieria-4",
@@ -10440,56 +3907,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Bioingeniero(a) · Magíster en Ingeniería Biomédica",
+    "education": "Bioingeniería · Magíster en Ingeniería Biomédica",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "bioingenieria-4-esp-1",
-        "name": "LÓGICA COMPUTACIONAL - CIV-B (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-4-esp-2",
-        "name": "SISTEMAS DIGITALES - BIO4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-4-esp-3",
-        "name": "SISTEMAS DIGITALES - BIO4B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-4-esp-4",
-        "name": "SEÑALES Y SISTEMAS - BIO5A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-4-esp-5",
-        "name": "RESPONSABILIDAD SOCIAL DESDE LA BIOINGENIERÍA - BIO5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "CIENCIAS BÁSICAS"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "bioingenieria-5",
@@ -10499,52 +3921,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Bioingeniero(a) · Magíster en Ingeniería Biomédica",
+    "education": "Bioingeniería · Magíster en Ingeniería Biomédica",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "bioingenieria-5-esp-1",
-        "name": "LOGICA COMPUTACIONAL - IDU-A (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-5-esp-2",
-        "name": "LOGICA COMPUTACIONAL - IDU-B (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-5-esp-3",
-        "name": "LOGICA COMPUTACIONAL - BIO-A (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-5-esp-4",
-        "name": "EQUIPOS E INSTRUMENTACIÓN BIOLÓGICA - BIO6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-5-esp-5",
-        "name": "INGENIERÍA CLÍNICA - BIO7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "CIENCIAS BÁSICAS"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "bioingenieria-6",
@@ -10554,27 +3935,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Bioingeniero(a) · Magíster en Ingeniería Biomédica",
+    "education": "Bioingeniería · Magíster en Ingeniería Biomédica",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "bioingenieria-6-esp-1",
-        "name": "PRÁCTICA: ANATOMÍA HUMANA - BIOA",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "bioingenieria-7",
@@ -10584,51 +3949,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Bioingeniero(a) · Magíster en Ingeniería Biomédica",
+    "education": "Bioingeniería · Magíster en Ingeniería Biomédica",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "bioingenieria-7-esp-1",
-        "name": "ECOLOGIA - BIOEA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-7-esp-2",
-        "name": "ECOLOGIA - BIOEB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-7-esp-3",
-        "name": "INTRODUCCIÓN A LA BIOINGENIERÍA - BIOEB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-7-esp-4",
-        "name": "MICROBIOLOGÍA Y BIOLOGÍA DE SISTEMAS - BIOEB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-7-esp-5",
-        "name": "BIOMIMÉTICA - BIO7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "bioingenieria-8",
@@ -10638,52 +3963,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Bioingeniero(a) · Magíster en Ingeniería Biomédica",
+    "education": "Bioingeniería · Magíster en Ingeniería Biomédica",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "bioingenieria-8-esp-1",
-        "name": "BIOLOGIA GENERAL - BIO-A (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-8-esp-2",
-        "name": "BIOLOGIA GENERAL - BIO-A1 (CIENCIAS BÁSICAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-8-esp-3",
-        "name": "BIOLOGÍA CELULAR MOLECULAR - BIO2A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-8-esp-4",
-        "name": "BIOLOGÍA CELULAR MOLECULAR - BIO2B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-8-esp-5",
-        "name": "BIOLOGÍA CELULAR MOLECULAR - BIO2C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "CIENCIAS BÁSICAS"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "bioingenieria-9",
@@ -10693,52 +3977,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Bioingeniero(a) · Magíster en Ingeniería Biomédica",
+    "education": "Bioingeniería · Magíster en Ingeniería Biomédica",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "bioingenieria-9-esp-1",
-        "name": "SEMINARIO DE GRADO I - ICV8B (ING. CIVIL)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-9-esp-2",
-        "name": "MICROBIOLOGÍA Y BIOLOGÍA DE SISTEMAS - BIOEA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-9-esp-3",
-        "name": "FISIOLOGÍA DE SISTEMAS - BIO4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-9-esp-4",
-        "name": "FISIOLOGÍA DE SISTEMAS - BIO4B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "bioingenieria-9-esp-5",
-        "name": "INVESTIGACIÓN EN BIOINGENIERÍA - BIO5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "ING. CIVIL"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-datos-ia-1",
@@ -10748,55 +3991,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) de Sistemas / Datos · Magíster en Ciencia de Datos e IA",
+    "education": "Ingeniería de Sistemas · Magíster en Ciencia de Datos e Inteligencia Artificial",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ing-datos-ia-1-esp-1",
-        "name": "SEGURIDAD DE LA INFORMACIÓN - IDTAA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-1-esp-2",
-        "name": "SISTEMAS OPERATIVOS - IDTAA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-1-esp-3",
-        "name": "ARQUITECTURA DEL COMPUTADORES - IDTAA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-1-esp-4",
-        "name": "ARQUITECTURA DEL COMPUTADORES - IDTAB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-1-esp-5",
-        "name": "ARQUITECTURA DEL COMPUTADORES - IDTAC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 4
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-datos-ia-2",
@@ -10806,43 +4005,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) de Sistemas / Datos · Magíster en Ciencia de Datos e IA",
+    "education": "Ingeniería de Sistemas · Magíster en Ciencia de Datos e Inteligencia Artificial",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ing-datos-ia-2-esp-1",
-        "name": "INTRODUCCIÓN A LA INGENIERÍA DE DATOS E INTELIGENCIA ARTIFICIAL - IDT1A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ing-datos-ia-2-esp-2",
-        "name": "INTRODUCCIÓN A LA INGENIERÍA DE DATOS E INTELIGENCIA ARTIFICIAL - IDT1B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ing-datos-ia-2-esp-3",
-        "name": "LOGICA COMPUTACIONAL - IDT1B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-datos-ia-3",
@@ -10852,61 +4019,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Ingeniero(a) de Sistemas / Datos · Magíster en Ciencia de Datos e IA",
+    "education": "Ingeniería de Sistemas · Magíster en Ciencia de Datos e Inteligencia Artificial",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ing-datos-ia-3-esp-1",
-        "name": "COMPUTACIÓN PARALELA Y DISTRIBUIDA - IDT4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-datos-ia-3-esp-2",
-        "name": "COMPUTACIÓN PARALELA Y DISTRIBUIDA - IDT4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-datos-ia-3-esp-3",
-        "name": "COMPUTACIÓN PARALELA Y DISTRIBUIDA - IDT4C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-datos-ia-3-esp-4",
-        "name": "MINERIA DE DATOS - IDT5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-datos-ia-3-esp-5",
-        "name": "CLOUD COMPUTING - IDT5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ing-datos-ia-3-esp-6",
-        "name": "EVALUACIÓN ECONÓMICA DE SOLUCIONES DE INTELIGENCIA ARTIFICIAL - IDT5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-datos-ia-4",
@@ -10916,55 +4033,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) de Sistemas / Datos · Magíster en Ciencia de Datos e IA",
+    "education": "Ingeniería de Sistemas · Magíster en Ciencia de Datos e Inteligencia Artificial",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ing-datos-ia-4-esp-1",
-        "name": "SISTEMAS DE ADQUISICIÓN Y PROCESAMIENTO DE DATOS - IDTAB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-4-esp-2",
-        "name": "ANALITICA Y VIZUALIZACIÓN DE DATOS - IDT4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-4-esp-3",
-        "name": "ANALITICA Y VIZUALIZACIÓN DE DATOS - IDT4B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-4-esp-4",
-        "name": "ANALITICA Y VIZUALIZACIÓN DE DATOS - IDT4C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-4-esp-5",
-        "name": "LOGICA COMPUTACIONAL - IDT1A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-datos-ia-5",
@@ -10974,51 +4047,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Ingeniero(a) de Sistemas / Datos · Magíster en Ciencia de Datos e IA",
+    "education": "Ingeniería de Sistemas · Magíster en Ciencia de Datos e Inteligencia Artificial",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ing-datos-ia-5-esp-1",
-        "name": "SISTEMAS DE ADQUISICIÓN Y PROCESAMIENTO DE DATOS - IDTAC",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-5-esp-2",
-        "name": "ESTRUCTURAS DE DATOS - IDTAA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-5-esp-3",
-        "name": "ESTRUCTURAS DE DATOS - IDTAB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-5-esp-4",
-        "name": "ESTRUCTURAS DE DATOS - IDTAC",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-5-esp-5",
-        "name": "BASES DE DATOS - IDTAA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ing-datos-ia-6",
@@ -11028,51 +4061,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Ingeniero(a) de Sistemas / Datos · Magíster en Ciencia de Datos e IA",
+    "education": "Ingeniería de Sistemas · Magíster en Ciencia de Datos e Inteligencia Artificial",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ing-datos-ia-6-esp-1",
-        "name": "SISTEMAS DE ADQUISICIÓN Y PROCESAMIENTO DE DATOS - IDTAA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-6-esp-2",
-        "name": "REDES E INFRAESTRUCTURA - IDT4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-6-esp-3",
-        "name": "REDES E INFRAESTRUCTURA - IDT4B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-6-esp-4",
-        "name": "REDES E INFRAESTRUCTURA - IDT4C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ing-datos-ia-6-esp-5",
-        "name": "MACHINE LEARNING - IDT5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-1",
@@ -11081,24 +4074,12 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "fullName": "LUIS RAFAEL HUTCHISON SALAZAR",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Decano(a) de Facultad",
+    "rank": "Decanatura de Facultad",
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-1-esp-1",
-        "name": "PRACTICA PROFESIONAL - CFS9A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-2",
@@ -11111,52 +4092,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-2-esp-1",
-        "name": "INICIACIÓN Y FORMACIÓN DEPORTIVA - CUF2A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "cultura-fisica-2-esp-2",
-        "name": "ENTRENAMIENTO DEPORTIVO - CFS4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "cultura-fisica-2-esp-3",
-        "name": "ENTRENAMIENTO DEPORTIVO 1 - CUF3A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "cultura-fisica-2-esp-4",
-        "name": "DEPORTES TIEMPO Y MARCA - CFS6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "cultura-fisica-2-esp-5",
-        "name": "PROFUNDIZACIÓN II - CFS8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 22
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 10
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-3",
@@ -11169,28 +4106,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-3-esp-1",
-        "name": "FISIOLOGÍA DEL EJERCICIO - CUF3A",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-4",
@@ -11203,64 +4120,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-4-esp-1",
-        "name": "RECREACION TURISTICA - CFS7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-4-esp-2",
-        "name": "DEPORTE ADAPTADO - CFS8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-4-esp-3",
-        "name": "PEDAGOGÍA DEL JUEGO - CUF3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-4-esp-4",
-        "name": "METODOLOGÍA PARA LA ENSEÑANZA DE LA RECREACIÓN - CFS4A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cultura-fisica-4-esp-5",
-        "name": "PROMOCIÓN Y PREVENCIÓN - CFS5A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cultura-fisica-4-esp-6",
-        "name": "CAMPAMENTO - CFS5A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cultura-fisica-4-esp-7",
-        "name": "DISEÑO DE INSTRUMENTOS Y PROPUESTAS RECREATIVAS - CFS6A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 12
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-5",
@@ -11273,34 +4134,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-5-esp-1",
-        "name": "PROFUNDIZACIÓN I - CFS7A",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      },
-      {
-        "id": "cultura-fisica-5-esp-2",
-        "name": "METODOLOGÍA DE LA INVESTIGACIÓN - CFS8A",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 4
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-6",
@@ -11313,46 +4148,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-6-esp-1",
-        "name": "DEPORTES DE COMBATE - CFS5A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "cultura-fisica-6-esp-2",
-        "name": "ENTRENAMIENTO PERSONALIZADO Y GRUPAL - CFS6A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "cultura-fisica-6-esp-3",
-        "name": "DEPORTES ALTERNATIVOS - CFS6A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "cultura-fisica-6-esp-4",
-        "name": "PROFUNDIZACIÓN I - CFS7A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 12
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-7",
@@ -11365,58 +4162,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-7-esp-1",
-        "name": "PSICOMOTRICIDAD - CUF2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-7-esp-2",
-        "name": "BIOMECÁNICA - CUF3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-7-esp-3",
-        "name": "EVALUACIÓN FUNCIONAL - CFS4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-7-esp-4",
-        "name": "ENFERMEDADES CRÓNICAS NO TRANSMISIBLES - PATOKINESIS - CFS4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-7-esp-5",
-        "name": "NUTRICIÓN - CFS5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-7-esp-6",
-        "name": "PRACTICA PROFESIONAL - CFS9A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-8",
@@ -11429,42 +4176,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-8-esp-1",
-        "name": "MARKETING DEPORTIVO - CFS4A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "cultura-fisica-8-esp-2",
-        "name": "DEPORTES DE CONJUNTO - CFS5A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "cultura-fisica-8-esp-3",
-        "name": "MARCO CONCEPTUAL, HISTORIA Y TENDENCIAS DE LA RECREACIÓN - CFS5A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "cultura-fisica-8-esp-4",
-        "name": "PRACTICA PROFESIONAL - CFS9A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-9",
@@ -11477,54 +4190,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-9-esp-1",
-        "name": "APRENDIZAJE Y DESARROLLO - CUF2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-9-esp-2",
-        "name": "INTRODUCCIÓN A LA CULTURA FÍSICA DEPORTE Y RECREACIÓN - CFSIA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-9-esp-3",
-        "name": "FUNDAMENTOS DE MORFOFISIOLOGÍA - CUF2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-9-esp-4",
-        "name": "PRAXIOLOGÍA MOTRIZ - CUF2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-9-esp-5",
-        "name": "DIDÁCTICA DE LA CULTURA FÍSICA - CUF3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-9-esp-6",
-        "name": "PRACTICA PROFESIONAL - CFS9A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-10",
@@ -11537,60 +4204,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-10-esp-1",
-        "name": "EVENTOS Y ESCENARIOS DEPORTIVOS - CUF2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-10-esp-2",
-        "name": "DISEÑO Y GESTIÓN DE PROYECTOS DE LA CULTURA FISICA - CUF3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-10-esp-3",
-        "name": "ADMINISTRACIÓN DE ORGANISMOS DEPORTIVOS - CFS6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-10-esp-4",
-        "name": "PROFUNDIZACIÓN I - CFS7A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cultura-fisica-10-esp-5",
-        "name": "PROFUNDIZACIÓN II - CFS8A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cultura-fisica-10-esp-6",
-        "name": "INTRODUCCIÓN A LA ADMINISTRACIÓN DE LA CULTURA FÍSICA - CFSIA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cultura-fisica-10-esp-7",
-        "name": "PEDAGOGÍA DE LA CULTURA FÍSICA - CFSIA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-11",
@@ -11603,54 +4218,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-11-esp-1",
-        "name": "MASAJE TERAPEUTICO Y DEPORTIVO - CFS7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-11-esp-2",
-        "name": "CLASES GRUPALES - CFS8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-11-esp-3",
-        "name": "EXPRESION CORPORAL - CFSIA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-11-esp-4",
-        "name": "EDUCACIÓN EXPERIENCIAL - CFS6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-11-esp-5",
-        "name": "PSICOLOGÍA DEPORTIVA - CFS6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-11-esp-6",
-        "name": "PROYECTO DE INVESTIGACIÓN - CFS7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cultura-fisica-12",
@@ -11663,54 +4232,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Cultura Física y Deporte · Magíster en Ciencias del Deporte",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "cultura-fisica-12-esp-1",
-        "name": "DEPORTES ARTE Y PRECISIÓN - CFS4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-12-esp-2",
-        "name": "PROGRAMACIÓN DEL EJERCICIO - CFS5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-12-esp-3",
-        "name": "HISTORIA Y TENDENCIAS DE LA RECREACIÓN - CUF2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-12-esp-4",
-        "name": "TECNOLOGÍA APLICADA A LA ACTIVIDAD FÍSICA - CFS7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-12-esp-5",
-        "name": "PROFUNDIZACIÓN II - CFS8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cultura-fisica-12-esp-6",
-        "name": "OPCIÓN DE GRADO - CFS9A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "diseno-interaccion-1",
@@ -11720,55 +4243,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Diseñador(a) · Magíster en Diseño de Interacción y Medios Digitales",
+    "education": "Diseño de Interacción · Magíster en Diseño de Interacción y Medios Digitales",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "diseno-interaccion-1-esp-1",
-        "name": "PROGRAMACION IXD I - DIT2A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "diseno-interaccion-1-esp-2",
-        "name": "PROGRAMACION IXD II - DIT3A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "diseno-interaccion-1-esp-3",
-        "name": "PROGRAMACION IXD III - DITTA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "diseno-interaccion-1-esp-4",
-        "name": "PROGRAMACION IXD IV - DIT5A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "diseno-interaccion-1-esp-5",
-        "name": "DESARROLLO Y PROGRAMACIÓN PARA VIDEO JUEGOS - DIT7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "diseno-interaccion-2",
@@ -11778,73 +4257,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Diseñador(a) · Magíster en Diseño de Interacción y Medios Digitales",
+    "education": "Diseño de Interacción · Magíster en Diseño de Interacción y Medios Digitales",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "diseno-interaccion-2-esp-1",
-        "name": "INTRODUCCION AL DISEÑO DE INTERACCION - DIT1A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-2-esp-2",
-        "name": "EXPRESION II - DIT2A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-2-esp-3",
-        "name": "TEORIAS DEL JUEGO [VIRTUAL] - DIT5A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-2-esp-4",
-        "name": "TENDENCIAS Y MERCADOS - DIT5A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-2-esp-5",
-        "name": "GESTION I - DIT5A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-2-esp-6",
-        "name": "GESTION II GERENCIA DE PROYECTOS - DIT6A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-2-esp-7",
-        "name": "LUDICA Y LOS VIDEOJUEGOS - DIT6A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-2-esp-8",
-        "name": "MODELADO DE PERSONAJES Y ESCENARIOS PARA VIDEOJUEGOS - DIT8A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "diseno-interaccion-3",
@@ -11854,55 +4271,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Diseñador(a) · Magíster en Diseño de Interacción y Medios Digitales",
+    "education": "Diseño de Interacción · Magíster en Diseño de Interacción y Medios Digitales",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "diseno-interaccion-3-esp-1",
-        "name": "FUNDAMENTOS DE DISEÑO - DIT1A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "diseno-interaccion-3-esp-2",
-        "name": "X LAB I - DIT6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "diseno-interaccion-3-esp-3",
-        "name": "X LAB II - DIT7A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "diseno-interaccion-3-esp-4",
-        "name": "ESTUDIO UCD (DISEÑO CENTRADO EN LOS USUARIOS) - DIT8A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "diseno-interaccion-3-esp-5",
-        "name": "DIMENSIONES DEL DISEÑO DE INTERACCION - DIT3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "diseno-interaccion-4",
@@ -11912,67 +4285,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Diseñador(a) · Magíster en Diseño de Interacción y Medios Digitales",
+    "education": "Diseño de Interacción · Magíster en Diseño de Interacción y Medios Digitales",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "diseno-interaccion-4-esp-1",
-        "name": "PAUTAS DE DISEÑO UNIVERSAL - DIT2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "diseno-interaccion-4-esp-2",
-        "name": "METODOLOGIAS Y METODOS DE INVESTIGACION - DIT2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "diseno-interaccion-4-esp-3",
-        "name": "DISEÑO DE INTERACCION I - DIT3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "diseno-interaccion-4-esp-4",
-        "name": "DISEÑO DE INTERACCION II - DITTA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-4-esp-5",
-        "name": "ESTUDIOS CULTURALES - DITTA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-4-esp-6",
-        "name": "CULTURA VISUAL - DIT6A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-4-esp-7",
-        "name": "OPCION DE GRADO I - DIT7A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 12
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "diseno-interaccion-5",
@@ -11982,61 +4299,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Diseñador(a) · Magíster en Diseño de Interacción y Medios Digitales",
+    "education": "Diseño de Interacción · Magíster en Diseño de Interacción y Medios Digitales",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "diseno-interaccion-5-esp-1",
-        "name": "INTRODUCCION A LA PROGRAMACION - DIT1A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "diseno-interaccion-5-esp-2",
-        "name": "EXPRESION III - DIT3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "diseno-interaccion-5-esp-3",
-        "name": "INVESTIGACION EN DISEÑO DE INTERACCION I - DIT3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "diseno-interaccion-5-esp-4",
-        "name": "PROYECTO DE INTERACCION I - DITTA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "diseno-interaccion-5-esp-5",
-        "name": "INVESTIGACION EN DISEÑO DE INTERACCION II - DITTA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "diseno-interaccion-5-esp-6",
-        "name": "OPCION DE GRADO II - DIT8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "20502": {
-        "code": "20502",
-        "hours": 4
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "diseno-interaccion-6",
@@ -12046,33 +4313,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Diseñador(a) · Magíster en Diseño de Interacción y Medios Digitales",
+    "education": "Diseño de Interacción · Magíster en Diseño de Interacción y Medios Digitales",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "diseno-interaccion-6-esp-1",
-        "name": "DISEÑO DE SONIDO - DIT4A",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      },
-      {
-        "id": "diseno-interaccion-6-esp-2",
-        "name": "DISEÑO DE SONIDO - DIT4B",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "diseno-interaccion-7",
@@ -12082,27 +4327,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Diseñador(a) · Magíster en Diseño de Interacción y Medios Digitales",
+    "education": "Diseño de Interacción · Magíster en Diseño de Interacción y Medios Digitales",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "diseno-interaccion-7-esp-1",
-        "name": "FUNDAMENTOS DE ADMINISTRACION - DITTA",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "diseno-interaccion-8",
@@ -12112,63 +4341,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Diseñador(a) · Magíster en Diseño de Interacción y Medios Digitales",
+    "education": "Diseño de Interacción · Magíster en Diseño de Interacción y Medios Digitales",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "diseno-interaccion-8-esp-1",
-        "name": "EXPRESION I - DIT1A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "diseno-interaccion-8-esp-2",
-        "name": "INTRODUCCION A LA INVESTIGACION - DIT1A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "diseno-interaccion-8-esp-3",
-        "name": "OBJETOS DE DISEÑO - DIS2A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "diseno-interaccion-8-esp-4",
-        "name": "HISTORIA DEL DISEÑO - DIT2A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-8-esp-5",
-        "name": "DISEÑO Y VISUALIZACIÓN - DIT3A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-8-esp-6",
-        "name": "PROYECTO DE INTERACCION II - DIT5A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "diseno-interaccion-8-esp-7",
-        "name": "REALIDADES - DIT6A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-1",
@@ -12177,24 +4354,12 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "fullName": "FR. JAVIER ANIBAL MORENO MOJICA, O.P.",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Decano(a) de Facultad",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "rank": "Decanatura de Facultad",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-1-esp-1",
-        "name": "LINGÜÍSTICA APLICADA AL ELE - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-2",
@@ -12203,24 +4368,12 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "fullName": "GLADYS LEONOR ARIAS RODRÍGUEZ",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Decano(a) de Facultad",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "rank": "Decanatura de Facultad",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-2-esp-1",
-        "name": "INVESTIGACIÓN EDUCATIVA - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-3",
@@ -12230,61 +4383,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-3-esp-1",
-        "name": "INGLÉS BÁSICO III - LCF3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-3-esp-2",
-        "name": "FONÉTICA Y FONOLOGÍA DEL INGLÉS - LCF3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-3-esp-3",
-        "name": "LINGÜÍSTICA APLICADA ELT & TIC - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-3-esp-4",
-        "name": "INGLÉS INTERMEDIO - LCF5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-3-esp-5",
-        "name": "CULTURA Y LITERATURA INGLESA UNIVERSAL - LCF5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-3-esp-6",
-        "name": "CULTURA Y LITERATURA INGLESA UNIVERSAL - LCF5B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-4",
@@ -12294,61 +4397,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-4-esp-1",
-        "name": "FRANCÉS PREINTERMEDIO - LCF4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-4-esp-2",
-        "name": "LINGÜÍSTICA APLICADA FLE & TIC - LCF5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-4-esp-3",
-        "name": "LINGÜÍSTICA APLICADA FLE & TIC - LCF5B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-4-esp-4",
-        "name": "FRANCÉS AVANZADO - LCF7B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-4-esp-5",
-        "name": "EDUCACIÓN INCLUSIVA MULTICULTURAL - LCF8A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-4-esp-6",
-        "name": "EDUCACIÓN INCLUSIVA MULTICULTURAL - LCF8B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-5",
@@ -12358,55 +4411,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-5-esp-1",
-        "name": "FRANCÉS BÁSICO III - LCF3B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-5-esp-2",
-        "name": "FRANCÉS INTERMEDIO - LCF5A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-5-esp-3",
-        "name": "FRANCÉS INTERMEDIO ALTO - LCF6A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-5-esp-4",
-        "name": "FRANCÉS INTERMEDIO ALTO - LCF6B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-5-esp-5",
-        "name": "PREPARACION DE EXAMENES INTERNACIONALES - LCEFB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-6",
@@ -12416,57 +4425,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-6-esp-1",
-        "name": "MODELOS PEDAGÓGICOS - LCF1B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-6-esp-2",
-        "name": "EVALUACIÓN EN CONTEXTO ESCOLAR - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-6-esp-3",
-        "name": "PRÁCTICA PEDAGÓGICA E INVESTIGATIVA I - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-6-esp-4",
-        "name": "PRÁCTICA PEDAGÓGICA E INVESTIGATIVA III - LCF8B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-6-esp-5",
-        "name": "PRÁCTICA PROFESIONAL Y PROYECTO DE GRADO II - LC10A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-6-esp-6",
-        "name": "EDUCACIÓN MULTILINGÜE - LCF7A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-7",
@@ -12476,51 +4439,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-7-esp-1",
-        "name": "FRANCÉS INTERMEDIO - LCF5B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-7-esp-2",
-        "name": "FRANCÉS AVANZADO - LCF7A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-7-esp-3",
-        "name": "CULTURA Y CIVILIZACIÓN FRANCÓFONA - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-7-esp-4",
-        "name": "POLÍTICA EDUCATIVA, GESTIÓN Y ADMINISTRACIÓN - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-7-esp-5",
-        "name": "PROYECTO COMUNICATIVO DEL FRANCÉS - LCFA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-8",
@@ -12530,63 +4453,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-8-esp-1",
-        "name": "FONÉTICA Y FONOLOGÍA DEL FRANCÉS - LCF3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-8-esp-2",
-        "name": "FONÉTICA Y FONOLOGÍA DEL FRANCÉS - LCF3B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-8-esp-3",
-        "name": "FRANCÉS PREINTERMEDIO - LCF4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-8-esp-4",
-        "name": "FRANCÉS PREINTERMEDIO - LCFAC",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-8-esp-5",
-        "name": "PRÁCTICA PEDAGÓGICA E INVESTIGATIVA II - LCF7B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-8-esp-6",
-        "name": "PRÁCTICA PROFESIONAL Y PROYECTO DE GRADO II - LC10A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-8-esp-7",
-        "name": "PREPARACION DE EXAMENES INTERNACIONALES - LCEFA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-9",
@@ -12596,75 +4467,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-9-esp-1",
-        "name": "MODELOS PEDAGÓGICOS - LCF1A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-9-esp-2",
-        "name": "LITERATURA UNIVERSAL - LCF2B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-9-esp-3",
-        "name": "LITERATURA UNIVERSAL - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-9-esp-4",
-        "name": "PROCESOS DE APRENDIZAJE - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-9-esp-5",
-        "name": "INTRODUCCIÓN A LA INVESTIGACIÓN - LCF3A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-9-esp-6",
-        "name": "LITERATURA ESPAÑOLA - LCF4B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-9-esp-7",
-        "name": "LITERATURA ESPAÑOLA - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "lic-lenguas-9-esp-8",
-        "name": "LITERATURA COLOMBIANA E HISPANOAMAERICANA - LCF6A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "lic-lenguas-9-esp-9",
-        "name": "LITERATURA COLOMBIANA E HISPANOAMAERICANA - LCF6B",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-10",
@@ -12674,51 +4481,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-10-esp-1",
-        "name": "INGLÉS AVANZADO - LCF7A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-10-esp-2",
-        "name": "INGLÉS AVANZADO - LCF7B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-10-esp-3",
-        "name": "INGLÉS AVANZADO - LCF7C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-10-esp-4",
-        "name": "PREPARACION DE EXAMENES INTERNACIONALES - LCEFA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-lenguas-10-esp-5",
-        "name": "POLITICAS EDUCATIVAS - LCFB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-11",
@@ -12728,75 +4495,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-11-esp-1",
-        "name": "LINGÜÍSTICA GENERAL - LCFB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-11-esp-2",
-        "name": "GRAMÁTICA DEL ESPAÑOL - LCFAB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-11-esp-3",
-        "name": "INTRODUCCIÓN A LA INVESTIGACIÓN - LCF3B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-11-esp-4",
-        "name": "PRÁCTICA INVESTIGATIVA EN PEDAGOGÍA DE LENGUAS - LCF5B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-11-esp-5",
-        "name": "ANTROPOLOGÍA LINGÜÍSTICA - LCF8A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-11-esp-6",
-        "name": "ANTROPOLOGÍA LINGÜÍSTICA - LCF8B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-11-esp-7",
-        "name": "DIDÁCTICA DEL ESPAÑOL Y LA LITERATURA - LCF9A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "lic-lenguas-11-esp-8",
-        "name": "DIDÁCTICA DEL ESPAÑOL Y LA LITERATURA - LCF9B",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "lic-lenguas-11-esp-9",
-        "name": "PENSAMIENTO CRITICO - LIFRA",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-12",
@@ -12806,57 +4509,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-12-esp-1",
-        "name": "FONÉTICA Y FONOLOGÍA DEL INGLÉS - LCF3B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-12-esp-2",
-        "name": "INGLÉS PREINTERMEDIO - LCF4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-12-esp-3",
-        "name": "LINGÜÍSTICA APLICADA ELT & TIC - LCF4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-12-esp-4",
-        "name": "INGLÉS INTERMEDIO - LCF5B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-12-esp-5",
-        "name": "INGLÉS INTERMEDIO ALTO - LCF6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-12-esp-6",
-        "name": "PREPARACION DE EXAMENES INTERNACIONALES - LCEFB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-13",
@@ -12866,45 +4523,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-13-esp-1",
-        "name": "INGLES BÁSICO I - LCF1B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "lic-lenguas-13-esp-2",
-        "name": "FRANCÉS BÁSICO I - LCF1A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "lic-lenguas-13-esp-3",
-        "name": "FRANCÉS BÁSICO II - LCF2A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "lic-lenguas-13-esp-4",
-        "name": "FRANCÉS BÁSICO II - LCF2B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-14",
@@ -12914,45 +4537,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-14-esp-1",
-        "name": "INGLÉS BÁSICO III - LCF3B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "lic-lenguas-14-esp-2",
-        "name": "INGLÉS INTERMEDIO ALTO - LCF6B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "lic-lenguas-14-esp-3",
-        "name": "PROYECTO COMUNICATIVO DEL INGLÉS - LCF8B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "lic-lenguas-14-esp-4",
-        "name": "PRÁCTICA PEDAGÓGICA E INVESTIGATIVA III - LCF8A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-15",
@@ -12962,57 +4551,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-15-esp-1",
-        "name": "MÉTODOS Y ENFOQUES DE LA ENSEÑANZA DE LAS LENGUAS - LCF3B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-15-esp-2",
-        "name": "CURRÍCULO Y DIDÁCTICA - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-15-esp-3",
-        "name": "CURRÍCULO Y DIDÁCTICA - LCFAB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-15-esp-4",
-        "name": "DIDÁCTICA DE LAS LENGUAS Y DISEÑO DE MATERIALES CON INCLUSIÓN DE TIC TAC TEP* - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-15-esp-5",
-        "name": "PRÁCTICA PEDAGÓGICA E INVESTIGATIVA I - LCFAB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "lic-lenguas-15-esp-6",
-        "name": "POLÍTICA EDUCATIVA, GESTIÓN Y ADMINISTRACIÓN - LCF7B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-16",
@@ -13022,45 +4565,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-16-esp-1",
-        "name": "INGLES BÁSICO I - LCF1A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "lic-lenguas-16-esp-2",
-        "name": "INGLÉS BÁSICO II - LCF2B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "lic-lenguas-16-esp-3",
-        "name": "INGLÉS BÁSICO II - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "lic-lenguas-16-esp-4",
-        "name": "INGLÉS PREINTERMEDIO - LCF4B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-lenguas-17",
@@ -13070,81 +4579,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
+    "education": "Licenciatura en Español y Lenguas Extranjeras · Magíster en Lingüística Aplicada",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "lic-lenguas-17-esp-1",
-        "name": "LINGÜÍSTICA GENERAL - LCF1A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-17-esp-2",
-        "name": "GRAMÁTICA DEL ESPAÑOL - LCFAA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-17-esp-3",
-        "name": "PRAGMALINGÜÍSTICA - LCF3A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-17-esp-4",
-        "name": "PRAGMALINGÜÍSTICA - LCF3B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "lic-lenguas-17-esp-5",
-        "name": "INVESTIGACIÓN EDUCATIVA - LCF4B",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "lic-lenguas-17-esp-6",
-        "name": "SEMIÓTICA - LCF5A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "lic-lenguas-17-esp-7",
-        "name": "SEMIÓTICA - LCF5B",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "lic-lenguas-17-esp-8",
-        "name": "PRÁCTICA INVESTIGATIVA EN PEDAGOGÍA DE LENGUAS - LCF5A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "lic-lenguas-17-esp-9",
-        "name": "PSICOLINGÜÍSTICA - LC10A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "lic-lenguas-17-esp-10",
-        "name": "APRENDIZAJE SIGNIFICATIVO - LC10A",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-infantil-1",
@@ -13154,31 +4593,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Educación Infantil · Magíster en Educación",
+    "education": "Licenciatura en Educación Infantil · Magíster en Educación",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "lic-infantil-1-esp-1",
-        "name": "DESARROLLO NEUROBIOLÓGICO - A1",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-infantil-2",
@@ -13188,56 +4607,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Educación Infantil · Magíster en Educación",
+    "education": "Licenciatura en Educación Infantil · Magíster en Educación",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "lic-infantil-2-esp-1",
-        "name": "FRANCÉS BÁSICO I - LCF1B (LIC. LENGUAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-infantil-2-esp-2",
-        "name": "FRANCÉS BÁSICO II - LCF2C (LIC. LENGUAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-infantil-2-esp-3",
-        "name": "FRANCÉS BÁSICO III - LCF3A (LIC. LENGUAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-infantil-2-esp-4",
-        "name": "PRÁCTICA PEDAGÓGICA E INVESTIGATIVA II - LCFAA (LIC. LENGUAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-infantil-2-esp-5",
-        "name": "INTRODUCCIÓN A LA EDUCACIÓN INFANTIL - A1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 4
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    },
-    "sharedUnitName": "LIC. LENGUAS"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "lic-infantil-3",
@@ -13247,52 +4621,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Educación Infantil · Magíster en Educación",
+    "education": "Licenciatura en Educación Infantil · Magíster en Educación",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "lic-infantil-3-esp-1",
-        "name": "INGLÉS PREINTERMEDIO - LCF4C (LIC. LENGUAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-infantil-3-esp-2",
-        "name": "PROYECTO COMUNICATIVO DEL INGLÉS - LCF8A (LIC. LENGUAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-infantil-3-esp-3",
-        "name": "PRÁCTICA PROFESIONAL Y PROYECTO DE GRADO I - LCFA (LIC. LENGUAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-infantil-3-esp-4",
-        "name": "POLITICAS EDUCATIVAS - LCFA (LIC. LENGUAS)",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "lic-infantil-3-esp-5",
-        "name": "FUNDAMENTOS DE LA EDUCACIÓN BILINGÜE - A1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "LIC. LENGUAS"
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "marketing-1",
@@ -13305,28 +4638,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Mercadeo · Magíster en Marketing y Transformación Digital",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "marketing-1-esp-1",
-        "name": "DERECHO LABORAL Y COMERCIAL - MDG3A",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "30411": {
-        "code": "30411",
-        "hours": 4
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "marketing-2",
@@ -13339,34 +4652,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Mercadeo · Magíster en Marketing y Transformación Digital",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "marketing-2-esp-1",
-        "name": "TENDENCIAS DIGITALES Y TECNOLÓGICAS - MADGC",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      },
-      {
-        "id": "marketing-2-esp-2",
-        "name": "TENDENCIAS DIGITALES Y TECNOLÓGICAS - MRD2B",
-        "level": "Pregrado",
-        "monthlyHours": 48
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "marketing-3",
@@ -13379,65 +4666,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Mercadeo · Magíster en Marketing y Transformación Digital",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "marketing-3-esp-1",
-        "name": "MARKETING INTERNACIONAL - NEG6B (NEGOCIOS INT.)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "marketing-3-esp-2",
-        "name": "INVESTIGACIÓN DE MERCADOS - MDG3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "marketing-3-esp-3",
-        "name": "INVESTIGACIÓN DE MERCADOS - MDG3B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "marketing-3-esp-4",
-        "name": "FUNDAMENTOS DE MARKETING Y TRANSFORMACIÓN DIGITAL - MDG1B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "marketing-3-esp-5",
-        "name": "FUNDAMENTOS DE MARKETING Y TRANSFORMACIÓN DIGITAL - MRD1A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "marketing-3-esp-6",
-        "name": "PENSAMIENTO CREATIVO - MRD2B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "marketing-3-esp-7",
-        "name": "PENSAMIENTO CREATIVO - MRDGA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "NEGOCIOS INT."
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "marketing-4",
@@ -13450,52 +4680,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Mercadeo · Magíster en Marketing y Transformación Digital",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "marketing-4-esp-1",
-        "name": "AUDIOVISUAL LAB - MAD2D",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "marketing-4-esp-2",
-        "name": "AUDIOVISUAL LAB - MRD2A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "marketing-4-esp-3",
-        "name": "AUDIOVISUAL LAB - MRD2B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "marketing-4-esp-4",
-        "name": "COMUNICACIÓN ESTRATÉGICA - MDG3A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "marketing-4-esp-5",
-        "name": "STARTUP NEGOCIOS DIGITALES - MDG3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "marketing-5",
@@ -13508,54 +4694,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Mercadeo · Magíster en Marketing y Transformación Digital",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "marketing-5-esp-1",
-        "name": "DATA LAB - MDG3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "marketing-5-esp-2",
-        "name": "DATA LAB - MDG3B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "marketing-5-esp-3",
-        "name": "BIG DATA - MDG4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "marketing-5-esp-4",
-        "name": "BIG DATA - MDG4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "marketing-5-esp-5",
-        "name": "E -COMMERCE Y DIGITAL MEDIA - MDG4A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "marketing-5-esp-6",
-        "name": "E -COMMERCE Y DIGITAL MEDIA - MDG4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "marketing-6",
@@ -13568,42 +4708,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Mercadeo · Magíster en Marketing y Transformación Digital",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "marketing-6-esp-1",
-        "name": "PROGRAMACIÓN - MDG1B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "marketing-6-esp-2",
-        "name": "PROGRAMACIÓN - MRD1A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "marketing-6-esp-3",
-        "name": "ANÁLISIS DE DATOS - MRD2B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "marketing-6-esp-4",
-        "name": "ANÁLISIS DE DATOS - MRDGA",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "marketing-7",
@@ -13616,61 +4722,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Mercadeo · Magíster en Marketing y Transformación Digital",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "marketing-7-esp-1",
-        "name": "ESTRATEGIAS DE MERCADEO - NEG4A (NEGOCIOS INT.)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "marketing-7-esp-2",
-        "name": "ESTRATEGIAS DE MERCADEO - NEG4B (NEGOCIOS INT.)",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "marketing-7-esp-3",
-        "name": "SOCIOLOGÍA Y PSICOLOGÍA DEL CONSUMO - MRDGC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "marketing-7-esp-4",
-        "name": "GERENCIA DE LA INNOVACIÓN Y EL CAMBIO - MDG3A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "marketing-7-esp-5",
-        "name": "BRANDING & MERCHANDISING - MDG3B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "marketing-7-esp-6",
-        "name": "GERENCIA COMERCIAL - MDG4A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "marketing-7-esp-7",
-        "name": "GERENCIA COMERCIAL - MDG4B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    },
-    "sharedUnitName": "NEGOCIOS INT."
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "marketing-8",
@@ -13683,48 +4736,8 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "education": "Profesional en Mercadeo · Magíster en Marketing y Transformación Digital",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "marketing-8-esp-1",
-        "name": "SOCIOLOGÍA Y PSICOLOGÍA DEL CONSUMO - MRD2B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "marketing-8-esp-2",
-        "name": "DIGITAL DESIGN LAB - MDG4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "marketing-8-esp-3",
-        "name": "DIGITAL DESIGN LAB - MDG4B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "marketing-8-esp-4",
-        "name": "CREACIÓN DE CONTENIDO - MDG4A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "marketing-8-esp-5",
-        "name": "CREACIÓN DE CONTENIDO - MDG4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-1",
@@ -13734,55 +4747,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-1-esp-1",
-        "name": "QUIMICA GENERAL - ELEC",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-1-esp-2",
-        "name": "QUIMICA GENERAL - INDU-A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-1-esp-3",
-        "name": "QUIMICA GENERAL - INDU-A1",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-1-esp-4",
-        "name": "BIOLOGIA amb - AMB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-1-esp-5",
-        "name": "FUNDAMENTOS DE BIOLOGIA - CULF-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-2",
@@ -13792,61 +4761,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-2-esp-1",
-        "name": "ALGEBRA LINEAL - CIV-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-2-esp-2",
-        "name": "ALGEBRA LINEAL - MEC-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-2-esp-3",
-        "name": "CALCULO DIFERENCIAL - CIV-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-2-esp-4",
-        "name": "CALCULO DIFERENCIAL - IND-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-2-esp-5",
-        "name": "ECUACIONES DIFERENCIALES - BIOB-AMB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-2-esp-6",
-        "name": "ECUACIONES DIFERENCIALES - MEC-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-3",
@@ -13856,61 +4775,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-3-esp-1",
-        "name": "ALGEBRA LINEAL - BIO-AMB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-3-esp-2",
-        "name": "ALGEBRA LINEAL - CIV-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-3-esp-3",
-        "name": "CALCULO DIFERENCIAL - SISB-ELEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-3-esp-4",
-        "name": "CALCULO INTEGRAL - BIO-AMB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-3-esp-5",
-        "name": "CALCULO INTEGRAL - ELEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-3-esp-6",
-        "name": "ECUACIONES DIFERENCIALES - INDU-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-4",
@@ -13920,67 +4789,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-4-esp-1",
-        "name": "ONDAS Y ELECTROMAGNETISMO - ELEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-4-esp-2",
-        "name": "FISICA MECANICA - AMB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-4-esp-3",
-        "name": "FISICA MECANICA - DAT-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-4-esp-4",
-        "name": "FISICA MECANICA - DAT-C",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-4-esp-5",
-        "name": "ELECTRICIDAD Y MAGNETISMO - DAT-A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-4-esp-6",
-        "name": "ELECTRICIDAD Y MAGNETISMO - DAT-A1",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-4-esp-7",
-        "name": "ELECTRICIDAD Y MAGNETISMO - SIS-B1",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-5",
@@ -13990,67 +4803,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-5-esp-1",
-        "name": "ELECTRICIDAD Y MAGNETISMO - BIO-ELEC-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-5-esp-2",
-        "name": "ELECTRICIDAD Y MAGNETISMO - BIO-ELEC-A1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-5-esp-3",
-        "name": "ELECTRICIDAD Y MAGNETISMO - INDU-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-5-esp-4",
-        "name": "ELECTRICIDAD Y MAGNETISMO - INDU-A1",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-5-esp-5",
-        "name": "FISICA MECANICA - INDU-A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-5-esp-6",
-        "name": "FISICA MECANICA - INDU-A1",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-5-esp-7",
-        "name": "ELECTRICIDAD Y MAGNETISMO - SIS-B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-6",
@@ -14060,57 +4817,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-6-esp-1",
-        "name": "MATEMATICAS I adm - NEG-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-6-esp-2",
-        "name": "MATEMATICAS II cnt - CONT-ADMMB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-6-esp-3",
-        "name": "CALCULO DIFERENCIAL - SISC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-6-esp-4",
-        "name": "CALCULO INTEGRAL - IND-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-6-esp-5",
-        "name": "CALCULO INTEGRAL - MEC-B-DAT",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-6-esp-6",
-        "name": "MATEMATICAS II - NEG-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-7",
@@ -14120,51 +4831,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-7-esp-1",
-        "name": "ALGEBRA LINEAL - DAT-A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-7-esp-2",
-        "name": "CALCULO DIFERENCIAL - DAT-A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-7-esp-3",
-        "name": "CALCULO INTEGRAL - BIO-B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-7-esp-4",
-        "name": "CALCULO INTEGRAL - CIV-B-SISB",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-7-esp-5",
-        "name": "ECUACIONES DIFERENCIALES - CIV",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-8",
@@ -14174,39 +4845,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-8-esp-1",
-        "name": "ESTADISTICA II adm - ADM",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ciencias-basicas-8-esp-2",
-        "name": "MATEMATICA FINANCIERA - CONT",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ciencias-basicas-8-esp-3",
-        "name": "MATEMATICAS III - CONT-DN",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-9",
@@ -14216,69 +4859,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-9-esp-1",
-        "name": "ESTADISTICA I - ADM-A-CONTA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-9-esp-2",
-        "name": "ESTADISTICA I - MARK-A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-9-esp-3",
-        "name": "PROBABILIDAD Y ESTADISTICA ele mec - ELEC-MEC",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-9-esp-4",
-        "name": "PROBABILIDAD Y ESTADISTICA ele mec - SIS-B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-9-esp-5",
-        "name": "ESTADISTICA Y PROBABILIDAD - DAT-B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-9-esp-6",
-        "name": "ESTADISTICA Y PROBABILIDAD - IND",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-9-esp-7",
-        "name": "ESTADISTICA Y PROBABILIDAD - SIS-A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-9-esp-8",
-        "name": "ANÁLISIS DE DATOS - CULF-A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-10",
@@ -14288,63 +4873,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-10-esp-1",
-        "name": "ESTADISTICA I - MARK-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-10-esp-2",
-        "name": "PROBABILIDAD Y ESTADISTICA ele mec - BIO-AMB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-10-esp-3",
-        "name": "ESTADISTICA Y PROBABILIDAD - CIV-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-10-esp-4",
-        "name": "ESTADISTICA Y PROBABILIDAD - SIS-B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-10-esp-5",
-        "name": "CALCULO INTEGRAL - INDA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-10-esp-6",
-        "name": "CALCULO INTEGRAL - MEC-AMB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-10-esp-7",
-        "name": "MATEMATICAS II - MARK-B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-11",
@@ -14354,51 +4887,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-11-esp-1",
-        "name": "METODOS NUMERICOS - SIS-A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-11-esp-2",
-        "name": "CALCULO INTEGRAL - DAT-B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-11-esp-3",
-        "name": "CALCULO INTEGRAL - SIS-B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-11-esp-4",
-        "name": "CALCULO VECTORIAL - DAT-A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-11-esp-5",
-        "name": "CALCULO VECTORIAL - SIS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-12",
@@ -14408,57 +4901,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-12-esp-1",
-        "name": "OPERACIONAL Y NUMERICOS - SIS-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-12-esp-2",
-        "name": "OPERACIONAL Y NUMERICOS - SIS-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-12-esp-3",
-        "name": "MATEMATICAS I adm - MARK-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-12-esp-4",
-        "name": "INVESTIGACIÓN DE OPERACIONES - ADM",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-12-esp-5",
-        "name": "MATEMATICAS II cnt - CONT-ADMMA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-12-esp-6",
-        "name": "MATEMATICAS II - MARK-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-13",
@@ -14468,45 +4915,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-13-esp-1",
-        "name": "QUIMICA GENERAL - BIO-A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ciencias-basicas-13-esp-2",
-        "name": "QUIMICA GENERAL - BIO-A1",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ciencias-basicas-13-esp-3",
-        "name": "QUIMICA GENERAL - BIO-B-AMB",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ciencias-basicas-13-esp-4",
-        "name": "BALANCE DE MATERIA Y ENERGÍA - AMB",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-14",
@@ -14516,57 +4929,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-14-esp-1",
-        "name": "FISICA MECANICA - CIV-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-14-esp-2",
-        "name": "FISICA MECANICA - CIV-A1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-14-esp-3",
-        "name": "FISICA MECANICA - DAT-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-14-esp-4",
-        "name": "FISICA MECANICA - DAT-A1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-14-esp-5",
-        "name": "ELECTRICIDAD Y MAGNETISMO - MEC-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-14-esp-6",
-        "name": "ELECTRICIDAD Y MAGNETISMO - MEC-A1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-15",
@@ -14576,57 +4943,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-15-esp-1",
-        "name": "PENSAMIENTO LOGICO - DIS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-15-esp-2",
-        "name": "ESTADISTICA Y PROBABILIDAD - CIV-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-15-esp-3",
-        "name": "ALGEBRA LINEAL - IND-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-15-esp-4",
-        "name": "ALGEBRA LINEAL - SIS-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-15-esp-5",
-        "name": "CALCULO DIFERENCIAL - SIS-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-15-esp-6",
-        "name": "ECUACIONES DIFERENCIALES - MEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-16",
@@ -14636,63 +4957,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-16-esp-1",
-        "name": "MATEMATICAS I adm - ADMA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-16-esp-2",
-        "name": "PROBABILIDAD Y ESTADISTICA ele mec - BIO-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-16-esp-3",
-        "name": "PROBABILIDAD Y ESTADISTICA ele mec - SIS-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-16-esp-4",
-        "name": "ESTADISTICA Y PROBABILIDAD - DAT-A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-16-esp-5",
-        "name": "ESTADISTICA Y PROBABILIDAD - SIS-C",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-16-esp-6",
-        "name": "ALGEBRA LINEAL - SIS-C",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "ciencias-basicas-16-esp-7",
-        "name": "ALGEBRA LINEAL - ELEC",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-17",
@@ -14702,51 +4971,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-17-esp-1",
-        "name": "ECUACIONES DIFERENCIALES amb - SIS-B-ELEC",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-17-esp-2",
-        "name": "METODOS NUMERICOS - SIS-C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-17-esp-3",
-        "name": "CALCULO VECTORIAL - BIO",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-17-esp-4",
-        "name": "CALCULO VECTORIAL - DAT-B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-17-esp-5",
-        "name": "ECUACIONES DIFERENCIALES - BIOA-DAT",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-18",
@@ -14756,57 +4985,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-18-esp-1",
-        "name": "FISICA MECANICA - AMB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-18-esp-2",
-        "name": "FISICA MECANICA - BIO-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-18-esp-3",
-        "name": "FISICA MECANICA - BIO-A1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-18-esp-4",
-        "name": "FISICA MECANICA - CIV-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-18-esp-5",
-        "name": "ELECTRICIDAD Y MAGNETISMO - SIS-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-18-esp-6",
-        "name": "ELECTRICIDAD Y MAGNETISMO - SIS-A1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-19",
@@ -14816,57 +4999,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-19-esp-1",
-        "name": "ECUACIONES DIFERENCIALES amb - SIS-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-19-esp-2",
-        "name": "ALGEBRA LINEAL - IND-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-19-esp-3",
-        "name": "ALGEBRA LINEAL - SIS-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-19-esp-4",
-        "name": "CALCULO VECTORIAL - CIV-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-19-esp-5",
-        "name": "CALCULO VECTORIAL - ELEC-MEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-19-esp-6",
-        "name": "ECUACIONES DIFERENCIALES - BIOB-DATB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-20",
@@ -14876,51 +5013,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-20-esp-1",
-        "name": "METODOS NUMERICOS - SIS-B",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-20-esp-2",
-        "name": "CALCULO DIFERENCIAL - MEC-A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-20-esp-3",
-        "name": "CALCULO INTEGRAL - CIV-A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-20-esp-4",
-        "name": "CALCULO VECTORIAL - BIOA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "ciencias-basicas-20-esp-5",
-        "name": "CALCULO VECTORIAL - IND",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-21",
@@ -14930,45 +5027,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-21-esp-1",
-        "name": "HABILIDADES MATEMATICAS - CIV",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ciencias-basicas-21-esp-2",
-        "name": "CALCULO DIFERENCIAL - BIO-AMB",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ciencias-basicas-21-esp-3",
-        "name": "CALCULO INTEGRAL - DAT-A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ciencias-basicas-21-esp-4",
-        "name": "CALCULO INTEGRAL - SIS-A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-22",
@@ -14978,27 +5041,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-22-esp-1",
-        "name": "PENSAMIENTO LÓGICO - LENG-A",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-23",
@@ -15008,45 +5055,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-23-esp-1",
-        "name": "MATEMATICAS I adm - CONT-ADM B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ciencias-basicas-23-esp-2",
-        "name": "MATEMATICAS I adm - MARK-B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ciencias-basicas-23-esp-3",
-        "name": "ESTADISTICA I - NEG-A",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      },
-      {
-        "id": "ciencias-basicas-23-esp-4",
-        "name": "MATEMATICAS II - NEG-B",
-        "level": "Pregrado",
-        "monthlyHours": 24
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-24",
@@ -15056,39 +5069,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-24-esp-1",
-        "name": "FISICA MECANICA - SIS-A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ciencias-basicas-24-esp-2",
-        "name": "FISICA MECANICA - SIS-A1",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "ciencias-basicas-24-esp-3",
-        "name": "FISICA MECANICA - BIO-B",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "ciencias-basicas-25",
@@ -15098,57 +5083,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) / Físico / Matemático · Magíster en Ciencias Básicas",
+    "education": "Ciencias Básicas · Magíster en Ciencias Básicas",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "ciencias-basicas-25-esp-1",
-        "name": "FISICA MECANICA - ELEC-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-25-esp-2",
-        "name": "FISICA MECANICA - ELEC-A1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-25-esp-3",
-        "name": "FISICA MECANICA - INDU-B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-25-esp-4",
-        "name": "FISICA MECANICA - MEC-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-25-esp-5",
-        "name": "FISICA MECANICA - MEC-A1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "ciencias-basicas-25-esp-6",
-        "name": "ELECTRICIDAD Y MAGNETISMO - MEC-A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-1",
@@ -15158,67 +5097,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "humanidades-1-esp-1",
-        "name": "FILOSOFIA INSTITUCIONAL - ADM1C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-1-esp-2",
-        "name": "FILOSOFIA INSTITUCIONAL - DER1A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-1-esp-3",
-        "name": "FILOSOFIA POLITICA - ADM5E",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-1-esp-4",
-        "name": "ANTROPOLOGIA neg in - ADMCONT",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-1-esp-5",
-        "name": "FRAY DOMINIQUE PIRÉ: CÁTEDRA PARA LA PAZ - NEG6B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-1-esp-6",
-        "name": "COMUNICACION ORAL Y ESCRITA - NEG1A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-1-esp-7",
-        "name": "COMUNICACION ORAL Y ESCRITA - NEG1B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40106": {
-        "code": "40106",
-        "hours": 20
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-2",
@@ -15228,67 +5111,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "humanidades-2-esp-1",
-        "name": "FILOSOFIA POLITICA - AMELME",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-2-esp-2",
-        "name": "ANTROPOLOGIA neg in - DER1B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-2-esp-3",
-        "name": "PERSONA, SOCIEDAD Y CONOCIMIENTO - SIST",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-2-esp-4",
-        "name": "FRAY JOSÉ DE JESÚS SEDANO: HABILIDADES Y MÉTODOS DE APRENDIZAJE - CIVA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-2-esp-5",
-        "name": "FRAY JOSÉ DE JESÚS SEDANO: HABILIDADES Y MÉTODOS DE APRENDIZAJE - INTAMB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-2-esp-6",
-        "name": "COMUNICACION ORAL Y ESCRITA - LICENB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-2-esp-7",
-        "name": "REDES, PLATAFORMAS, COMUNIDADES Y ENTORNOS DIGITALES: LUUK JANSEN - SISTB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 24
-      },
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-3",
@@ -15298,55 +5125,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "humanidades-3-esp-1",
-        "name": "FILOSOFIA INSTITUCIONAL - ARQ",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-3-esp-2",
-        "name": "EPISTEMOLOGIA - ADMCONT",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-3-esp-3",
-        "name": "COMUNICACIÓN ORAL Y ESCRITA 1 - DATOS",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-3-esp-4",
-        "name": "PERSONA, SOCIEDAD Y CONOCIMIENTO - INDU",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-3-esp-5",
-        "name": "PERSONA, SOCIEDAD Y CONOCIMIENTO - MARK",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-4",
@@ -15356,67 +5139,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "humanidades-4-esp-1",
-        "name": "FRAY JOSÉ LUIS GAGO DE VAL: LIDERAZGO Y COMUNICACIÓN - CONT",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-4-esp-2",
-        "name": "FILOSOFIA INSTITUCIONAL - MEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-4-esp-3",
-        "name": "FILOSOFIA POLITICA - ARQB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-4-esp-4",
-        "name": "FILOSOFIA POLITICA - CONT",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-4-esp-5",
-        "name": "FILOSOFIA POLITICA - SIST",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-4-esp-6",
-        "name": "ANTROPOLOGIA neg in - DER1A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-4-esp-7",
-        "name": "PERSONA, SOCIEDAD Y CONOCIMIENTO - NEG2B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 16
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 4
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-5",
@@ -15426,57 +5153,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "humanidades-5-esp-1",
-        "name": "CULTURA TEOLOGICA - BIOM",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-5-esp-2",
-        "name": "CULTURA TEOLOGICA - ELMEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-5-esp-3",
-        "name": "FILOSOFIA POLITICA - DER3A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-5-esp-4",
-        "name": "PERSONA, SOCIEDAD Y CONOCIMIENTO - CIV",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-5-esp-5",
-        "name": "PERSONA, SOCIEDAD Y CONOCIMIENTO - NEG2C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-5-esp-6",
-        "name": "ETICA - CIV",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-6",
@@ -15486,27 +5167,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "humanidades-6-esp-1",
-        "name": "FRAY JOSÉ DE JESÚS SEDANO: HABILIDADES Y MÉTODOS DE APRENDIZAJE - CIVB",
-        "level": "Pregrado",
-        "monthlyHours": 96
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-7",
@@ -15516,69 +5181,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "humanidades-7-esp-1",
-        "name": "FILOSOFIA INSTITUCIONAL - SIST",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-7-esp-2",
-        "name": "EPISTEMOLOGIA - LICENA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-7-esp-3",
-        "name": "FILOSOFIA POLITICA - IND",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-7-esp-4",
-        "name": "FILOSOFIA POLITICA - NEG",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-7-esp-5",
-        "name": "PERSONA, SOCIEDAD Y CONOCIMIENTO - INTEB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-7-esp-6",
-        "name": "CULTURA TEOLOGICA - DER4B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-7-esp-7",
-        "name": "CULTURA TEOLOGICA - DER4C",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-7-esp-8",
-        "name": "ETICA - INDAMB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-8",
@@ -15588,69 +5195,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "humanidades-8-esp-1",
-        "name": "FILOSOFIA INSTITUCIONAL - CULT",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-8-esp-2",
-        "name": "FILOSOFIA INSTITUCIONAL - LICB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-8-esp-3",
-        "name": "CULTURA TEOLOGICA - ADM4C",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-8-esp-4",
-        "name": "CULTURA TEOLOGICA - DISE",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-8-esp-5",
-        "name": "EPISTEMOLOGIA - AMB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-8-esp-6",
-        "name": "EPISTEMOLOGIA - SIST",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-8-esp-7",
-        "name": "COMUNICACIÓN ORAL Y ESCRITA 1 - CIVLENG",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-8-esp-8",
-        "name": "COMUNICACIÓN ORAL Y ESCRITA 1 - CONTD",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-9",
@@ -15660,51 +5209,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "humanidades-9-esp-1",
-        "name": "EPISTEMOLOGIA - ELMEC",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-9-esp-2",
-        "name": "PERSONA, SOCIEDAD Y CONOCIMIENTO - NEG2A",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-9-esp-3",
-        "name": "PRODUCCION DE TEXTO E INTRODUCCION AL PENSAMIENTO CIENTIFICO - CULFIS",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-9-esp-4",
-        "name": "EPISTEMOLOGIA - DER2C",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-9-esp-5",
-        "name": "FRAY JOSÉ DE JESÚS SEDANO: HABILIDADES Y MÉTODOS DE APRENDIZAJE - CONTD",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-10",
@@ -15714,69 +5223,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "humanidades-10-esp-1",
-        "name": "FILOSOFIA INSTITUCIONAL - DER1B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-10-esp-2",
-        "name": "FILOSOFIA INSTITUCIONAL - IDTA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-10-esp-3",
-        "name": "FILOSOFIA POLITICA - ARQA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-10-esp-4",
-        "name": "FILOSOFIA POLITICA - DER3B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-10-esp-5",
-        "name": "FRAY LOUIS JOSEPH LEBRET: ECONOMÍA Y HUMANISMO - ADMD",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-10-esp-6",
-        "name": "PERSONA, SOCIEDAD Y CONOCIMIENTO - MEC",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-10-esp-7",
-        "name": "FRAY DOMINIQUE PIRÉ: CÁTEDRA PARA LA PAZ - NEG6A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-10-esp-8",
-        "name": "ETICA - ADMCONT",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-11",
@@ -15786,69 +5237,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "humanidades-11-esp-1",
-        "name": "CULTURA TEOLOGICA - ARQ6B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-11-esp-2",
-        "name": "EPISTEMOLOGIA - ARQ",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-11-esp-3",
-        "name": "FRAY LOUIS JOSEPH LEBRET: ECONOMÍA Y HUMANISMO - MECA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-11-esp-4",
-        "name": "COMUNICACION ORAL Y ESCRITA - ELEC",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-11-esp-5",
-        "name": "FRAY GIORDANO BRUNO: UNIVERSO, CIENCIAS Y HUMANISMO - ARQB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-11-esp-6",
-        "name": "EPISTEMOLOGIA - CIV",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-11-esp-7",
-        "name": "FRAY ANGÉLICO: ARTE Y HUMANISMO - ARQ",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-11-esp-8",
-        "name": "COMUNICACION ORAL Y ESCRITA - LICENA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-12",
@@ -15858,63 +5251,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "humanidades-12-esp-1",
-        "name": "CULTURA TEOLOGICA - NEG5B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-12-esp-2",
-        "name": "FRAY JOSÉ DE JESÚS SEDANO: HABILIDADES Y MÉTODOS DE APRENDIZAJE - MEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-12-esp-3",
-        "name": "ETICA - ADMCONTB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-12-esp-4",
-        "name": "FRAY TEODORICO TEUTONICO DE VRIBERG: INGENIERÍA HUMANISTA - ELEC",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-12-esp-5",
-        "name": "ETICA - ARQ8A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-12-esp-6",
-        "name": "ETICA - LICENB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-12-esp-7",
-        "name": "CIENCIA, TECNOLOGIA Y BIOETICA - BIO5A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-13",
@@ -15924,51 +5265,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "humanidades-13-esp-1",
-        "name": "FILOSOFIA POLITICA - LCA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-13-esp-2",
-        "name": "ANTROPOLOGIA - LICEA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-13-esp-3",
-        "name": "ETICA - CULDIS",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-13-esp-4",
-        "name": "ETICA - LICENA",
-        "level": "Pregrado",
-        "monthlyHours": 20
-      },
-      {
-        "id": "humanidades-13-esp-5",
-        "name": "COMUNICACION ORAL Y ESCRITA - MARKB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-14",
@@ -15978,69 +5279,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "humanidades-14-esp-1",
-        "name": "FILOSOFIA INSTITUCIONAL - BIOE",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-14-esp-2",
-        "name": "FILOSOFIA INSTITUCIONAL - IND",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-14-esp-3",
-        "name": "FILOSOFIA INSTITUCIONAL - NEG1A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-14-esp-4",
-        "name": "FILOSOFIA INSTITUCIONAL - NEG1B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-14-esp-5",
-        "name": "FILOSOFIA INSTITUCIONAL - CIV",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-14-esp-6",
-        "name": "CATEDRA HENRI DIDON - DER1B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-14-esp-7",
-        "name": "CATEDRA HENRI DIDON - LICENA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-14-esp-8",
-        "name": "CATEDRA HENRI DIDON I - ELEC",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-15",
@@ -16050,63 +5293,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "humanidades-15-esp-1",
-        "name": "CULTURA TEOLOGICA - NEG5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-15-esp-2",
-        "name": "EPISTEMOLOGIA - NEG",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-15-esp-3",
-        "name": "FILOSOFIA POLITICA - CULDIS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-15-esp-4",
-        "name": "PERSONA, SOCIEDAD Y CONOCIMIENTO - AMBBIO",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-15-esp-5",
-        "name": "ETICA - ELMESI",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-15-esp-6",
-        "name": "ETICA - ARQ8B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-15-esp-7",
-        "name": "COMUNICACION ORAL Y ESCRITA - ADMD",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-16",
@@ -16116,75 +5307,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "humanidades-16-esp-1",
-        "name": "FRAY JOSÉ LUIS GAGO DE VAL: LIDERAZGO Y COMUNICACIÓN - CIV-AMBA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-16-esp-2",
-        "name": "FRAY JOSÉ LUIS GAGO DE VAL: LIDERAZGO Y COMUNICACIÓN - CIV-AMBB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-16-esp-3",
-        "name": "FILOSOFIA INSTITUCIONAL - ELECAM",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-16-esp-4",
-        "name": "COMUNICACIÓN ORAL Y ESCRITA 1 - ARQUG",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-16-esp-5",
-        "name": "COMUNICACIÓN ORAL Y ESCRITA 1 - BIOING",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-16-esp-6",
-        "name": "COMUNICACIÓN ORAL Y ESCRITA 2 - BIOB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-16-esp-7",
-        "name": "PERSONA, SOCIEDAD Y CONOCIMIENTO - INTEA",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "humanidades-16-esp-8",
-        "name": "FRAY JOSÉ DE JESÚS SEDANO: HABILIDADES Y MÉTODOS DE APRENDIZAJE - ARQ",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      },
-      {
-        "id": "humanidades-16-esp-9",
-        "name": "COMUNICACION ORAL Y ESCRITA - DISE",
-        "level": "Pregrado",
-        "monthlyHours": 8
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-17",
@@ -16194,57 +5321,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "humanidades-17-esp-1",
-        "name": "EPISTEMOLOGIA - LICENB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-17-esp-2",
-        "name": "EPISTEMOLOGIA - DER2B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-17-esp-3",
-        "name": "ETICA - NEG",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-17-esp-4",
-        "name": "ETICA - ARQ8C",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-17-esp-5",
-        "name": "COMUNICACION ORAL Y ESCRITA - MARKA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-17-esp-6",
-        "name": "REDES, PLATAFORMAS, COMUNIDADES Y ENTORNOS DIGITALES: LUUK JANSEN - SISTA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-18",
@@ -16254,63 +5335,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "humanidades-18-esp-1",
-        "name": "FILOSOFIA INSTITUCIONAL - LICA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-18-esp-2",
-        "name": "CATEDRA HENRI DIDON - ADMD",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-18-esp-3",
-        "name": "CATEDRA HENRI DIDON - DER1A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-18-esp-4",
-        "name": "CATEDRA HENRI DIDON - DISE",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-18-esp-5",
-        "name": "CATEDRA HENRI DIDON - LICENB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-18-esp-6",
-        "name": "FRAY BRUNO CADORÉ, O.P: DESARROLLO HUMANO, SALUD Y BIENESTAR - CULT",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-18-esp-7",
-        "name": "CATEDRA DE LA FELICIDAD - DISE",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-19",
@@ -16320,63 +5349,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "humanidades-19-esp-1",
-        "name": "CULTURA TEOLOGICA - ARQ6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-19-esp-2",
-        "name": "CULTURA TEOLOGICA - LICENB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-19-esp-3",
-        "name": "EPISTEMOLOGIA - CULDIS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-19-esp-4",
-        "name": "FILOSOFIA POLITICA - LCB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-19-esp-5",
-        "name": "FRAY GIORDANO BRUNO: UNIVERSO, CIENCIAS Y HUMANISMO - ARQA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-19-esp-6",
-        "name": "ANTROPOLOGIA - ELECDIS",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-19-esp-7",
-        "name": "ANTROPOLOGIA - LICENB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-20",
@@ -16386,63 +5363,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "humanidades-20-esp-1",
-        "name": "FILOSOFIA INSTITUCIONAL - MARKTA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-20-esp-2",
-        "name": "FILOSOFIA INSTITUCIONAL - MARKTB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-20-esp-3",
-        "name": "CULTURA TEOLOGICA - CONTN",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "humanidades-20-esp-4",
-        "name": "CULTURA TEOLOGICA - LICENA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-20-esp-5",
-        "name": "FRAY LOUIS JOSEPH LEBRET: ECONOMÍA Y HUMANISMO - MARKET",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-20-esp-6",
-        "name": "EPISTEMOLOGIA - DER2A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "humanidades-20-esp-7",
-        "name": "CULTURA TEOLOGICA - DER4A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "humanidades-21",
@@ -16452,39 +5377,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Filosofía y Humanidades · Magíster en Humanidades",
+    "education": "Licenciatura en Filosofía y Humanidades · Magíster en Humanidades",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "humanidades-21-esp-1",
-        "name": "CULTURA TEOLOGICA - AMB7A",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "humanidades-21-esp-2",
-        "name": "CULTURA TEOLOGICA - SIST",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      },
-      {
-        "id": "humanidades-21-esp-3",
-        "name": "CULTURA TEOLOGICA - INTEAMB",
-        "level": "Pregrado",
-        "monthlyHours": 32
-      }
-    ],
-    "allocations": {
-      "10336": {
-        "code": "10336",
-        "hours": 32
-      },
-      "40117": {
-        "code": "40117",
-        "hours": 8
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-1",
@@ -16493,24 +5390,12 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "fullName": "JOSE MIGUEL FAGUA CONTRERAS",
     "dedication": "DIRECTIVO",
     "expectedWorkload": 210,
-    "rank": "Director(a) de Unidad Académica",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "rank": "Dirección de Unidad Académica",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "cilce-1-esp-1",
-        "name": "INGLES II - CIV",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30222": {
-        "code": "30222",
-        "hours": 190
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-2",
@@ -16520,57 +5405,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "cilce-2-esp-1",
-        "name": "INGLES I - CULDIS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-2-esp-2",
-        "name": "INGLES I - INTE",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-2-esp-3",
-        "name": "INGLES II - BIOINTEA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-2-esp-4",
-        "name": "INGLES III - INDUA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-2-esp-5",
-        "name": "INGLES V - ARQ5A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-2-esp-6",
-        "name": "INGLES VI - ELEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "30411": {
-        "code": "30411",
-        "hours": 16
-      },
-      "40123": {
-        "code": "40123",
-        "hours": 24
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-3",
@@ -16580,63 +5419,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "cilce-3-esp-1",
-        "name": "INGLES I - DER1A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-3-esp-2",
-        "name": "INGLES II - ADMCONT",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-3-esp-3",
-        "name": "INGLES III - DER3B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-3-esp-4",
-        "name": "INGLES III - NEG",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-3-esp-5",
-        "name": "INGLES IV - NEGB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-3-esp-6",
-        "name": "INGLES V - ADMCONT",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-3-esp-7",
-        "name": "INGLES VI - ADMD",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "40106": {
-        "code": "40106",
-        "hours": 16
-      },
-      "40123": {
-        "code": "40123",
-        "hours": 24
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-4",
@@ -16646,57 +5433,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "cilce-4-esp-1",
-        "name": "INGLES II - BIOINTEB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-4-esp-2",
-        "name": "INGLES III - BIO",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-4-esp-3",
-        "name": "INGLES III - ELMEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-4-esp-4",
-        "name": "INGLES IV - ARQA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-4-esp-5",
-        "name": "INGLES V - CULDISA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-4-esp-6",
-        "name": "INGLES V - ELMEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "40109": {
-        "code": "40109",
-        "hours": 8
-      },
-      "40123": {
-        "code": "40123",
-        "hours": 32
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-5",
@@ -16706,57 +5447,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "cilce-5-esp-1",
-        "name": "IDIOMA EXTRANJERO VI - DER6B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-5-esp-2",
-        "name": "INGLES II - DEREA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-5-esp-3",
-        "name": "INGLES II - MRDGD",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-5-esp-4",
-        "name": "INGLES III - MARK",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-5-esp-5",
-        "name": "INGLES V - NEGB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-5-esp-6",
-        "name": "INGLES VI - NEG",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "40123": {
-        "code": "40123",
-        "hours": 20
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-6",
@@ -16766,63 +5461,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "cilce-6-esp-1",
-        "name": "INGLES I - ARQA1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-6-esp-2",
-        "name": "INGLES II - ARQ",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-6-esp-3",
-        "name": "INGLES II - SIST",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-6-esp-4",
-        "name": "INGLES III - CULDIS",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-6-esp-5",
-        "name": "INGLES IV - CIV",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-6-esp-6",
-        "name": "INGLES I - DER1B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-6-esp-7",
-        "name": "INGLES III - ADMCONT",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "40123": {
-        "code": "40123",
-        "hours": 20
-      },
-      "40127": {
-        "code": "40127",
-        "hours": 20
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-7",
@@ -16832,53 +5475,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "cilce-7-esp-1",
-        "name": "IDIOMA EXTRANJERO LEGAL I - DEREB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-7-esp-2",
-        "name": "INGLES II - INDU",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-7-esp-3",
-        "name": "INGLES III - SIST",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-7-esp-4",
-        "name": "INGLES V - ARQ5B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-7-esp-5",
-        "name": "INGLES IV - DER4B",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-7-esp-6",
-        "name": "INGLES IV - MARK",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "40123": {
-        "code": "40123",
-        "hours": 40
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-8",
@@ -16888,53 +5489,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 4,
-    "academicSpaces": [
-      {
-        "id": "cilce-8-esp-1",
-        "name": "INGLES IV - ELMEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-8-esp-2",
-        "name": "INGLES V - INDU",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-8-esp-3",
-        "name": "INGLES VI - CULDISA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-8-esp-4",
-        "name": "INGLES VI - SIST",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-8-esp-5",
-        "name": "IDIOMA EXTRANJERO VI - DER6A",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-8-esp-6",
-        "name": "INGLES II - NEG",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "40123": {
-        "code": "40123",
-        "hours": 40
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-9",
@@ -16944,59 +5503,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 5,
-    "academicSpaces": [
-      {
-        "id": "cilce-9-esp-1",
-        "name": "IDIOMA EXTRANJERO LEGAL II - DERA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-9-esp-2",
-        "name": "INGLES IV - ARQB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-9-esp-3",
-        "name": "INGLES I - MARK",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-9-esp-4",
-        "name": "INGLES II - DER2B",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-9-esp-5",
-        "name": "INGLES III - DER3A",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-9-esp-6",
-        "name": "INGLES IV - DEREA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-9-esp-7",
-        "name": "INGLES V - DERA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "40123": {
-        "code": "40123",
-        "hours": 40
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-10",
@@ -17006,59 +5517,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 6,
-    "academicSpaces": [
-      {
-        "id": "cilce-10-esp-1",
-        "name": "INGLES I - ELMEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-10-esp-2",
-        "name": "INGLES I - INDU",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-10-esp-3",
-        "name": "INGLES III - AMBI",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-10-esp-4",
-        "name": "INGLES IV - INDUAMBIA",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-10-esp-5",
-        "name": "INGLES VI - ARQ",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-10-esp-6",
-        "name": "INGLES VI - CULDISB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-10-esp-7",
-        "name": "INGLES I - ADMCONT",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "40123": {
-        "code": "40123",
-        "hours": 40
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-11",
@@ -17068,53 +5531,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 1 (Auxiliar)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 7,
-    "academicSpaces": [
-      {
-        "id": "cilce-11-esp-1",
-        "name": "INGLES II - CULDIS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-11-esp-2",
-        "name": "INGLES III - INDUB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-11-esp-3",
-        "name": "INGLES V - BIODATOS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-11-esp-4",
-        "name": "INGLES I - NEG1",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-11-esp-5",
-        "name": "INGLES IV - ADMCONT",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-11-esp-6",
-        "name": "INGLES VI - ADMCONTN",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "40123": {
-        "code": "40123",
-        "hours": 40
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-12",
@@ -17124,53 +5545,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 3 (Asociado)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 8,
-    "academicSpaces": [
-      {
-        "id": "cilce-12-esp-1",
-        "name": "INGLES I - BIOING",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-12-esp-2",
-        "name": "INGLES I - SIST",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-12-esp-3",
-        "name": "INGLES III - ARQ",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-12-esp-4",
-        "name": "INGLES IV - BIODATOS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-12-esp-5",
-        "name": "INGLES IV - CULDIS",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-12-esp-6",
-        "name": "INGLES IV - NEGA",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      }
-    ],
-    "allocations": {
-      "40123": {
-        "code": "40123",
-        "hours": 40
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   },
   {
     "id": "cilce-13",
@@ -17180,59 +5559,11 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "dedication": "TC",
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
-    "education": "Licenciado(a) en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
     "isProvisional": false,
     "seniorityYears": 3,
-    "academicSpaces": [
-      {
-        "id": "cilce-13-esp-1",
-        "name": "INGLES II - ELMEC",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-13-esp-2",
-        "name": "INGLES III - CIV",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-13-esp-3",
-        "name": "INGLES IV - INDUAMBB",
-        "level": "Pregrado",
-        "monthlyHours": 16
-      },
-      {
-        "id": "cilce-13-esp-4",
-        "name": "INGLES IV - SIST",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-13-esp-5",
-        "name": "INGLES V - CULDISB",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-13-esp-6",
-        "name": "INGLES V - SIST",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      },
-      {
-        "id": "cilce-13-esp-7",
-        "name": "INGLES VI - INDU",
-        "level": "Pregrado",
-        "monthlyHours": 12
-      }
-    ],
-    "allocations": {
-      "40123": {
-        "code": "40123",
-        "hours": 40
-      }
-    }
+    "academicSpaces": [],
+    "allocations": {}
   }
 ];
 

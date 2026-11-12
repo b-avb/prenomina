@@ -30,16 +30,16 @@ export function translateDatabaseError(error: unknown): AppError | null {
   if (!isMysqlDriverError(error)) return null;
   switch (error.errno) {
     case ER_DUP_ENTRY:
-      return new ConflictError('Ya existe un registro con los mismos datos únicos.');
+      return new ConflictError('Ya existe un registro con esa misma identificación.');
     case ER_ROW_IS_REFERENCED_2:
-      return new ConflictError('El registro está en uso por otros datos y no puede eliminarse.');
+      return new ConflictError('No se puede eliminar este registro porque tiene información asociada.');
     case ER_NO_REFERENCED_ROW_2:
-      return new ConflictError('La operación referencia un registro inexistente.');
+      return new ConflictError('Uno de los datos asociados ya no se encuentra disponible.');
     case ER_DATA_TOO_LONG:
-      return new BadRequestError('Uno de los valores excede la longitud máxima permitida.');
+      return new BadRequestError('Uno de los campos supera la longitud máxima permitida.');
     case ER_TRUNCATED_WRONG_VALUE:
     case WARN_DATA_TRUNCATED:
-      return new BadRequestError('Uno de los valores no es válido para el campo indicado.');
+      return new BadRequestError('Uno de los valores ingresados no es válido.');
     default:
       return null;
   }

@@ -46,10 +46,21 @@ function computeTeacherResearchHours(teacher: FacultyTeacher): number {
 }
 
 function computeTeacherOtherHours(teacher: FacultyTeacher): number {
-  return Object.values(teacher.allocations)
-    .filter((a) => !DEDICATED_BAG_COLUMNS.has(a.code) && !researchCodeSet.value.has(a.code))
+  const postgrad40006 = store.computeHours40006(teacher);
+  const allocOther = Object.values(teacher.allocations)
+    .filter(
+      (a) =>
+        a.code !== '40006' &&
+        !DEDICATED_BAG_COLUMNS.has(a.code) &&
+        !researchCodeSet.value.has(a.code),
+    )
     .reduce((acc, x) => acc + x.hours, 0);
+  return postgrad40006 + allocOther;
 }
+
+const unitOtherTotal = computed<number>(() =>
+  store.activeUnitTeachers.reduce((acc, t) => acc + computeTeacherOtherHours(t), 0),
+);
 </script>
 
 <template>
@@ -59,14 +70,14 @@ function computeTeacherOtherHours(teacher: FacultyTeacher): number {
     >
       <div>
         <div class="section-label" style="margin: 0">
-          Sábana Consolidada en Formato ANEXO 2 — {{ store.activeUnit.name }}
+          Sábana consolidada (Anexo 2) — {{ store.activeUnit.name }}
         </div>
         <p style="font-size: 12px; color: var(--ink-soft); margin: 3px 0 0">
-          Haz clic sobre cualquier docente para abrir su ficha detallada.
+          Seleccione un docente para abrir su detalle.
         </p>
       </div>
       <button class="btn primary small" type="button" @click="emit('exportExcel')">
-        ↓ Descargar Libro ANEXO 2 (.xlsx con 3 hojas)
+        Descargar Anexo 2 (.xlsx)
       </button>
     </div>
 
@@ -86,11 +97,17 @@ function computeTeacherOtherHours(teacher: FacultyTeacher): number {
           <th>20502 Grad.</th>
           <th>Investigación</th>
           <th>Otros</th>
-          <th>TOTAL MES</th>
+          <th>Total mes</th>
         </tr>
       </thead>
       <tbody>
+        <tr v-if="store.activeUnitTeachers.length === 0">
+          <td colspan="14" class="empty-note" style="padding: 24px 16px; text-align: center">
+            No hay docentes registrados en esta unidad académica.
+          </td>
+        </tr>
         <tr
+          v-else
           style="background: var(--surface-soft); font-family: var(--font-mono); font-weight: 700; color: var(--navy)"
         >
           <td colspan="4">TOTALES {{ store.activeUnit.name.toUpperCase() }}</td>
@@ -102,7 +119,7 @@ function computeTeacherOtherHours(teacher: FacultyTeacher): number {
           <td>{{ store.sumCodeInUnit(store.activeUnit.id, '30411') }} h</td>
           <td>{{ store.sumCodeInUnit(store.activeUnit.id, '20502') }} h</td>
           <td>{{ unitResearchTotal }} h</td>
-          <td>—</td>
+          <td>{{ unitOtherTotal }} h</td>
           <td>
             {{
               store.activeUnitTeachers.reduce(
@@ -151,7 +168,11 @@ function computeTeacherOtherHours(teacher: FacultyTeacher): number {
               :class="
                 store.computeTeacherTotalHours(t) === t.expectedWorkload
                   ? 'aprobado'
-                  : 'reprobado'
+                  : store.computeTeacherTotalHours(t) > t.expectedWorkload
+                    ? 'reprobado'
+                    : store.isTeacherUnstarted(t)
+                      ? 'retirado'
+                      : 'pendiente'
               "
             >
               {{ store.computeTeacherTotalHours(t) }} / {{ t.expectedWorkload }} h

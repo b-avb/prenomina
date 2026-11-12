@@ -56,7 +56,7 @@ export class Annex2ExcelService {
       [
         `UNIDAD ACADÉMICA: ${unit.name.toUpperCase()}`,
         `DIVISIÓN: ${unit.division}`,
-        `ESTADO: ${unit.payrollStatus} (Versión v${unit.currentVersion})`,
+        `ESTADO: ${unit.payrollStatus} (Versión ${unit.currentVersion})`,
         `FECHA: ${unit.updatedAt}`,
       ],
       [],
@@ -75,7 +75,7 @@ export class Annex2ExcelService {
       ...extraCodes.map((c) => `${c.code} - ${c.name.replace('TUNJA ', '')}`),
       'TOTAL HORAS MES',
       'DIFERENCIA VS CARGA',
-      'HORAS COMPARTIDAS (RN-17)',
+      'HORAS COMPARTIDAS',
       'UNIDAD COMPARTIDA',
       'OBSERVACIONES / TRAZABILIDAD',
     ];
@@ -226,10 +226,9 @@ export class Annex2ExcelService {
       else if (c.substantiveFunction === 'Gestión Académica') sumManagement += h;
     }
 
-    const totalSummary = Math.max(
-      1,
-      sumTeaching + sumOutreach + sumResearch + sumManagement,
-    );
+    const rawSummaryTotal = sumTeaching + sumOutreach + sumResearch + sumManagement;
+    const summaryPct = (hours: number) =>
+      rawSummaryTotal > 0 ? `${Math.round((hours / rawSummaryTotal) * 1000) / 10}%` : '0%';
 
     const ws3Data = [
       [
@@ -242,24 +241,28 @@ export class Annex2ExcelService {
       [
         'Enseñanza y Aprendizaje (Incluye 40104 y 40108 PSE)',
         sumTeaching,
-        `${Math.round((sumTeaching / totalSummary) * 1000) / 10}%`,
+        summaryPct(sumTeaching),
       ],
       [
         'Proyección Social y Extensión Universitaria',
         sumOutreach,
-        `${Math.round((sumOutreach / totalSummary) * 1000) / 10}%`,
+        summaryPct(sumOutreach),
       ],
       [
         'Investigación e Innovación (Proyectos, SICDDI, Opciones de Grado)',
         sumResearch,
-        `${Math.round((sumResearch / totalSummary) * 1000) / 10}%`,
+        summaryPct(sumResearch),
       ],
       [
         'Gestión Académica y Aseguramiento de la Calidad',
         sumManagement,
-        `${Math.round((sumManagement / totalSummary) * 1000) / 10}%`,
+        summaryPct(sumManagement),
       ],
-      ['TOTAL HORAS PROYECTADAS EN LA FACULTAD', grandTotal, '100%'],
+      [
+        'TOTAL HORAS PROYECTADAS EN LA FACULTAD',
+        grandTotal,
+        grandTotal > 0 ? '100%' : '0%',
+      ],
       [],
       ['2. CONTROL DE BOLSAS SEMESTRALES (ANEXO 5 Y ANEXO 6)'],
       [
@@ -353,7 +356,7 @@ export class Annex2ExcelService {
 
     if (headerRowIdx === -1) {
       throw new Error(
-        'No se encontraron columnas con códigos SAC (ej. 40104, 40108) en el archivo.',
+        'El archivo no contiene columnas con códigos SAC (p. ej., 40104, 40108).',
       );
     }
 

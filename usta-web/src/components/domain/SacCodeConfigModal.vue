@@ -2,6 +2,8 @@
 import { computed, ref, watch } from 'vue';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import UstaUnitMultiSelect from '@/components/ui/UstaUnitMultiSelect.vue';
+import { cloneState } from '@/composables/useMutation';
+import { STRUCTURAL_SAC_CODES } from '@/constants/payroll.constants';
 import { usePayrollStore } from '@/stores/payroll.store';
 import type { SacCode } from '@usta/domain';
 
@@ -17,9 +19,10 @@ const store = usePayrollStore();
 
 const originalCode = ref<string>('');
 const draft = ref<SacCode | null>(null);
+const confirmingDelete = ref<boolean>(false);
 
-const isProtectedTrunkCode = computed(
-  () => originalCode.value === '40104' || originalCode.value === '40108',
+const isProtectedTrunkCode = computed(() =>
+  (STRUCTURAL_SAC_CODES as readonly string[]).includes(originalCode.value),
 );
 
 const newFacultyRule = ref<{
@@ -49,18 +52,20 @@ function toNullableText(val: unknown): string | null {
 watch(
   () => props.codeItem,
   (item) => {
+    confirmingDelete.value = false;
     if (item) {
-      originalCode.value = item.code;
+      const cloned = cloneState(item);
+      originalCode.value = cloned.code;
       draft.value = {
-        ...structuredClone(item),
-        postgraduateCapHours: item.postgraduateCapHours ?? null,
-        psePercentage: item.psePercentage ?? null,
-        hoursPerUnitFactor: item.hoursPerUnitFactor ?? null,
-        unitLabel: item.unitLabel ?? null,
-        annex3Format: item.annex3Format ?? null,
-        mandatoryInFaculty: Boolean(item.mandatoryInFaculty),
-        lockedByResearch: Boolean(item.lockedByResearch),
-        facultyRules: item.facultyRules ? structuredClone(item.facultyRules) : [],
+        ...cloned,
+        postgraduateCapHours: cloned.postgraduateCapHours ?? null,
+        psePercentage: cloned.psePercentage ?? null,
+        hoursPerUnitFactor: cloned.hoursPerUnitFactor ?? null,
+        unitLabel: cloned.unitLabel ?? null,
+        annex3Format: cloned.annex3Format ?? null,
+        mandatoryInFaculty: Boolean(cloned.mandatoryInFaculty),
+        lockedByResearch: Boolean(cloned.lockedByResearch),
+        facultyRules: cloned.facultyRules ? cloneState(cloned.facultyRules) : [],
       };
       if (!newFacultyRule.value.unitId) {
         newFacultyRule.value.unitId = store.units[0]?.id ?? '';
@@ -94,7 +99,7 @@ function addFacultyRuleToCode() {
     draft.value.facultyRules.push(rule);
   }
   store.showToast(
-    `Regla específica preparada para ${unit.name} en código ${draft.value.code}`,
+    `Regla configurada para ${unit.name} en el código ${draft.value.code}.`,
   );
 }
 
@@ -109,7 +114,7 @@ async function handleSave() {
   if (!draft.value) return;
   const targetCode = draft.value.code.trim().toUpperCase();
   if (!targetCode || !draft.value.name.trim()) {
-    store.showToast('El código SAC y el nombre de la actividad son obligatorios', 'error');
+    store.showToast('Indique el código SAC y el nombre de la actividad.', 'error');
     return;
   }
 
@@ -147,7 +152,7 @@ async function handleSave() {
     facultyRules: normalizedRules,
   });
   if (res.ok) {
-    store.showToast(`Código SAC ${res.data.code} actualizado en el catálogo ANEXO 4`);
+    store.showToast(`Código SAC ${res.data.code} actualizado.`);
     emit('close');
   }
 }
@@ -164,7 +169,7 @@ async function handleDelete() {
 <template>
   <UstaModal
     :open="!!draft"
-    :title="draft ? `Configurar Código SAC ${originalCode} y Parámetros Normativos` : ''"
+    :title="draft ? `Configurar código SAC ${originalCode}` : ''"
     :subtitle="draft?.name"
     max-width="820px"
     @close="emit('close')"
@@ -175,7 +180,7 @@ async function handleDelete() {
           <label>
             Código SAC
             <span v-if="isProtectedTrunkCode" style="color: var(--ink-soft); font-weight: 500">
-              (Troncal)
+              (estructural)
             </span>
           </label>
           <input
@@ -183,11 +188,10 @@ async function handleDelete() {
             type="text"
             maxlength="20"
             :disabled="isProtectedTrunkCode"
-            style="font-family: var(--font-mono); font-weight: 700"
           />
         </div>
         <div class="field" style="grid-column: span 2">
-          <label>Función Sustantiva</label>
+          <label>Función sustantiva</label>
           <select v-model="draft.substantiveFunction">
             <option value="Enseñanza-Aprendizaje">Enseñanza-Aprendizaje</option>
             <option value="Proyección Social">Proyección Social</option>
@@ -198,22 +202,22 @@ async function handleDelete() {
       </div>
 
       <div class="field">
-        <label>Nombre Oficial de la Actividad (ANEXO 4)</label>
+        <label>Nombre oficial de la actividad (Anexo 4)</label>
         <input v-model="draft.name" type="text" maxlength="200" />
       </div>
 
       <div class="field">
-        <label>Descripción / Definición de la Actividad (ANEXO 4)</label>
+        <label>Descripción de la actividad</label>
         <textarea v-model="draft.definition" rows="3"></textarea>
       </div>
       <div class="field">
-        <label>Lineamiento y Regla de Validación (Visible para el Decano al asignar)</label>
+        <label>Lineamiento de asignación</label>
         <textarea v-model="draft.guideline" rows="3"></textarea>
       </div>
 
       <div class="grid cols-3" style="gap: 10px">
         <div v-if="originalCode === '40108'" class="field">
-          <label>Porcentaje Automático PSE (% sobre 40104)</label>
+          <label>Porcentaje automático de PSE (% sobre 40104)</label>
           <input
             v-model.number="draft.psePercentage"
             type="number"
@@ -223,7 +227,7 @@ async function handleDelete() {
           />
         </div>
         <div v-else class="field">
-          <label>Base Horas (Mínimo General · vacío = sin mín.)</label>
+          <label>Horas mínimas (vacío si no aplica)</label>
           <input
             v-model.number="draft.baseHours"
             type="number"
@@ -234,18 +238,18 @@ async function handleDelete() {
         </div>
 
         <div class="field">
-          <label>Tope Horas (Máximo General · vacío = según aval)</label>
+          <label>Horas máximas (vacío si depende de aval)</label>
           <input
             v-model.number="draft.capHours"
             type="number"
             min="0"
             max="240"
             :disabled="originalCode === '40108'"
-            placeholder="Según aval / sin tope"
+            placeholder="Según aval"
           />
         </div>
         <div class="field">
-          <label>Tope con Posgrado Activo (Opcional)</label>
+          <label>Tope con posgrado activo (opcional)</label>
           <input
             v-model.number="draft.postgraduateCapHours"
             type="number"
@@ -258,13 +262,13 @@ async function handleDelete() {
 
       <div class="grid cols-2" style="gap: 10px">
         <div class="field">
-          <label>Comportamiento si se supera el tope</label>
+          <label>Control al superar el tope</label>
           <select v-model="draft.severity">
-            <option value="blocking">Bloqueante (No dejar pasar sin ajuste)</option>
+            <option value="blocking">Bloqueante (impide guardar sin ajuste)</option>
             <option value="justifiable_alert">
-              Confirmación de Excepción (Permitir con justificación escrita)
+              Alerta justificable (exige justificación escrita)
             </option>
-            <option value="informative">Informativa (Aviso preventivo)</option>
+            <option value="informative">Informativa (aviso preventivo)</option>
           </select>
         </div>
         <UstaUnitMultiSelect v-model="draft.appliesTo" :units="store.units" />
@@ -275,7 +279,7 @@ async function handleDelete() {
         style="background: var(--surface-soft); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px"
       >
         <div style="font-size: 12px; font-weight: 800; color: var(--navy); margin-bottom: 8px">
-          ⚙️ Condiciones Normativas, Pre-Aval (ANEXO 3) y Multiplicador por Unidad
+          Condiciones de aval (Anexo 3) y factor por unidad
         </div>
 
         <div class="grid cols-3" style="gap: 10px; margin-bottom: 10px">
@@ -283,7 +287,7 @@ async function handleDelete() {
             <input v-model="draft.requiresViceRectorApproval" type="checkbox" />
             <span class="toggle__track"></span>
             <span style="font-size: 11.5px; font-weight: 700">
-              Requiere Pre-Aval V.A. (ANEXO 3)
+              Requiere aval de Vicerrectoría (Anexo 3)
             </span>
           </label>
 
@@ -299,41 +303,41 @@ async function handleDelete() {
             <input v-model="draft.lockedByResearch" type="checkbox" />
             <span class="toggle__track"></span>
             <span style="font-size: 11.5px; font-weight: 700">
-              Cargue exclusivo Investigación (ANEXO 7)
+              Asignación exclusiva de Investigación (Anexo 7)
             </span>
           </label>
         </div>
 
         <div class="grid cols-3" style="gap: 10px">
           <div v-if="draft.requiresViceRectorApproval" class="field" style="margin: 0">
-            <label>Plantilla de Pre-Aval (ANEXO 3)</label>
+            <label>Formato Anexo 3</label>
             <select v-model="draft.annex3Format">
-              <option :value="null">Formato General ANEXO 3</option>
-              <option value="10212">10212 · Internacionalización / Movilidad</option>
+              <option :value="null">Formato general Anexo 3</option>
+              <option value="10212">10212 · Internacionalización y movilidad</option>
               <option value="20223_20120">20223 / 20120 · Consultorio Jurídico y Conciliación</option>
-              <option value="20222">20222 · Prácticas y Pasantías</option>
-              <option value="40126">40126 · Tutoría y Consejería</option>
-              <option value="40222">40222 · Proyectos Institucionales</option>
-              <option value="43401">43401 · Actividades Académicas Especiales</option>
+              <option value="20222">20222 · Prácticas y pasantías</option>
+              <option value="40126">40126 · Tutoría y consejería</option>
+              <option value="40222">40222 · Proyectos institucionales</option>
+              <option value="43401">43401 · Actividades académicas especiales</option>
             </select>
           </div>
           <div class="field" style="margin: 0">
-            <label>Factor Horas por Unidad (Opc.)</label>
+            <label>Factor de horas por unidad (opcional)</label>
             <input
               v-model.number="draft.hoursPerUnitFactor"
               type="number"
               min="0"
               max="240"
-              placeholder="Ej: 4"
+              placeholder="Ej.: 4"
             />
           </div>
           <div class="field" style="margin: 0">
-            <label>Etiqueta Unidad (Opc.)</label>
+            <label>Unidad de medida (opcional)</label>
             <input
               v-model="draft.unitLabel"
               type="text"
               maxlength="80"
-              placeholder="Ej: semillero, proyecto, revista"
+              placeholder="Ej.: semillero, proyecto, revista"
             />
           </div>
         </div>
@@ -344,74 +348,59 @@ async function handleDelete() {
         style="background: var(--surface-soft); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-top: 6px"
       >
         <div style="font-size: 12px; font-weight: 800; color: var(--navy); margin-bottom: 4px">
-          🎯 Reglas de Rango Específicas por Facultad (Ej: "Sistemas entre 12 y 16 h, Civil entre 16 y 20 h")
+          Reglas específicas por unidad académica
         </div>
         <p style="font-size: 11px; color: var(--ink-soft); margin: 0 0 10px">
-          Permite definir un mínimo, máximo o bolsa exclusiva para una facultad determinada en este código SAC.
+          Defina un rango docente o bolsa particular para una unidad en este código.
         </p>
 
         <div
           style="display: grid; grid-template-columns: 1.6fr 0.7fr 0.7fr 0.8fr auto; gap: 8px; align-items: end"
         >
-          <div>
-            <label
-              style="font-size: 10.5px; font-weight: 700; color: var(--ink-soft); display: block; margin-bottom: 3px"
-            >
-              Facultad / Unidad
-            </label>
-            <select
-              v-model="newFacultyRule.unitId"
-              style="width: 100%; padding: 6px 8px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 11.5px"
-            >
+          <div class="field field--sm">
+            <label>Unidad académica</label>
+            <select v-model="newFacultyRule.unitId">
               <option v-for="unit in store.units" :key="unit.id" :value="unit.id">
                 {{ unit.name }}
               </option>
             </select>
           </div>
-          <div>
-            <label
-              style="font-size: 10.5px; font-weight: 700; color: var(--ink-soft); display: block; margin-bottom: 3px"
-            >
-              Mín. Docente (h)
-            </label>
+          <div class="field field--sm">
+            <label>Mín. docente (h)</label>
             <input
               v-model.number="newFacultyRule.minTeacherHours"
               type="number"
               min="0"
               max="240"
-              style="width: 100%; padding: 6px 8px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-size: 12px"
             />
           </div>
-          <div>
-            <label
-              style="font-size: 10.5px; font-weight: 700; color: var(--ink-soft); display: block; margin-bottom: 3px"
-            >
-              Máx. Docente (h)
-            </label>
+          <div class="field field--sm">
+            <label>Máx. docente (h)</label>
             <input
               v-model.number="newFacultyRule.maxTeacherHours"
               type="number"
               min="0"
               max="240"
-              style="width: 100%; padding: 6px 8px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-size: 12px"
             />
           </div>
-          <div>
-            <label
-              style="font-size: 10.5px; font-weight: 700; color: var(--ink-soft); display: block; margin-bottom: 3px"
-            >
-              Bolsa Fac. (Opc.)
-            </label>
+          <div class="field field--sm">
+            <label>Bolsa unidad (opc.)</label>
             <input
               v-model.number="newFacultyRule.facultyBagCap"
               type="number"
               min="0"
               max="500"
               placeholder="—"
-              style="width: 100%; padding: 6px 8px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-size: 12px"
             />
           </div>
-          <button class="btn primary small" @click="addFacultyRuleToCode">+ Fijar Regla</button>
+          <button
+            type="button"
+            class="btn primary small"
+            style="height: 34px"
+            @click="addFacultyRuleToCode"
+          >
+            Agregar regla
+          </button>
         </div>
 
         <div
@@ -424,15 +413,16 @@ async function handleDelete() {
             style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 11.5px"
           >
             <div>
-              <b style="color: var(--navy)">{{ rf.unitName }}</b> · Rango Docente:
+              <b style="color: var(--navy)">{{ rf.unitName }}</b> · Rango docente:
               <b style="font-family: var(--font-mono)">
                 {{ rf.minTeacherHours ?? 0 }} a {{ rf.maxTeacherHours ?? '∞' }} h/mes
               </b>
               <span v-if="rf.facultyBagCap" style="margin-left: 8px; color: var(--blue)">
-                · Tope Bolsa Facultad: <b>{{ rf.facultyBagCap }} h</b>
+                · Tope bolsa: <b>{{ rf.facultyBagCap }} h</b>
               </span>
             </div>
             <button
+              type="button"
               class="btn danger small"
               style="padding: 2px 8px; font-size: 11px"
               @click="removeFacultyRuleFromCode(rf.unitId)"
@@ -445,18 +435,41 @@ async function handleDelete() {
     </template>
 
     <template #actions>
-      <div style="display: flex; justify-content: space-between; width: 100%">
-        <button
-          v-if="draft && !isProtectedTrunkCode"
-          class="btn danger small"
-          @click="handleDelete"
-        >
-          Eliminar Código del Catálogo
-        </button>
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px; flex-wrap: wrap">
+        <div v-if="draft && !isProtectedTrunkCode" style="display: inline-flex; align-items: center; gap: 6px">
+          <template v-if="!confirmingDelete">
+            <button
+              type="button"
+              class="btn danger small"
+              @click="confirmingDelete = true"
+            >
+              Eliminar código
+            </button>
+          </template>
+          <template v-else>
+            <span style="font-size: 11.5px; font-weight: 700; color: var(--danger)">
+              ¿Eliminar el código {{ originalCode }}?
+            </span>
+            <button
+              type="button"
+              class="btn ghost small"
+              @click="confirmingDelete = false"
+            >
+              No
+            </button>
+            <button
+              type="button"
+              class="btn danger small"
+              @click="handleDelete"
+            >
+              Sí, eliminar
+            </button>
+          </template>
+        </div>
         <div v-else></div>
         <div style="display: flex; gap: 8px">
-          <button class="btn ghost" @click="emit('close')">Cancelar</button>
-          <button class="btn primary" @click="handleSave">Guardar Cambios</button>
+          <button type="button" class="btn ghost" @click="emit('close')">Cancelar</button>
+          <button type="button" class="btn primary" @click="handleSave">Guardar cambios</button>
         </div>
       </div>
     </template>

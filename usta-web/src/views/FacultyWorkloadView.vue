@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { cloneState } from '@/composables/useMutation';
 import { usePayrollStore } from '@/stores/payroll.store';
+import type { AllocationProgramRef } from '@/stores/workload.store';
 import { exportFacultyAnnex2Xlsx, importAnnex2FromXlsx } from '@/services/exporters';
 import type { FacultyTeacher, SacCode } from '@usta/domain';
 import { eventChecked, eventValue } from '@/utils/dom-events';
+import UstaModal from '@/components/ui/UstaModal.vue';
 import Annex5QuotaStrip from '@/components/domain/Annex5QuotaStrip.vue';
 import TeacherSidebarPanel from '@/components/domain/TeacherSidebarPanel.vue';
 import TeacherSummaryCard from '@/components/domain/TeacherSummaryCard.vue';
@@ -26,6 +29,50 @@ const viewMode = ref<'teacher' | 'matrix'>('teacher');
 const teacherSearchQuery = ref('');
 const teacherStatusFilter = ref<'all' | 'alerts' | 'ok'>('all');
 const bagCodeFilter = ref<string | null>(null);
+
+const selectableUnits = computed(() => {
+  if (store.activeRole === 'dean') {
+    const allowed = new Set(store.managedUnitIds);
+    return store.units.filter((u) => allowed.has(u.id));
+  }
+  return store.units;
+});
+
+const canEditWorkload = computed<boolean>(() => {
+  if (store.activeRole === 'director' || store.activeRole === 'vice_rector') {
+    return true;
+  }
+  if (store.activeRole === 'dean') {
+    const status = store.activeUnit.payrollStatus;
+    const isEditableStatus =
+      status === 'Borrador' || status === 'Devuelta con Observaciones';
+    const isAllowedUnit =
+      store.managedUnitIds.length === 0 ||
+      store.managedUnitIds.includes(store.activeUnit.id);
+    return isEditableStatus && isAllowedUnit;
+  }
+  return false;
+});
+
+const readonlyBannerMessage = computed<string | null>(() => {
+  if (canEditWorkload.value) return null;
+  if (store.activeRole === 'research') {
+    return 'Modo de consulta: las horas de investigación y SICDDI se gestionan en el módulo Investigación.';
+  }
+  if (store.activeRole === 'dean') {
+    const status = store.activeUnit.payrollStatus;
+    if (status === 'Enviada') {
+      return 'Prenómina enviada a revisión. Si requiere hacer ajustes antes de que inicie la revisión, utilice "Retirar envío".';
+    }
+    if (status === 'En Revisión') {
+      return 'Prenómina en revisión por la Dirección de Enseñanza y Aprendizaje.';
+    }
+    if (status === 'Avalada') {
+      return 'Prenómina avalada para el periodo activo.';
+    }
+  }
+  return 'Modo de solo consulta.';
+});
 
 function resolveInitialTeacherId(): string {
   const queryId = typeof route.query.teacherId === 'string' ? route.query.teacherId : '';
@@ -112,28 +159,45 @@ const activeTeacherCodes = computed(() => {
 
 const exceptionModalState = ref<ExceptionModalState | null>(null);
 
-function tryAssignHoursWithCapControl(definition: SacCode, requestedHours: number) {
-  if (!activeTeacher.value) return;
+function tryAssignHoursWithCapControl(
+  definition: SacCode,
+  requestedHours: number,
+  programInfo?: AllocationProgramRef,
+) {
+  if (!canEditWorkload.value || !activeTeacher.value) return;
   if (definition.lockedByResearch && store.activeRole === 'dean') {
     store.showToast(
-      `El código ${definition.code} (SICDDI) es precargado exclusivamente por Dirección de Investigación`,
+      `El código ${definition.code} lo asigna exclusivamente la Dirección de Investigación`,
       'error',
     );
     return;
   }
+  const existing = activeTeacher.value.allocations[definition.code];
+  const effectiveProgramId =
+    programInfo !== undefined ? programInfo.programId ?? null : existing?.programId ?? null;
+  const selectedProgram = effectiveProgramId
+    ? store.programQuotas.find((p) => p.id === effectiveProgramId) ?? null
+    : null;
+
   const hours = Math.max(0, Number(requestedHours) || 0);
-  const cap = store.getEffectiveCodeCap(definition);
+  const cap = store.getEffectiveCodeCap(definition, store.activeUnit, selectedProgram);
 
   if (hours > 0 && cap !== null && hours > cap) {
     if (definition.severity === 'blocking' && store.activeRole === 'dean') {
-      store.updateCodeAllocation(activeTeacher.value.id, definition.code, cap);
+      void store.updateCodeAllocation(
+        activeTeacher.value.id,
+        definition.code,
+        cap,
+        undefined,
+        undefined,
+        programInfo,
+      );
       store.showToast(
-        `⛔ Tope Bloqueante (${definition.code}): No se permite superar ${cap} h/mes en esta unidad. Se ajustó al tope máximo (${cap} h).`,
+        `Tope máximo en ${definition.code}: no se permite superar ${cap} h/mes${selectedProgram ? ` en ${selectedProgram.programName}` : ''}. Se ajustó a ${cap} h.`,
         'error',
       );
       return;
     }
-    const existing = activeTeacher.value.allocations[definition.code];
     exceptionModalState.value = {
       codeItem: definition,
       hours,
@@ -144,18 +208,34 @@ function tryAssignHoursWithCapControl(definition: SacCode, requestedHours: numbe
       confirmStep3: false,
       justification: existing?.exceptionJustification ?? '',
       directorNote: existing?.directorNote ?? '',
+      ...(programInfo !== undefined
+        ? {
+            programId: programInfo.programId ?? null,
+            programName: programInfo.programName ?? null,
+          }
+        : {}),
     };
     return;
   }
 
-  store.updateCodeAllocation(activeTeacher.value.id, definition.code, hours);
+  void store.updateCodeAllocation(
+    activeTeacher.value.id,
+    definition.code,
+    hours,
+    undefined,
+    undefined,
+    programInfo,
+  );
 }
 
 function openExceptionModal(codeItem: SacCode) {
-  if (!activeTeacher.value) return;
+  if (!canEditWorkload.value || !activeTeacher.value) return;
   const existing = activeTeacher.value.allocations[codeItem.code];
   const currentHours = existing?.hours ?? 0;
-  const cap = store.getEffectiveCodeCap(codeItem);
+  const selectedProgram = existing?.programId
+    ? store.programQuotas.find((p) => p.id === existing.programId) ?? null
+    : null;
+  const cap = store.getEffectiveCodeCap(codeItem, store.activeUnit, selectedProgram);
   const exceeds = cap !== null && currentHours > cap;
   exceptionModalState.value = {
     codeItem,
@@ -170,26 +250,42 @@ function openExceptionModal(codeItem: SacCode) {
   };
 }
 
-// Teacher Profile Modal
+// Teacher Profile & Removal Modals
 const isTeacherModalOpen = ref(false);
 const editingTeacherModel = ref<FacultyTeacher | null>(null);
+const teacherToDelete = ref<FacultyTeacher | null>(null);
+const isDeletingTeacher = ref(false);
 
 function openNewTeacherModal() {
+  if (!canEditWorkload.value) return;
   editingTeacherModel.value = null;
   isTeacherModalOpen.value = true;
 }
 
 function openEditTeacherModal() {
-  if (!activeTeacher.value) return;
+  if (!canEditWorkload.value || !activeTeacher.value) return;
   editingTeacherModel.value = activeTeacher.value;
   isTeacherModalOpen.value = true;
 }
 
-function handleRemoveCurrentTeacher() {
-  if (!activeTeacher.value) return;
-  const idToRemove = activeTeacher.value.id;
-  store.removeFacultyTeacher(idToRemove);
-  activeTeacherId.value = store.activeUnitTeachers[0]?.id ?? '';
+function promptRemoveCurrentTeacher() {
+  if (!canEditWorkload.value || !activeTeacher.value) return;
+  teacherToDelete.value = activeTeacher.value;
+}
+
+async function confirmRemoveTeacher(): Promise<void> {
+  if (!teacherToDelete.value) return;
+  isDeletingTeacher.value = true;
+  try {
+    const idToRemove = teacherToDelete.value.id;
+    const res = await store.removeFacultyTeacher(idToRemove);
+    if (res.ok) {
+      teacherToDelete.value = null;
+      activeTeacherId.value = store.activeUnitTeachers[0]?.id ?? '';
+    }
+  } finally {
+    isDeletingTeacher.value = false;
+  }
 }
 
 // Annex 3 Approval Modal
@@ -200,7 +296,7 @@ function getTeacherCodeApprovalStatus(teacherId: string, code: string) {
 }
 
 function openAnnex3ApprovalModal(codeItem: SacCode) {
-  if (!activeTeacher.value) return;
+  if (!canEditWorkload.value || !activeTeacher.value) return;
   const existing = getTeacherCodeApprovalStatus(activeTeacher.value.id, codeItem.code);
   const defaultFactor =
     codeItem.code === '10212'
@@ -210,12 +306,13 @@ function openAnnex3ApprovalModal(codeItem: SacCode) {
         : codeItem.baseHours ?? 8;
   annex3ModalState.value = {
     codeItem,
-    programName: existing?.programName ?? store.activeUnit.name,
-    attachmentUrl:
-      existing?.attachmentUrl ??
-      `Soporte_ANEXO3_${codeItem.code}_${activeTeacher.value.documentId}.pdf`,
+    programName:
+      existing?.programName ??
+      activeTeacher.value.allocations[codeItem.code]?.programName ??
+      store.activeUnit.name,
+    attachmentUrl: existing?.attachmentUrl ?? '',
     rows: existing?.projectDetails?.length
-      ? structuredClone(existing.projectDetails)
+      ? cloneState(existing.projectDetails)
       : [
           {
             title: '',
@@ -252,19 +349,18 @@ function handleExportAnnex2Xlsx() {
     sumCodeInUnit: store.sumCodeInUnit,
     bags: store.activeUnitBagIndicators,
   });
-  store.showToast(
-    `Libro Excel ANEXO 2 (.xlsx con 3 hojas) de ${store.activeUnit.name} descargado`,
-  );
+  store.showToast(`Prenómina de ${store.activeUnit.name} descargada`);
 }
 
 async function handleImportExcelFile(event: Event) {
+  if (!canEditWorkload.value) return;
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
   if (!file) return;
   try {
     const imported = await importAnnex2FromXlsx(file, store.sacCodes);
     if (imported.length === 0) {
-      store.showToast('No se detectaron filas de docentes válidas en el archivo', 'error');
+      store.showToast('El archivo no contiene registros docentes válidos', 'error');
       return;
     }
     const res = await store.importUnitTeachers(store.activeUnit.id, file.name, imported);
@@ -273,7 +369,7 @@ async function handleImportExcelFile(event: Event) {
     }
   } catch (err) {
     store.showToast(
-      err instanceof Error ? err.message : 'Error al leer el archivo Excel',
+      err instanceof Error ? err.message : 'No se pudo leer el archivo Excel',
       'error',
     );
   } finally {
@@ -293,24 +389,13 @@ async function handleImportExcelFile(event: Event) {
           </div>
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
             <select
-              v-if="store.currentUser?.role !== 'dean'"
+              v-if="selectableUnits.length > 1"
               :value="store.activeUnitId"
-              aria-label="Seleccionar Unidad Académica"
-              style="
-                font-family: var(--font-display);
-                font-size: 20px;
-                font-weight: 700;
-                color: var(--navy);
-                background: #fff;
-                border: 1.5px solid var(--border);
-                border-radius: 10px;
-                padding: 5px 12px;
-                cursor: pointer;
-                box-shadow: 2px 2px 0 rgba(0, 51, 106, 0.05);
-              "
+              aria-label="Seleccionar unidad académica"
+              class="unit-title-select"
               @change="store.selectUnit(eventValue($event))"
             >
-              <option v-for="unit in store.units" :key="unit.id" :value="unit.id">
+              <option v-for="unit in selectableUnits" :key="unit.id" :value="unit.id">
                 {{ unit.name }} ({{ store.countUnitTeachers(unit.id) }} docentes)
               </option>
             </select>
@@ -324,7 +409,9 @@ async function handleImportExcelFile(event: Event) {
                   ? 'aprobado'
                   : store.activeUnit.payrollStatus === 'Devuelta con Observaciones'
                     ? 'reprobado'
-                    : 'inscrito'
+                    : store.activeUnit.payrollStatus === 'Borrador'
+                      ? 'retirado'
+                      : 'inscrito'
               "
             >
               {{ store.activeUnit.payrollStatus }} · v{{ store.activeUnit.currentVersion }}
@@ -336,20 +423,25 @@ async function handleImportExcelFile(event: Event) {
       <div class="page-actions">
         <div class="segmented-control">
           <button
+            type="button"
             :class="{ active: viewMode === 'teacher' }"
             @click="viewMode = 'teacher'"
           >
-            Ficha por Docente
+            Por docente
           </button>
-          <button :class="{ active: viewMode === 'matrix' }" @click="viewMode = 'matrix'">
-            Sábana ANEXO 2
+          <button
+            type="button"
+            :class="{ active: viewMode === 'matrix' }"
+            @click="viewMode = 'matrix'"
+          >
+            Sábana Anexo 2
           </button>
         </div>
 
         <label
           class="toggle"
           style="background: #fff; padding: 5px 10px; border-radius: 8px; border: 1.5px solid var(--border)"
-          title="Compara la línea base v1 de la facultad contra los ajustes actuales de revisión"
+          title="Comparar las horas actuales frente a la versión inicial enviada"
         >
           <input
             :checked="store.versionComparisonMode"
@@ -358,11 +450,12 @@ async function handleImportExcelFile(event: Event) {
           />
           <span class="toggle__track"></span>
           <span style="font-size: 11.5px; font-weight: 700; color: var(--navy)">
-            Diff v1→v{{ Math.max(2, store.activeUnit.currentVersion) }}
+            Comparar versión inicial
           </span>
         </label>
 
         <input
+          v-if="canEditWorkload"
           ref="excelFileInput"
           type="file"
           accept=".xlsx,.xls,.csv"
@@ -370,48 +463,88 @@ async function handleImportExcelFile(event: Event) {
           @change="handleImportExcelFile"
         />
         <button
+          v-if="canEditWorkload"
+          type="button"
           class="btn ghost small"
-          title="Importar sábana Excel (.xlsx) oficial de ANEXO 2"
+          title="Importar sábana Anexo 2 (.xlsx)"
           @click="excelFileInput?.click()"
         >
-          ↑ Importar
+          Importar
         </button>
 
         <button
+          type="button"
           class="btn ghost small"
-          title="Exportar libro Excel (.xlsx) oficial con las 3 hojas: Proyección de Nómina, Espacios Académicos y Resumen"
+          title="Descargar prenómina Anexo 2 (.xlsx)"
           @click="handleExportAnnex2Xlsx"
         >
-          ↓ Exportar .xlsx
+          Exportar
         </button>
 
         <button
-          v-if="store.activeRole === 'dean'"
+          v-if="
+            store.activeRole === 'dean' &&
+            (store.activeUnit.payrollStatus === 'Borrador' ||
+              store.activeUnit.payrollStatus === 'Devuelta con Observaciones')
+          "
+          type="button"
           class="btn primary small"
           @click="
             store.changePayrollStatus(
               store.activeUnit.id,
               'Enviada',
-              'Enviada por Decanatura para revisión',
+              'Enviada por decanatura para revisión',
             )
           "
         >
-          Enviar a E&A
+          Enviar prenómina
         </button>
         <button
-          v-else-if="store.activeRole === 'director'"
+          v-else-if="
+            store.activeRole === 'dean' &&
+            store.activeUnit.payrollStatus === 'Enviada'
+          "
+          type="button"
+          class="btn ghost small"
+          title="Volver a borrador para realizar ajustes"
+          @click="
+            store.changePayrollStatus(
+              store.activeUnit.id,
+              'Borrador',
+              'Envío retirado por decanatura para ajustes',
+            )
+          "
+        >
+          Retirar envío
+        </button>
+        <button
+          v-else-if="
+            (store.activeRole === 'director' || store.activeRole === 'vice_rector') &&
+            store.activeUnit.payrollStatus !== 'Avalada'
+          "
+          type="button"
           class="btn accent small"
           @click="
             store.changePayrollStatus(
               store.activeUnit.id,
               'Avalada',
-              'Avalada en sesión de revisión por Directora E&A',
+              store.activeRole === 'vice_rector'
+                ? 'Avalada por Vicerrectoría Académica'
+                : 'Avalada por Dirección de Enseñanza y Aprendizaje',
             )
           "
         >
-          ✓ Avalar Facultad
+          Avalar prenómina
         </button>
       </div>
+    </div>
+
+    <div
+      v-if="readonlyBannerMessage"
+      class="validation-banner info"
+      style="margin-bottom: 12px"
+    >
+      <div>{{ readonlyBannerMessage }}</div>
     </div>
 
     <!-- ANNEX 5 & 6 QUOTA STRIP -->
@@ -430,6 +563,7 @@ async function handleImportExcelFile(event: Event) {
         :filtered-teachers="filteredTeachers"
         :total-unit-teachers="store.activeUnitTeachers.length"
         :active-teacher-id="activeTeacher?.id ?? null"
+        :readonly="!canEditWorkload"
         @select-teacher="(id) => (activeTeacherId = id)"
         @new-teacher="openNewTeacherModal"
       />
@@ -439,24 +573,42 @@ async function handleImportExcelFile(event: Event) {
           :teacher="activeTeacher"
           :active-codes-count="activeTeacherCodes.length"
           :alerts="activeTeacherAlerts"
+          :readonly="!canEditWorkload"
           @edit-profile="openEditTeacherModal"
-          @remove-teacher="handleRemoveCurrentTeacher"
+          @remove-teacher="promptRemoveCurrentTeacher"
           @open-annex3="openAnnex3ApprovalModal"
           @open-exception="openExceptionModal"
         />
 
         <div class="docente-split-grid">
-          <TeacherAcademicSpacesCard :teacher="activeTeacher" />
+          <TeacherAcademicSpacesCard
+            :teacher="activeTeacher"
+            :readonly="!canEditWorkload"
+          />
 
           <TeacherSacCodesCard
             :teacher="activeTeacher"
             :assignable-codes="assignableCodes"
             :active-teacher-codes="activeTeacherCodes"
+            :readonly="!canEditWorkload"
             @assign-hours="tryAssignHoursWithCapControl"
             @open-annex3="openAnnex3ApprovalModal"
             @open-exception="openExceptionModal"
           />
         </div>
+      </section>
+
+      <section v-else class="card" style="padding: 32px; text-align: center">
+        <b style="color: var(--navy); display: block; margin-bottom: 6px">
+          Sin docentes registrados en esta unidad
+        </b>
+        <p class="empty-note" style="margin: 0">
+          {{
+            canEditWorkload
+              ? 'Agregue docentes manualmente o importe el archivo Excel del periodo.'
+              : 'Esta unidad aún no registra docentes en el periodo activo.'
+          }}
+        </p>
       </section>
     </div>
 
@@ -491,5 +643,29 @@ async function handleImportExcelFile(event: Event) {
       :teacher="activeTeacher"
       @close="annex3ModalState = null"
     />
+
+    <UstaModal
+      :open="Boolean(teacherToDelete)"
+      title="Retirar docente"
+      :subtitle="`¿Retirar a ${teacherToDelete?.fullName ?? ''} (CC ${teacherToDelete?.documentId ?? ''}) de ${store.activeUnit.name}?`"
+      @close="teacherToDelete = null"
+    >
+      <p style="font-size: 12.5px; color: var(--ink-soft); margin: 0">
+        Se eliminarán sus espacios académicos y horas asignadas en el periodo {{ store.activePeriod }}.
+      </p>
+      <template #footer>
+        <button type="button" class="btn ghost" @click="teacherToDelete = null">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn danger"
+          :disabled="isDeletingTeacher"
+          @click="confirmRemoveTeacher"
+        >
+          {{ isDeletingTeacher ? 'Retirando…' : 'Retirar docente' }}
+        </button>
+      </template>
+    </UstaModal>
   </div>
 </template>

@@ -63,7 +63,7 @@ watch(
 
 async function handleSave() {
   if (!form.value.fullName.trim()) {
-    store.showToast('Debes ingresar el nombre del docente o etiqueta de la vacante', 'error');
+    store.showToast('Indique el nombre del docente o la denominación de la vacante.', 'error');
     return;
   }
   if (props.editingTeacher) {
@@ -84,10 +84,10 @@ async function handleSave() {
     :open="open"
     :title="
       editingTeacher
-        ? 'Editar Ficha del Docente y Horas Compartidas'
-        : 'Registrar Docente o Vacante Provisional'
+        ? 'Editar perfil del docente'
+        : 'Registrar docente o vacante'
     "
-    subtitle="Configura datos contractuales, dedicación y condición de horas compartidas con otras unidades (RN-17)."
+    subtitle="Datos contractuales, dedicación y horas compartidas con otras unidades."
     @close="emit('close')"
   >
     <label
@@ -97,21 +97,21 @@ async function handleSave() {
       <input v-model="form.isProvisional" type="checkbox" />
       <span class="toggle__track"></span>
       <span style="font-size: 12.5px; font-weight: 700; color: var(--navy)">
-        Es vacante provisional / Docente por definir (RF-10)
+        Vacante provisional por definir
       </span>
     </label>
 
     <div style="display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 14px">
       <div class="field">
-        <label>Documento / Cédula</label>
+        <label>Documento de identidad</label>
         <input
           v-model="form.documentId"
           type="text"
-          :placeholder="form.isProvisional ? 'Automático (VACANTE)' : 'Ej: 1049625911'"
+          :placeholder="form.isProvisional ? 'Código automático de vacante' : 'Número sin puntos ni espacios'"
         />
       </div>
       <div class="field">
-        <label>Dedicación Contractual</label>
+        <label>Dedicación contractual</label>
         <select
           v-model="form.dedication"
           @change="
@@ -134,17 +134,17 @@ async function handleSave() {
     </div>
 
     <div class="field">
-      <label>Nombre completo o etiqueta de vacante</label>
+      <label>Nombre completo o denominación de la vacante</label>
       <input
         v-model="form.fullName"
         type="text"
-        placeholder="Ej: DOCENTE NUEVO 1 - ÁREA PRODUCCIÓN"
+        placeholder="Ej.: DOCENTE NUEVO — ÁREA PRODUCCIÓN"
       />
     </div>
 
     <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 14px">
       <div class="field">
-        <label>Categoría Escalafón</label>
+        <label>Categoría en escalafón</label>
         <select v-model="form.rank">
           <option value="Categoría 1 (Auxiliar)">Categoría 1 (Auxiliar)</option>
           <option value="Categoría 2 (Asistente)">Categoría 2 (Asistente)</option>
@@ -154,17 +154,17 @@ async function handleSave() {
         </select>
       </div>
       <div class="field">
-        <label>Carga Mensual Esperada (h)</label>
+        <label>Carga mensual esperada (h)</label>
         <input v-model.number="form.expectedWorkload" type="number" min="8" max="240" />
       </div>
     </div>
 
     <div class="field">
-      <label>Formación Académica (Pregrado y Posgrados)</label>
+      <label>Formación académica</label>
       <input
         v-model="form.education"
         type="text"
-        placeholder="Ej: Ingeniero Industrial · Magíster en Ingeniería"
+        placeholder="Ej.: Ingeniero Industrial · Magíster en Ingeniería"
       />
     </div>
 
@@ -172,26 +172,26 @@ async function handleSave() {
       style="background: var(--surface-soft); padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 18px"
     >
       <b style="font-size: 12px; color: var(--navy); display: block; margin-bottom: 10px">
-        Condición de Docente Compartido entre Unidades Académicas (RN-17 · Columna AG)
+        Horas compartidas con otra unidad académica
       </b>
       <div style="display: grid; grid-template-columns: 175px 1fr; gap: 14px">
         <div class="field" style="margin-bottom: 0">
-          <label>Horas compartidas / mes</label>
+          <label>Horas compartidas al mes</label>
           <input v-model.number="form.sharedHours" type="number" min="0" max="160" />
         </div>
         <div class="field" style="margin-bottom: 0">
-          <label>Facultad / Unidad con la que comparte</label>
+          <label>Unidad con la que comparte</label>
           <input
             v-model="form.sharedUnitName"
             type="text"
             list="shared-units-list"
-            placeholder="Ej: POSGRADOS / INGENIERÍA AMBIENTAL"
+            placeholder="Ej.: POSGRADOS"
           />
           <datalist id="shared-units-list">
             <option value="POSGRADOS" />
-            <option value="DEPARTAMENTO DE HUMANIDADES" />
-            <option value="DEPARTAMENTO DE CIENCIAS BÁSICAS" />
-            <option value="INSTITUTO DE LENGUAS FRAY BERNARDO DE LUGO" />
+            <option value="DIRECCIÓN DE HUMANIDADES" />
+            <option value="DIRECCIÓN DE CIENCIAS BÁSICAS" />
+            <option value="CILCE" />
             <option
               v-for="unit in store.units"
               :key="unit.id"
@@ -203,9 +203,9 @@ async function handleSave() {
     </div>
 
     <template #actions>
-      <button class="btn ghost" @click="emit('close')">Cancelar</button>
-      <button class="btn primary" @click="handleSave">
-        {{ editingTeacher ? 'Guardar Cambios' : 'Registrar Docente' }}
+      <button type="button" class="btn ghost" @click="emit('close')">Cancelar</button>
+      <button type="button" class="btn primary" @click="handleSave">
+        {{ editingTeacher ? 'Guardar cambios' : 'Registrar docente' }}
       </button>
     </template>
   </UstaModal>

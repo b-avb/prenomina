@@ -33,79 +33,96 @@ const sectionalAnalytics = computed(() => {
     }
   }
 
-  const total = Math.max(
-    1,
-    teaching40104 + pse40108 + otherTeaching + research + socialOutreach + management,
-  );
+  const rawTotal =
+    teaching40104 + pse40108 + otherTeaching + research + socialOutreach + management;
+  const pct = (hours: number) => (rawTotal > 0 ? Math.round((hours / rawTotal) * 100) : 0);
 
   return [
     {
-      label: 'Orientación de Espacios Académicos (40104)',
+      label: 'Orientación de espacios académicos (40104)',
       hours: teaching40104,
-      pct: Math.round((teaching40104 / total) * 100),
+      pct: pct(teaching40104),
       color: 'var(--blue)',
     },
     {
-      label: 'Preparación, Seguimiento y Evaluación - PSE 25% (40108)',
+      label: 'Preparación, seguimiento y evaluación — PSE 25 % (40108)',
       hours: pse40108,
-      pct: Math.round((pse40108 / total) * 100),
+      pct: pct(pse40108),
       color: 'var(--success)',
     },
     {
-      label: 'Enseñanza y Aprendizaje (Currículo, SEA, Saber Pro, Tutorías)',
+      label: 'Enseñanza y aprendizaje (currículo, SEA, Saber Pro, tutorías)',
       hours: otherTeaching,
-      pct: Math.round((otherTeaching / total) * 100),
+      pct: pct(otherTeaching),
       color: 'var(--cerulean)',
     },
     {
-      label: 'Investigación e Innovación (Proyectos, SICDDI, Opciones de Grado)',
+      label: 'Investigación e innovación (proyectos, SICDDI, opciones de grado)',
       hours: research,
-      pct: Math.round((research / total) * 100),
+      pct: pct(research),
       color: 'var(--navy)',
     },
     {
-      label: 'Gestión Académica y Aseguramiento de la Calidad (Decanos, Calidad)',
+      label: 'Gestión académica y aseguramiento de la calidad',
       hours: management,
-      pct: Math.round((management / total) * 100),
+      pct: pct(management),
       color: 'var(--gold)',
     },
     {
-      label: 'Proyección Social y Extensión (Graduados, Prácticas, Consultorios)',
+      label: 'Proyección social y extensión (graduados, prácticas, consultorios)',
       hours: socialOutreach,
-      pct: Math.round((socialOutreach / total) * 100),
+      pct: pct(socialOutreach),
       color: 'var(--warning)',
     },
   ];
 });
 
+const isSectionalUnstarted = computed(
+  () => store.units.length > 0 && store.units.every((u) => store.isUnitUnstarted(u.id)),
+);
+
+function getQuotaBadgeClass(allocated: number, cap: number): string {
+  if (allocated > cap) return 'reprobado';
+  if (allocated === cap) return 'aprobado';
+  if (allocated === 0 && isSectionalUnstarted.value) return 'retirado';
+  return 'pendiente';
+}
+
+function getQuotaBadgeLabel(allocated: number, cap: number): string {
+  if (allocated === cap) return 'Cumple';
+  if (allocated > cap) return `Exceso (+${allocated - cap} h)`;
+  if (allocated === 0 && isSectionalUnstarted.value) return 'Sin asignar';
+  return `Faltan ${cap - allocated} h`;
+}
+
 const institutionalQuotasSummary = computed(() => [
   {
     code: '30411',
-    name: 'Aseguramiento de la Calidad (ANEXO 5)',
+    name: 'Aseguramiento de la calidad (Anexo 5)',
     allocated: store.units.reduce((acc, u) => acc + store.sumCodeInUnit(u.id, '30411'), 0),
     cap: store.units.reduce((acc, u) => acc + u.qualityCap30411, 0),
   },
   {
     code: '40106',
-    name: 'Líder de Currículo (ANEXO 5)',
+    name: 'Líder de currículo (Anexo 5)',
     allocated: store.units.reduce((acc, u) => acc + store.sumCodeInUnit(u.id, '40106'), 0),
     cap: store.units.reduce((acc, u) => acc + u.curriculumCap40106, 0),
   },
   {
     code: '40109',
-    name: 'Pruebas Académicas SEA (ANEXO 5)',
+    name: 'Pruebas académicas SEA (Anexo 5)',
     allocated: store.units.reduce((acc, u) => acc + store.sumCodeInUnit(u.id, '40109'), 0),
     cap: store.units.reduce((acc, u) => acc + u.seaCap40109, 0),
   },
   {
     code: '40127',
-    name: 'Pruebas Saber Pro (ANEXO 5)',
+    name: 'Pruebas Saber Pro (Anexo 5)',
     allocated: store.units.reduce((acc, u) => acc + store.sumCodeInUnit(u.id, '40127'), 0),
     cap: store.units.reduce((acc, u) => acc + u.saberProCap40127, 0),
   },
   {
     code: '20502',
-    name: 'Gestión de Graduados (ANEXO 6)',
+    name: 'Gestión de graduados (Anexo 6)',
     allocated: store.units.reduce((acc, u) => acc + store.sumCodeInUnit(u.id, '20502'), 0),
     cap: store.units.reduce((acc, u) => acc + u.graduatesCap20502, 0),
   },
@@ -116,10 +133,10 @@ const institutionalQuotasSummary = computed(() => [
   <div class="grid cols-2">
     <div class="card">
       <div class="section-label" style="margin-top: 0">
-        Distribución Seccional de Horas por Función Sustantiva ({{ store.activePeriod }})
+        Horas por función sustantiva ({{ store.activePeriod }})
       </div>
       <p style="font-size: 12px; color: var(--ink-soft); margin: 0 0 16px">
-        Consolidado en tiempo real sobre {{ totalSectionalTeachers }} docentes registrados en las
+        Consolidado sobre {{ totalSectionalTeachers }} docentes en
         {{ store.units.length }} unidades académicas.
       </p>
 
@@ -143,19 +160,19 @@ const institutionalQuotasSummary = computed(() => [
 
     <div class="card">
       <div class="section-label" style="margin-top: 0">
-        Cumplimiento Seccional de Bolsas Institucionales (ANEXOS 5 y 6)
+        Bolsas institucionales (Anexos 5 y 6)
       </div>
       <p style="font-size: 12px; color: var(--ink-soft); margin: 0 0 16px">
-        Sumatoria global de horas asignadas frente a los topes institucionales de la Seccional Tunja.
+        Horas asignadas frente a los topes institucionales de la Seccional Tunja.
       </p>
 
       <table class="compact-table">
         <thead>
           <tr>
-            <th>Código SAC</th>
-            <th>Bolsa Institucional</th>
-            <th>Horas Asignadas</th>
-            <th>Tope Seccional</th>
+            <th>Código</th>
+            <th>Bolsa institucional</th>
+            <th>Asignadas</th>
+            <th>Tope seccional</th>
             <th>Estado</th>
           </tr>
         </thead>
@@ -168,13 +185,9 @@ const institutionalQuotasSummary = computed(() => [
             <td>
               <span
                 class="badge"
-                :class="quota.allocated === quota.cap ? 'aprobado' : 'pendiente'"
+                :class="getQuotaBadgeClass(quota.allocated, quota.cap)"
               >
-                {{
-                  quota.allocated === quota.cap
-                    ? '100% cuadrado'
-                    : `Dif: ${quota.allocated - quota.cap} h`
-                }}
+                {{ getQuotaBadgeLabel(quota.allocated, quota.cap) }}
               </span>
             </td>
           </tr>

@@ -28,21 +28,22 @@ const filteredUnits = computed(() => {
     >
       <div>
         <div class="section-label" style="margin: 0">
-          Topes Semestrales por Facultad y Dirección Académica (ANEXO 5 + ANEXO 6)
+          Topes semestrales por unidad académica (Anexos 5 y 6)
         </div>
         <p style="font-size: 12px; color: var(--ink-soft); margin: 3px 0 0">
-          Cualquier ajuste aquí actualiza inmediatamente las validaciones y barras de progreso en la prenómina de la facultad.
+          Los ajustes actualizan los cupos disponibles en la prenómina de cada unidad.
         </p>
       </div>
       <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
         <input
           v-model="facultySearchQuery"
           type="text"
+          class="control-sm"
           placeholder="Buscar unidad académica…"
-          style="padding: 6px 11px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 12px; min-width: 220px"
+          style="min-width: 220px"
         />
-        <button class="btn primary small" @click="emit('newUnit')">
-          + Nueva Unidad Académica
+        <button type="button" class="btn primary small" style="height: 34px" @click="emit('newUnit')">
+          Nueva unidad
         </button>
       </div>
     </div>
@@ -50,31 +51,37 @@ const filteredUnits = computed(() => {
     <table class="compact-table">
       <thead>
         <tr>
-          <th>Facultad / Unidad Académica</th>
-          <th>Decano(a) / Director(a)</th>
-          <th>Posgrado</th>
-          <th>30411 Calidad</th>
-          <th>40106 Currículo</th>
-          <th>40109 Docente SEA</th>
-          <th>40127 Saber Pro</th>
-          <th>20502 Graduados (ANEXO 6)</th>
+          <th>Unidad académica</th>
+          <th>Titular</th>
+          <th class="col-center">Posgrado</th>
+          <th class="col-center">30411 Calidad</th>
+          <th class="col-center">40106 Currículo</th>
+          <th class="col-center">40109 SEA</th>
+          <th class="col-center">40127 Saber Pro</th>
+          <th class="col-center">20502 Graduados</th>
         </tr>
       </thead>
       <tbody>
+        <tr v-if="filteredUnits.length === 0">
+          <td colspan="8" class="empty-note" style="padding: 24px 16px; text-align: center">
+            Sin unidades académicas para el filtro seleccionado.
+          </td>
+        </tr>
         <tr v-for="unit in filteredUnits" :key="unit.id">
-          <td data-label="Facultad">
+          <td data-label="Unidad">
             <b style="color: var(--navy)">{{ unit.name }}</b>
             <div style="font-size: 10.5px; color: var(--ink-soft)">{{ unit.division }}</div>
           </td>
-          <td data-label="Decano(a)">
+          <td data-label="Titular">
             <input
               :value="unit.deanName"
               type="text"
-              style="width: 195px; padding: 4px 7px; border: 1px solid var(--border); border-radius: 6px; font-size: 11.5px"
+              class="table-input"
+              style="width: 100%; min-width: 170px; max-width: 230px"
               @change="store.updateUnitDean({ unitId: unit.id, deanName: eventValue($event) })"
             />
           </td>
-          <td data-label="Posgrado">
+          <td data-label="Posgrado" class="col-center">
             <label class="toggle">
               <input
                 :checked="unit.hasPostgraduates"
@@ -84,65 +91,70 @@ const filteredUnits = computed(() => {
               <span class="toggle__track"></span>
             </label>
           </td>
-          <td data-label="Calidad (30411)">
+          <td data-label="Calidad (30411)" class="col-center" style="white-space: nowrap">
             <input
               :value="unit.qualityCap30411"
               type="number"
               min="0"
               max="200"
               step="4"
-              style="width: 68px; padding: 4px 7px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700"
+              class="table-input table-input--num"
+              style="width: 54px"
               @change="store.updateUnit(unit.id, { qualityCap30411: eventNumber($event) })"
             />
-            <span style="font-size: 11px; margin-left: 4px">h</span>
+            <span style="font-size: 11px; margin-left: 3px; color: var(--ink-soft)">h</span>
           </td>
-          <td data-label="Currículo (40106)">
+          <td data-label="Currículo (40106)" class="col-center" style="white-space: nowrap">
             <input
               :value="unit.curriculumCap40106"
               type="number"
               min="0"
               max="200"
               step="4"
-              style="width: 68px; padding: 4px 7px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700"
+              class="table-input table-input--num"
+              style="width: 54px"
               @change="store.updateUnit(unit.id, { curriculumCap40106: eventNumber($event) })"
             />
-            <span style="font-size: 11px; margin-left: 4px">h</span>
+            <span style="font-size: 11px; margin-left: 3px; color: var(--ink-soft)">h</span>
           </td>
-          <td data-label="SEA (40109)">
+          <td data-label="SEA (40109)" class="col-center" style="white-space: nowrap">
             <input
               :value="unit.seaCap40109"
               type="number"
               min="0"
               max="100"
               step="4"
-              style="width: 68px; padding: 4px 7px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700"
+              class="table-input table-input--num"
+              style="width: 54px"
               @change="store.updateUnit(unit.id, { seaCap40109: eventNumber($event) })"
             />
-            <span style="font-size: 11px; margin-left: 4px">h</span>
+            <span style="font-size: 11px; margin-left: 3px; color: var(--ink-soft)">h</span>
           </td>
-          <td data-label="Saber Pro (40127)">
+          <td data-label="Saber Pro (40127)" class="col-center" style="white-space: nowrap">
             <input
               :value="unit.saberProCap40127"
               type="number"
               min="0"
               max="100"
               step="4"
-              style="width: 68px; padding: 4px 7px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700"
+              class="table-input table-input--num"
+              style="width: 54px"
               @change="store.updateUnit(unit.id, { saberProCap40127: eventNumber($event) })"
             />
-            <span style="font-size: 11px; margin-left: 4px">h</span>
+            <span style="font-size: 11px; margin-left: 3px; color: var(--ink-soft)">h</span>
           </td>
-          <td data-label="Graduados (20502)">
+          <td data-label="Graduados (20502)" class="col-center" style="white-space: nowrap">
             <input
               :value="unit.graduatesCap20502"
               type="number"
               min="0"
               max="64"
               step="4"
-              style="width: 68px; padding: 4px 7px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700"
+              class="table-input table-input--num"
+              style="width: 54px"
               @change="store.updateUnit(unit.id, { graduatesCap20502: eventNumber($event) })"
             />
-            <span style="font-size: 11px; margin-left: 4px">h</span>
+            <span style="font-size: 11px; margin-left: 3px; color: var(--ink-soft)">h</span>
           </td>
         </tr>
       </tbody>

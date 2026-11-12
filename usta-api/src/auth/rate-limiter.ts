@@ -12,14 +12,24 @@ const BLOCK_DURATION_MS = 5 * 60 * 1000; // 5 minutes lockout after max failures
 const MAX_FAILED_ATTEMPTS = 10;
 const MAX_BUCKETS = 5000;
 
+function isLoopbackAddress(addr: string | undefined): boolean {
+  if (!addr) return false;
+  return addr === '127.0.0.1' || addr === '::1' || addr === '::ffff:127.0.0.1';
+}
+
 export function extractClientIp(req: IncomingMessage): string {
-  const forwarded = req.headers['x-forwarded-for'];
-  const rawForwarded = Array.isArray(forwarded) ? forwarded[0] : forwarded;
-  if (rawForwarded) {
-    const firstIp = rawForwarded.split(',')[0]?.trim();
-    if (firstIp) return firstIp;
+  const socketIp = req.socket?.remoteAddress || 'unknown-ip';
+  const trustForwarded =
+    process.env.TRUST_PROXY === 'true' || isLoopbackAddress(socketIp);
+  if (trustForwarded) {
+    const forwarded = req.headers['x-forwarded-for'];
+    const rawForwarded = Array.isArray(forwarded) ? forwarded[0] : forwarded;
+    if (rawForwarded) {
+      const firstIp = rawForwarded.split(',')[0]?.trim();
+      if (firstIp) return firstIp;
+    }
   }
-  return req.socket?.remoteAddress || 'unknown-ip';
+  return socketIp;
 }
 
 export class AuthRateLimiter {
@@ -36,6 +46,11 @@ export class AuthRateLimiter {
         this.buckets.delete(key);
       }
     }
+    while (this.buckets.size >= MAX_BUCKETS) {
+      const oldestKey = this.buckets.keys().next().value;
+      if (oldestKey === undefined) break;
+      this.buckets.delete(oldestKey);
+    }
   }
 
   public assertNotBlocked(req: IncomingMessage, identifier: string): void {
@@ -48,7 +63,7 @@ export class AuthRateLimiter {
     if (bucket.blockedUntil > now) {
       const remainingSeconds = Math.max(1, Math.ceil((bucket.blockedUntil - now) / 1000));
       throw new TooManyRequestsError(
-        `Cuenta temporalmente protegida por exceso de intentos fallidos. Intenta nuevamente en ${remainingSeconds} segundos.`,
+        `El acceso se bloqueó temporalmente por intentos fallidos consecutivos. Intente nuevamente en ${remainingSeconds} segundos.`,
       );
     }
 
@@ -59,6 +74,7 @@ export class AuthRateLimiter {
 
   public recordFailure(req: IncomingMessage, identifier: string): void {
     const now = Date.now();
+    this.pruneExpired(now);
     const key = this.buildKey(extractClientIp(req), identifier);
     const existing = this.buckets.get(key);
 

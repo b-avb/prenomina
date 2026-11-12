@@ -11,7 +11,7 @@ import type {
   UpdateSacCodeDto,
 } from '@usta/domain';
 import { useMutation, type MutationResult } from '@/composables/useMutation';
-import { DEFAULT_RULES_CONFIG, TRUNK_SAC_CODES } from '@/constants/payroll.constants';
+import { DEFAULT_RULES_CONFIG, STRUCTURAL_SAC_CODES } from '@/constants/payroll.constants';
 import { rulesApi, sacCodesApi } from '@/services/api';
 import { useOrganizationStore } from './organization.store';
 import { restoreAt } from './utils/collection.utils';
@@ -53,7 +53,7 @@ export const useCatalogStore = defineStore('catalog', () => {
   function createSacCode(payload: SacCode): Promise<MutationResult<SacCode>> {
     return persistNewSacCode(
       payload,
-      `Código SAC ${payload.code} (${payload.name}) agregado al catálogo ANEXO 4`,
+      `Código ${payload.code} (${payload.name}) agregado al catálogo`,
     );
   }
 
@@ -68,10 +68,10 @@ export const useCatalogStore = defineStore('catalog', () => {
 
     const targetCode = patch.newCode?.trim().toUpperCase();
     if (targetCode && targetCode !== code) {
-      if (TRUNK_SAC_CODES.includes(code)) {
+      if (STRUCTURAL_SAC_CODES.includes(code)) {
         return reject(
           'BUSINESS_RULE_VIOLATION',
-          'Los códigos troncales 40104 y 40108 no pueden renombrarse',
+          `El código ${code} hace parte de los cálculos institucionales y no puede cambiarse`,
         );
       }
       if (findSacCodeIndex(targetCode) >= 0) {
@@ -93,7 +93,7 @@ export const useCatalogStore = defineStore('catalog', () => {
 
     const { newCode: _ignoredNewCode, ...cleanPatch } = patch;
     return runOptimistic({
-      capture: () => structuredClone(current),
+      capture: () => current,
       apply: () => Object.assign(current, cleanPatch),
       request: () => sacCodesApi.update({ code, ...cleanPatch }),
       commit: replaceSacCode,
@@ -103,10 +103,10 @@ export const useCatalogStore = defineStore('catalog', () => {
   }
 
   function deleteSacCode(code: string): Promise<MutationResult<DeletedResponse>> {
-    if (TRUNK_SAC_CODES.includes(code)) {
+    if (STRUCTURAL_SAC_CODES.includes(code)) {
       return reject(
         'BUSINESS_RULE_VIOLATION',
-        'Los códigos troncales 40104 y 40108 no pueden eliminarse',
+        `El código ${code} hace parte de los cálculos institucionales y no puede eliminarse`,
       );
     }
     const index = findSacCodeIndex(code);
@@ -117,7 +117,7 @@ export const useCatalogStore = defineStore('catalog', () => {
       apply: () => sacCodes.value.splice(index, 1),
       request: () => sacCodesApi.remove(code),
       rollback: (previous) => restoreAt(sacCodes.value, index, previous),
-      successMessage: `Código SAC ${code} (${current.name}) retirado del catálogo`,
+      successMessage: `Código ${code} (${current.name}) eliminado del catálogo`,
       successType: 'info',
     });
   }
@@ -149,7 +149,7 @@ export const useCatalogStore = defineStore('catalog', () => {
       }));
 
     if (validRows.length === 0) {
-      return reject('VALIDATION_FAILED', 'No se detectaron códigos SAC válidos en el archivo');
+      return reject('VALIDATION_FAILED', 'El archivo no contiene códigos SAC válidos');
     }
 
     return runPessimistic({
@@ -158,7 +158,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         sacCodes.value = codes;
       },
       successMessage: ({ updatedCount, createdCount }) =>
-        `Excel procesado: ${updatedCount} códigos actualizados y ${createdCount} nuevos agregados`,
+        `Catálogo actualizado: ${updatedCount} modificados, ${createdCount} nuevos`,
     });
   }
 

@@ -1,5 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type {
+  ActorContext,
   ChangeUnitStatusDto,
   CreateAcademicUnitDto,
   SnapshotUnitVersionDto,
@@ -27,10 +28,13 @@ export class AcademicUnitsController {
     req: IncomingMessage,
     res: ServerResponse,
     url: URL,
+    _params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
+    const actor = resolvedActor ?? (await this.actorResolver.resolve(req));
     const period = optionalQueryParam(url, 'period', req);
     const division = optionalQueryParam(url, 'division');
-    const units = await this.service.list(period, division);
+    const units = await this.service.list(period, division, actor);
     sendSuccess(res, 200, units);
   };
 
@@ -39,10 +43,12 @@ export class AcademicUnitsController {
     res: ServerResponse,
     url: URL,
     params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
+    const actor = resolvedActor ?? (await this.actorResolver.resolve(req));
     const id = requirePathParam(params, 'id', { maxLength: 64 });
     const period = optionalQueryParam(url, 'period', req);
-    const unit = await this.service.getById(id, period);
+    const unit = await this.service.getById(id, period, actor);
     sendSuccess(res, 200, unit);
   };
 
@@ -50,8 +56,12 @@ export class AcademicUnitsController {
     req: IncomingMessage,
     res: ServerResponse,
     url: URL,
+    _params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management));
     const period = optionalQueryParam(url, 'period', req);
     const raw = await readJsonBody(req);
     const dto = PayloadReader.parse<CreateAcademicUnitDto>(raw, (r) => ({
@@ -59,6 +69,9 @@ export class AcademicUnitsController {
       division: r.requiredString('division', { maxLength: 160 }),
       unitType: r.requiredEnum('unitType', UNIT_TYPES),
       deanName: r.requiredString('deanName', { maxLength: 160 }),
+      ...(r.has('documentId')
+        ? { documentId: r.optionalString('documentId', { maxLength: 40 }) }
+        : {}),
       ...(r.has('username')
         ? { username: r.optionalString('username', { maxLength: 80 }) }
         : {}),
@@ -81,8 +94,11 @@ export class AcademicUnitsController {
     res: ServerResponse,
     url: URL,
     params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management));
     const id = requirePathParam(params, 'id', { maxLength: 64 });
     const period = optionalQueryParam(url, 'period', req);
     const raw = await readJsonBody(req);
@@ -130,8 +146,11 @@ export class AcademicUnitsController {
     res: ServerResponse,
     url: URL,
     params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management));
     const unitId = requirePathParam(params, 'id', { maxLength: 64 });
     const period = optionalQueryParam(url, 'period', req);
     const raw = await readJsonBody(req);
@@ -169,8 +188,11 @@ export class AcademicUnitsController {
     res: ServerResponse,
     url: URL,
     params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.workload);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.workload));
     const unitId = requirePathParam(params, 'id', { maxLength: 64 });
     const period = optionalQueryParam(url, 'period', req);
     const raw = await readJsonBody(req);
@@ -190,8 +212,11 @@ export class AcademicUnitsController {
     res: ServerResponse,
     url: URL,
     params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.workload);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management));
     const unitId = requirePathParam(params, 'id', { maxLength: 64 });
     const period = optionalQueryParam(url, 'period', req);
     const dto: SnapshotUnitVersionDto = { unitId };
@@ -204,8 +229,11 @@ export class AcademicUnitsController {
     res: ServerResponse,
     url: URL,
     params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management));
     const id = requirePathParam(params, 'id', { maxLength: 64 });
     const period = optionalQueryParam(url, 'period', req);
     const deleted = await this.service.remove(actor, id, period);

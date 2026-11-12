@@ -28,7 +28,7 @@ export interface FieldViolation {
 
 export class ValidationError extends AppError {
   constructor(violations: FieldViolation[]) {
-    super('La solicitud contiene campos inválidos.', 400, 'VALIDATION_FAILED', violations);
+    super('Algunos datos del formulario requieren revisión.', 400, 'VALIDATION_FAILED', violations);
   }
 }
 
@@ -40,7 +40,7 @@ export class UnauthorizedError extends AppError {
 
 export class PasswordChangeRequiredError extends AppError {
   constructor(
-    message = 'Debes cambiar tu contraseña temporal antes de continuar utilizando la plataforma.',
+    message = 'Actualice su contraseña temporal antes de continuar en la plataforma.',
   ) {
     super(message, 403, 'PASSWORD_CHANGE_REQUIRED');
   }
@@ -59,8 +59,8 @@ export class NotFoundError extends AppError {
 }
 
 export class RouteNotFoundError extends AppError {
-  constructor(method: string, path: string) {
-    super(`Ruta no encontrada: ${method} ${path}`, 404, 'ROUTE_NOT_FOUND');
+  constructor(_method: string, _path: string) {
+    super('El recurso solicitado no está disponible.', 404, 'ROUTE_NOT_FOUND');
   }
 }
 
@@ -73,7 +73,7 @@ export class ConflictError extends AppError {
 export class PayloadTooLargeError extends AppError {
   constructor(limitBytes: number) {
     super(
-      `El cuerpo de la solicitud supera el límite permitido (${Math.round(limitBytes / 1024 / 1024)} MB).`,
+      `El archivo o envío supera el tamaño máximo permitido (${Math.round(limitBytes / 1024 / 1024)} MB).`,
       413,
       'PAYLOAD_TOO_LARGE',
     );
@@ -88,7 +88,7 @@ export class BusinessRuleError extends AppError {
 
 export class TooManyRequestsError extends AppError {
   constructor(
-    message = 'Demasiados intentos fallidos consecutivos. Por seguridad, espera unos minutos antes de volver a intentar.',
+    message = 'Se registraron demasiados intentos fallidos consecutivos. Espere unos minutos antes de volver a intentar.',
   ) {
     super(message, 429, 'TOO_MANY_REQUESTS');
   }

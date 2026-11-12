@@ -1,6 +1,7 @@
+import { ENV_CONFIG } from './config/env.config.js';
 import http from 'node:http';
 import { JwtActorResolver } from './auth/actor-resolver.js';
-import { ENV_CONFIG } from './config/env.config.js';
+import { assertProductionAuthSecret } from './auth/password-crypto.js';
 import { AcademicProgramsController } from './controllers/academic-programs.controller.js';
 import { AcademicUnitsController } from './controllers/academic-units.controller.js';
 import { ApprovalsController } from './controllers/approvals.controller.js';
@@ -12,6 +13,7 @@ import { ResearchController } from './controllers/research.controller.js';
 import { SacCatalogController } from './controllers/sac-catalog.controller.js';
 import { ValidationEngineController } from './controllers/validation-engine.controller.js';
 import { createDatabase, describeDatabaseTarget } from './database/connection.js';
+import { migrateToLatest } from './database/migrations/index.js';
 import { KyselyTransactionRunner } from './database/transaction-runner.js';
 import { UuidIdGenerator } from './infrastructure/uuid-id-generator.js';
 import { createMariaDbRepositories } from './repositories/mariadb/index.js';
@@ -28,11 +30,13 @@ import { ResearchService } from './services/research.service.js';
 import { SacCatalogService } from './services/sac-catalog.service.js';
 import { ValidationEngineService } from './services/validation-engine.service.js';
 
+assertProductionAuthSecret();
+
 const db = createDatabase(ENV_CONFIG.database);
 const tx = new KyselyTransactionRunner(db);
 const repos = createMariaDbRepositories();
 const ids = new UuidIdGenerator();
-const actorResolver = new JwtActorResolver(tx.executor, repos.users);
+const actorResolver = new JwtActorResolver(tx.executor, repos.users, repos.units);
 
 const periodContext = new PeriodContextService(repos);
 const auditService = new AuditService(tx, repos, ids);
@@ -117,24 +121,31 @@ const router = new ApiRouter(
 
 const server = http.createServer(router.dispatch);
 
-server.listen(ENV_CONFIG.port, () => {
-  console.log(
-    `[USTA-API-TS] Enterprise Backend listening on http://localhost:${ENV_CONFIG.port}`,
-  );
-  console.log(
-    `[USTA-API-TS] MariaDB pool connected to ${describeDatabaseTarget(ENV_CONFIG.database)}`,
-  );
-  void authService
-    .ensureDefaultUsersSeeded()
-    .then((count) => {
-      if (count > 0) {
-        console.log(`[USTA-API-TS] Seeded ${count} default institutional user accounts.`);
-      }
-    })
-    .catch((err) => {
-      console.warn('[USTA-API-TS] Could not auto-seed default users:', err);
-    });
-});
+async function bootstrap(): Promise<void> {
+  try {
+    const { applied } = await migrateToLatest(db);
+    if (applied.length > 0) {
+      console.log(`[USTA-API-TS] Auto-applied DB migrations: ${applied.join(', ')}`);
+    }
+    const count = await authService.ensureDefaultUsersSeeded();
+    if (count > 0) {
+      console.log(`[USTA-API-TS] Seeded ${count} default institutional user accounts.`);
+    }
+  } catch (err) {
+    console.warn('[USTA-API-TS] Warning during startup DB migration/bootstrap:', err);
+  }
+
+  server.listen(ENV_CONFIG.port, ENV_CONFIG.host, () => {
+    console.log(
+      `[USTA-API-TS] Enterprise Backend listening on http://${ENV_CONFIG.host}:${ENV_CONFIG.port}`,
+    );
+    console.log(
+      `[USTA-API-TS] MariaDB pool connected to ${describeDatabaseTarget(ENV_CONFIG.database)}`,
+    );
+  });
+}
+
+void bootstrap();
 
 async function shutdown(signal: string): Promise<void> {
   console.log(`[USTA-API-TS] Received ${signal}. Closing server and MariaDB pool...`);

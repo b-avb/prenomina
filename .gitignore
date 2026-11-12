@@ -15,4 +15,5 @@ dist/
 /.htaccess
 /api-proxy.php
 usta-api/data/
+usta-api/uploads/
 

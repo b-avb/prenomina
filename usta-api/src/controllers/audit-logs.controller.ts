@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import type { ActorContext } from '@usta/domain';
 import type { AuditService } from '../services/audit.service.js';
-import { sendSuccess } from '../utils/http.utils.js';
+import { type RouteParams, sendSuccess } from '../utils/http.utils.js';
 import {
   optionalIntQueryParam,
   optionalQueryParam,
@@ -13,6 +14,8 @@ export class AuditLogsController {
     req: IncomingMessage,
     res: ServerResponse,
     url: URL,
+    _params: RouteParams,
+    actor?: ActorContext,
   ): Promise<void> => {
     const period = optionalQueryParam(url, 'period', req);
     const unitId = optionalQueryParam(url, 'unitId');
@@ -21,6 +24,7 @@ export class AuditLogsController {
       ...(period !== undefined ? { period } : {}),
       ...(unitId !== undefined ? { unitId } : {}),
       ...(limit !== undefined ? { limit } : {}),
+      ...(actor ? { actor } : {}),
     });
     sendSuccess(res, 200, logs);
   };

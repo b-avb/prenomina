@@ -1,5 +1,10 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { ACTOR_HEADERS, type ApiFailure, type ApiSuccess } from '@usta/domain';
+import {
+  ACTOR_HEADERS,
+  type ActorContext,
+  type ApiFailure,
+  type ApiSuccess,
+} from '@usta/domain';
 import { ENV_CONFIG } from '../config/env.config.js';
 import { BadRequestError, PayloadTooLargeError } from './app-error.js';
 
@@ -10,6 +15,7 @@ export type RouteHandler = (
   res: ServerResponse,
   url: URL,
   params: RouteParams,
+  actor?: ActorContext,
 ) => Promise<void>;
 
 export function buildCorsHeaders(): Record<string, string> {
@@ -19,8 +25,7 @@ export function buildCorsHeaders(): Record<string, string> {
     'Access-Control-Allow-Headers': [
       'Content-Type',
       'Authorization',
-      ACTOR_HEADERS.name,
-      ACTOR_HEADERS.role,
+      'X-HTTP-Method-Override',
       ACTOR_HEADERS.period,
     ].join(', '),
     'X-Content-Type-Options': 'nosniff',
@@ -52,6 +57,24 @@ export function sendNoContent(res: ServerResponse): void {
   res.end();
 }
 
+export function sendBinary(
+  res: ServerResponse,
+  statusCode: number,
+  buffer: Buffer,
+  mimeType: string,
+  fileName: string,
+): void {
+  const safeAsciiName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
+  res.writeHead(statusCode, {
+    ...buildCorsHeaders(),
+    'Content-Type': mimeType,
+    'Content-Length': String(buffer.length),
+    'Content-Disposition': `inline; filename="${safeAsciiName}"`,
+    'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+  });
+  res.end(buffer);
+}
+
 /** Reads and parses the JSON request body, enforcing the configured size limit. */
 export function readJsonBody(req: IncomingMessage): Promise<unknown> {
   const limit = ENV_CONFIG.maxBodySizeBytes;
@@ -76,7 +99,7 @@ export function readJsonBody(req: IncomingMessage): Promise<unknown> {
       try {
         resolve(raw ? (JSON.parse(raw) as unknown) : {});
       } catch {
-        reject(new BadRequestError('El cuerpo de la solicitud no es un JSON válido.'));
+        reject(new BadRequestError('Los datos enviados tienen un formato no válido.'));
       }
     });
     req.on('error', reject);

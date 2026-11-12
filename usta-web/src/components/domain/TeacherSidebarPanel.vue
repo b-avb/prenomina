@@ -9,6 +9,7 @@ defineProps<{
   searchQuery: string;
   statusFilter: 'all' | 'alerts' | 'ok';
   bagCodeFilter: string | null;
+  readonly?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -28,17 +29,21 @@ const store = usePayrollStore();
       <b style="color: var(--navy); font-size: 13px">
         Docentes ({{ filteredTeachers.length }}/{{ totalUnitTeachers }})
       </b>
-      <button class="btn primary small" type="button" @click="emit('newTeacher')">
-        + Docente
+      <button
+        v-if="!readonly"
+        class="btn primary small"
+        type="button"
+        @click="emit('newTeacher')"
+      >
+        Nuevo docente
       </button>
     </div>
 
-    <div class="field" style="margin: 8px 0 6px">
+    <div class="field field--sm" style="margin: 8px 0 6px">
       <input
         :value="searchQuery"
         type="text"
         placeholder="Buscar por nombre o cédula…"
-        style="padding: 7px 10px; font-size: 12px"
         @input="emit('update:searchQuery', ($event.target as HTMLInputElement).value)"
       />
     </div>
@@ -72,7 +77,7 @@ const store = usePayrollStore();
         :class="{ active: statusFilter === 'ok' }"
         @click="emit('update:statusFilter', 'ok')"
       >
-        OK
+        Cumple
       </button>
     </div>
 
@@ -80,17 +85,24 @@ const store = usePayrollStore();
       v-if="bagCodeFilter"
       style="margin-top: 6px; padding: 4px 8px; background: var(--brand-tint); border-radius: 6px; font-size: 11px; display: flex; justify-content: space-between; align-items: center"
     >
-      <span>Filtrando Cód. <b>{{ bagCodeFilter }}</b></span>
+      <span>Código <b>{{ bagCodeFilter }}</b></span>
       <button
         type="button"
         style="border: none; background: transparent; cursor: pointer; font-weight: 700; color: var(--navy)"
         @click="emit('update:bagCodeFilter', null)"
       >
-        × Quitar
+        Quitar
       </button>
     </div>
 
     <div class="docente-list">
+      <div
+        v-if="filteredTeachers.length === 0"
+        class="empty-note"
+        style="padding: 18px 8px; text-align: center; font-size: 11.5px"
+      >
+        Sin docentes para este filtro.
+      </div>
       <div
         v-for="teacher in filteredTeachers"
         :key="teacher.id"
@@ -110,7 +122,9 @@ const store = usePayrollStore();
                 ? 'aprobado'
                 : store.computeTeacherTotalHours(teacher) > teacher.expectedWorkload
                   ? 'reprobado'
-                  : 'pendiente'
+                  : store.isTeacherUnstarted(teacher)
+                    ? 'retirado'
+                    : 'pendiente'
             "
           >
             {{ store.computeTeacherTotalHours(teacher) }}/{{ teacher.expectedWorkload }}h
@@ -145,18 +159,27 @@ const store = usePayrollStore();
             "
             style="color: var(--danger); font-weight: 700; font-size: 10.5px"
           >
-            ● Revisar
+            Revisar
           </span>
           <span
             v-else-if="store.validateTeacher(teacher).some((a) => a.severity === 'alert')"
             style="color: var(--warning); font-weight: 700; font-size: 10.5px"
           >
-            ▲
             {{ store.validateTeacher(teacher).filter((a) => a.severity === 'alert').length }}
-            alerta(s)
+            {{
+              store.validateTeacher(teacher).filter((a) => a.severity === 'alert').length === 1
+                ? 'alerta'
+                : 'alertas'
+            }}
+          </span>
+          <span
+            v-else-if="store.isTeacherUnstarted(teacher) && teacher.expectedWorkload > 0"
+            style="color: var(--ink-soft); font-weight: 600; font-size: 10.5px"
+          >
+            Sin horas
           </span>
           <span v-else style="color: var(--success); font-weight: 700; font-size: 10.5px">
-            ✓ Cuadrado
+            Cumple
           </span>
         </div>
       </div>

@@ -2,6 +2,7 @@ import type {
   AcademicUnitSummary,
   ApprovalStatus,
   AssignedAcademicSpace,
+  AuthProvider,
   PayrollRole,
   PayrollStatus,
   ProgramQuotaAnnex5,
@@ -25,6 +26,12 @@ export const PAYROLL_ROLES = keysOf<PayrollRole>({
   dean: true,
   vice_rector: true,
   research: true,
+});
+
+export const AUTH_PROVIDERS = keysOf<AuthProvider>({
+  local: true,
+  microsoft_entra: true,
+  hybrid: true,
 });
 
 export const PAYROLL_STATUSES = keysOf<PayrollStatus>({

@@ -20,7 +20,7 @@ cd prenomina
 ./deploy.sh --local
 ```
 
-> El script instala automáticamente Node.js 22 LTS, MariaDB y Nginx (si no existen), compila los 3 paquetes, genera `/opt/usta-plataforma/usta-api/.env` con un secreto JWT criptográfico (`openssl rand -hex 32`), ejecuta las migraciones y el seed inicial, y activa el servicio `systemd` (`usta-api`).
+> El script instala o verifica Node.js 22 LTS y MariaDB/MySQL, compila los 3 paquetes en modo producción (`build:prod`), configura `/opt/usta-plataforma/usta-api/.env` con secreto JWT criptográfico (`openssl rand -hex 32`) preservando variables existentes, ejecuta las migraciones y la sincronización segura de catálogo/planta, activa el servicio sin privilegios `systemd` (`usta-api`) y configura el proxy inverso Apache (`/app/prenomina/` y `/prenomina/`).
 
 ### Opción B — Escritorio Remoto Windows Server o Linux con Docker + Node.js
 

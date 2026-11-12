@@ -20,16 +20,7 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     name: 'login',
     component: () => import('@/views/LoginView.vue'),
-    meta: { title: 'Iniciar Sesión', publicRoute: true },
-  },
-  {
-    path: '/role-selection',
-    name: 'role-selection',
-    component: () => import('@/views/RoleSelectionView.vue'),
-    meta: {
-      allowedRoles: ['director'],
-      title: 'Seleccionar Rol Institucional',
-    },
+    meta: { title: 'Iniciar sesión', publicRoute: true },
   },
   {
     path: '/director/dashboard',
@@ -37,7 +28,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/ExecutiveDashboardView.vue'),
     meta: {
       allowedRoles: ['director', 'vice_rector'],
-      title: 'Bandeja Seccional y Analítica',
+      title: 'Seguimiento seccional',
     },
   },
   {
@@ -45,8 +36,8 @@ const routes: RouteRecordRaw[] = [
     name: 'faculty-workload',
     component: () => import('@/views/FacultyWorkloadView.vue'),
     meta: {
-      allowedRoles: ['director', 'dean', 'research'],
-      title: 'Prenómina por Facultad (ANEXO 2)',
+      allowedRoles: ['director', 'vice_rector', 'dean', 'research'],
+      title: 'Prenómina docente',
     },
   },
   {
@@ -54,8 +45,8 @@ const routes: RouteRecordRaw[] = [
     name: 'organization-management',
     component: () => import('@/views/OrganizationManagementView.vue'),
     meta: {
-      allowedRoles: ['director'],
-      title: 'Decanos y Programas Académicos',
+      allowedRoles: ['director', 'vice_rector'],
+      title: 'Unidades y programas',
     },
   },
   {
@@ -63,8 +54,8 @@ const routes: RouteRecordRaw[] = [
     name: 'institutional-catalog',
     component: () => import('@/views/InstitutionalCatalogView.vue'),
     meta: {
-      allowedRoles: ['director'],
-      title: 'Catálogo SAC y Reglas (ANEXOS 4, 5 y 6)',
+      allowedRoles: ['director', 'vice_rector'],
+      title: 'Catálogo SAC y cupos',
     },
   },
   {
@@ -73,7 +64,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/ViceRectorApprovalsView.vue'),
     meta: {
       allowedRoles: ['director', 'dean', 'vice_rector'],
-      title: 'Pre-Avales V.A. (ANEXO 3)',
+      title: 'Solicitudes de aval',
     },
   },
   {
@@ -81,18 +72,19 @@ const routes: RouteRecordRaw[] = [
     name: 'research-allocations',
     component: () => import('@/views/ResearchAllocationsView.vue'),
     meta: {
-      allowedRoles: ['director', 'research'],
-      title: 'Investigación SICDDI (ANEXO 7)',
+      allowedRoles: ['director', 'vice_rector', 'research'],
+      title: 'Asignación de investigación',
     },
   },
-  // Backward-compatible redirects for legacy Spanish bookmarks
-  { path: '/seleccionar-vista', redirect: '/role-selection' },
+  // Backward-compatible redirects for Spanish bookmarks
   { path: '/directora/bandeja', redirect: '/director/dashboard' },
   { path: '/decano/prenomina', redirect: '/dean/payroll' },
   { path: '/directora/facultades', redirect: '/director/organization' },
   { path: '/directora/codigos', redirect: '/director/catalog' },
   { path: '/vicerrector/avales', redirect: '/vice-rector/approvals' },
   { path: '/investigacion/asignaciones', redirect: '/research/allocations' },
+  // Catch-all fallback
+  { path: '/:pathMatch(.*)*', redirect: '/' },
 ];
 
 export const router = createRouter({
@@ -123,13 +115,20 @@ router.beforeEach((to) => {
     return getHomeRouteForRole(authStore.activeRole);
   }
 
-  // Keep deans locked to their assigned unit
-  if (authStore.currentUser?.role === 'dean' && authStore.currentUser.unitId) {
-    authStore.setActiveUnit(authStore.currentUser.unitId);
+  // Keep Deans scoped to their assigned academic unit(s)
+  if (authStore.currentUser?.role === 'dean') {
+    const allowed = authStore.managedUnitIds;
+    if (allowed.length > 0 && !allowed.includes(authStore.activeUnitId)) {
+      authStore.setActiveUnit(allowed[0]!);
+    }
   }
 
   const allowedRoles = to.meta.allowedRoles;
-  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(authStore.activeRole)) {
+  if (
+    allowedRoles &&
+    allowedRoles.length > 0 &&
+    !allowedRoles.includes(authStore.activeRole)
+  ) {
     return getHomeRouteForRole(authStore.activeRole);
   }
 

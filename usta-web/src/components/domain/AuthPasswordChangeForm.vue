@@ -60,9 +60,9 @@ function roleBadgeLabel(role: PayrollRole, unitName?: string | null): string {
     case 'vice_rector':
       return 'Vicerrectoría Académica';
     case 'research':
-      return 'Dirección de Investigación (SICDDI)';
+      return 'Dirección de Investigación e Innovación';
     case 'dean':
-      return unitName ? `Decanatura · ${unitName}` : 'Decanatura / Dirección de Unidad';
+      return unitName ? `Decanatura · ${unitName}` : 'Decanatura';
   }
 }
 
@@ -84,43 +84,40 @@ function onFormSubmit(): void {
       <div>
         <div class="user-banner__name">{{ props.user?.fullName }}</div>
         <div class="user-banner__meta">
-          <code>@{{ props.user?.username }}</code> ·
           {{ roleBadgeLabel(props.user?.role ?? 'dean', props.user?.unitName) }}
         </div>
       </div>
     </div>
 
     <h1 class="screen-title" style="margin-top: 6px">
-      Cambio obligatorio de contraseña temporal
+      Definir contraseña personal
     </h1>
     <p class="screen-sub" style="margin-bottom: 14px">
-      Has iniciado sesión con una <b>contraseña temporal</b>. Por políticas de seguridad, debes definir tu nueva contraseña personal antes de acceder a la plataforma.
+      Reemplace su contraseña temporal para acceder a la plataforma.
     </p>
 
     <form @submit.prevent="onFormSubmit">
       <div class="field" style="margin-bottom: 12px">
-        <label for="current-temp-password">Contraseña Temporal Actual</label>
+        <label for="current-temp-password">Contraseña temporal</label>
         <input
           id="current-temp-password"
           v-model="currentPasswordInput"
           :type="showNewPassword ? 'text' : 'password'"
           autocomplete="current-password"
-          placeholder="Contraseña temporal con la que ingresaste"
+          placeholder="Contraseña recibida"
           required
         />
       </div>
 
       <div class="field" style="margin-bottom: 12px">
-        <div style="display: flex; justify-content: space-between; align-items: center">
-          <label for="new-personal-password" style="margin-bottom: 0">
-            Nueva Contraseña Personal
-          </label>
+        <div class="field__label-row">
+          <label for="new-personal-password">Nueva contraseña</label>
           <button
             type="button"
             class="link-btn"
             @click="showNewPassword = !showNewPassword"
           >
-            {{ showNewPassword ? 'Ocultar' : 'Mostrar contraseñas' }}
+            {{ showNewPassword ? 'Ocultar' : 'Mostrar' }}
           </button>
         </div>
         <input
@@ -128,40 +125,39 @@ function onFormSubmit(): void {
           v-model="newPasswordInput"
           :type="showNewPassword ? 'text' : 'password'"
           autocomplete="new-password"
-          placeholder="Mínimo 8 caracteres (letras y números)"
+          placeholder="Mínimo 8 caracteres, letras y números"
           required
-          style="margin-top: 5px"
         />
       </div>
 
       <div class="field" style="margin-bottom: 12px">
-        <label for="confirm-personal-password">Confirmar Nueva Contraseña</label>
+        <label for="confirm-personal-password">Confirmar contraseña</label>
         <input
           id="confirm-personal-password"
           v-model="confirmPasswordInput"
           :type="showNewPassword ? 'text' : 'password'"
           autocomplete="new-password"
-          placeholder="Repite la nueva contraseña"
+          placeholder="Repita la nueva contraseña"
           required
         />
       </div>
 
       <div class="password-rules">
         <div class="password-rules__item" :class="{ ok: hasMinLength }">
-          <span>{{ hasMinLength ? '✓' : '○' }}</span>
-          Mínimo 8 caracteres de longitud
+          <span>{{ hasMinLength ? '●' : '○' }}</span>
+          Al menos 8 caracteres
         </div>
         <div class="password-rules__item" :class="{ ok: hasLetterAndDigit }">
-          <span>{{ hasLetterAndDigit ? '✓' : '○' }}</span>
-          Incluye al menos una letra y un número
+          <span>{{ hasLetterAndDigit ? '●' : '○' }}</span>
+          Al menos una letra y un número
         </div>
         <div class="password-rules__item" :class="{ ok: isDifferentFromTemporary }">
-          <span>{{ isDifferentFromTemporary ? '✓' : '○' }}</span>
-          Diferente a la contraseña temporal inicial
+          <span>{{ isDifferentFromTemporary ? '●' : '○' }}</span>
+          Distinta de la contraseña temporal
         </div>
         <div class="password-rules__item" :class="{ ok: passwordsMatch }">
-          <span>{{ passwordsMatch ? '✓' : '○' }}</span>
-          La confirmación coincide exactamente
+          <span>{{ passwordsMatch ? '●' : '○' }}</span>
+          Las contraseñas coinciden
         </div>
       </div>
 
@@ -182,8 +178,8 @@ function onFormSubmit(): void {
         >
           {{
             props.isSubmitting
-              ? 'Guardando nueva contraseña…'
-              : 'Guardar Contraseña y Continuar'
+              ? 'Guardando…'
+              : 'Guardar y continuar'
           }}
         </button>
       </div>

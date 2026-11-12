@@ -95,11 +95,11 @@ export class WorkloadBalancerDomain {
             suggestions.push({
               id: `sug-bag-${bag.code}`,
               code: bag.code,
-              activityName: `${bag.fullTitle} (Bolsa Facultad con ${bagBalance} h disponibles)`,
+              activityName: `${bag.fullTitle} (${bagBalance} h disponibles en bolsa)`,
               currentHours: current,
               proposedHours: current + addHours,
               delta: addHours,
-              explanation: `La bolsa ${bag.code} (${bag.source}) tiene ${bag.allocated}/${bag.cap} h en la facultad. Asignar +${addHours} h cuadra tanto al docente como la bolsa.`,
+              explanation: `La bolsa ${bag.code} (${bag.source}) registra ${bag.allocated} de ${bag.cap} h en la unidad. Asignar ${addHours} h completa la carga dentro del cupo disponible.`,
               suggestionType: 'bag',
             });
           }
@@ -118,6 +118,7 @@ export class WorkloadBalancerDomain {
           const addHours = Math.min(diff, cap - current);
           const proposed = Math.max(def.baseHours ?? 4, current + addHours);
           if (proposed <= cap) {
+            const cleanGuideline = def.guideline.trim().replace(/\.$/, '');
             suggestions.push({
               id: `sug-act-${code}`,
               code,
@@ -125,7 +126,7 @@ export class WorkloadBalancerDomain {
               currentHours: current,
               proposedHours: proposed,
               delta: proposed - current,
-              explanation: `${def.guideline} (Base: ${def.baseHours ?? 4}h · Tope: ${cap}h).`,
+              explanation: `${cleanGuideline} (base: ${def.baseHours ?? 4} h, tope: ${cap} h).`,
               suggestionType: 'activity',
             });
           }
@@ -155,8 +156,8 @@ export class WorkloadBalancerDomain {
           delta: -reduceBy,
           explanation:
             nextValue === 0
-              ? `Retirar las ${alloc.hours} h asignadas en ${alloc.code} para eliminar el sobrecupo.`
-              : `Reducir de ${alloc.hours} h a ${nextValue} h (-${reduceBy} h) para ajustar a ${teacher.expectedWorkload} h.`,
+              ? `Retirar las ${alloc.hours} h del código ${alloc.code} para corregir el exceso de carga.`
+              : `Reducir de ${alloc.hours} h a ${nextValue} h (-${reduceBy} h) para ajustar a las ${teacher.expectedWorkload} h del periodo.`,
           suggestionType: 'reduction',
         });
       }
@@ -192,13 +193,21 @@ export class WorkloadBalancerDomain {
     };
   }
 
-  public static syncPostgraduateAllocations(teacher: FacultyTeacher): void {
+  public static syncPostgraduateAllocations(
+    teacher: FacultyTeacher,
+    options?: { clearWhenNoPostgradSpaces?: boolean },
+  ): void {
     const totalPostgrad = teacher.academicSpaces
       .filter((s) => s.level === 'Posgrado')
       .reduce((a, b) => a + b.monthlyHours, 0);
+    const existing = teacher.allocations['40006'];
     if (totalPostgrad > 0) {
-      teacher.allocations['40006'] = { code: '40006', hours: totalPostgrad };
-    } else {
+      teacher.allocations['40006'] = {
+        ...existing,
+        code: '40006',
+        hours: totalPostgrad,
+      };
+    } else if (options?.clearWhenNoPostgradSpaces) {
       delete teacher.allocations['40006'];
     }
     teacher.pseManualOverride = null;
@@ -207,14 +216,20 @@ export class WorkloadBalancerDomain {
   public static snapshotTeachersVersion1(
     unitTeachers: FacultyTeacher[],
     rulesConfig: BusinessRulesConfig,
+    options?: { forceOverwrite?: boolean },
   ): void {
+    const force = options?.forceOverwrite ?? true;
     for (const teacher of unitTeachers) {
-      teacher.version1Total = WorkloadCalculatorDomain.computeTeacherTotalHours(
-        teacher,
-        rulesConfig,
-      );
+      if (force || teacher.version1Total === undefined) {
+        teacher.version1Total = WorkloadCalculatorDomain.computeTeacherTotalHours(
+          teacher,
+          rulesConfig,
+        );
+      }
       for (const alloc of Object.values(teacher.allocations)) {
-        alloc.version1Hours = alloc.hours;
+        if (force || alloc.version1Hours === undefined) {
+          alloc.version1Hours = alloc.hours;
+        }
       }
     }
   }

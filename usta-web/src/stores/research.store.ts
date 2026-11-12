@@ -41,7 +41,7 @@ export const useResearchStore = defineStore('research', () => {
     return runPessimistic({
       request: () => researchApi.create(orgStore.activePeriod, dto),
       commit: commitResearchMutation,
-      successMessage: `Horas de investigación (${dto.monthlyHours} h en ${dto.code}) precargadas para CC ${dto.documentId}`,
+      successMessage: `Asignadas ${dto.monthlyHours} h (${dto.code}) al documento ${dto.documentId}`,
     });
   }
 
@@ -62,7 +62,7 @@ export const useResearchStore = defineStore('research', () => {
       request: () => researchApi.update({ id, ...patch }),
       commit: commitResearchMutation,
       rollback: (previous) => upsertById(researchAllocations.value, previous),
-      successMessage: `Asignación de investigación (${patch.code ?? item.code}) actualizada para ${patch.teacherName ?? item.teacherName}`,
+      successMessage: `Asignación de ${patch.teacherName ?? item.teacherName} (${patch.code ?? item.code}) actualizada`,
     });
   }
 
@@ -76,7 +76,7 @@ export const useResearchStore = defineStore('research', () => {
       request: () => researchApi.remove(id),
       commit: commitResearchMutation,
       rollback: (previous) => restoreAt(researchAllocations.value, index, previous),
-      successMessage: `Asignación de investigación (${item.code}) retirada de ${item.teacherName}`,
+      successMessage: `Asignación de ${item.teacherName} (${item.code}) eliminada`,
       successType: 'info',
     });
   }

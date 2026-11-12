@@ -1,3 +1,4 @@
+import '../config/env.config.js';
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import type { AuthUser, PayrollRole } from '@usta/domain';
 import { isOneOf, PAYROLL_ROLES } from '../validation/domain-enums.js';
@@ -5,18 +6,35 @@ import { isOneOf, PAYROLL_ROLES } from '../validation/domain-enums.js';
 const SCRYPT_KEYLEN = 64;
 const DEFAULT_TOKEN_TTL_SECONDS = 12 * 60 * 60; // 12 hours
 const JWT_ISSUER = 'usta-tunja-prenomina-api';
+const DEV_FALLBACK_SECRET = 'usta-tunja-prenomina-dev-only-secret-key';
 
 const JWT_HEADER_B64 = Buffer.from(
   JSON.stringify({ alg: 'HS256', typ: 'JWT' }),
   'utf8',
 ).toString('base64url');
 
-const TOKEN_SECRET =
-  process.env.AUTH_TOKEN_SECRET?.trim() ||
-  process.env.AUTH_JWT_SECRET?.trim() ||
-  (process.env.NODE_ENV === 'production'
-    ? randomBytes(32).toString('hex')
-    : 'usta-tunja-prenomina-dev-only-secret-key');
+function resolveTokenSecret(): string {
+  const configured =
+    process.env.AUTH_TOKEN_SECRET?.trim() || process.env.AUTH_JWT_SECRET?.trim() || '';
+  if (configured) return configured;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      '[USTA-API-TS] Configuración crítica faltante: AUTH_TOKEN_SECRET es obligatorio en producción.',
+    );
+  }
+  return DEV_FALLBACK_SECRET;
+}
+
+export function assertProductionAuthSecret(): void {
+  if (process.env.NODE_ENV !== 'production') return;
+  const configured =
+    process.env.AUTH_TOKEN_SECRET?.trim() || process.env.AUTH_JWT_SECRET?.trim() || '';
+  if (!configured || configured === DEV_FALLBACK_SECRET || configured.length < 32) {
+    throw new Error(
+      '[USTA-API-TS] Configuración insegura: AUTH_TOKEN_SECRET debe tener al menos 32 caracteres aleatorios en producción.',
+    );
+  }
+}
 
 export interface AuthTokenClaims {
   iss: string;
@@ -80,7 +98,7 @@ export function signAuthToken(
   };
   const payloadB64 = Buffer.from(JSON.stringify(claims), 'utf8').toString('base64url');
   const signingInput = `${JWT_HEADER_B64}.${payloadB64}`;
-  const sigB64 = createHmac('sha256', TOKEN_SECRET)
+  const sigB64 = createHmac('sha256', resolveTokenSecret())
     .update(signingInput)
     .digest('base64url');
   return `${signingInput}.${sigB64}`;
@@ -91,6 +109,7 @@ function validateParsedClaims(raw: unknown): AuthTokenClaims | null {
   const obj = raw as Record<string, unknown>;
   const nowSec = Math.floor(Date.now() / 1000);
 
+  if (obj.iss !== JWT_ISSUER) return null;
   if (typeof obj.sub !== 'string' || !obj.sub) return null;
   if (typeof obj.username !== 'string' || !obj.username) return null;
   if (typeof obj.fullName !== 'string' || !obj.fullName) return null;
@@ -100,7 +119,7 @@ function validateParsedClaims(raw: unknown): AuthTokenClaims | null {
   if (typeof obj.exp !== 'number' || obj.exp < nowSec) return null;
 
   return {
-    iss: typeof obj.iss === 'string' ? obj.iss : JWT_ISSUER,
+    iss: JWT_ISSUER,
     sub: obj.sub,
     username: obj.username,
     fullName: obj.fullName,
@@ -115,46 +134,28 @@ function validateParsedClaims(raw: unknown): AuthTokenClaims | null {
 
 export function verifyAuthToken(token: string): AuthTokenClaims | null {
   const parts = token.split('.');
+  if (parts.length !== 3) return null;
   try {
-    if (parts.length === 3) {
-      const [headerB64, payloadB64, sigB64] = parts;
-      if (!headerB64 || !payloadB64 || !sigB64) return null;
+    const [headerB64, payloadB64, sigB64] = parts;
+    if (!headerB64 || !payloadB64 || !sigB64) return null;
 
-      const headerJson = JSON.parse(
-        Buffer.from(headerB64, 'base64url').toString('utf8'),
-      ) as Record<string, unknown>;
-      if (headerJson.alg !== 'HS256') return null;
+    const headerJson = JSON.parse(
+      Buffer.from(headerB64, 'base64url').toString('utf8'),
+    ) as Record<string, unknown>;
+    if (headerJson.alg !== 'HS256') return null;
 
-      const signingInput = `${headerB64}.${payloadB64}`;
-      const expectedSig = createHmac('sha256', TOKEN_SECRET)
-        .update(signingInput)
-        .digest();
-      const actualSig = Buffer.from(sigB64, 'base64url');
-      if (expectedSig.length !== actualSig.length) return null;
-      if (!timingSafeEqual(expectedSig, actualSig)) return null;
+    const signingInput = `${headerB64}.${payloadB64}`;
+    const expectedSig = createHmac('sha256', resolveTokenSecret())
+      .update(signingInput)
+      .digest();
+    const actualSig = Buffer.from(sigB64, 'base64url');
+    if (expectedSig.length !== actualSig.length) return null;
+    if (!timingSafeEqual(expectedSig, actualSig)) return null;
 
-      const rawClaims: unknown = JSON.parse(
-        Buffer.from(payloadB64, 'base64url').toString('utf8'),
-      );
-      return validateParsedClaims(rawClaims);
-    }
-
-    if (parts.length === 2) {
-      // Backward compatibility for existing 2-part tokens in active sessions
-      const [payloadB64, sigB64] = parts;
-      if (!payloadB64 || !sigB64) return null;
-      const expectedSig = createHmac('sha256', TOKEN_SECRET).update(payloadB64).digest();
-      const actualSig = Buffer.from(sigB64, 'base64url');
-      if (expectedSig.length !== actualSig.length) return null;
-      if (!timingSafeEqual(expectedSig, actualSig)) return null;
-
-      const rawClaims: unknown = JSON.parse(
-        Buffer.from(payloadB64, 'base64url').toString('utf8'),
-      );
-      return validateParsedClaims(rawClaims);
-    }
-
-    return null;
+    const rawClaims: unknown = JSON.parse(
+      Buffer.from(payloadB64, 'base64url').toString('utf8'),
+    );
+    return validateParsedClaims(rawClaims);
   } catch {
     return null;
   }

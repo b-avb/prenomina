@@ -7,6 +7,7 @@ import type { ProgramQuotaAnnex5 } from '@usta/domain';
 const props = defineProps<{
   open: boolean;
   defaultUnitId?: string;
+  editingProgram?: ProgramQuotaAnnex5 | null;
 }>();
 
 const emit = defineEmits<{
@@ -30,35 +31,85 @@ const form = ref({
 });
 
 watch(
-  () => [props.open, props.defaultUnitId] as const,
-  ([isOpen, unitId]) => {
-    if (isOpen) {
-      form.value.unitId = unitId || store.units[0]?.id || '';
+  () => [props.open, props.defaultUnitId, props.editingProgram] as const,
+  ([isOpen, unitId, editing]) => {
+    if (!isOpen) return;
+    if (editing) {
+      form.value = {
+        unitId: editing.unitId,
+        programName: editing.programName,
+        level: editing.level,
+        modality: editing.modality,
+        accreditationStatus: editing.accreditationStatus,
+        curriculumNotes: editing.curriculumNotes ?? '',
+        quality30411: editing.quality30411,
+        curriculum40106: editing.curriculum40106,
+        sea40109: editing.sea40109,
+        saberPro40127: editing.saberPro40127,
+        isActive: editing.isActive,
+      };
+      return;
     }
+    form.value = {
+      unitId: unitId || store.units[0]?.id || '',
+      programName: '',
+      level: 'Pregrado',
+      modality: 'Presencial',
+      accreditationStatus: 'Registro Calificado Vigente',
+      curriculumNotes: '',
+      quality30411: 16,
+      curriculum40106: 16,
+      sea40109: 8,
+      saberPro40127: 12,
+      isActive: true,
+    };
   },
   { immediate: true },
 );
 
 async function handleSave() {
   if (!form.value.programName.trim()) {
-    store.showToast('Debes ingresar el nombre del programa académico o cohorte', 'error');
+    store.showToast('Indique el nombre del programa académico.', 'error');
     return;
   }
   const unit = store.units.find((u) => u.id === form.value.unitId);
   if (unit && form.value.level !== 'Pregrado' && !unit.hasPostgraduates) {
     await store.updateUnit(unit.id, { hasPostgraduates: true });
   }
+
+  if (props.editingProgram) {
+    const result = await store.updateProgram(props.editingProgram.id, {
+      programName: form.value.programName.trim().toUpperCase(),
+      level: form.value.level,
+      modality: form.value.modality,
+      accreditationStatus: form.value.accreditationStatus.trim() || 'Registro Calificado Vigente',
+      curriculumNotes: form.value.curriculumNotes.trim() || undefined,
+      quality30411: Number(form.value.quality30411) || 0,
+      curriculum40106: Number(form.value.curriculum40106) || 0,
+      sea40109: Number(form.value.sea40109) || 0,
+      saberPro40127: Number(form.value.saberPro40127) || 0,
+      isActive: form.value.isActive,
+    });
+    if (result.ok) {
+      store.showToast(
+        `Programa "${form.value.programName.trim().toUpperCase()}" actualizado.`,
+      );
+      emit('close');
+    }
+    return;
+  }
+
   const result = await store.createProgram({
     unitId: form.value.unitId,
     programName: form.value.programName.trim().toUpperCase(),
     level: form.value.level,
     modality: form.value.modality,
-    accreditationStatus: form.value.accreditationStatus,
-    curriculumNotes: form.value.curriculumNotes || undefined,
-    quality30411: form.value.quality30411,
-    curriculum40106: form.value.curriculum40106,
-    sea40109: form.value.sea40109,
-    saberPro40127: form.value.saberPro40127,
+    accreditationStatus: form.value.accreditationStatus.trim() || 'Registro Calificado Vigente',
+    curriculumNotes: form.value.curriculumNotes.trim() || undefined,
+    quality30411: Number(form.value.quality30411) || 0,
+    curriculum40106: Number(form.value.curriculum40106) || 0,
+    sea40109: Number(form.value.sea40109) || 0,
+    saberPro40127: Number(form.value.saberPro40127) || 0,
     isActive: form.value.isActive,
   });
   if (result.ok) {
@@ -72,32 +123,36 @@ async function handleSave() {
 <template>
   <UstaModal
     :open="open"
-    title="Crear Nuevo Programa Académico (Pregrado o Posgrado)"
-    subtitle="Agrega un nuevo programa a cualquier facultad y sincroniza automáticamente su bolsa de horas en el ANEXO 5."
+    :title="
+      editingProgram
+        ? `Editar programa — ${editingProgram.programName}`
+        : 'Nuevo programa académico'
+    "
+    subtitle="Defina modalidad, estado de acreditación y topes de horas del Anexo 5."
     @close="emit('close')"
   >
     <div class="grid cols-2">
       <div class="field">
-        <label>Facultad / Unidad Académica</label>
-        <select v-model="form.unitId">
+        <label>Unidad académica</label>
+        <select v-model="form.unitId" :disabled="Boolean(editingProgram)">
           <option v-for="unit in store.units" :key="unit.id" :value="unit.id">
             {{ unit.name }}
           </option>
         </select>
       </div>
       <div class="field">
-        <label>Nombre del Programa Académico</label>
+        <label>Nombre del programa</label>
         <input
           v-model="form.programName"
           type="text"
-          placeholder="Ej: MAESTRÍA EN INTELIGENCIA ARTIFICIAL"
+          placeholder="Ej.: MAESTRÍA EN INTELIGENCIA ARTIFICIAL"
         />
       </div>
     </div>
 
     <div class="grid cols-3" style="gap: 10px">
       <div class="field">
-        <label>Nivel Académico</label>
+        <label>Nivel académico</label>
         <select v-model="form.level">
           <option value="Pregrado">Pregrado</option>
           <option value="Posgrado">Posgrado (Esp. / Maestría / Doc.)</option>
@@ -112,7 +167,7 @@ async function handleSave() {
         </select>
       </div>
       <div class="field">
-        <label>Estado Acreditación / R.C.</label>
+        <label>Estado de acreditación o registro calificado</label>
         <input v-model="form.accreditationStatus" type="text" />
       </div>
     </div>
@@ -138,26 +193,26 @@ async function handleSave() {
 
     <div class="grid cols-2" style="align-items: center">
       <div class="field">
-        <label>Observación Curricular / Condición de Apertura</label>
+        <label>Observación curricular</label>
         <input
           v-model="form.curriculumNotes"
           type="text"
-          placeholder="Ej: Cohorte activa 2026-2…"
+          placeholder="Ej.: Cohorte activa 2026-2"
         />
       </div>
       <label class="toggle" style="margin-top: 14px">
         <input v-model="form.isActive" type="checkbox" />
         <span class="toggle__track"></span>
         <span style="font-size: 12px; font-weight: 700">
-          Cohorte Activa (Suma al tope de la facultad)
+          Cohorte activa (suma a la bolsa de la unidad)
         </span>
       </label>
     </div>
 
     <template #actions>
-      <button class="btn ghost" @click="emit('close')">Cancelar</button>
-      <button class="btn primary" @click="handleSave">
-        Crear Programa y Sincronizar Bolsa
+      <button type="button" class="btn ghost" @click="emit('close')">Cancelar</button>
+      <button type="button" class="btn primary" @click="handleSave">
+        {{ editingProgram ? 'Guardar cambios' : 'Crear programa' }}
       </button>
     </template>
   </UstaModal>

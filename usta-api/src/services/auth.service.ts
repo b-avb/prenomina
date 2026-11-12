@@ -15,6 +15,7 @@ import {
   type ResetUserPasswordDto,
   type ResetUserPasswordResponse,
 } from '@usta/domain';
+import { normalizeComparableName } from '../auth/actor-resolver.js';
 import { verifyMicrosoftEntraToken } from '../auth/entra-token-verifier.js';
 import { hashPassword, signAuthToken, verifyPassword } from '../auth/password-crypto.js';
 import { resolveAuthEnvConfig } from '../config/env.config.js';
@@ -324,7 +325,28 @@ export class AuthService {
     private readonly ids: IdGenerator,
   ) {}
 
-  private toAuthUser(record: UserRecord, unitNameById: ReadonlyMap<string, string>): AuthUser {
+  private toAuthUser(
+    record: UserRecord,
+    unitsContext: {
+      unitNameById: ReadonlyMap<string, string>;
+      units: readonly AcademicUnitRecord[];
+    },
+  ): AuthUser {
+    let managedUnitIds: string[] | undefined;
+    if (record.role === 'dean') {
+      const normalizedUser = normalizeComparableName(record.fullName);
+      const set = new Set<string>();
+      if (record.unitId) set.add(record.unitId);
+      if (normalizedUser) {
+        for (const u of unitsContext.units) {
+          if (normalizeComparableName(u.deanName) === normalizedUser) {
+            set.add(u.id);
+          }
+        }
+      }
+      managedUnitIds = Array.from(set);
+    }
+
     return {
       id: record.id,
       username: record.username,
@@ -334,7 +356,8 @@ export class AuthService {
       fullName: record.fullName,
       role: record.role,
       unitId: record.unitId,
-      unitName: record.unitId ? (unitNameById.get(record.unitId) ?? null) : null,
+      unitName: record.unitId ? (unitsContext.unitNameById.get(record.unitId) ?? null) : null,
+      ...(managedUnitIds ? { managedUnitIds } : {}),
       mustChangePassword: record.mustChangePassword,
       isActive: record.isActive,
       passwordChangedAt: record.passwordChangedAt,
@@ -343,9 +366,15 @@ export class AuthService {
     };
   }
 
-  private async buildUnitNameMap(db: DbExecutor): Promise<Map<string, string>> {
+  private async buildUnitsContext(db: DbExecutor): Promise<{
+    unitNameById: Map<string, string>;
+    units: AcademicUnitRecord[];
+  }> {
     const units = await this.repos.units.listAll(db);
-    return new Map(units.map((u) => [u.id, u.name]));
+    return {
+      unitNameById: new Map(units.map((u) => [u.id, u.name])),
+      units,
+    };
   }
 
   public getAuthConfig(): AuthConfigResponse {
@@ -371,6 +400,11 @@ export class AuthService {
     };
   }
 
+  /**
+   * Idempotent and non-destructive bootstrap check executed on server start:
+   * inserts missing official accounts without overwriting admin edits to usernames,
+   * emails, roles, active status, or unit Deans.
+   */
   public async ensureDefaultUsersSeeded(): Promise<number> {
     return this.tx.run(async (trx) => {
       const units = await this.repos.units.listAll(trx);
@@ -381,7 +415,6 @@ export class AuthService {
         return seedUsers.length;
       }
 
-      // Eliminar cuentas derivadas heredadas de semillas anteriores si nunca iniciaron sesión
       for (const legacyId of ['user-research', 'user-dean-lic-infantil']) {
         const legacyUser = await this.repos.users.findById(trx, legacyId, { forUpdate: true });
         if (
@@ -393,74 +426,44 @@ export class AuthService {
         }
       }
 
-      // Sincronizar cuentas oficiales y nombres de Decanos en unidades académicas existentes
       const nowIso = new Date().toISOString();
       const unitById = new Map(units.map((u) => [u.id, u]));
-      const licInfantil = unitById.get('lic-infantil');
-      if (licInfantil && licInfantil.deanName === 'Yolanda Patricia Fonseca Arias') {
-        await this.repos.units.update(trx, {
-          ...licInfantil,
-          deanName: 'Gladys Leonor Arias Rodríguez',
-        });
-      }
-
-      let syncedCount = 0;
+      let insertedCount = 0;
 
       for (const official of OFFICIAL_INSTITUTIONAL_ACCOUNTS) {
-        if (official.unitId) {
-          const unit = unitById.get(official.unitId);
-          if (unit && unit.deanName !== official.fullName) {
-            await this.repos.units.update(trx, {
-              ...unit,
-              deanName: official.fullName,
-            });
-          }
+        if (official.unitId && !unitById.has(official.unitId)) {
+          continue;
         }
+        const existingById = await this.repos.users.findById(trx, official.id);
+        if (existingById) continue;
+        const existingByUsername = await this.repos.users.findByUsername(
+          trx,
+          official.username,
+        );
+        if (existingByUsername) continue;
 
-        const existingById = await this.repos.users.findById(trx, official.id, {
-          forUpdate: true,
-        });
-        if (existingById) {
-          const hasNotChangedPassword = existingById.passwordChangedAt === null;
-          await this.repos.users.update(trx, {
-            ...existingById,
+        await this.repos.users.insertMany(trx, [
+          {
+            id: official.id,
             username: official.username,
             email: official.email,
+            entraOid: null,
+            authProvider: 'hybrid',
+            passwordHash: official.passwordHash,
             fullName: official.fullName,
             role: official.role,
             unitId: official.unitId,
+            mustChangePassword: true,
             isActive: true,
-            passwordHash: hasNotChangedPassword
-              ? official.passwordHash
-              : existingById.passwordHash,
-            mustChangePassword: hasNotChangedPassword ? true : existingById.mustChangePassword,
+            passwordChangedAt: null,
+            lastLoginAt: null,
             updatedAt: nowIso,
-          });
-          syncedCount++;
-        } else {
-          await this.repos.users.insertMany(trx, [
-            {
-              id: official.id,
-              username: official.username,
-              email: official.email,
-              entraOid: null,
-              authProvider: 'hybrid',
-              passwordHash: official.passwordHash,
-              fullName: official.fullName,
-              role: official.role,
-              unitId: official.unitId,
-              mustChangePassword: true,
-              isActive: true,
-              passwordChangedAt: null,
-              lastLoginAt: null,
-              updatedAt: nowIso,
-            },
-          ]);
-          syncedCount++;
-        }
+          },
+        ]);
+        insertedCount++;
       }
 
-      return syncedCount;
+      return insertedCount;
     });
   }
 
@@ -468,7 +471,7 @@ export class AuthService {
     const authConfig = this.getAuthConfig();
     if (!authConfig.allowLocalLogin) {
       throw new UnauthorizedError(
-        `El inicio de sesión con contraseña local está deshabilitado. Ingresa con tu cuenta institucional de Microsoft (@${authConfig.microsoftEntra.institutionalDomain}).`,
+        `El acceso con contraseña local está deshabilitado. Ingrese con su cuenta institucional de Microsoft (@${authConfig.microsoftEntra.institutionalDomain}).`,
       );
     }
 
@@ -476,7 +479,7 @@ export class AuthService {
     const rawIdentifier = dto.username.trim().toLowerCase();
     const username = sanitizeUsernameInput(rawIdentifier);
     if (!username || !dto.password) {
-      throw new BadRequestError('Debes ingresar tu nombre de usuario y contraseña.');
+      throw new BadRequestError('Ingrese su usuario institucional y su contraseña.');
     }
 
     let userRecord = await this.repos.users.findByUsername(db, username);
@@ -485,14 +488,14 @@ export class AuthService {
     }
     if (!userRecord || !userRecord.isActive) {
       throw new UnauthorizedError(
-        'Usuario o contraseña incorrectos. Verifica tu usuario o correo institucional e intenta nuevamente.',
+        'Usuario o contraseña incorrectos. Verifique su usuario o correo institucional e intente nuevamente.',
       );
     }
 
     const valid = verifyPassword(dto.password, userRecord.passwordHash);
     if (!valid) {
       throw new UnauthorizedError(
-        'Usuario o contraseña incorrectos. Verifica tus credenciales e intenta nuevamente.',
+        'Usuario o contraseña incorrectos. Verifique sus credenciales e intente nuevamente.',
       );
     }
 
@@ -504,8 +507,8 @@ export class AuthService {
     };
     await this.repos.users.update(db, updatedRecord);
 
-    const unitNameMap = await this.buildUnitNameMap(db);
-    const user = this.toAuthUser(updatedRecord, unitNameMap);
+    const unitsCtx = await this.buildUnitsContext(db);
+    const user = this.toAuthUser(updatedRecord, unitsCtx);
     const token = signAuthToken(user);
     return { token, user };
   }
@@ -514,7 +517,7 @@ export class AuthService {
     const rawToken = (dto.idToken || dto.accessToken || '').trim();
     if (!rawToken) {
       throw new BadRequestError(
-        'Se requiere el token de identidad (idToken o accessToken) emitido por Microsoft Entra ID.',
+        'No se recibieron las credenciales de autenticación de Microsoft. Intente iniciar sesión de nuevo.',
       );
     }
 
@@ -538,7 +541,7 @@ export class AuthService {
 
       if (!existing || !existing.isActive) {
         throw new UnauthorizedError(
-          `Tu cuenta institucional (${verified.email}) fue autenticada por Microsoft Entra ID, pero el usuario '@${verified.username}' aún no tiene un rol asignado o activo en Prenómina. Solicita la habilitación a la Dirección de Enseñanza y Aprendizaje.`,
+          `La cuenta institucional ${verified.email} fue autenticada por Microsoft, pero aún no tiene un perfil habilitado en Prenómina. Solicite la activación a la Dirección de Enseñanza y Aprendizaje.`,
         );
       }
 
@@ -548,18 +551,19 @@ export class AuthService {
         ...existing,
         email: verified.email,
         entraOid: verified.entraOid,
-        authProvider: existing.authProvider === 'local' ? 'hybrid' : (existing.authProvider ?? 'hybrid'),
+        authProvider:
+          existing.authProvider === 'local' ? 'hybrid' : (existing.authProvider ?? 'hybrid'),
         mustChangePassword: false,
         lastLoginAt: nowIso,
         updatedAt: nowIso,
       };
       await this.repos.users.update(trx, updated);
 
-      const unitNameMap = await this.buildUnitNameMap(trx);
+      const unitsCtx = await this.buildUnitsContext(trx);
       if (firstTimeEntraLink) {
         const periodCode = await this.periodContext.resolvePeriod(trx);
         const unitName = updated.unitId
-          ? (unitNameMap.get(updated.unitId) ?? 'Institucional')
+          ? (unitsCtx.unitNameById.get(updated.unitId) ?? 'Institucional')
           : 'Dirección Institucional';
         await this.audit.record(
           trx,
@@ -574,15 +578,15 @@ export class AuthService {
             periodCode,
             unitId: updated.unitId,
             unitName,
-            action: 'Vinculación de Cuenta Institucional Microsoft Entra ID (AD SSO)',
-            previousValue: existing.entraOid ?? 'Cuenta local sin OID vinculado',
-            newValue: `${verified.email} (OID: ${verified.entraOid})`,
-            reason: 'Autenticación institucional mediante Directorio Activo USTA',
+            action: 'Vinculación de cuenta institucional Microsoft',
+            previousValue: existing.entraOid ? 'Cuenta vinculada previamente' : 'Acceso local',
+            newValue: verified.email,
+            reason: 'Ingreso con correo institucional de la Universidad Santo Tomás',
           },
         );
       }
 
-      const user = this.toAuthUser(updated, unitNameMap);
+      const user = this.toAuthUser(updated, unitsCtx);
       const token = signAuthToken(user);
       return { token, user };
     });
@@ -592,10 +596,10 @@ export class AuthService {
     const db = this.tx.executor;
     const userRecord = await this.repos.users.findById(db, userId);
     if (!userRecord || !userRecord.isActive) {
-      throw new UnauthorizedError('El usuario de la sesión ya no se encuentra activo.');
+      throw new UnauthorizedError('La cuenta asociada a esta sesión ya no se encuentra activa.');
     }
-    const unitNameMap = await this.buildUnitNameMap(db);
-    return this.toAuthUser(userRecord, unitNameMap);
+    const unitsCtx = await this.buildUnitsContext(db);
+    return this.toAuthUser(userRecord, unitsCtx);
   }
 
   public async changePassword(
@@ -606,7 +610,7 @@ export class AuthService {
     const newPassword = dto.newPassword ?? '';
 
     if (newPassword.length < 8) {
-      throw new BadRequestError('La nueva contraseña debe tener mínimo 8 caracteres.');
+      throw new BadRequestError('La nueva contraseña debe tener al menos 8 caracteres.');
     }
     if (!/[a-zA-Z]/.test(newPassword) || !/\d/.test(newPassword)) {
       throw new BadRequestError(
@@ -615,19 +619,19 @@ export class AuthService {
     }
     if (newPassword === currentPassword) {
       throw new BadRequestError(
-        'La nueva contraseña debe ser diferente a la contraseña temporal o actual.',
+        'La nueva contraseña debe ser diferente a la contraseña actual.',
       );
     }
 
     return this.tx.run(async (trx) => {
       const existing = await this.repos.users.findById(trx, userId, { forUpdate: true });
       if (!existing || !existing.isActive) {
-        throw new UnauthorizedError('Cuenta de usuario no encontrada o inactiva.');
+        throw new UnauthorizedError('La cuenta de usuario no existe o se encuentra inactiva.');
       }
 
       if (!verifyPassword(currentPassword, existing.passwordHash)) {
         throw new UnauthorizedError(
-          'La contraseña temporal o actual ingresada no es correcta.',
+          'La contraseña actual ingresada no es correcta.',
         );
       }
 
@@ -642,9 +646,9 @@ export class AuthService {
       await this.repos.users.update(trx, updated);
 
       const periodCode = await this.periodContext.resolvePeriod(trx);
-      const unitNameMap = await this.buildUnitNameMap(trx);
+      const unitsCtx = await this.buildUnitsContext(trx);
       const unitName = updated.unitId
-        ? (unitNameMap.get(updated.unitId) ?? ' Institucional')
+        ? (unitsCtx.unitNameById.get(updated.unitId) ?? 'Institucional')
         : 'Dirección Institucional';
 
       await this.audit.record(
@@ -660,16 +664,20 @@ export class AuthService {
           periodCode,
           unitId: updated.unitId,
           unitName,
-          action: 'Activación de Contraseña Personal (Cambio de Clave Temporal)',
+          action: existing.mustChangePassword
+            ? 'Activación de Contraseña Personal'
+            : 'Actualización de Contraseña Personal',
           previousValue: existing.mustChangePassword
             ? 'Contraseña temporal inicial'
-            : 'Contraseña anterior',
-          newValue: `Contraseña actualizada por @${updated.username}`,
-          reason: 'Cambio obligatorio de contraseña al iniciar sesión',
+            : 'Contraseña personal anterior',
+          newValue: `Cuenta activada (${updated.username})`,
+          reason: existing.mustChangePassword
+            ? 'Activación de cuenta en el primer ingreso'
+            : 'Actualización voluntaria de contraseña',
         },
       );
 
-      const user = this.toAuthUser(updated, unitNameMap);
+      const user = this.toAuthUser(updated, unitsCtx);
       const token = signAuthToken(user);
       return { token, user };
     });
@@ -677,11 +685,11 @@ export class AuthService {
 
   public async listUsers(): Promise<AuthUser[]> {
     const db = this.tx.executor;
-    const [records, unitNameMap] = await Promise.all([
+    const [records, unitsCtx] = await Promise.all([
       this.repos.users.listAll(db),
-      this.buildUnitNameMap(db),
+      this.buildUnitsContext(db),
     ]);
-    return records.map((r) => this.toAuthUser(r, unitNameMap));
+    return records.map((r) => this.toAuthUser(r, unitsCtx));
   }
 
   public async createUser(
@@ -691,7 +699,7 @@ export class AuthService {
     const username = sanitizeUsernameInput(dto.username);
     if (!USERNAME_PATTERN.test(username)) {
       throw new BadRequestError(
-        'El nombre de usuario debe tener entre 3 y 60 caracteres (solo letras minúsculas, números, punto o guion, sin @dominio).',
+        'El usuario debe tener entre 3 y 60 caracteres (letras minúsculas, números, punto o guion, sin incluir el dominio).',
       );
     }
     const temporaryPassword = dto.temporaryPassword?.trim() || generateSecureTemporaryPassword();
@@ -706,13 +714,13 @@ export class AuthService {
         forUpdate: true,
       });
       if (existing) {
-        throw new ConflictError(`El nombre de usuario '${username}' ya está registrado.`);
+        throw new ConflictError(`El usuario '${username}' ya se encuentra registrado.`);
       }
 
       if (dto.unitId) {
         const unit = await this.repos.units.findById(trx, dto.unitId);
         if (!unit) {
-          throw new NotFoundError(`La unidad académica '${dto.unitId}' no existe.`);
+          throw new NotFoundError('La unidad académica seleccionada no existe.');
         }
       }
 
@@ -736,22 +744,30 @@ export class AuthService {
       await this.repos.users.insertMany(trx, [record]);
 
       const periodCode = await this.periodContext.resolvePeriod(trx);
-      const unitNameMap = await this.buildUnitNameMap(trx);
+      const unitsCtx = await this.buildUnitsContext(trx);
       const unitName = record.unitId
-        ? (unitNameMap.get(record.unitId) ?? 'Institucional')
+        ? (unitsCtx.unitNameById.get(record.unitId) ?? 'Institucional')
         : 'Dirección Institucional';
+      const roleLabel =
+        record.role === 'director'
+          ? 'Dirección de Enseñanza y Aprendizaje'
+          : record.role === 'vice_rector'
+            ? 'Vicerrectoría Académica'
+            : record.role === 'research'
+              ? 'Dirección de Investigación'
+              : 'Decanatura o Dirección de Unidad';
 
       await this.audit.record(trx, actor, {
         periodCode,
         unitId: record.unitId,
         unitName,
-        action: 'Creación de Usuario con Contraseña Temporal',
-        newValue: `@${record.username} (${record.fullName} · rol: ${record.role})`,
-        reason: 'Asignación de credenciales temporales con cambio obligatorio en primer ingreso',
+        action: 'Creación de cuenta institucional',
+        newValue: `${record.fullName} (${record.username} · ${roleLabel})`,
+        reason: 'Asignación de credenciales temporales para primer ingreso',
       });
 
       return {
-        user: this.toAuthUser(record, unitNameMap),
+        user: this.toAuthUser(record, unitsCtx),
         temporaryPassword,
       };
     });
@@ -771,7 +787,7 @@ export class AuthService {
     return this.tx.run(async (trx) => {
       const existing = await this.repos.users.findById(trx, dto.id, { forUpdate: true });
       if (!existing) {
-        throw new NotFoundError(`El usuario '${dto.id}' no existe.`);
+        throw new NotFoundError('La cuenta de usuario seleccionada no existe.');
       }
 
       const nowIso = new Date().toISOString();
@@ -785,9 +801,9 @@ export class AuthService {
       await this.repos.users.update(trx, updated);
 
       const periodCode = await this.periodContext.resolvePeriod(trx);
-      const unitNameMap = await this.buildUnitNameMap(trx);
+      const unitsCtx = await this.buildUnitsContext(trx);
       const unitName = updated.unitId
-        ? (unitNameMap.get(updated.unitId) ?? 'Institucional')
+        ? (unitsCtx.unitNameById.get(updated.unitId) ?? 'Institucional')
         : 'Dirección Institucional';
 
       await this.audit.record(trx, actor, {
@@ -795,34 +811,63 @@ export class AuthService {
         unitId: updated.unitId,
         unitName,
         action: 'Restablecimiento de Contraseña Temporal',
-        previousValue: `@${updated.username}`,
-        newValue: 'Contraseña temporal activa (cambio obligatorio en próximo inicio de sesión)',
-        reason: `Restablecimiento ejecutado por ${actor.name}`,
+        previousValue: updated.username,
+        newValue: 'Contraseña temporal activa para el próximo ingreso',
+        reason: `Restablecimiento autorizado por ${actor.name}`,
       });
 
       return {
-        user: this.toAuthUser(updated, unitNameMap),
+        user: this.toAuthUser(updated, unitsCtx),
         temporaryPassword,
       };
     });
   }
 
+  public async deactivateExclusiveDeanForDeletedUnit(
+    trx: DbExecutor,
+    unitId: string,
+  ): Promise<void> {
+    const deanRecord = await this.repos.users.findByUnitId(trx, unitId, { forUpdate: true });
+    if (!deanRecord) return;
+    const allUnits = await this.repos.units.listAll(trx);
+    const normalizedDean = normalizeComparableName(deanRecord.fullName);
+    const otherManagedUnit = allUnits.find(
+      (u) => u.id !== unitId && normalizeComparableName(u.deanName) === normalizedDean,
+    );
+    const nowIso = new Date().toISOString();
+    if (otherManagedUnit) {
+      await this.repos.users.update(trx, {
+        ...deanRecord,
+        unitId: otherManagedUnit.id,
+        updatedAt: nowIso,
+      });
+    } else {
+      await this.repos.users.update(trx, {
+        ...deanRecord,
+        unitId: null,
+        isActive: false,
+        updatedAt: nowIso,
+      });
+    }
+  }
+
   /**
    * Synchronizes or provisions the Dean user account inside an ongoing unit/dean transaction.
+   * Returns `temporaryPassword` ONLY when a new account was provisioned or its password was reset.
    */
   public async syncUnitDeanUserInTransaction(
     trx: DbExecutor,
     unit: { id: string; name: string; deanName: string },
     options?: { username?: string; temporaryPassword?: string },
-  ): Promise<AuthUser> {
+  ): Promise<{ user: AuthUser; temporaryPassword?: string }> {
     const existingForUnit = await this.repos.users.findByUnitId(trx, unit.id, {
       forUpdate: true,
     });
     const desiredBase =
       (options?.username ? sanitizeUsernameInput(options.username) : '') ||
       AcademicOrganizationDomain.deriveUsernameFromFullName(unit.deanName);
-    const temporaryPassword =
-      options?.temporaryPassword?.trim() || generateSecureTemporaryPassword();
+    const explicitPassword = options?.temporaryPassword?.trim();
+    const generatedPassword = explicitPassword || generateSecureTemporaryPassword();
     const nowIso = new Date().toISOString();
 
     const resolveUniqueUsername = async (
@@ -840,24 +885,26 @@ export class AuthService {
 
     if (existingForUnit) {
       const deanChanged =
-        existingForUnit.fullName.trim().toLowerCase() !==
-        unit.deanName.trim().toLowerCase();
+        normalizeComparableName(existingForUnit.fullName) !==
+        normalizeComparableName(unit.deanName);
       const shouldUpdateUsername = Boolean(options?.username?.trim()) || deanChanged;
       const nextUsername = shouldUpdateUsername
         ? await resolveUniqueUsername(desiredBase, existingForUnit.id)
         : existingForUnit.username;
-      const shouldResetPassword =
-        Boolean(options?.temporaryPassword?.trim()) || deanChanged;
+      const shouldResetPassword = Boolean(explicitPassword) || deanChanged;
 
       const updated: UserRecord = {
         ...existingForUnit,
         username: nextUsername,
-        email: buildInstitutionalEmail(nextUsername),
+        email: shouldUpdateUsername
+          ? buildInstitutionalEmail(nextUsername)
+          : (existingForUnit.email ?? buildInstitutionalEmail(nextUsername)),
         entraOid: deanChanged ? null : existingForUnit.entraOid,
         authProvider: existingForUnit.authProvider ?? 'hybrid',
         fullName: unit.deanName.trim(),
+        isActive: true,
         passwordHash: shouldResetPassword
-          ? hashPassword(temporaryPassword)
+          ? hashPassword(generatedPassword)
           : existingForUnit.passwordHash,
         mustChangePassword: shouldResetPassword
           ? true
@@ -866,32 +913,53 @@ export class AuthService {
         updatedAt: nowIso,
       };
       await this.repos.users.update(trx, updated);
+      const unitsCtx = await this.buildUnitsContext(trx);
       return {
-        id: updated.id,
-        username: updated.username,
-        email: updated.email ?? buildInstitutionalEmail(updated.username),
-        entraOid: updated.entraOid ?? null,
-        authProvider: updated.authProvider ?? 'hybrid',
-        fullName: updated.fullName,
-        role: updated.role,
-        unitId: updated.unitId,
-        unitName: unit.name,
-        mustChangePassword: updated.mustChangePassword,
-        isActive: updated.isActive,
-        passwordChangedAt: updated.passwordChangedAt,
-        lastLoginAt: updated.lastLoginAt ?? null,
-        updatedAt: updated.updatedAt,
+        user: this.toAuthUser(updated, unitsCtx),
+        ...(shouldResetPassword ? { temporaryPassword: generatedPassword } : {}),
       };
     }
 
+    // Multi-unit Dean support: if an active Dean already matches fullName and no custom username was requested, reuse their account!
+    if (!options?.username?.trim()) {
+      const allUsers = await this.repos.users.listAll(trx);
+      const normalizedTarget = normalizeComparableName(unit.deanName);
+      const matchingMultiUnitDean = allUsers.find(
+        (u) =>
+          u.role === 'dean' &&
+          u.isActive &&
+          normalizeComparableName(u.fullName) === normalizedTarget,
+      );
+      if (matchingMultiUnitDean) {
+        let finalRecord = matchingMultiUnitDean;
+        if (explicitPassword) {
+          finalRecord = {
+            ...matchingMultiUnitDean,
+            passwordHash: hashPassword(generatedPassword),
+            mustChangePassword: true,
+            passwordChangedAt: null,
+            updatedAt: nowIso,
+          };
+          await this.repos.users.update(trx, finalRecord);
+        }
+        const unitsCtx = await this.buildUnitsContext(trx);
+        return {
+          user: this.toAuthUser(finalRecord, unitsCtx),
+          ...(explicitPassword ? { temporaryPassword: generatedPassword } : {}),
+        };
+      }
+    }
+
     const uniqueUsername = await resolveUniqueUsername(desiredBase);
+    const candidateId = `user-dean-${unit.id}`;
+    const existingWithId = await this.repos.users.findById(trx, candidateId);
     const created: UserRecord = {
-      id: `user-dean-${unit.id}`,
+      id: existingWithId ? `user-dean-${this.ids.next()}` : candidateId,
       username: uniqueUsername,
       email: buildInstitutionalEmail(uniqueUsername),
       entraOid: null,
       authProvider: 'hybrid',
-      passwordHash: hashPassword(temporaryPassword),
+      passwordHash: hashPassword(generatedPassword),
       fullName: unit.deanName.trim(),
       role: 'dean',
       unitId: unit.id,
@@ -902,21 +970,10 @@ export class AuthService {
       updatedAt: nowIso,
     };
     await this.repos.users.insertMany(trx, [created]);
+    const unitsCtx = await this.buildUnitsContext(trx);
     return {
-      id: created.id,
-      username: created.username,
-      email: created.email ?? buildInstitutionalEmail(created.username),
-      entraOid: created.entraOid ?? null,
-      authProvider: created.authProvider ?? 'hybrid',
-      fullName: created.fullName,
-      role: created.role,
-      unitId: created.unitId,
-      unitName: unit.name,
-      mustChangePassword: created.mustChangePassword,
-      isActive: created.isActive,
-      passwordChangedAt: created.passwordChangedAt,
-      lastLoginAt: created.lastLoginAt ?? null,
-      updatedAt: created.updatedAt,
+      user: this.toAuthUser(created, unitsCtx),
+      temporaryPassword: generatedPassword,
     };
   }
 }

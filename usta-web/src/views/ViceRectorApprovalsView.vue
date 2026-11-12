@@ -13,6 +13,7 @@ const statusFilter = ref<string>('TODOS');
 const searchQuery = ref<string>('');
 const selectedRequest = ref<ApprovalRequestAnnex3 | null>(null);
 const observationText = ref<string>('');
+const isDeciding = ref(false);
 
 const canDecideApprovals = computed(
   () => store.activeRole === 'vice_rector' || store.activeRole === 'director',
@@ -20,7 +21,11 @@ const canDecideApprovals = computed(
 
 const filteredRequests = computed(() => {
   return store.approvalRequests.filter((req) => {
-    if (store.activeRole === 'dean' && req.unitId !== store.activeUnitId) {
+    if (
+      store.activeRole === 'dean' &&
+      store.managedUnitIds.length > 0 &&
+      !store.managedUnitIds.includes(req.unitId)
+    ) {
       return false;
     }
     const matchesStatus =
@@ -41,15 +46,28 @@ function openDecisionModal(req: ApprovalRequestAnnex3): void {
   observationText.value = req.viceRectorNote ?? '';
 }
 
-function submitDecision(status: 'Avalado' | 'Con Observaciones' | 'Rechazado'): void {
+async function submitDecision(
+  status: 'Avalado' | 'Con Observaciones' | 'Rechazado',
+): Promise<void> {
   if (!selectedRequest.value) return;
-  store.decideApprovalRequest(selectedRequest.value.id, status, observationText.value);
-  selectedRequest.value = null;
+  isDeciding.value = true;
+  try {
+    const res = await store.decideApprovalRequest(
+      selectedRequest.value.id,
+      status,
+      observationText.value.trim() || undefined,
+    );
+    if (res.ok) {
+      selectedRequest.value = null;
+    }
+  } finally {
+    isDeciding.value = false;
+  }
 }
 
 function navigateToTeacherPayroll(req: ApprovalRequestAnnex3): void {
   store.selectUnit(req.unitId);
-  router.push({
+  void router.push({
     path: '/dean/payroll',
     query: { teacherId: req.teacherId, documentId: req.teacherDocumentId },
   });
@@ -61,10 +79,10 @@ function navigateToTeacherPayroll(req: ApprovalRequestAnnex3): void {
     <div class="page-top">
       <div>
         <div class="eyebrow-tag" style="margin-bottom: 3px">
-          VICERRECTORÍA ACADÉMICA & DIRECCIÓN E&A · PRE-AVAL DIGITAL SIN DESCARGAR FORMATOS (RF-25, RF-26)
+          VICERRECTORÍA ACADÉMICA · {{ store.activePeriod }}
         </div>
         <h1 class="screen-title" style="margin: 0; font-size: 22px">
-          Bandeja de Pre-Aval de Códigos Especiales (ANEXO 3)
+          Solicitudes de aval (Anexo 3)
         </h1>
       </div>
     </div>
@@ -75,40 +93,53 @@ function navigateToTeacherPayroll(req: ApprovalRequestAnnex3): void {
       >
         <div style="display: flex; gap: 6px; flex-wrap: wrap">
           <button
-            v-for="st in ['TODOS', 'Pendiente', 'Avalado', 'Con Observaciones', 'Rechazado']"
-            :key="st"
+            v-for="st in [
+              { id: 'TODOS', label: 'Todas' },
+              { id: 'Pendiente', label: 'Pendientes' },
+              { id: 'Avalado', label: 'Avaladas' },
+              { id: 'Con Observaciones', label: 'Con observaciones' },
+              { id: 'Rechazado', label: 'Rechazadas' },
+            ]"
+            :key="st.id"
+            type="button"
             class="dia-chip"
             style="height: 28px; font-size: 11.5px"
-            :class="{ active: statusFilter === st }"
-            @click="statusFilter = st"
+            :class="{ active: statusFilter === st.id }"
+            @click="statusFilter = st.id"
           >
-            {{ st }}
+            {{ st.label }}
           </button>
         </div>
 
         <input
           v-model="searchQuery"
           type="text"
-          placeholder="Buscar por docente, código (10212, 20223…) o facultad…"
-          style="padding: 6px 11px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 12px; min-width: 260px"
+          class="control-sm"
+          placeholder="Buscar por docente, código o unidad…"
+          style="min-width: 260px"
         />
       </div>
 
       <table class="compact-table">
         <thead>
           <tr>
-            <th>Facultad y Programa</th>
-            <th>Docente Asignado</th>
-            <th>Código Especial (ANEXO 3)</th>
-            <th>Horas/Mes</th>
-            <th>Relación de Proyectos / Curso / Soporte</th>
-            <th>Estado Pre-Aval</th>
-            <th style="text-align: right">Decisión en Línea</th>
+            <th>Unidad y programa</th>
+            <th>Docente</th>
+            <th>Código SAC</th>
+            <th>Horas/mes</th>
+            <th>Detalle y soporte</th>
+            <th>Estado</th>
+            <th style="text-align: right">Acciones</th>
           </tr>
         </thead>
         <tbody>
+          <tr v-if="filteredRequests.length === 0">
+            <td colspan="7" class="empty-note" style="padding: 28px 16px; text-align: center">
+              No hay solicitudes de aval para los criterios seleccionados.
+            </td>
+          </tr>
           <tr v-for="req in filteredRequests" :key="req.id">
-            <td data-label="Facultad">
+            <td data-label="Unidad">
               <b style="color: var(--navy)">{{ req.unitName }}</b>
               <div style="font-size: 11px; color: var(--ink-soft)">{{ req.programName }}</div>
               <div
@@ -128,18 +159,18 @@ function navigateToTeacherPayroll(req: ApprovalRequestAnnex3): void {
                 CC {{ req.teacherDocumentId }}
               </div>
             </td>
-            <td data-label="Código Especial">
+            <td data-label="Código SAC">
               <span class="code-chip">{{ req.code }}</span>
               <div style="font-size: 11.5px; font-weight: 600; margin-top: 3px">
                 {{ req.codeName.replace('TUNJA ', '') }}
               </div>
             </td>
-            <td data-label="Horas/Mes">
+            <td data-label="Horas/mes">
               <b style="font-family: var(--font-mono); font-size: 14px; color: var(--navy)">
                 {{ req.requestedHours }} h
               </b>
             </td>
-            <td data-label="Soporte ANEXO 3">
+            <td data-label="Detalle y soporte">
               <div
                 v-for="(det, i) in req.projectDetails"
                 :key="i"
@@ -151,8 +182,18 @@ function navigateToTeacherPayroll(req: ApprovalRequestAnnex3): void {
                   <b>{{ det.committeeApprovalMinute }}</b>
                 </span>
               </div>
-              <div style="font-family: var(--font-mono); font-size: 10.5px; color: var(--blue)">
-                📎 {{ req.attachmentUrl }}
+              <div v-if="req.attachmentUrl" style="margin-top: 4px">
+                <button
+                  type="button"
+                  class="btn ghost small"
+                  style="padding: 2px 8px; font-size: 11px; color: var(--cerulean)"
+                  @click="store.openApprovalAttachment(req.attachmentUrl)"
+                >
+                  Ver soporte
+                </button>
+              </div>
+              <div v-else style="font-size: 10.5px; color: var(--ink-faint)">
+                Sin soporte adjunto
               </div>
               <div
                 v-if="req.viceRectorNote"
@@ -181,34 +222,37 @@ function navigateToTeacherPayroll(req: ApprovalRequestAnnex3): void {
                 {{ req.decidedBy }}
               </div>
             </td>
-            <td data-label="Decisión" style="text-align: right; white-space: nowrap">
+            <td data-label="Acciones" style="text-align: right; white-space: nowrap">
               <div style="display: flex; gap: 5px; justify-content: flex-end">
                 <button
+                  type="button"
                   class="btn ghost small"
-                  title="Imprimir / Exportar PDF Formato Oficial ANEXO 3 USTA Tunja"
+                  title="Imprimir o guardar formato Anexo 3 en PDF"
                   @click="printOfficialAnnex3Format(req, store.activePeriod)"
                 >
-                  🖨 Formato PDF
+                  Formato PDF
                 </button>
                 <button
                   v-if="canDecideApprovals"
+                  type="button"
                   class="btn primary small"
                   @click="
                     store.decideApprovalRequest(
                       req.id,
                       'Avalado',
-                      'Cumple con los soportes del ANEXO 3',
+                      'Avalado según soportes del Anexo 3',
                     )
                   "
                 >
-                  ✓ Avalar
+                  Avalar
                 </button>
                 <button
                   v-if="canDecideApprovals"
+                  type="button"
                   class="btn ghost small"
                   @click="openDecisionModal(req)"
                 >
-                  Observar / Rechazar
+                  Observar o rechazar
                 </button>
               </div>
             </td>
@@ -219,27 +263,39 @@ function navigateToTeacherPayroll(req: ApprovalRequestAnnex3): void {
 
     <UstaModal
       :open="Boolean(selectedRequest)"
-      :title="`Revisión de Solicitud ANEXO 3 — Código ${selectedRequest?.code ?? ''}`"
-      :subtitle="`Docente: <b>${selectedRequest?.teacherName ?? ''}</b> (${selectedRequest?.unitName ?? ''})`"
+      :title="`Revisar solicitud · Código ${selectedRequest?.code ?? ''}`"
+      :subtitle="`${selectedRequest?.teacherName ?? ''} · ${selectedRequest?.unitName ?? ''}`"
       @close="selectedRequest = null"
     >
       <div class="field">
-        <label>Observación de la Vicerrectoría Académica / Dirección E&A</label>
+        <label>Observaciones</label>
         <textarea
           v-model="observationText"
           rows="5"
           style="min-height: 150px"
-          placeholder="Indica el ajuste requerido en horas o en los soportes del comité curricular…"
+          placeholder="Indique los ajustes requeridos en horas o soportes…"
         ></textarea>
       </div>
 
       <template #footer>
-        <button class="btn ghost" @click="selectedRequest = null">Cancelar</button>
-        <button class="btn accent" @click="submitDecision('Con Observaciones')">
-          Devolver con Observaciones
+        <button type="button" class="btn ghost" @click="selectedRequest = null">
+          Cancelar
         </button>
-        <button class="btn danger" @click="submitDecision('Rechazado')">
-          Rechazar Solicitud
+        <button
+          type="button"
+          class="btn accent"
+          :disabled="isDeciding"
+          @click="submitDecision('Con Observaciones')"
+        >
+          Devolver con observaciones
+        </button>
+        <button
+          type="button"
+          class="btn danger"
+          :disabled="isDeciding"
+          @click="submitDecision('Rechazado')"
+        >
+          Rechazar solicitud
         </button>
       </template>
     </UstaModal>

@@ -37,7 +37,7 @@ const CREATE_STATEMENTS = [
     include_postgraduate_in_pse125 TINYINT(1) NOT NULL DEFAULT 0,
     enforce_annex6_cap_on_graduates TINYINT(1) NOT NULL DEFAULT 1,
     block_submission_with_blocking_alerts TINYINT(1) NOT NULL DEFAULT 1,
-    min_full_time_teaching_hours DECIMAL(8,2) NOT NULL DEFAULT 96,
+    min_full_time_teaching_hours DECIMAL(8,2) NOT NULL DEFAULT 64,
     max_recommended_academic_spaces INT UNSIGNED NOT NULL DEFAULT 4,
     updated_by VARCHAR(160) NULL,
     updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),

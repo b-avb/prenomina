@@ -6,6 +6,7 @@ import { eventNumber, eventValue } from '@/utils/dom-events';
 
 const props = defineProps<{
   teacher: FacultyTeacher;
+  readonly?: boolean;
 }>();
 
 const store = usePayrollStore();
@@ -25,6 +26,7 @@ const suggestedFacultySpaces = computed(() => {
 });
 
 async function handleAddAcademicSpace() {
+  if (props.readonly) return;
   let spaceName = newSpaceName.value.trim();
   const wasEmpty = !spaceName;
   if (!spaceName) {
@@ -37,7 +39,7 @@ async function handleAddAcademicSpace() {
     spaceName =
       suggested ?? `ESPACIO ACADÉMICO #${props.teacher.academicSpaces.length + 1}`;
   }
-  store.addAcademicSpace(
+  await store.addAcademicSpace(
     props.teacher.id,
     spaceName,
     newSpaceLevel.value,
@@ -71,31 +73,45 @@ async function handleAddAcademicSpace() {
     >
       <div>
         <h3>
-          1. Espacios Académicos (40104 / 40006)
+          Espacios académicos (40104 / 40006)
           <span
             class="code-chip"
             style="margin-left: 8px; vertical-align: middle; font-size: 10.5px"
           >
-            40104: {{ store.computeHours40104(teacher) }}h · PSE (25%):
-            {{ store.getEffectivePse(teacher) }}h
+            40104: {{ store.computeHours40104(teacher) }}h<template
+              v-if="store.computeHours40006(teacher) > 0"
+            >
+              · 40006 (Posg.): {{ store.computeHours40006(teacher) }}h</template
+            >
+            · PSE (25%): {{ store.getEffectivePse(teacher) }}h
           </span>
         </h3>
         <p>
           {{
             teacher.academicSpaces.length === 0
-              ? 'Sin asignaturas asignadas actualmente. Puedes registrar un espacio académico a la derecha:'
-              : 'Suma automática de horas de orientación de clase y 25 % de PSE (40108)'
+              ? readonly
+                ? 'Sin espacios académicos registrados.'
+                : 'Sin espacios académicos registrados. Agregue una asignatura de pregrado (40104) o módulo de posgrado (40006).'
+              : 'Cálculo automático de orientación presencial y 25 % de PSE (40108).'
           }}
         </p>
       </div>
 
-      <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap">
+      <div
+        v-if="!readonly"
+        style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap"
+      >
         <input
           v-model="newSpaceName"
           type="text"
           list="faculty-spaces-list"
-          placeholder="Nombre de la asignatura (o clic en + Agregar)…"
-          style="padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 12px; min-width: 240px"
+          class="control-sm"
+          :placeholder="
+            newSpaceLevel === 'Posgrado'
+              ? 'Nombre del seminario o módulo…'
+              : 'Nombre de la asignatura…'
+          "
+          style="min-width: 240px"
           @keyup.enter="handleAddAcademicSpace"
         />
         <datalist id="faculty-spaces-list">
@@ -105,12 +121,9 @@ async function handleAddAcademicSpace() {
             :value="spaceOption"
           />
         </datalist>
-        <select
-          v-model="newSpaceLevel"
-          style="padding: 6px 8px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 12px"
-        >
-          <option value="Pregrado">Pregrado</option>
-          <option value="Posgrado">Posgrado</option>
+        <select v-model="newSpaceLevel" class="control-sm">
+          <option value="Pregrado">Pregrado (40104)</option>
+          <option value="Posgrado">Posgrado (40006)</option>
         </select>
         <input
           v-model.number="newSpaceHours"
@@ -118,11 +131,28 @@ async function handleAddAcademicSpace() {
           min="2"
           max="128"
           step="2"
-          title="Horas mensuales (Pregrado) o del módulo (Posgrado)"
-          style="width: 68px; padding: 6px 8px; border: 1.5px solid var(--border); border-radius: 7px; font-family: var(--font-mono); font-weight: 700; font-size: 12px"
+          class="control-sm control-sm--num"
+          :title="
+            newSpaceLevel === 'Posgrado'
+              ? 'Horas totales del módulo de posgrado (se divide entre 4 para horas/mes en 40006)'
+              : 'Horas mensuales del espacio de pregrado (40104)'
+          "
+          style="width: 68px"
         />
-        <button class="btn primary small" @click="handleAddAcademicSpace">
-          + Agregar Espacio
+        <span
+          v-if="newSpaceLevel === 'Posgrado'"
+          style="font-size: 10.5px; font-weight: 700; color: var(--navy); white-space: nowrap"
+          title="Las horas del módulo de posgrado se dividen entre 4 semanas para calcular horas/mes en 40006"
+        >
+          h mód. (={{ Math.round(((Number(newSpaceHours) || 0) / 4) * 10) / 10 }}h/mes)
+        </span>
+        <button
+          type="button"
+          class="btn primary small"
+          style="height: 34px"
+          @click="handleAddAcademicSpace"
+        >
+          Agregar espacio
         </button>
       </div>
     </div>
@@ -130,11 +160,11 @@ async function handleAddAcademicSpace() {
     <table v-if="teacher.academicSpaces.length > 0" class="compact-table">
       <thead>
         <tr>
-          <th>Espacio Académico (Editable)</th>
+          <th>Espacio académico</th>
           <th>Nivel</th>
-          <th>Horas/Mes (40104 / 40006)</th>
-          <th>PSE Automático (25%)</th>
-          <th style="text-align: right">Acciones</th>
+          <th>Horas/mes</th>
+          <th>PSE (25 %)</th>
+          <th v-if="!readonly" style="text-align: right">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -144,8 +174,9 @@ async function handleAddAcademicSpace() {
               :value="space.name"
               type="text"
               list="faculty-spaces-list"
-              class="space-name-input"
-              style="width: 100%; padding: 5px 8px; border: 1.5px solid var(--border); border-radius: 6px; font-weight: 700; font-size: 12px; color: var(--navy)"
+              :disabled="readonly"
+              class="space-name-input table-input table-input--strong"
+              style="width: 100%"
               @change="
                 store.updateAcademicSpace(teacher.id, space.id, {
                   name: eventValue($event).trim().toUpperCase() || 'ESPACIO ACADÉMICO',
@@ -156,7 +187,8 @@ async function handleAddAcademicSpace() {
           <td data-label="Nivel">
             <select
               :value="space.level"
-              style="padding: 4px 8px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 11.5px; font-weight: 700; color: var(--navy); background: #fff"
+              :disabled="readonly"
+              class="table-select"
               @change="
                 store.updateAcademicSpace(teacher.id, space.id, {
                   level: eventValue($event) as AssignedAcademicSpace['level'],
@@ -167,14 +199,16 @@ async function handleAddAcademicSpace() {
               <option value="Posgrado">Posgrado</option>
             </select>
           </td>
-          <td data-label="Horas/Mes">
+          <td data-label="Horas/mes">
             <input
               :value="space.monthlyHours"
               type="number"
               min="0"
               max="64"
               step="2"
-              style="width: 68px; padding: 4px 7px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 12px"
+              :disabled="readonly"
+              class="table-input table-input--num"
+              style="width: 68px"
               @change="
                 store.updateAcademicSpace(teacher.id, space.id, {
                   monthlyHours: eventNumber($event),
@@ -195,14 +229,15 @@ async function handleAddAcademicSpace() {
                 : 'Posgrado (según regla)'
             }}
           </td>
-          <td style="text-align: right">
+          <td v-if="!readonly" style="text-align: right">
             <button
+              type="button"
               class="btn ghost small"
               style="padding: 2px 8px; color: var(--danger)"
               title="Quitar asignatura"
               @click="store.removeAcademicSpace(teacher.id, space.id)"
             >
-              × Quitar
+              Quitar
             </button>
           </td>
         </tr>

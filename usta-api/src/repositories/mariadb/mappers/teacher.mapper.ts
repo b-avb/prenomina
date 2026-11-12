@@ -31,6 +31,8 @@ export function toTeacherCodeAllocation(row: Selectable<TeacherCodeAllocationsTa
     code: row.code,
     hours: row.hours,
     ...definedProps({
+      programId: row.program_id,
+      programName: row.program_name,
       version1Hours: row.version1_hours,
       unitCount: row.unit_count,
       exceptionJustification: row.exception_justification,
@@ -115,10 +117,13 @@ export function toAllocationRows(teacher: FacultyTeacher): Insertable<TeacherCod
     teacher_id: teacher.id,
     code,
     hours: allocation.hours,
+    program_id: nullable(allocation.programId),
+    program_name: nullable(allocation.programName),
     version1_hours: nullable(allocation.version1Hours),
     unit_count: nullable(allocation.unitCount),
+    exceptionJustification: undefined,
     exception_justification: nullable(allocation.exceptionJustification),
     director_note: nullable(allocation.directorNote),
     adjusted_by_director: toNullableFlag(allocation.adjustedByDirector),
-  }));
+  })).map(({ exceptionJustification: _unused, ...rest }) => rest);
 }

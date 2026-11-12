@@ -1,4 +1,5 @@
 import type { ActorContext, AuditLogEntry, IdGenerator } from '@usta/domain';
+import { assertUnitAccess, getActorAllowedUnitIds } from '../auth/actor-resolver.js';
 import type { DbExecutor } from '../database/database.types.js';
 import type { TransactionRunner } from '../database/transaction-runner.js';
 import type { AuditEntryDraft, AuditLogRecord } from '../models/audit.models.js';
@@ -36,7 +37,11 @@ export class AuditService {
     period?: string;
     unitId?: string;
     limit?: number;
+    actor?: ActorContext;
   }): Promise<AuditLogEntry[]> {
+    if (options.actor && options.unitId) {
+      assertUnitAccess(options.actor, options.unitId);
+    }
     const db = this.tx.executor;
     let periodCode = options.period;
     if (!periodCode) {
@@ -45,9 +50,14 @@ export class AuditService {
     }
     const rawLimit = options.limit ?? DEFAULT_AUDIT_LIMIT;
     const limit = Math.max(1, Math.min(MAX_AUDIT_LIMIT, rawLimit));
+    const unitIds =
+      options.actor?.role === 'dean' && !options.unitId
+        ? getActorAllowedUnitIds(options.actor)
+        : undefined;
     return this.repos.auditLogs.list(db, {
       periodCode,
       unitId: options.unitId,
+      unitIds,
       limit,
     });
   }

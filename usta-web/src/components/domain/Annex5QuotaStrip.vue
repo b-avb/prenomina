@@ -18,7 +18,7 @@ const emit = defineEmits<{
       :key="bag.code"
       class="bolsa-pill"
       :class="[bag.status, { 'active-filter': activeCode === bag.code }]"
-      title="Haz clic para filtrar los docentes que tienen horas en esta bolsa"
+      title="Filtrar docentes con horas en este código"
       @click="emit('select', bag.code)"
     >
       <div class="bolsa-pill__row1">
@@ -32,17 +32,21 @@ const emit = defineEmits<{
             color:
               bag.status === 'ok'
                 ? 'var(--success)'
-                : bag.status === 'warn'
-                  ? 'var(--warning)'
-                  : 'var(--danger)',
+                : bag.status === 'pending'
+                  ? 'var(--ink-soft)'
+                  : bag.status === 'warn'
+                    ? 'var(--warning)'
+                    : 'var(--danger)',
           }"
         >
           {{
             bag.status === 'ok'
-              ? '✓ Cumple'
-              : bag.status === 'warn'
-                ? `Faltan ${bag.cap - bag.allocated}h`
-                : `Excede +${bag.allocated - bag.cap}h`
+              ? 'Cumple'
+              : bag.status === 'pending'
+                ? 'Sin asignar'
+                : bag.status === 'warn'
+                  ? `Faltan ${bag.cap - bag.allocated} h`
+                  : `Excede ${bag.allocated - bag.cap} h`
           }}
         </span>
       </div>

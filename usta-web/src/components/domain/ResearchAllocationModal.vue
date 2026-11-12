@@ -35,12 +35,16 @@ const form = ref({
 });
 
 const modalUnitTeachers = computed(() =>
-  store.teachers.filter((t) => t.unitId === form.value.unitId),
+  store.teachers.filter(
+    (t) => t.unitId === form.value.unitId && t.dedication !== 'CATEDRA',
+  ),
 );
 
 function resetFormForCreate() {
   const defaultUnitId = store.units[0]?.id ?? '';
-  const unitTeachers = store.teachers.filter((t) => t.unitId === defaultUnitId);
+  const unitTeachers = store.teachers.filter(
+    (t) => t.unitId === defaultUnitId && t.dedication !== 'CATEDRA',
+  );
   const firstTeacher = unitTeachers[0];
   form.value = {
     unitId: defaultUnitId,
@@ -92,6 +96,10 @@ watch(
       form.value.selectedTeacherId = first.id;
       form.value.documentId = first.documentId;
       form.value.teacherName = first.fullName;
+    } else {
+      form.value.selectedTeacherId = '';
+      form.value.documentId = '';
+      form.value.teacherName = '';
     }
   },
 );
@@ -127,6 +135,13 @@ function handleDocumentIdLookup(): void {
   if (!cc) return;
   const teacher = store.teachers.find((t) => t.documentId === cc);
   if (teacher) {
+    if (teacher.dedication === 'CATEDRA') {
+      store.showToast(
+        'No se permite asignar horas de investigación (Anexo 7) a docentes de cátedra.',
+        'error',
+      );
+      return;
+    }
     form.value.unitId = teacher.unitId;
     form.value.selectedTeacherId = teacher.id;
     form.value.teacherName = teacher.fullName;
@@ -135,7 +150,18 @@ function handleDocumentIdLookup(): void {
 
 function handleSubmit(): void {
   if (!form.value.documentId.trim() || !form.value.teacherName.trim()) {
-    store.showToast('Debes seleccionar un docente o ingresar su cédula y nombre', 'error');
+    store.showToast('Seleccione un docente o indique su cédula y nombre.', 'error');
+    return;
+  }
+  const matchedTeacher = store.teachers.find(
+    (t) =>
+      t.documentId === form.value.documentId.trim() && t.unitId === form.value.unitId,
+  );
+  if (matchedTeacher?.dedication === 'CATEDRA') {
+    store.showToast(
+      'No se permite asignar horas de investigación (Anexo 7) a docentes de cátedra.',
+      'error',
+    );
     return;
   }
   const unit = store.units.find((u) => u.id === form.value.unitId);
@@ -143,18 +169,19 @@ function handleSubmit(): void {
     'save',
     {
       unitId: form.value.unitId,
-      unitName: unit?.name ?? 'Ingeniería Industrial',
-      documentId: form.value.documentId,
-      teacherName: form.value.teacherName.toUpperCase(),
+      unitName: unit?.name ?? '',
+      documentId: form.value.documentId.trim(),
+      teacherName: form.value.teacherName.trim().toUpperCase(),
       code: form.value.code,
       activityName: form.value.activityName,
-      projectOrGroup: form.value.projectOrGroup || 'Proyecto Convocatoria FODEIN 2026',
+      projectOrGroup:
+        form.value.projectOrGroup.trim() || `Asignación ${form.value.code} (${store.activePeriod})`,
       role: form.value.role,
       sicddiLevel: form.value.sicddiLevel,
       weeklyHours: Math.round((form.value.monthlyHours / 4) * 10) / 10,
       monthlyHours: form.value.monthlyHours,
       isSicddiLocked: form.value.code === '10226',
-      notes: form.value.notes,
+      notes: form.value.notes.trim(),
     },
     props.editingItem?.id ?? null,
   );
@@ -166,24 +193,24 @@ function handleSubmit(): void {
     :open="open"
     :title="
       editingItem
-        ? 'Editar Asignación de Investigación (ANEXO 7)'
-        : 'Registrar Horas de Investigación por Cédula (RF-29)'
+        ? 'Editar asignación de investigación (Anexo 7)'
+        : 'Registrar horas de investigación (Anexo 7)'
     "
-    subtitle="Selecciona un docente de cualquier facultad o digita su cédula; al guardar, las horas se sincronizan automáticamente en su prenómina."
+    subtitle="Seleccione un docente de planta o busque su cédula. Las horas se aplicarán en su prenómina."
     @close="emit('close')"
   >
     <div class="grid cols-2">
       <div class="field">
-        <label>Facultad / Unidad Académica</label>
+        <label>Unidad académica</label>
         <select v-model="form.unitId">
           <option v-for="u in store.units" :key="u.id" :value="u.id">{{ u.name }}</option>
         </select>
       </div>
       <div class="field">
-        <label>Seleccionar Docente de la Facultad</label>
+        <label>Docente de planta</label>
         <select v-model="form.selectedTeacherId" @change="handleSelectExistingTeacher">
           <option v-for="t in modalUnitTeachers" :key="t.id" :value="t.id">
-            {{ t.fullName }} (CC {{ t.documentId }})
+            {{ t.fullName }} ({{ t.dedication }} · CC {{ t.documentId }})
           </option>
         </select>
       </div>
@@ -191,36 +218,36 @@ function handleSubmit(): void {
 
     <div class="grid cols-2">
       <div class="field">
-        <label>Cédula del Docente (Autocompleta Facultad y Nombre)</label>
+        <label>Cédula del docente</label>
         <input
           v-model="form.documentId"
           type="text"
-          placeholder="Digita la cédula del profesor…"
+          placeholder="Buscar por número de cédula…"
           @input="handleDocumentIdLookup"
         />
       </div>
       <div class="field">
-        <label>Nombre del Docente</label>
+        <label>Nombre del docente</label>
         <input v-model="form.teacherName" type="text" />
       </div>
     </div>
 
     <div class="grid cols-2">
       <div class="field">
-        <label>Código SAC de Investigación</label>
+        <label>Código SAC de investigación</label>
         <select v-model="form.code">
-          <option value="10336">10336 - Proyectos de Investigación</option>
-          <option value="10226">10226 - Investigador Escalafonado SICDDI</option>
-          <option value="10318">10318 - Líder Grupo de Investigación</option>
-          <option value="10384">10384 - Coordinador de Investigación Facultad</option>
-          <option value="10225">10225 - Centro CEDETS</option>
-          <option value="S/C-CITECDES">S/C-CITECDES - Centro CITECDES</option>
-          <option value="10340">10340 - Editor Revista Científica</option>
+          <option value="10336">10336 — Proyectos de investigación</option>
+          <option value="10226">10226 — Investigador escalafonado SICDDI</option>
+          <option value="10318">10318 — Líder de grupo de investigación</option>
+          <option value="10384">10384 — Coordinador de investigación</option>
+          <option value="10225">10225 — Centro CEDETS</option>
+          <option value="S/C-CITECDES">S/C-CITECDES — Centro CITECDES</option>
+          <option value="10340">10340 — Editor de revista científica</option>
         </select>
       </div>
 
       <div v-if="form.code === '10226'" class="field">
-        <label>Subnivel SICDDI (Acuerdo 3 - Horas Fijas)</label>
+        <label>Nivel SICDDI (Acuerdo 3 — horas fijas)</label>
         <select v-model="form.sicddiLevel">
           <option value="Nivel I (20h)">Nivel I — 20 h/mes fijas</option>
           <option value="Nivel II (80h)">Nivel II — 80 h/mes fijas</option>
@@ -228,24 +255,24 @@ function handleSubmit(): void {
         </select>
       </div>
       <div v-else class="field">
-        <label>Horas al Mes Aprobadas</label>
+        <label>Horas aprobadas al mes</label>
         <input v-model.number="form.monthlyHours" type="number" min="1" max="136" />
       </div>
     </div>
 
     <div class="field">
-      <label>Nombre del Proyecto / Grupo / Estrategia</label>
+      <label>Proyecto, grupo o estrategia</label>
       <input
         v-model="form.projectOrGroup"
         type="text"
-        placeholder="Ej: Código FODEIN 2026 - Optimización energética…"
+        placeholder="Código de convocatoria, proyecto o grupo…"
       />
     </div>
 
-    <template #footer>
-      <button class="btn ghost" @click="emit('close')">Cancelar</button>
-      <button class="btn primary" @click="handleSubmit">
-        Guardar y Precargar en Prenómina
+    <template #actions>
+      <button type="button" class="btn ghost" @click="emit('close')">Cancelar</button>
+      <button type="button" class="btn primary" @click="handleSubmit">
+        {{ editingItem ? 'Guardar cambios' : 'Guardar asignación' }}
       </button>
     </template>
   </UstaModal>

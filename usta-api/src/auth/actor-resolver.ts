@@ -1,6 +1,7 @@
 import type { IncomingMessage } from 'node:http';
 import type { ActorContext, PayrollRole } from '@usta/domain';
 import type { DbExecutor } from '../database/database.types.js';
+import type { AcademicUnitRepository } from '../repositories/academic-unit.repository.js';
 import type { UserRepository } from '../repositories/user.repository.js';
 import {
   ForbiddenError,
@@ -40,6 +41,16 @@ export interface ActorResolver {
   ): Promise<ActorContext>;
 }
 
+export function normalizeComparableName(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
 export function extractBearerToken(req: IncomingMessage): string | null {
   const raw = req.headers.authorization;
   const value = Array.isArray(raw) ? raw[0] : raw;
@@ -55,13 +66,13 @@ export function requireValidTokenClaims(
   const token = extractBearerToken(req);
   if (!token) {
     throw new UnauthorizedError(
-      'Autenticación requerida: debes iniciar sesión con tu cuenta institucional (JWT Bearer).',
+      'Inicie sesión con su cuenta institucional para continuar.',
     );
   }
   const claims = verifyAuthToken(token);
   if (!claims) {
     throw new UnauthorizedError(
-      'Tu sesión ha expirado o el token JWT no es válido. Por favor inicia sesión nuevamente.',
+      'Su sesión expiró o ya no es válida. Vuelva a iniciar sesión.',
     );
   }
   if (claims.mustChangePassword && !options.allowPendingPasswordChange) {
@@ -70,15 +81,23 @@ export function requireValidTokenClaims(
   return claims;
 }
 
+export function getActorAllowedUnitIds(actor: ActorContext): readonly string[] {
+  if (actor.managedUnitIds && actor.managedUnitIds.length > 0) {
+    return actor.managedUnitIds;
+  }
+  return actor.unitId ? [actor.unitId] : [];
+}
+
 /**
  * Enforces multi-tenant faculty isolation: a Dean (`role === 'dean'`) may only
- * mutate resources belonging to their assigned `actor.unitId`.
+ * access or mutate resources belonging to their assigned `managedUnitIds`.
  */
 export function assertUnitAccess(actor: ActorContext, targetUnitId: string): void {
   if (actor.role === 'dean') {
-    if (!actor.unitId || actor.unitId !== targetUnitId) {
+    const allowed = getActorAllowedUnitIds(actor);
+    if (!allowed.includes(targetUnitId)) {
       throw new ForbiddenError(
-        `Acceso denegado: como Decano(a) solo tienes autorización para gestionar tu propia unidad académica (${actor.unitId ?? 'sin unidad asignada'}).`,
+        'No tiene permisos para consultar ni modificar información de otra unidad académica.',
       );
     }
   }
@@ -92,6 +111,7 @@ export class JwtActorResolver implements ActorResolver {
   constructor(
     private readonly db: DbExecutor,
     private readonly usersRepo: UserRepository,
+    private readonly unitsRepo?: AcademicUnitRepository,
   ) {}
 
   public async resolve(
@@ -104,7 +124,7 @@ export class JwtActorResolver implements ActorResolver {
 
     if (!userRecord || !userRecord.isActive) {
       throw new UnauthorizedError(
-        'La cuenta de usuario asociada a la sesión no existe o se encuentra desactivada.',
+        'La cuenta asociada a esta sesión no existe o se encuentra inactiva.',
       );
     }
 
@@ -113,7 +133,7 @@ export class JwtActorResolver implements ActorResolver {
       (userRecord.mustChangePassword && !claims.mustChangePassword)
     ) {
       throw new UnauthorizedError(
-        'Tus credenciales fueron actualizadas o restablecidas recientemente. Inicia sesión nuevamente.',
+        'Sus credenciales se actualizaron recientemente. Inicie sesión de nuevo.',
       );
     }
 
@@ -128,8 +148,26 @@ export class JwtActorResolver implements ActorResolver {
       !allowedRoles.includes(authoritativeRole)
     ) {
       throw new ForbiddenError(
-        `El rol '${authoritativeRole}' no tiene permisos para ejecutar esta operación (permitidos: ${allowedRoles.join(', ')}).`,
+        'Su perfil no cuenta con permisos para realizar esta acción.',
       );
+    }
+
+    let managedUnitIds: string[] | undefined;
+    if (authoritativeRole === 'dean') {
+      const assigned = new Set<string>();
+      if (userRecord.unitId) assigned.add(userRecord.unitId);
+      if (this.unitsRepo) {
+        const allUnits = await this.unitsRepo.listAll(this.db);
+        const normUser = normalizeComparableName(userRecord.fullName);
+        if (normUser) {
+          for (const u of allUnits) {
+            if (normalizeComparableName(u.deanName) === normUser) {
+              assigned.add(u.id);
+            }
+          }
+        }
+      }
+      managedUnitIds = Array.from(assigned);
     }
 
     return {
@@ -138,6 +176,7 @@ export class JwtActorResolver implements ActorResolver {
       userId: userRecord.id,
       username: userRecord.username,
       unitId: userRecord.unitId,
+      ...(managedUnitIds ? { managedUnitIds } : {}),
     };
   }
 }

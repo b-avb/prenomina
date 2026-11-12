@@ -50,7 +50,7 @@ export class PeriodContextService {
     db: DbExecutor,
     periodCode: string,
   ): Promise<AcademicUnitSummary[]> {
-    const [unitRecords, cycles, teachers, approvals, sacCodes, rulesConfig] =
+    const [unitRecords, cycles, teachers, approvals, sacCodes, rulesConfig, programQuotas] =
       await Promise.all([
         this.repos.units.listAll(db),
         this.repos.units.listCycles(db, periodCode),
@@ -58,6 +58,7 @@ export class PeriodContextService {
         this.repos.approvals.listByPeriod(db, periodCode),
         this.repos.sacCodes.listAll(db),
         this.getRulesForPeriod(db, periodCode),
+        this.repos.programs.list(db),
       ]);
 
     const cycleByUnit = new Map<string, UnitPayrollCycle>(
@@ -80,6 +81,7 @@ export class PeriodContextService {
         sacCodes,
         approvalRequests: approvals,
         rulesConfig,
+        programQuotas,
       });
       const pendingAlerts = alerts.filter(
         (a) => a.severity === 'blocking' || a.severity === 'alert',

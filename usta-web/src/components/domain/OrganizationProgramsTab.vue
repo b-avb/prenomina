@@ -1,17 +1,34 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import type { ProgramQuotaAnnex5 } from '@usta/domain';
+import UstaModal from '@/components/ui/UstaModal.vue';
 import { usePayrollStore } from '@/stores/payroll.store';
-import { eventChecked, eventNumber, eventValue } from '@/utils/dom-events';
+import { eventChecked, eventNumber } from '@/utils/dom-events';
+
+const props = defineProps<{
+  initialUnitId?: string;
+}>();
 
 const emit = defineEmits<{
-  newProgram: [];
+  newProgram: [unitId?: string];
+  editProgram: [program: ProgramQuotaAnnex5];
 }>();
 
 const store = usePayrollStore();
 
-const programUnitFilter = ref('TODAS');
+const programUnitFilter = ref(props.initialUnitId || 'TODAS');
 const programLevelFilter = ref('TODOS');
 const programSearchQuery = ref('');
+const programPendingDelete = ref<ProgramQuotaAnnex5 | null>(null);
+
+watch(
+  () => props.initialUnitId,
+  (unitId) => {
+    if (unitId) {
+      programUnitFilter.value = unitId;
+    }
+  },
+);
 
 const filteredPrograms = computed(() => {
   const query = programSearchQuery.value.trim().toLowerCase();
@@ -30,6 +47,14 @@ const filteredPrograms = computed(() => {
     return matchesUnit && matchesLevel && matchesQuery;
   });
 });
+
+async function confirmRemoveProgram() {
+  if (!programPendingDelete.value) return;
+  const res = await store.removeProgram(programPendingDelete.value.id);
+  if (res.ok) {
+    programPendingDelete.value = null;
+  }
+}
 </script>
 
 <template>
@@ -39,42 +64,47 @@ const filteredPrograms = computed(() => {
     >
       <div>
         <div class="section-label" style="margin: 0">
-          Programas Académicos de Pregrado y Posgrado (Sincronización Automática ANEXO 5)
+          Programas académicos (Anexo 5)
         </div>
         <p style="font-size: 12px; color: var(--ink-soft); margin: 3px 0 0">
-          Crea nuevos programas de pregrado, especializaciones, maestrías o doctorados y activa o excluye su cohorte para actualizar las bolsas de cada facultad.
+          Seleccione un programa para editarlo o ajuste sus horas y estado de cohorte en la tabla.
         </p>
       </div>
 
       <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
-        <select
-          v-model="programUnitFilter"
-          style="padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 12px; font-weight: 700; color: var(--navy)"
-        >
-          <option value="TODAS">Todas las Facultades</option>
+        <select v-model="programUnitFilter" class="control-sm">
+          <option value="TODAS">Todas las unidades</option>
           <option v-for="unit in store.units" :key="unit.id" :value="unit.id">
             {{ unit.name }}
           </option>
         </select>
 
-        <select
-          v-model="programLevelFilter"
-          style="padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 12px; font-weight: 700; color: var(--navy)"
-        >
-          <option value="TODOS">Todos los Niveles</option>
-          <option value="Pregrado">Solo Pregrado</option>
-          <option value="Posgrado">Solo Posgrado</option>
+        <select v-model="programLevelFilter" class="control-sm">
+          <option value="TODOS">Todos los niveles</option>
+          <option value="Pregrado">Pregrado</option>
+          <option value="Posgrado">Posgrado</option>
         </select>
 
         <input
           v-model="programSearchQuery"
           type="search"
-          placeholder="Buscar programa o facultad…"
-          style="padding: 6px 12px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 12px; width: 220px"
+          class="control-sm"
+          placeholder="Buscar programa o unidad…"
+          style="width: 210px"
         />
 
-        <button class="btn primary small" @click="emit('newProgram')">
-          + Crear Nuevo Programa
+        <button
+          type="button"
+          class="btn primary small"
+          style="height: 34px"
+          @click="
+            emit(
+              'newProgram',
+              programUnitFilter !== 'TODAS' ? programUnitFilter : undefined,
+            )
+          "
+        >
+          Nuevo programa
         </button>
       </div>
     </div>
@@ -82,112 +112,162 @@ const filteredPrograms = computed(() => {
     <table class="compact-table">
       <thead>
         <tr>
-          <th>Facultad / Unidad</th>
-          <th>Nombre del Programa Académico</th>
-          <th>Nivel / Modalidad</th>
-          <th>Estado Acreditación / Observación</th>
-          <th>30411 Cal.</th>
-          <th>40106 Curr.</th>
-          <th>40109 SEA</th>
-          <th>40127 S.Pro</th>
-          <th>Cohorte Activa</th>
-          <th></th>
+          <th style="width: 13%">Unidad</th>
+          <th style="width: 24%">Programa académico</th>
+          <th class="col-center" style="width: 12%">Nivel y modalidad</th>
+          <th style="width: 16%">Acreditación y observaciones</th>
+          <th class="col-center">30411 Cal.</th>
+          <th class="col-center">40106 Curr.</th>
+          <th class="col-center">40109 SEA</th>
+          <th class="col-center">40127 S.Pro</th>
+          <th class="col-center">Cohorte</th>
+          <th class="col-right">Acciones</th>
         </tr>
       </thead>
       <tbody>
+        <tr v-if="filteredPrograms.length === 0">
+          <td colspan="10" class="empty-note" style="padding: 16px; text-align: center">
+            Sin programas registrados para este filtro.
+          </td>
+        </tr>
         <tr v-for="program in filteredPrograms" :key="program.id">
           <td>
-            <b style="color: var(--navy)">{{ program.unitName }}</b>
+            <b style="color: var(--navy); font-size: 12px; line-height: 1.3; display: block">
+              {{ program.unitName }}
+            </b>
           </td>
           <td>
-            <input
-              :value="program.programName"
-              type="text"
-              style="width: 100%; min-width: 220px; padding: 4px 7px; border: 1px solid var(--border); border-radius: 6px; font-size: 11.5px; font-weight: 700; color: var(--navy)"
-              @change="
-                store.updateProgram(program.id, {
-                  programName: eventValue($event).trim().toUpperCase(),
-                })
-              "
-            />
+            <b
+              style="color: var(--navy); font-size: 12px; line-height: 1.35; display: block; cursor: pointer"
+              title="Editar programa académico"
+              @click="emit('editProgram', program)"
+            >
+              {{ program.programName }}
+            </b>
           </td>
-          <td>
-            <span class="badge inscrito">{{ program.level }} · {{ program.modality }}</span>
+          <td class="col-center">
+            <span class="badge inscrito" style="white-space: nowrap">
+              {{ program.level }} · {{ program.modality }}
+            </span>
           </td>
-          <td style="font-size: 11px; color: var(--ink-soft)">
+          <td style="font-size: 11px; color: var(--ink-soft); line-height: 1.3">
             {{ program.accreditationStatus }}
-            <div v-if="program.curriculumNotes" style="color: var(--blue)">
+            <div
+              v-if="
+                program.curriculumNotes &&
+                program.curriculumNotes.trim() !== program.accreditationStatus.trim()
+              "
+              style="color: var(--blue); margin-top: 2px"
+            >
               {{ program.curriculumNotes }}
             </div>
           </td>
-          <td>
+          <td class="col-center">
             <input
               :value="program.quality30411"
               type="number"
               min="0"
               max="150"
               step="4"
-              style="width: 58px; padding: 3px 6px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700"
+              class="table-input table-input--num"
+              style="width: 48px"
               @change="store.updateProgram(program.id, { quality30411: eventNumber($event) })"
             />
           </td>
-          <td>
+          <td class="col-center">
             <input
               :value="program.curriculum40106"
               type="number"
               min="0"
               max="150"
               step="4"
-              style="width: 58px; padding: 3px 6px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700"
+              class="table-input table-input--num"
+              style="width: 48px"
               @change="store.updateProgram(program.id, { curriculum40106: eventNumber($event) })"
             />
           </td>
-          <td>
+          <td class="col-center">
             <input
               :value="program.sea40109"
               type="number"
               min="0"
               max="80"
               step="4"
-              style="width: 58px; padding: 3px 6px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700"
+              class="table-input table-input--num"
+              style="width: 48px"
               @change="store.updateProgram(program.id, { sea40109: eventNumber($event) })"
             />
           </td>
-          <td>
+          <td class="col-center">
             <input
               :value="program.saberPro40127"
               type="number"
               min="0"
               max="80"
               step="4"
-              style="width: 58px; padding: 3px 6px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700"
+              class="table-input table-input--num"
+              style="width: 48px"
               @change="store.updateProgram(program.id, { saberPro40127: eventNumber($event) })"
             />
           </td>
-          <td>
-            <label class="toggle">
+          <td class="col-center">
+            <label
+              class="toggle"
+              title="Define si la cohorte suma a la bolsa semestral de la unidad (Anexo 5)"
+            >
               <input
                 :checked="program.isActive"
                 type="checkbox"
                 @change="store.updateProgram(program.id, { isActive: eventChecked($event) })"
               />
               <span class="toggle__track"></span>
-              <span style="font-size: 11px; font-weight: 700">
-                {{ program.isActive ? 'Incluida en Tope' : 'Excluida' }}
+              <span style="font-size: 11px; font-weight: 700; white-space: nowrap">
+                {{ program.isActive ? 'Activa' : 'Excluida' }}
               </span>
             </label>
           </td>
-          <td>
-            <button
-              class="btn danger small"
-              title="Eliminar programa académico"
-              @click="store.removeProgram(program.id)"
-            >
-              ×
-            </button>
+          <td class="col-right" style="white-space: nowrap">
+            <div style="display: inline-flex; align-items: center; gap: 5px; justify-content: flex-end">
+              <button
+                type="button"
+                class="btn ghost small"
+                title="Editar programa académico"
+                @click="emit('editProgram', program)"
+              >
+                Editar
+              </button>
+              <button
+                type="button"
+                class="btn danger icon small"
+                style="font-size: 15px; line-height: 1"
+                title="Eliminar programa académico"
+                @click="programPendingDelete = program"
+              >
+                ×
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
+
+    <UstaModal
+      :open="!!programPendingDelete"
+      title="Eliminar programa académico"
+      subtitle="Se retirará del Anexo 5 y se recalcularán los topes de la unidad."
+      @close="programPendingDelete = null"
+    >
+      <p v-if="programPendingDelete" class="sub" style="margin: 0">
+        ¿Desea eliminar el programa <b>{{ programPendingDelete.programName }}</b> ({{ programPendingDelete.unitName }})?
+      </p>
+      <template #actions>
+        <button type="button" class="btn ghost" @click="programPendingDelete = null">
+          Cancelar
+        </button>
+        <button type="button" class="btn danger" @click="confirmRemoveProgram">
+          Eliminar programa
+        </button>
+      </template>
+    </UstaModal>
   </div>
 </template>

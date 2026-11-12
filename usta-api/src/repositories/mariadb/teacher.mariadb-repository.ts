@@ -1,4 +1,4 @@
-import { sql, type Selectable } from 'kysely';
+import type { Selectable } from 'kysely';
 import type { AssignedAcademicSpace, FacultyTeacher, TeacherCodeAllocation } from '@usta/domain';
 import type { DbExecutor, TeachersTable } from '../../database/database.types.js';
 import type { LockOptions, PeriodScoped } from '../../models/persistence.models.js';
@@ -69,10 +69,11 @@ export class MariaDbTeacherRepository implements TeacherRepository {
       .selectFrom('teachers')
       .selectAll()
       .where('period_code', '=', periodCode)
-      .where('document_id', '=', documentId)
-      .orderBy(sql`(unit_id = ${preferredUnitId})`, 'desc')
-      .orderBy('insertion_order')
-      .limit(1);
+      .where('document_id', '=', documentId);
+    if (preferredUnitId) {
+      query = query.where('unit_id', '=', preferredUnitId);
+    }
+    query = query.orderBy('insertion_order').limit(1);
     if (options.forUpdate) query = query.forUpdate();
     const row = await query.executeTakeFirst();
     if (!row) return undefined;

@@ -10,6 +10,7 @@ export interface CreateAcademicUnitPayload {
   division: string;
   unitType: 'Facultad' | 'Dirección Académica';
   deanName: string;
+  documentId?: string;
   username?: string;
   temporaryPassword?: string;
   hasPostgraduates: boolean;
@@ -57,15 +58,20 @@ const COMMON_SECOND_GIVEN_NAMES = new Set([
   'luis',
 ]);
 
+function normalizePersonName(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\b(fr|o\.?p|op|ing|dr|dra|mg|ph\.?d|phd|lic|esp|abg|arq)\.?\b/gi, ' ')
+    .replace(/[^a-zA-Z\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
 export class AcademicOrganizationDomain {
   public static deriveUsernameFromFullName(fullName: string): string {
-    const cleaned = fullName
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/\b(fr|o\.?p|op|ing|dr|dra|mg|ph\.?d|phd|lic|esp|abg|arq)\.?\b/gi, ' ')
-      .replace(/[^a-zA-Z\s]/g, ' ')
-      .trim()
-      .toLowerCase();
+    const cleaned = normalizePersonName(fullName);
     const tokens = cleaned.split(/\s+/).filter((t) => t.length >= 2);
     if (tokens.length === 0) return 'usuario.usta';
     if (tokens.length === 1) return tokens[0]!;
@@ -82,11 +88,20 @@ export class AcademicOrganizationDomain {
   public static recalculateUnitCapsFromPrograms(
     unit: AcademicUnitSummary,
     programQuotas: ProgramQuotaAnnex5[],
+    options?: { forceZeroWhenNoPrograms?: boolean },
   ): boolean {
-    const activePrograms = programQuotas.filter(
-      (p) => p.unitId === unit.id && p.isActive,
+    const unitPrograms = programQuotas.filter((p) => p.unitId === unit.id);
+    if (unitPrograms.length === 0 && !options?.forceZeroWhenNoPrograms) {
+      return false;
+    }
+    const activePrograms = unitPrograms.filter((p) => p.isActive);
+    unit.hasPostgraduates = activePrograms.some(
+      (p) =>
+        p.level === 'Posgrado' ||
+        /\b(posgrados?|especializaci[oó]n|especializaciones|maestr[ií]as?|doctorados?)\b/i.test(
+          p.programName,
+        ),
     );
-    if (activePrograms.length === 0) return false;
     unit.qualityCap30411 = activePrograms.reduce(
       (acc, p) => acc + (Number(p.quality30411) || 0),
       0,
@@ -105,7 +120,7 @@ export class AcademicOrganizationDomain {
 
   public static buildNewUnitAndDirector(
     payload: CreateAcademicUnitPayload,
-    currentUnitsCount: number,
+    _currentUnitsCount: number,
     ids: IdGenerator,
   ): { unit: AcademicUnitSummary; directorTeacher: FacultyTeacher } {
     const unit: AcademicUnitSummary = {
@@ -114,7 +129,7 @@ export class AcademicOrganizationDomain {
       division: payload.division.trim(),
       unitType: payload.unitType,
       hasPostgraduates: payload.hasPostgraduates,
-      deanName: payload.deanName.trim() || 'Decano(a) Titular',
+      deanName: payload.deanName.trim() || 'Decanatura Titular',
       payrollStatus: 'Borrador',
       currentVersion: 1,
       updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
@@ -133,8 +148,8 @@ export class AcademicOrganizationDomain {
       {
         unitId: unit.id,
         deanName: unit.deanName,
-        documentId: String(1053000001 + currentUnitsCount),
-        education: `Magíster en ${unit.name}`,
+        documentId: payload.documentId?.trim(),
+        education: '',
       },
       ids,
     );
@@ -150,21 +165,45 @@ export class AcademicOrganizationDomain {
     unit: AcademicUnitSummary,
     teachers: FacultyTeacher[],
     payload: UpdateUnitDeanPayload,
-    totalUnits: number,
+    _totalUnits: number,
     ids: IdGenerator,
   ): { previousDeanName: string; directorTeacher: FacultyTeacher; created: boolean } {
     const previousDeanName = unit.deanName;
+    const normalizedPrev = normalizePersonName(previousDeanName);
+    const normalizedNext = normalizePersonName(payload.deanName);
+    const cleanDoc = payload.documentId?.trim();
     unit.deanName = payload.deanName.trim();
 
-    const existing = teachers.find(
-      (t) => t.unitId === payload.unitId && t.dedication === 'DIRECTIVO',
-    );
+    const unitTeachers = teachers.filter((t) => t.unitId === payload.unitId);
+    const existing =
+      (cleanDoc ? unitTeachers.find((t) => t.documentId === cleanDoc) : undefined) ??
+      (normalizedPrev
+        ? unitTeachers.find((t) => normalizePersonName(t.fullName) === normalizedPrev)
+        : undefined) ??
+      (normalizedNext
+        ? unitTeachers.find((t) => normalizePersonName(t.fullName) === normalizedNext)
+        : undefined) ??
+      unitTeachers.find((t) => t.dedication === 'DIRECTIVO');
+
     if (existing) {
+      const wasDirectivo = existing.dedication === 'DIRECTIVO';
       existing.fullName = payload.deanName.trim().toUpperCase();
-      if (payload.documentId) existing.documentId = payload.documentId.trim();
-      if (payload.education) existing.education = payload.education.trim();
-      if (payload.rank) existing.rank = payload.rank.trim();
-      if (payload.expectedWorkload) existing.expectedWorkload = payload.expectedWorkload;
+      existing.dedication = 'DIRECTIVO';
+      if (cleanDoc) {
+        existing.documentId = cleanDoc;
+        existing.isProvisional = false;
+      }
+      if (payload.education !== undefined && payload.education.trim()) {
+        existing.education = payload.education.trim();
+      }
+      if (payload.rank !== undefined && payload.rank.trim()) {
+        existing.rank = payload.rank.trim();
+      }
+      if (payload.expectedWorkload) {
+        existing.expectedWorkload = payload.expectedWorkload;
+      } else if (!wasDirectivo) {
+        existing.expectedWorkload = 210;
+      }
       return { previousDeanName, directorTeacher: existing, created: false };
     }
 
@@ -172,7 +211,7 @@ export class AcademicOrganizationDomain {
       unit,
       {
         ...payload,
-        documentId: payload.documentId?.trim() || String(1053000000 + totalUnits),
+        documentId: cleanDoc,
       },
       ids,
     );
@@ -185,30 +224,24 @@ export class AcademicOrganizationDomain {
     payload: UpdateUnitDeanPayload,
     ids: IdGenerator,
   ): FacultyTeacher {
+    const id = ids.next();
     const workload = payload.expectedWorkload || 210;
+    const cleanDoc = payload.documentId?.trim() || '';
     return {
-      id: ids.next(),
+      id,
       unitId: unit.id,
-      documentId: payload.documentId ?? '',
+      documentId: cleanDoc || `VACANTE-${id.slice(0, 8).toUpperCase()}`,
       fullName: payload.deanName.trim().toUpperCase(),
       dedication: 'DIRECTIVO',
       expectedWorkload: workload,
       rank:
         payload.rank?.trim() ||
-        (unit.unitType === 'Facultad' ? 'Decano(a) de Facultad' : 'Director(a) de Unidad'),
-      education: payload.education?.trim() || `Magíster · ${unit.name}`,
-      isProvisional: false,
-      seniorityYears: 5,
-      version1Total: workload,
-      academicSpaces: [
-        {
-          id: ids.next(),
-          name: 'SEMINARIO DISCIPLINAR I',
-          level: 'Pregrado',
-          monthlyHours: 16,
-        },
-      ],
-      allocations: { '30222': { code: '30222', hours: 190, version1Hours: 190 } },
+        (unit.unitType === 'Facultad' ? 'Decanatura de Facultad' : 'Dirección de Unidad'),
+      education: payload.education?.trim() || '',
+      isProvisional: !cleanDoc,
+      seniorityYears: 0,
+      academicSpaces: [],
+      allocations: {},
     };
   }
 }

@@ -37,6 +37,11 @@ export class MariaDbSacCodeRepository implements SacCodeRepository {
       const { code: _key, ...changes } = row;
       await db.updateTable('sac_codes').set(changes).where('code', '=', targetKey).execute();
     }
+    await db
+      .updateTable('research_allocations')
+      .set({ activity_name: code.name })
+      .where('code', '=', code.code)
+      .execute();
     await db.deleteFrom('sac_faculty_rules').where('sac_code', '=', code.code).execute();
     await this.insertFacultyRules(db, [code]);
   }
@@ -53,6 +58,13 @@ export class MariaDbSacCodeRepository implements SacCodeRepository {
       .limit(1)
       .executeTakeFirst();
     if (allocation) return true;
+    const approval = await db
+      .selectFrom('approval_requests')
+      .select('code')
+      .where('code', '=', code)
+      .limit(1)
+      .executeTakeFirst();
+    if (approval) return true;
     const research = await db
       .selectFrom('research_allocations')
       .select('code')

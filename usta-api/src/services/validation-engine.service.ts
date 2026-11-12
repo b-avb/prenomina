@@ -35,13 +35,14 @@ export class ValidationEngineService {
   ): Promise<UnitValidationEvaluation> {
     const db = this.tx.executor;
     const periodCode = await this.periodContext.resolvePeriod(db, requestedPeriod);
-    const [units, teachers, sacCodes, approvalRequests, rulesConfig] =
+    const [units, teachers, sacCodes, approvalRequests, rulesConfig, programQuotas] =
       await Promise.all([
         this.periodContext.hydrateUnitsForPeriod(db, periodCode),
         this.repos.teachers.listByPeriod(db, periodCode),
         this.repos.sacCodes.listAll(db),
         this.repos.approvals.listByPeriod(db, periodCode),
         this.periodContext.getRulesForPeriod(db, periodCode),
+        this.repos.programs.list(db, { unitId }),
       ]);
 
     const unit = units.find((u) => u.id === unitId);
@@ -49,12 +50,18 @@ export class ValidationEngineService {
       throw new NotFoundError(`La unidad académica '${unitId}' no existe.`);
     }
 
-    const alerts = ValidationEngineDomain.getUnitAlerts(unitId, {
+    const ctx = {
       units,
       teachers,
       sacCodes,
       approvalRequests,
       rulesConfig,
+      programQuotas,
+    };
+
+    const alerts = ValidationEngineDomain.getUnitAlerts(unitId, ctx);
+    const submissionAlerts = ValidationEngineDomain.getUnitAlerts(unitId, ctx, {
+      enforceSubmissionReadiness: true,
     });
 
     const bagIndicators = WorkloadCalculatorDomain.computeUnitBagIndicators(
@@ -63,7 +70,13 @@ export class ValidationEngineService {
       rulesConfig,
     );
 
+    const unitTeachers = teachers.filter((t) => t.unitId === unitId);
+    const unitUnstarted =
+      unitTeachers.length > 0 && WorkloadCalculatorDomain.isUnitUnstarted(teachers, unitId);
     const blockingAlertsCount = alerts.filter((a) => a.severity === 'blocking').length;
+    const submissionBlockingCount = submissionAlerts.filter(
+      (a) => a.severity === 'blocking',
+    ).length;
     const justifiableAlertsCount = alerts.filter((a) => a.severity === 'alert').length;
     const infoAlertsCount = alerts.filter((a) => a.severity === 'info').length;
 
@@ -71,13 +84,15 @@ export class ValidationEngineService {
       unitId: unit.id,
       unitName: unit.name,
       period: periodCode,
-      totalTeachers: teachers.filter((t) => t.unitId === unitId).length,
+      totalTeachers: unitTeachers.length,
       blockingAlertsCount,
       justifiableAlertsCount,
       infoAlertsCount,
-      canSubmitPayroll: rulesConfig.blockSubmissionWithBlockingAlerts
-        ? blockingAlertsCount === 0
-        : true,
+      canSubmitPayroll:
+        !unitUnstarted &&
+        (rulesConfig.blockSubmissionWithBlockingAlerts
+          ? submissionBlockingCount === 0
+          : true),
       bagIndicators,
       alerts,
     };

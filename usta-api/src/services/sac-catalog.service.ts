@@ -22,7 +22,33 @@ import {
 import type { AuditService } from './audit.service.js';
 import type { PeriodContextService } from './period-context.service.js';
 
-const PROTECTED_SAC_CODES = new Set(['40104', '40108']);
+const PROTECTED_SAC_CODES = new Set([
+  '40104',
+  '40108',
+  '40006',
+  '10226',
+  '30411',
+  '40106',
+  '40109',
+  '40127',
+  '20502',
+]);
+
+function formatRuleSeverityLabel(severity: SacCode['severity']): string {
+  if (severity === 'blocking') return 'Bloqueante';
+  if (severity === 'justifiable_alert') return 'Alerta con justificación';
+  return 'Informativo';
+}
+
+function summarizeBusinessRules(rules: BusinessRulesConfig): string {
+  return [
+    `PSE posgrado: ${rules.includePostgraduateInPse125 ? 'Sí' : 'No'}`,
+    `Control Anexo 6: ${rules.enforceAnnex6CapOnGraduates ? 'Activo' : 'Inactivo'}`,
+    `Bloqueo al enviar: ${rules.blockSubmissionWithBlockingAlerts ? 'Activo' : 'Inactivo'}`,
+    `Mínimo docencia TC: ${rules.minFullTimeTeachingHours} h`,
+    `Máximo espacios sugeridos: ${rules.maxRecommendedAcademicSpaces}`,
+  ].join(' · ');
+}
 
 export class SacCatalogService {
   constructor(
@@ -41,7 +67,7 @@ export class SacCatalogService {
   public async getByCode(code: string): Promise<SacCode> {
     const item = await this.repos.sacCodes.findByCode(this.tx.executor, code);
     if (!item) {
-      throw new NotFoundError(`El código SAC '${code}' no existe en el catálogo ANEXO 4.`);
+      throw new NotFoundError(`El código SAC ${code} no figura en el catálogo del Anexo 4.`);
     }
     return item;
   }
@@ -56,7 +82,7 @@ export class SacCatalogService {
       const code = dto.code.trim().toUpperCase();
       const existing = await this.repos.sacCodes.findByCode(trx, code);
       if (existing) {
-        throw new ConflictError(`El código SAC '${code}' ya está registrado en el catálogo.`);
+        throw new ConflictError(`El código SAC ${code} ya está registrado en el catálogo.`);
       }
 
       const newCode: SacCode = {
@@ -72,9 +98,9 @@ export class SacCatalogService {
         periodCode,
         unitId: null,
         unitName: 'Catálogo Institucional SAC (ANEXO 4)',
-        action: `Creación de Código SAC ${newCode.code} (${newCode.name})`,
-        newValue: `${newCode.substantiveFunction} · Base: ${newCode.baseHours ?? 'S/L'}h · Tope: ${newCode.capHours ?? 'S/L'}h`,
-        reason: 'Alta de código en parametrización institucional',
+        action: `Creación de código SAC ${newCode.code} (${newCode.name})`,
+        newValue: `${newCode.substantiveFunction} · Base: ${newCode.baseHours !== null ? `${newCode.baseHours} h` : 'Sin mínimo'} · Tope: ${newCode.capHours !== null ? `${newCode.capHours} h` : 'Sin tope'}`,
+        reason: 'Registro en el catálogo institucional SAC',
       });
 
       const persisted = await this.repos.sacCodes.findByCode(trx, code);
@@ -92,7 +118,7 @@ export class SacCatalogService {
       const code = dto.code.trim();
       const existing = await this.repos.sacCodes.findByCode(trx, code);
       if (!existing) {
-        throw new NotFoundError(`El código SAC '${code}' no existe.`);
+        throw new NotFoundError(`El código SAC ${code} no figura en el catálogo.`);
       }
 
       const targetCode =
@@ -100,13 +126,13 @@ export class SacCatalogService {
       if (targetCode !== code) {
         if (PROTECTED_SAC_CODES.has(code)) {
           throw new BusinessRuleError(
-            `El código '${code}' es estructural para el cálculo de docencia directa y PSE y no puede renombrarse.`,
+            `El código ${code} forma parte de los cálculos base de prenómina y no puede cambiar de numeración.`,
           );
         }
         const collision = await this.repos.sacCodes.findByCode(trx, targetCode);
         if (collision) {
           throw new ConflictError(
-            `El código SAC '${targetCode}' ya está registrado en el catálogo.`,
+            `El código SAC ${targetCode} ya está registrado en el catálogo.`,
           );
         }
       }
@@ -134,11 +160,11 @@ export class SacCatalogService {
         unitName: 'Catálogo Institucional SAC (ANEXO 4)',
         action:
           targetCode !== code
-            ? `Renombramiento y Actualización de Código SAC ${code} → ${targetCode} (${updated.name})`
-            : `Actualización de Código SAC ${code} (${updated.name})`,
-        previousValue: `Código: ${existing.code} · Base: ${existing.baseHours ?? 'S/L'}h · Tope: ${existing.capHours ?? 'S/L'}h · Severidad: ${existing.severity}`,
-        newValue: `Código: ${updated.code} · Base: ${updated.baseHours ?? 'S/L'}h · Tope: ${updated.capHours ?? 'S/L'}h · Severidad: ${updated.severity}`,
-        reason: 'Edición de parámetros normativos del código SAC',
+            ? `Cambio de numeración de código SAC ${code} → ${targetCode} (${updated.name})`
+            : `Actualización de código SAC ${code} (${updated.name})`,
+        previousValue: `Código ${existing.code} · Base: ${existing.baseHours !== null ? `${existing.baseHours} h` : 'Sin mínimo'} · Tope: ${existing.capHours !== null ? `${existing.capHours} h` : 'Sin tope'} · Control: ${formatRuleSeverityLabel(existing.severity)}`,
+        newValue: `Código ${updated.code} · Base: ${updated.baseHours !== null ? `${updated.baseHours} h` : 'Sin mínimo'} · Tope: ${updated.capHours !== null ? `${updated.capHours} h` : 'Sin tope'} · Control: ${formatRuleSeverityLabel(updated.severity)}`,
+        reason: 'Edición de lineamientos del código SAC',
       });
 
       const persisted = await this.repos.sacCodes.findByCode(trx, targetCode);
@@ -196,7 +222,7 @@ export class SacCatalogService {
             name: (row.name?.trim() || `TUNJA ACTIVIDAD ${code}`).toUpperCase(),
             substantiveFunction: row.substantiveFunction ?? 'Enseñanza-Aprendizaje',
             definition: row.definition || row.name || '',
-            guideline: row.guideline || 'Importado desde Excel ANEXO 4',
+            guideline: row.guideline || 'Importado desde libro Anexo 4',
             baseHours: row.baseHours ?? 4,
             capHours: row.capHours ?? 20,
             ...(row.postgraduateCapHours !== undefined
@@ -221,9 +247,9 @@ export class SacCatalogService {
         periodCode,
         unitId: null,
         unitName: 'Catálogo Institucional SAC (ANEXO 4)',
-        action: 'Importación Masiva de Catálogo SAC (ANEXO 4)',
-        newValue: `${createdCount} nuevos, ${updatedCount} actualizados`,
-        reason: 'Cargue masivo transaccional desde libro Excel ANEXO 4',
+        action: 'Importación de catálogo SAC (Anexo 4)',
+        newValue: `${createdCount} códigos nuevos, ${updatedCount} actualizados`,
+        reason: 'Cargue desde archivo Excel del Anexo 4',
       });
 
       const codes = await this.repos.sacCodes.listAll(trx);
@@ -245,19 +271,19 @@ export class SacCatalogService {
       const trimmed = code.trim();
       if (PROTECTED_SAC_CODES.has(trimmed)) {
         throw new BusinessRuleError(
-          `El código '${trimmed}' es estructural para el cálculo de docencia directa y PSE y no puede eliminarse.`,
+          `El código ${trimmed} forma parte de los cálculos base de prenómina y no puede eliminarse.`,
         );
       }
 
       const existing = await this.repos.sacCodes.findByCode(trx, trimmed);
       if (!existing) {
-        throw new NotFoundError(`El código SAC '${trimmed}' no existe.`);
+        throw new NotFoundError(`El código SAC ${trimmed} no figura en el catálogo.`);
       }
 
       const inUse = await this.repos.sacCodes.isInUse(trx, trimmed);
       if (inUse) {
         throw new ConflictError(
-          `El código SAC '${trimmed}' tiene horas o registros asociados y no puede eliminarse mientras esté en uso.`,
+          `El código SAC ${trimmed} tiene horas o registros asociados y no puede eliminarse mientras esté en uso.`,
         );
       }
 
@@ -267,10 +293,10 @@ export class SacCatalogService {
         periodCode,
         unitId: null,
         unitName: 'Catálogo Institucional SAC (ANEXO 4)',
-        action: `Eliminación de Código SAC ${trimmed}`,
+        action: `Retiro de código SAC ${trimmed}`,
         previousValue: `${existing.code} — ${existing.name}`,
-        newValue: 'Eliminado',
-        reason: 'Baja de código del catálogo institucional',
+        newValue: 'Retirado',
+        reason: 'Retiro de código en el catálogo institucional',
       });
 
       return { deletedId: trimmed };
@@ -301,11 +327,11 @@ export class SacCatalogService {
       await this.audit.record(trx, actor, {
         periodCode,
         unitId: null,
-        unitName: 'Reglas Institucionales de Negocio',
-        action: 'Actualización de Reglas Globales del Motor de Validación',
-        previousValue: JSON.stringify(current),
-        newValue: JSON.stringify(updated),
-        reason: 'Configuración de directrices desde panel de parametrización',
+        unitName: 'Lineamientos institucionales',
+        action: 'Actualización de lineamientos institucionales de validación',
+        previousValue: summarizeBusinessRules(current),
+        newValue: summarizeBusinessRules(updated),
+        reason: 'Ajuste de criterios de validación del periodo',
       });
 
       return updated;
@@ -319,7 +345,7 @@ export class SacCatalogService {
     return this.tx.run(async (trx) => {
       const scoped = await this.repos.schedulePhases.findById(trx, dto.id);
       if (!scoped) {
-        throw new NotFoundError(`La fase del cronograma '${dto.id}' no existe.`);
+        throw new NotFoundError('La etapa del cronograma seleccionada no existe.');
       }
 
       const existing = scoped.entity;
@@ -340,7 +366,7 @@ export class SacCatalogService {
         action: `Actualización de ${updated.label}: ${updated.title}`,
         previousValue: `${existing.dateRange} (${existing.status})`,
         newValue: `${updated.dateRange} (${updated.status})`,
-        reason: 'Edición del cronograma operativo de prenómina',
+        reason: 'Actualización de fechas en el cronograma del periodo',
       });
 
       return updated;

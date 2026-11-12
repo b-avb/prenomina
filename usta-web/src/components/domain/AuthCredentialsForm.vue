@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { AuthUser, PayrollRole } from '@usta/domain';
 
 const props = defineProps<{
-  usersDirectory: AuthUser[];
   isMicrosoftEntraEnabled: boolean;
   isLocalLoginAllowed: boolean;
   institutionalDomain: string;
@@ -19,24 +17,6 @@ const emit = defineEmits<{
 const usernameInput = ref('');
 const passwordInput = ref('');
 const showLoginPassword = ref(false);
-const showQuickDirectory = ref(false);
-
-function roleBadgeLabel(role: PayrollRole, unitName?: string | null): string {
-  switch (role) {
-    case 'director':
-      return 'Dirección de Enseñanza y Aprendizaje';
-    case 'vice_rector':
-      return 'Vicerrectoría Académica';
-    case 'research':
-      return 'Dirección de Investigación (SICDDI)';
-    case 'dean':
-      return unitName ? `Decanatura · ${unitName}` : 'Decanatura / Dirección de Unidad';
-  }
-}
-
-function selectQuickUser(username: string): void {
-  usernameInput.value = username;
-}
 
 function onFormSubmit(): void {
   const cleanUser = usernameInput.value.trim().toLowerCase().split('@')[0] ?? '';
@@ -49,13 +29,13 @@ function onFormSubmit(): void {
 
 <template>
   <div>
-    <h1 class="screen-title">Iniciar sesión institucional</h1>
+    <h1 class="screen-title">Iniciar sesión</h1>
     <p class="screen-sub">
       <template v-if="props.isMicrosoftEntraEnabled && !props.isLocalLoginAllowed">
-        Ingresa con tu cuenta institucional de Microsoft (<code>@{{ props.institutionalDomain }}</code>) para gestionar la prenómina docente seccional.
+        Acceda con su cuenta institucional (<code>@{{ props.institutionalDomain }}</code>).
       </template>
       <template v-else>
-        Ingresa con tu <b>correo o usuario institucional</b> y tu contraseña. En tu primer ingreso, digita tu documento de identidad y el sistema te solicitará crear tu clave personal.
+        Acceda con su correo o usuario institucional. En el primer ingreso deberá definir una contraseña personal.
       </template>
     </p>
 
@@ -81,36 +61,32 @@ function onFormSubmit(): void {
         </svg>
         {{
           props.isSubmittingMicrosoft
-            ? 'Conectando con Microsoft Entra ID…'
-            : `Iniciar sesión con Microsoft (@${props.institutionalDomain})`
+            ? 'Conectando con Microsoft…'
+            : `Continuar con Microsoft (@${props.institutionalDomain})`
         }}
       </button>
 
       <div v-if="props.isLocalLoginAllowed" class="sso-divider">
-        <span>o ingresa con usuario y contraseña</span>
+        <span>o con usuario y contraseña</span>
       </div>
     </div>
 
     <form v-if="props.isLocalLoginAllowed" @submit.prevent="onFormSubmit">
       <div class="field" style="margin-bottom: 12px">
-        <label for="login-username">Usuario o Correo Institucional</label>
+        <label for="login-username">Usuario o correo institucional</label>
         <input
           id="login-username"
           v-model="usernameInput"
           type="text"
           autocomplete="username"
-          placeholder="Ej: dir.ensenanza o dec.industrial@ustatunja.edu.co"
+          :placeholder="`usuario@${props.institutionalDomain}`"
           required
-          style="font-family: var(--font-mono); font-weight: 700"
         />
-        <span class="field-hint">
-          Puedes escribir tu usuario (ej. <code>dir.ensenanza</code>, <code>viceacademica</code>, <code>dec.industrial</code>) o tu correo institucional completo.
-        </span>
       </div>
 
       <div class="field" style="margin-bottom: 16px">
-        <div style="display: flex; justify-content: space-between; align-items: center">
-          <label for="login-password" style="margin-bottom: 0">Contraseña</label>
+        <div class="field__label-row">
+          <label for="login-password">Contraseña</label>
           <button
             type="button"
             class="link-btn"
@@ -124,9 +100,8 @@ function onFormSubmit(): void {
           v-model="passwordInput"
           :type="showLoginPassword ? 'text' : 'password'"
           autocomplete="current-password"
-          placeholder="Ingresa tu contraseña temporal o personal"
+          placeholder="Contraseña"
           required
-          style="margin-top: 5px"
         />
       </div>
 
@@ -136,51 +111,9 @@ function onFormSubmit(): void {
         style="width: 100%; justify-content: center; padding: 10px 16px"
         :disabled="props.isSubmittingLogin || props.isSubmittingMicrosoft"
       >
-        {{ props.isSubmittingLogin ? 'Verificando credenciales…' : 'Iniciar Sesión' }}
+        {{ props.isSubmittingLogin ? 'Verificando…' : 'Iniciar sesión' }}
       </button>
     </form>
-
-    <div
-      v-if="props.isLocalLoginAllowed && props.usersDirectory.length > 0"
-      class="directory-box"
-    >
-      <button
-        type="button"
-        class="directory-box__toggle"
-        @click="showQuickDirectory = !showQuickDirectory"
-      >
-        <span>
-          Directorio de usuarios institucionales ({{ props.usersDirectory.length }})
-        </span>
-        <span>{{ showQuickDirectory ? '▲' : '▼' }}</span>
-      </button>
-
-      <div v-if="showQuickDirectory" class="directory-box__body">
-        <div class="directory-list">
-          <button
-            v-for="u in props.usersDirectory"
-            :key="u.id"
-            type="button"
-            class="directory-item"
-            @click="selectQuickUser(u.username)"
-          >
-            <div>
-              <div class="directory-item__user">{{ u.email || `@${u.username}` }}</div>
-              <div class="directory-item__name">
-                {{ u.fullName }} · {{ roleBadgeLabel(u.role, u.unitName) }}
-              </div>
-            </div>
-            <span
-              class="badge"
-              :class="u.mustChangePassword ? 'observado' : 'avalado'"
-              style="font-size: 9.5px"
-            >
-              {{ u.mustChangePassword ? 'Primer Ingreso' : 'Activa' }}
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -219,80 +152,5 @@ function onFormSubmit(): void {
     height: 1px;
     background: var(--border);
   }
-}
-
-.directory-box {
-  margin-top: 16px;
-  border-top: 1px solid var(--border);
-  padding-top: 12px;
-}
-
-.directory-box__toggle {
-  width: 100%;
-  background: var(--surface-soft);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--navy);
-  cursor: pointer;
-}
-
-.directory-box__body {
-  margin-top: 8px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px;
-  background: #fff;
-}
-
-.temp-pass-banner {
-  font-size: 11.5px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  background: rgba(244, 180, 0, 0.14);
-  color: var(--navy);
-  margin-bottom: 8px;
-}
-
-.directory-list {
-  max-height: 210px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.directory-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-align: left;
-  padding: 6px 8px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--surface-soft);
-  cursor: pointer;
-  transition: border-color 0.15s ease;
-
-  &:hover {
-    border-color: var(--cerulean);
-  }
-}
-
-.directory-item__user {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 12px;
-  color: var(--navy);
-}
-
-.directory-item__name {
-  font-size: 10.5px;
-  color: var(--ink-soft);
 }
 </style>

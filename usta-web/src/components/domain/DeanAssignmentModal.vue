@@ -14,6 +14,16 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'close'): void;
+  (
+    e: 'issuedCredentials',
+    payload: {
+      title: string;
+      fullName: string;
+      unitName: string;
+      username: string;
+      temporaryPassword: string;
+    },
+  ): void;
 }>();
 
 const store = usePayrollStore();
@@ -25,7 +35,7 @@ const form = ref({
   username: '',
   temporaryPassword: '',
   documentId: '',
-  rank: 'Decano(a) de Facultad',
+  rank: 'Decanatura de Facultad',
   education: '',
   expectedWorkload: 210,
 });
@@ -34,7 +44,9 @@ function populateFromUnit(unit: AcademicUnitSummary) {
   const executiveTeacher = store.teachers.find(
     (t) => t.unitId === unit.id && t.dedication === 'DIRECTIVO',
   );
-  const existingUser = store.usersDirectory.find((u) => u.unitId === unit.id);
+  const existingUser = store.usersDirectory.find(
+    (u) => u.unitId === unit.id || u.managedUnitIds?.includes(unit.id),
+  );
   usernameManuallyEdited.value = false;
   form.value = {
     unitId: unit.id,
@@ -46,7 +58,7 @@ function populateFromUnit(unit: AcademicUnitSummary) {
     documentId: executiveTeacher?.documentId ?? '',
     rank:
       executiveTeacher?.rank ??
-      (unit.unitType === 'Facultad' ? 'Decano(a) de Facultad' : 'Director(a) de Unidad'),
+      (unit.unitType === 'Facultad' ? 'Decanatura de Facultad' : 'Dirección de Unidad'),
     education: executiveTeacher?.education ?? `Magíster · ${unit.name}`,
     expectedWorkload: executiveTeacher?.expectedWorkload ?? 210,
   };
@@ -80,12 +92,12 @@ function handleUnitChange() {
   if (unit) populateFromUnit(unit);
 }
 
-function handleSave() {
+async function handleSave() {
   if (!form.value.deanName.trim()) {
-    store.showToast('Debes ingresar el nombre completo del Decano(a) o Director(a)', 'error');
+    store.showToast('Indique el nombre completo del titular de la unidad.', 'error');
     return;
   }
-  void store.updateUnitDean({
+  const res = await store.updateUnitDean({
     unitId: form.value.unitId,
     deanName: form.value.deanName.trim(),
     username: form.value.username.trim() || undefined,
@@ -95,6 +107,16 @@ function handleSave() {
     education: form.value.education.trim(),
     expectedWorkload: form.value.expectedWorkload,
   });
+  if (!res.ok) return;
+  if (res.data.temporaryPassword && res.data.deanUser) {
+    emit('issuedCredentials', {
+      title: 'Credenciales de acceso emitidas',
+      fullName: res.data.unit.deanName,
+      unitName: res.data.unit.name,
+      username: res.data.deanUser.username,
+      temporaryPassword: res.data.temporaryPassword,
+    });
+  }
   emit('close');
 }
 </script>
@@ -102,12 +124,12 @@ function handleSave() {
 <template>
   <UstaModal
     :open="open"
-    title="Asignar o Actualizar Decano(a) / Director(a) de Unidad"
-    subtitle="Actualiza el titular de la Decanatura o Dirección Académica, sincroniza su ficha directiva en la prenómina y su cuenta de usuario institucional."
+    title="Actualizar decanatura o dirección"
+    subtitle="Actualiza el titular de la unidad, su perfil directivo en prenómina y su cuenta institucional."
     @close="emit('close')"
   >
     <div class="field">
-      <label>Facultad / Unidad Académica</label>
+      <label>Unidad académica</label>
       <select v-model="form.unitId" @change="handleUnitChange">
         <option v-for="unit in store.units" :key="unit.id" :value="unit.id">
           {{ unit.name }} (Actual: {{ unit.deanName }})
@@ -117,48 +139,46 @@ function handleSave() {
 
     <div class="grid cols-2">
       <div class="field">
-        <label>Nombre Completo del Decano(a) / Director(a)</label>
+        <label>Nombre completo del titular</label>
         <input
           v-model="form.deanName"
           type="text"
-          placeholder="Ej: Ing. Juan Camilo Ernesto Valderrama Balaguera"
+          placeholder="Nombre completo del titular"
         />
       </div>
       <div class="field">
-        <label>Documento / Cédula</label>
-        <input v-model="form.documentId" type="text" placeholder="Ej: 74382158" />
+        <label>Documento de identidad</label>
+        <input v-model="form.documentId" type="text" placeholder="Número de documento" />
       </div>
     </div>
 
     <div class="grid cols-2">
       <div class="field">
-        <label>Usuario de Acceso (solo nombre de usuario)</label>
+        <label>Usuario institucional</label>
         <input
           v-model="form.username"
           type="text"
-          placeholder="Ej: juan.valderrama"
-          style="font-family: var(--font-mono); font-weight: 700"
+          placeholder="usuario.institucional"
           @input="usernameManuallyEdited = true"
         />
       </div>
       <div class="field">
-        <label>Nueva Contraseña Temporal (opcional para asignar o reiniciar clave)</label>
+        <label>Nueva contraseña temporal (opcional)</label>
         <input
           v-model="form.temporaryPassword"
           type="text"
-          placeholder="Dejar vacío o ingresar cédula / clave temporal"
-          style="font-family: var(--font-mono)"
+          placeholder="Vacío para conservar la clave actual"
         />
       </div>
     </div>
 
     <div class="grid cols-2">
       <div class="field">
-        <label>Cargo / Escalafón Directivo</label>
-        <input v-model="form.rank" type="text" placeholder="Ej: Decano(a) de Facultad" />
+        <label>Cargo directivo</label>
+        <input v-model="form.rank" type="text" placeholder="Ej.: Decanatura de Facultad" />
       </div>
       <div class="field">
-        <label>Carga Mensual Directiva (h/mes)</label>
+        <label>Carga mensual directiva (h/mes)</label>
         <input
           v-model.number="form.expectedWorkload"
           type="number"
@@ -170,17 +190,17 @@ function handleSave() {
     </div>
 
     <div class="field">
-      <label>Formación Académica (Pregrado y Posgrados)</label>
+      <label>Formación académica</label>
       <input
         v-model="form.education"
         type="text"
-        placeholder="Ej: Ingeniera Industrial · Magíster en Administración"
+        placeholder="Título profesional y posgrado"
       />
     </div>
 
     <template #actions>
-      <button class="btn ghost" @click="emit('close')">Cancelar</button>
-      <button class="btn primary" @click="handleSave">Guardar Decano(a) y Usuario</button>
+      <button type="button" class="btn ghost" @click="emit('close')">Cancelar</button>
+      <button type="button" class="btn primary" @click="handleSave">Guardar cambios</button>
     </template>
   </UstaModal>
 </template>

@@ -6,8 +6,10 @@ import type {
   HealthResponse,
   IdGenerator,
   PayrollSnapshot,
+  TeacherCodeAllocation,
 } from '@usta/domain';
-import { isDevelopment } from '../config/env.config.js';
+import { getActorAllowedUnitIds } from '../auth/actor-resolver.js';
+import { ENV_CONFIG } from '../config/env.config.js';
 import type { TransactionRunner } from '../database/transaction-runner.js';
 import type { Repositories } from '../repositories/repositories.js';
 import { seedDatabaseWithOfficialData } from '../seed/database-seeder.js';
@@ -41,22 +43,28 @@ export class PayrollStateService {
     };
   }
 
-  public async getSnapshot(requestedPeriod?: string): Promise<PayrollSnapshot> {
+  public async getSnapshot(
+    requestedPeriod?: string,
+    actor?: ActorContext,
+  ): Promise<PayrollSnapshot> {
     const db = this.tx.executor;
     const allPeriods = await this.repos.periods.listAll(db);
     const currentPeriod =
       allPeriods.find((p) => p.isCurrent)?.code ?? allPeriods[0]?.code ?? '2026-2';
     const activePeriod = await this.periodContext.resolvePeriod(db, requestedPeriod);
+    const deanAllowedUnits =
+      actor?.role === 'dean' ? getActorAllowedUnitIds(actor) : undefined;
+    const deanAllowedSet = deanAllowedUnits ? new Set(deanAllowedUnits) : undefined;
 
     const [
       schedulePhases,
       rulesConfig,
       sacCodes,
-      units,
-      programQuotas,
-      teachers,
-      approvalRequests,
-      researchAllocations,
+      allUnits,
+      allProgramQuotas,
+      allTeachers,
+      allApprovalRequests,
+      allResearchAllocations,
       auditLogs,
     ] = await Promise.all([
       this.repos.schedulePhases.listByPeriod(db, activePeriod),
@@ -67,8 +75,28 @@ export class PayrollStateService {
       this.repos.teachers.listByPeriod(db, activePeriod),
       this.repos.approvals.listByPeriod(db, activePeriod),
       this.repos.research.listByPeriod(db, activePeriod),
-      this.repos.auditLogs.list(db, { periodCode: activePeriod, limit: SNAPSHOT_AUDIT_LIMIT }),
+      this.repos.auditLogs.list(db, {
+        periodCode: activePeriod,
+        unitIds: deanAllowedUnits,
+        limit: SNAPSHOT_AUDIT_LIMIT,
+      }),
     ]);
+
+    const units = deanAllowedSet
+      ? allUnits.filter((u) => deanAllowedSet.has(u.id))
+      : allUnits;
+    const programQuotas = deanAllowedSet
+      ? allProgramQuotas.filter((p) => deanAllowedSet.has(p.unitId))
+      : allProgramQuotas;
+    const teachers = deanAllowedSet
+      ? allTeachers.filter((t) => deanAllowedSet.has(t.unitId))
+      : allTeachers;
+    const approvalRequests = deanAllowedSet
+      ? allApprovalRequests.filter((r) => deanAllowedSet.has(r.unitId))
+      : allApprovalRequests;
+    const researchAllocations = deanAllowedSet
+      ? allResearchAllocations.filter((r) => deanAllowedSet.has(r.unitId))
+      : allResearchAllocations;
 
     return {
       activePeriod,
@@ -98,11 +126,11 @@ export class PayrollStateService {
     return this.tx.run(async (trx) => {
       const existing = await this.repos.periods.findByCode(trx, dto.code);
       if (existing) {
-        throw new ConflictError(`El periodo académico '${dto.code}' ya existe.`);
+        throw new ConflictError(`El periodo académico ${dto.code} ya está registrado.`);
       }
       const source = await this.repos.periods.findByCode(trx, dto.sourcePeriod);
       if (!source) {
-        throw new NotFoundError(`El periodo origen '${dto.sourcePeriod}' no existe.`);
+        throw new NotFoundError(`El periodo base ${dto.sourcePeriod} no existe.`);
       }
 
       const nowIso = new Date().toISOString();
@@ -154,8 +182,27 @@ export class PayrollStateService {
       const clonedTeachers: FacultyTeacher[] = sourceTeachers.map((teacher) => {
         const nextId = this.ids.next();
         teacherIdMap.set(teacher.id, nextId);
+        const cloned = structuredClone(teacher);
+        if (dto.resetStatuses) {
+          delete cloned.version1Total;
+          const resetAllocations: Record<string, TeacherCodeAllocation> = {};
+          for (const [code, alloc] of Object.entries(cloned.allocations)) {
+            const nextAlloc: TeacherCodeAllocation = {
+              code: alloc.code,
+              hours: alloc.hours,
+              ...(alloc.unitCount !== undefined ? { unitCount: alloc.unitCount } : {}),
+              ...(alloc.programId ? { programId: alloc.programId } : {}),
+              ...(alloc.programName ? { programName: alloc.programName } : {}),
+              ...(alloc.exceptionJustification
+                ? { exceptionJustification: alloc.exceptionJustification }
+                : {}),
+            };
+            resetAllocations[code] = nextAlloc;
+          }
+          cloned.allocations = resetAllocations;
+        }
         return {
-          ...structuredClone(teacher),
+          ...cloned,
           id: nextId,
           academicSpaces: teacher.academicSpaces.map((space) => ({
             ...space,
@@ -195,28 +242,31 @@ export class PayrollStateService {
       await this.audit.record(trx, actor, {
         periodCode: dto.code,
         unitId: null,
-        unitName: `Nivel Seccional (${allUnits.length} Unidades)`,
-        action: `Apertura / Clonación de Periodo Semestral ${dto.code}`,
+        unitName: `Consolidado seccional (${allUnits.length} unidades)`,
+        action: `Apertura de periodo académico ${dto.code}`,
         previousValue: dto.sourcePeriod,
         newValue: dto.code,
         reason: dto.resetStatuses
-          ? 'Catálogo SAC y topes clonados con reinicio de estados a Borrador (v1)'
-          : 'Catálogo SAC y estados conservados desde el periodo anterior',
+          ? `Configuración base tomada de ${dto.sourcePeriod} con unidades abiertas en Borrador`
+          : `Configuración y estados conservados a partir del periodo ${dto.sourcePeriod}`,
       });
 
       return createdPeriod;
     });
   }
 
-  public async resetToSeed(): Promise<PayrollSnapshot> {
-    if (!isDevelopment()) {
+  public async resetToSeed(actor?: ActorContext): Promise<PayrollSnapshot> {
+    if (
+      ENV_CONFIG.nodeEnv === 'production' ||
+      process.env.ALLOW_DESTRUCTIVE_STATE_RESET !== 'true'
+    ) {
       throw new ForbiddenError(
-        'El restablecimiento a la semilla institucional oficial solo está permitido en entorno de desarrollo.',
+        'El restablecimiento general de datos está deshabilitado por seguridad.',
       );
     }
     await seedDatabaseWithOfficialData(this.tx, this.repos, this.ids, {
       forceTruncate: true,
     });
-    return this.getSnapshot();
+    return this.getSnapshot(undefined, actor);
   }
 }

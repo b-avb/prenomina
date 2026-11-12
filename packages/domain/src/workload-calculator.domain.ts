@@ -8,10 +8,10 @@ export interface FacultyBagIndicator {
   code: string;
   title: string;
   fullTitle: string;
-  source: 'ANEXO 5' | 'ANEXO 6';
+  source: 'Anexo 5' | 'Anexo 6';
   allocated: number;
   cap: number;
-  status: 'ok' | 'warn' | 'error';
+  status: 'ok' | 'warn' | 'error' | 'pending';
 }
 
 export class WorkloadCalculatorDomain {
@@ -76,9 +76,33 @@ export class WorkloadCalculatorDomain {
     const unitTeachers = teachers.filter((t) => t.unitId === unitId);
     return unitTeachers.reduce((acc, t) => {
       if (code === '40104') return acc + this.computeHours40104(t);
+      if (code === '40006') return acc + this.computeHours40006(t);
       if (code === '40108') return acc + this.getEffectivePse(t, rules);
       return acc + (t.allocations[code]?.hours ?? 0);
     }, 0);
+  }
+
+  public static isTeacherUnstarted(teacher: FacultyTeacher): boolean {
+    const hasSpaces = teacher.academicSpaces.some((s) => (Number(s.monthlyHours) || 0) > 0);
+    if (hasSpaces) return false;
+    const hasAllocations = Object.values(teacher.allocations).some(
+      (a) => (Number(a.hours) || 0) > 0,
+    );
+    if (hasAllocations) return false;
+    if ((Number(teacher.sharedHours) || 0) > 0) return false;
+    if (
+      teacher.pseManualOverride !== undefined &&
+      teacher.pseManualOverride !== null &&
+      teacher.pseManualOverride > 0
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  public static isUnitUnstarted(teachers: FacultyTeacher[], unitId: string): boolean {
+    const unitTeachers = teachers.filter((t) => t.unitId === unitId);
+    return unitTeachers.every((t) => this.isTeacherUnstarted(t));
   }
 
   public static computeUnitBagIndicators(
@@ -87,28 +111,30 @@ export class WorkloadCalculatorDomain {
     rules: BusinessRulesConfig,
   ): FacultyBagIndicator[] {
     if (!unit) return [];
+    const unitUnstarted =
+      unit.payrollStatus === 'Borrador' && this.isUnitUnstarted(teachers, unit.id);
     const definitions: Omit<FacultyBagIndicator, 'status'>[] = [
       {
         code: '30411',
         title: 'Calidad',
         fullTitle: 'Aseguramiento de la Calidad',
-        source: 'ANEXO 5',
+        source: 'Anexo 5',
         allocated: this.sumCodeInUnit(teachers, unit.id, '30411', rules),
         cap: unit.qualityCap30411,
       },
       {
         code: '40106',
         title: 'Currículo',
-        fullTitle: 'Líder de Currículo',
-        source: 'ANEXO 5',
+        fullTitle: 'Gestión Curricular',
+        source: 'Anexo 5',
         allocated: this.sumCodeInUnit(teachers, unit.id, '40106', rules),
         cap: unit.curriculumCap40106,
       },
       {
         code: '40109',
-        title: 'Docente SEA',
+        title: 'Pruebas SEA',
         fullTitle: 'Pruebas Académicas SEA',
-        source: 'ANEXO 5',
+        source: 'Anexo 5',
         allocated: this.sumCodeInUnit(teachers, unit.id, '40109', rules),
         cap: unit.seaCap40109,
       },
@@ -116,7 +142,7 @@ export class WorkloadCalculatorDomain {
         code: '40127',
         title: 'Saber Pro',
         fullTitle: 'Pruebas Saber Pro',
-        source: 'ANEXO 5',
+        source: 'Anexo 5',
         allocated: this.sumCodeInUnit(teachers, unit.id, '40127', rules),
         cap: unit.saberProCap40127,
       },
@@ -124,15 +150,16 @@ export class WorkloadCalculatorDomain {
         code: '20502',
         title: 'Graduados',
         fullTitle: 'Gestión de Graduados',
-        source: 'ANEXO 6',
+        source: 'Anexo 6',
         allocated: this.sumCodeInUnit(teachers, unit.id, '20502', rules),
         cap: unit.graduatesCap20502,
       },
     ];
 
     return definitions.map((b) => {
-      let status: 'ok' | 'warn' | 'error' = 'ok';
+      let status: FacultyBagIndicator['status'] = 'ok';
       if (b.allocated > b.cap) status = 'error';
+      else if (unitUnstarted && b.allocated === 0 && b.cap > 0) status = 'pending';
       else if (b.allocated < b.cap) status = 'warn';
       return { ...b, status };
     });

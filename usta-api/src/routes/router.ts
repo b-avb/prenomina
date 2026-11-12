@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { PayrollRole } from '@usta/domain';
+import type { ActorContext, PayrollRole } from '@usta/domain';
 import { ROLE_PERMISSIONS, type ActorResolver } from '../auth/actor-resolver.js';
 import { ENV_CONFIG } from '../config/env.config.js';
 import type { AcademicProgramsController } from '../controllers/academic-programs.controller.js';
@@ -38,6 +38,7 @@ const MIME_TYPES: Readonly<Record<string, string>> = {
   '.jpeg': 'image/jpeg',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
+  '.ttf': 'font/ttf',
   '.woff': 'font/woff',
   '.woff2': 'font/woff2',
 };
@@ -45,12 +46,15 @@ const MIME_TYPES: Readonly<Record<string, string>> = {
 async function tryServeWebSpa(pathname: string, res: ServerResponse): Promise<boolean> {
   try {
     let cleanPathname = pathname;
-    const assetMatch = cleanPathname.match(/\/(assets\/.+|images\/.+|favicon\.ico)$/);
+    const assetMatch = cleanPathname.match(
+      /\/(assets\/.+|images\/.+|fonts\/.+|favicon\.ico)$/,
+    );
     if (assetMatch?.[1]) {
       cleanPathname = `/${assetMatch[1]}`;
     }
 
-    const safeRelative = cleanPathname === '/' ? 'index.html' : cleanPathname.replace(/^\/+/, '');
+    const safeRelative =
+      cleanPathname === '/' ? 'index.html' : cleanPathname.replace(/^\/+/, '');
     const candidatePath = path.resolve(WEB_DIST_DIR, safeRelative);
     if (!candidatePath.startsWith(WEB_DIST_DIR)) {
       return false;
@@ -63,6 +67,9 @@ async function tryServeWebSpa(pathname: string, res: ServerResponse): Promise<bo
         filePath = path.join(filePath, 'index.html');
       }
     } catch {
+      if (path.extname(cleanPathname)) {
+        return false;
+      }
       filePath = path.join(WEB_DIST_DIR, 'index.html');
     }
 
@@ -283,7 +290,7 @@ export class ApiRouter {
         method: 'POST',
         path: '/api/units/:id/version-snapshot',
         access: 'authenticated',
-        allowedRoles: ROLE_PERMISSIONS.workload,
+        allowedRoles: ROLE_PERMISSIONS.management,
         handler: controllers.academicUnits.snapshotVersion,
       },
       {
@@ -461,12 +468,25 @@ export class ApiRouter {
         handler: controllers.facultyTeachers.updateCodeAllocation,
       },
 
-      // 6. Vice-Rectorate Approvals (Annex 3)
+      // 6. Vice-Rectorate Approvals & Document Attachments (Annex 3)
       {
         method: 'GET',
         path: '/api/approvals',
         access: 'authenticated',
         handler: controllers.approvals.list,
+      },
+      {
+        method: 'POST',
+        path: '/api/approvals/attachments',
+        access: 'authenticated',
+        allowedRoles: ROLE_PERMISSIONS.workload,
+        handler: controllers.approvals.uploadAttachment,
+      },
+      {
+        method: 'GET',
+        path: '/api/approvals/attachments/:fileName',
+        access: 'authenticated',
+        handler: controllers.approvals.getAttachment,
       },
       {
         method: 'POST',
@@ -534,7 +554,22 @@ export class ApiRouter {
     }
 
     const url = new URL(req.url ?? '/', `http://localhost:${ENV_CONFIG.port}`);
-    const method = (req.method ?? 'GET').toUpperCase();
+    const rawMethod = (req.method ?? 'GET').toUpperCase();
+    const overrideHeader = req.headers['x-http-method-override'];
+    const overrideCandidate = (
+      (typeof overrideHeader === 'string' ? overrideHeader : undefined) ??
+      url.searchParams.get('_method') ??
+      ''
+    )
+      .trim()
+      .toUpperCase();
+    const method =
+      rawMethod === 'POST' &&
+      (overrideCandidate === 'PUT' ||
+        overrideCandidate === 'PATCH' ||
+        overrideCandidate === 'DELETE')
+        ? overrideCandidate
+        : rawMethod;
     const normalizedPathname =
       url.pathname.replace(/^\/(?:app\/)?prenomina(?=\/|$)/, '') || '/';
     const actualSegments = splitPath(normalizedPathname);
@@ -544,14 +579,15 @@ export class ApiRouter {
         if (route.method !== method) continue;
         const params = matchPathSegments(route.segments, actualSegments);
         if (params !== null) {
+          let actor: ActorContext | undefined;
           if (route.access === 'pending_password_allowed') {
-            await this.actorResolver.resolve(req, route.allowedRoles, {
+            actor = await this.actorResolver.resolve(req, route.allowedRoles, {
               allowPendingPasswordChange: true,
             });
           } else if (route.access === 'authenticated') {
-            await this.actorResolver.resolve(req, route.allowedRoles);
+            actor = await this.actorResolver.resolve(req, route.allowedRoles);
           }
-          await route.handler(req, res, url, params);
+          await route.handler(req, res, url, params, actor);
           return;
         }
       }
@@ -564,7 +600,7 @@ export class ApiRouter {
       sendFailure(res, 404, {
         ok: false,
         code: 'ROUTE_NOT_FOUND',
-        error: `Ruta no encontrada: ${method} ${url.pathname}`,
+        error: 'El recurso solicitado no está disponible.',
       });
     } catch (error) {
       const failure = mapErrorToHttpFailure(error);

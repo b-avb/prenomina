@@ -31,18 +31,15 @@ const inFlightCount = ref(0);
 const successListeners = new Set<() => void>();
 
 /**
- * Deep copy of store state through `structuredClone`. Vue stores raw values inside
- * reactive collections, so unwrapping the first level is enough to also support
- * snapshot containers assembled in `capture` (e.g. `{ program, unit }`).
+ * Safe deep copy of JSON-serializable store state that never throws `DataCloneError`
+ * on Vue 3 reactive `Proxy` objects (including deeply nested arrays/maps).
  */
 export function cloneState<T>(value: T): T {
   const raw: unknown = toRaw(value);
-  const detached = Array.isArray(raw)
-    ? raw.map((item: unknown) => toRaw(item))
-    : raw !== null && typeof raw === 'object'
-      ? Object.fromEntries(Object.entries(raw).map(([key, item]) => [key, toRaw(item)]))
-      : raw;
-  return structuredClone(detached) as T;
+  if (raw === undefined || raw === null || typeof raw !== 'object') {
+    return raw as T;
+  }
+  return JSON.parse(JSON.stringify(raw)) as T;
 }
 
 /** Subscribes to every successful mutation (e.g. to refresh server-side audit logs). */

@@ -1,5 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type {
+  ActorContext,
   CreateResearchAllocationDto,
   UpdateResearchAllocationDto,
 } from '@usta/domain';
@@ -24,10 +25,13 @@ export class ResearchController {
     req: IncomingMessage,
     res: ServerResponse,
     url: URL,
+    _params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
+    const actor = resolvedActor ?? (await this.actorResolver.resolve(req));
     const period = optionalQueryParam(url, 'period', req);
     const unitId = optionalQueryParam(url, 'unitId');
-    const items = await this.service.list(period, unitId);
+    const items = await this.service.list(period, unitId, actor);
     sendSuccess(res, 200, items);
   };
 
@@ -35,8 +39,12 @@ export class ResearchController {
     req: IncomingMessage,
     res: ServerResponse,
     url: URL,
+    _params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.research);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.research));
     const period = optionalQueryParam(url, 'period', req);
     const raw = await readJsonBody(req);
     const dto = PayloadReader.parse<CreateResearchAllocationDto>(raw, (r) => ({
@@ -65,8 +73,11 @@ export class ResearchController {
     res: ServerResponse,
     _url: URL,
     params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.research);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.research));
     const id = requirePathParam(params, 'id', { maxLength: 64 });
     const raw = await readJsonBody(req);
     const dto = PayloadReader.parse<UpdateResearchAllocationDto>(raw, (r) => ({
@@ -145,8 +156,11 @@ export class ResearchController {
     res: ServerResponse,
     _url: URL,
     params: RouteParams,
+    resolvedActor?: ActorContext,
   ): Promise<void> => {
-    const actor = await this.actorResolver.resolve(req, ROLE_PERMISSIONS.research);
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.research));
     const id = requirePathParam(params, 'id', { maxLength: 64 });
     const result = await this.service.remove(actor, id);
     sendSuccess(res, 200, result);

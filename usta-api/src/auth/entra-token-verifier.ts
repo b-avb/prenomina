@@ -49,7 +49,7 @@ function decodeBase64UrlJson<T>(segment: string): T {
     const json = Buffer.from(segment, 'base64url').toString('utf8');
     return JSON.parse(json) as T;
   } catch {
-    throw new UnauthorizedError('El token de Microsoft Entra ID tiene un formato inválido.');
+    throw new UnauthorizedError('No fue posible validar las credenciales de Microsoft.');
   }
 }
 
@@ -94,13 +94,13 @@ async function getMicrosoftJwk(tenantId: string, kid: string): Promise<JsonWebKe
     response = await fetch(jwksUrl);
   } catch {
     throw new UnauthorizedError(
-      'No fue posible consultar las llaves públicas de Microsoft Entra ID para verificar el token.',
+      'No fue posible conectar con el servicio de autenticación de Microsoft. Intente nuevamente.',
     );
   }
 
   if (!response.ok) {
     throw new UnauthorizedError(
-      `No se pudieron obtener las llaves JWKS del tenant de Microsoft Entra ID (HTTP ${response.status}).`,
+      'El servicio de autenticación de Microsoft no respondió correctamente. Intente nuevamente.',
     );
   }
 
@@ -120,7 +120,7 @@ async function getMicrosoftJwk(tenantId: string, kid: string): Promise<JsonWebKe
   const matched = keysByKid.get(kid);
   if (!matched) {
     throw new UnauthorizedError(
-      'La firma del token de Microsoft Entra ID no coincide con ninguna llave activa del tenant.',
+      'No fue posible verificar la sesión institucional de Microsoft. Inicie sesión de nuevo.',
     );
   }
   return matched;
@@ -133,7 +133,7 @@ export async function verifyMicrosoftEntraToken(
   const cleaned = rawToken.trim().replace(/^Bearer\s+/i, '');
   const parts = cleaned.split('.');
   if (parts.length !== 3) {
-    throw new UnauthorizedError('El token de Microsoft Entra ID no es un JWT válido.');
+    throw new UnauthorizedError('Las credenciales recibidas de Microsoft no son válidas.');
   }
   const [headerSeg, payloadSeg, signatureSeg] = parts as [string, string, string];
   const header = decodeBase64UrlJson<JwtHeader>(headerSeg);
@@ -141,23 +141,23 @@ export async function verifyMicrosoftEntraToken(
 
   if (!authConfig.azureTenantId || !authConfig.azureClientId) {
     throw new UnauthorizedError(
-      'El inicio de sesión con Microsoft Entra ID aún no tiene configuradas las variables AZURE_TENANT_ID y AZURE_CLIENT_ID en el servidor.',
+      'El ingreso con cuenta institucional de Microsoft no se encuentra habilitado en este momento.',
     );
   }
 
   const nowSec = Math.floor(Date.now() / 1000);
   if (typeof payload.exp === 'number' && payload.exp + CLOCK_SKEW_SECONDS < nowSec) {
-    throw new UnauthorizedError('La sesión de Microsoft Entra ID ha expirado. Inicia sesión nuevamente.');
+    throw new UnauthorizedError('La sesión de Microsoft expiró. Inicie sesión nuevamente.');
   }
   if (typeof payload.nbf === 'number' && payload.nbf - CLOCK_SKEW_SECONDS > nowSec) {
-    throw new UnauthorizedError('El token de Microsoft Entra ID aún no es válido (nbf).');
+    throw new UnauthorizedError('La sesión de Microsoft aún no es válida. Intente nuevamente.');
   }
 
   const tokenTenantId = (payload.tid ?? '').trim().toLowerCase();
   const expectedTenantId = authConfig.azureTenantId.trim().toLowerCase();
   if (!tokenTenantId || tokenTenantId !== expectedTenantId) {
     throw new UnauthorizedError(
-      'El token de Microsoft pertenece a un directorio (Tenant ID) distinto al institucional de la USTA.',
+      'La cuenta de Microsoft seleccionada no pertenece al directorio institucional de la Universidad Santo Tomás.',
     );
   }
 
@@ -173,7 +173,7 @@ export async function verifyMicrosoftEntraToken(
     !tokenAudiences.some((aud) => allowedAudiences.has(aud))
   ) {
     throw new UnauthorizedError(
-      'El token de Microsoft Entra ID no fue emitido para esta aplicación institucional (Audience inválida).',
+      'La sesión de Microsoft no corresponde a esta aplicación institucional.',
     );
   }
 
@@ -181,24 +181,24 @@ export async function verifyMicrosoftEntraToken(
   const signatureBytes = Buffer.from(signatureSeg, 'base64url');
 
   const testSecret = process.env.ENTRA_TEST_HS256_SECRET;
-  if (header.alg === 'HS256' && testSecret && process.env.NODE_ENV !== 'production') {
+  if (header.alg === 'HS256' && testSecret && process.env.NODE_ENV === 'test') {
     const expectedSig = createHmac('sha256', testSecret).update(signingInput).digest();
     if (
       expectedSig.length !== signatureBytes.length ||
       !timingSafeEqual(expectedSig, signatureBytes)
     ) {
-      throw new UnauthorizedError('Firma de token Microsoft de prueba inválida.');
+      throw new UnauthorizedError('No fue posible verificar la sesión de Microsoft.');
     }
   } else if (header.alg === 'RS256' && header.kid) {
     const jwk = await getMicrosoftJwk(authConfig.azureTenantId, header.kid);
     const publicKey = createPublicKey({ key: jwk, format: 'jwk' });
     const isValidSignature = verify('RSA-SHA256', signingInput, publicKey, signatureBytes);
     if (!isValidSignature) {
-      throw new UnauthorizedError('La firma criptográfica del token de Microsoft Entra ID es inválida.');
+      throw new UnauthorizedError('No fue posible verificar la autenticidad de la sesión de Microsoft.');
     }
   } else {
     throw new UnauthorizedError(
-      `Algoritmo de firma de token Microsoft no soportado (${header.alg ?? 'desconocido'}).`,
+      'El formato de autenticación recibido de Microsoft no es compatible.',
     );
   }
 
@@ -214,22 +214,22 @@ export async function verifyMicrosoftEntraToken(
 
   if (!rawPrincipal) {
     throw new UnauthorizedError(
-      'El token de Microsoft Entra ID no contiene el correo o nombre de usuario institucional (preferred_username / upn).',
+      'La cuenta de Microsoft no reportó un correo institucional válido.',
     );
   }
 
   const email = rawPrincipal.includes('@')
     ? rawPrincipal
     : `${rawPrincipal}@${authConfig.institutionalDomain}`;
-  const emailDomain = email.split('@')[1] ?? '';
+  const emailDomain = (email.split('@')[1] ?? '').toLowerCase();
+  const allowedDomains =
+    authConfig.institutionalDomains.length > 0
+      ? authConfig.institutionalDomains.map((d) => d.toLowerCase())
+      : [authConfig.institutionalDomain.toLowerCase()].filter(Boolean);
 
-  if (
-    authConfig.institutionalDomain &&
-    emailDomain &&
-    emailDomain !== authConfig.institutionalDomain.toLowerCase()
-  ) {
+  if (allowedDomains.length > 0 && emailDomain && !allowedDomains.includes(emailDomain)) {
     throw new UnauthorizedError(
-      `Solo se permiten cuentas del dominio institucional @${authConfig.institutionalDomain} (recibido: ${email}).`,
+      `Ingrese con un correo institucional autorizado (${allowedDomains.map((d) => `@${d}`).join(' o ')}).`,
     );
   }
 
@@ -242,7 +242,7 @@ export async function verifyMicrosoftEntraToken(
   const entraOid = (payload.oid || payload.sub || '').trim();
   if (!entraOid || !username) {
     throw new UnauthorizedError(
-      'El token de Microsoft Entra ID no incluye el identificador de objeto (oid) o usuario.',
+      'No fue posible identificar al usuario en el directorio institucional de Microsoft.',
     );
   }
 

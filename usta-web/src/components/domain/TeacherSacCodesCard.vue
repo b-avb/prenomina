@@ -1,17 +1,42 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import type { FacultyTeacher, SacCode, SubstantiveFunction } from '@usta/domain';
+import type {
+  FacultyTeacher,
+  ProgramQuotaAnnex5,
+  SacCode,
+  SubstantiveFunction,
+} from '@usta/domain';
 import { usePayrollStore } from '@/stores/payroll.store';
+import type { AllocationProgramRef } from '@/stores/workload.store';
 import { printOfficialAnnex3Format } from '@/services/exporters';
+
+const PROGRAM_LINKABLE_CODES = new Set([
+  '30411',
+  '40106',
+  '40109',
+  '40127',
+  '40006',
+  '40138',
+  '30407',
+  '30312',
+  '20502',
+]);
+
+const POSTGRAD_ONLY_CODES = new Set(['40006', '40138', '30407']);
 
 const props = defineProps<{
   teacher: FacultyTeacher;
   assignableCodes: SacCode[];
   activeTeacherCodes: SacCode[];
+  readonly?: boolean;
 }>();
 
 const emit = defineEmits<{
-  assignHours: [definition: SacCode, requestedHours: number];
+  assignHours: [
+    definition: SacCode,
+    requestedHours: number,
+    programInfo?: AllocationProgramRef,
+  ];
   openAnnex3: [codeItem: SacCode];
   openException: [codeItem: SacCode];
 }>();
@@ -23,6 +48,7 @@ const activeFunction = ref<SubstantiveFunction>('Enseñanza-Aprendizaje');
 const selectedCodeInfo = ref<SacCode | null>(null);
 const quickSelectedCode = ref<string>(props.assignableCodes[0]?.code ?? '');
 const quickCodeHours = ref<number>(props.assignableCodes[0]?.baseHours ?? 8);
+const quickSelectedProgramId = ref<string>('');
 
 const substantiveFunctions: SubstantiveFunction[] = [
   'Enseñanza-Aprendizaje',
@@ -30,6 +56,63 @@ const substantiveFunctions: SubstantiveFunction[] = [
   'Investigación',
   'Gestión Académica',
 ];
+
+const unitPrograms = computed<ProgramQuotaAnnex5[]>(() =>
+  store.programQuotas.filter((p) => p.unitId === props.teacher.unitId),
+);
+
+function isProgramLinkable(code: string): boolean {
+  return PROGRAM_LINKABLE_CODES.has(code) && unitPrograms.value.length > 0;
+}
+
+function getProgramsForCode(code: string): ProgramQuotaAnnex5[] {
+  if (POSTGRAD_ONLY_CODES.has(code)) {
+    const postgrad = unitPrograms.value.filter(
+      (p) =>
+        p.level !== 'Pregrado' ||
+        /posgrado|especializaci[oó]n|maestr[ií]a|doctorado/i.test(p.programName),
+    );
+    return postgrad.length > 0 ? postgrad : unitPrograms.value;
+  }
+  return unitPrograms.value;
+}
+
+function getProgramCapForCode(program: ProgramQuotaAnnex5, code: string): number | null {
+  switch (code) {
+    case '30411':
+      return program.quality30411;
+    case '40106':
+      return program.curriculum40106;
+    case '40109':
+      return program.sea40109;
+    case '40127':
+      return program.saberPro40127;
+    default:
+      return null;
+  }
+}
+
+function sumProgramHoursInUnit(programId: string, code: string): number {
+  let sum = 0;
+  for (const t of store.activeUnitTeachers) {
+    const alloc = t.allocations[code];
+    if (alloc && alloc.programId === programId && alloc.hours > 0) {
+      sum += alloc.hours;
+    }
+  }
+  return sum;
+}
+
+function resolveProgramInfo(programId: string): AllocationProgramRef {
+  if (!programId) {
+    return { programId: null, programName: null };
+  }
+  const found = unitPrograms.value.find((p) => p.id === programId);
+  return {
+    programId: found?.id ?? programId,
+    programName: found?.programName ?? null,
+  };
+}
 
 watch(
   () => props.assignableCodes,
@@ -45,11 +128,45 @@ watch(
   { immediate: true },
 );
 
-watch(quickSelectedCode, (code) => {
-  const def = store.sacCodes.find((c) => c.code === code);
-  if (def) {
-    selectedCodeInfo.value = def;
-    quickCodeHours.value = def.baseHours ?? 8;
+watch(
+  () => [quickSelectedCode.value, props.teacher.unitId] as const,
+  ([code]) => {
+    const def = store.sacCodes.find((c) => c.code === code);
+    if (def) {
+      selectedCodeInfo.value = def;
+      quickCodeHours.value = def.baseHours ?? 8;
+    }
+    if (isProgramLinkable(code)) {
+      const existingProgId = props.teacher.allocations[code]?.programId ?? '';
+      const available = getProgramsForCode(code);
+      if (existingProgId && available.some((p) => p.id === existingProgId)) {
+        quickSelectedProgramId.value = existingProgId;
+      } else if (available.length === 1) {
+        quickSelectedProgramId.value = available[0]!.id;
+      } else {
+        quickSelectedProgramId.value = '';
+      }
+    } else {
+      quickSelectedProgramId.value = '';
+    }
+  },
+);
+
+watch(quickSelectedProgramId, (programId) => {
+  if (!programId || !quickSelectedCode.value) return;
+  const prog = unitPrograms.value.find((p) => p.id === programId);
+  if (!prog) return;
+  const cap = getProgramCapForCode(prog, quickSelectedCode.value);
+  if (cap !== null && cap > 0) {
+    const used = sumProgramHoursInUnit(programId, quickSelectedCode.value);
+    const currentTeacherHours =
+      props.teacher.allocations[quickSelectedCode.value]?.programId === programId
+        ? (props.teacher.allocations[quickSelectedCode.value]?.hours ?? 0)
+        : 0;
+    const remaining = Math.max(0, cap - (used - currentTeacherHours));
+    if (remaining > 0) {
+      quickCodeHours.value = remaining;
+    }
   }
 });
 
@@ -62,12 +179,37 @@ const displayedCodes = computed(() =>
 );
 
 function handleQuickAssignCode() {
-  if (!quickSelectedCode.value) return;
+  if (props.readonly || !quickSelectedCode.value) return;
   const definition = store.sacCodes.find((c) => c.code === quickSelectedCode.value);
   if (!definition) return;
   const hours = Math.max(1, Number(quickCodeHours.value) || 4);
   selectedCodeInfo.value = definition;
-  emit('assignHours', definition, hours);
+  const programInfo = isProgramLinkable(definition.code)
+    ? resolveProgramInfo(quickSelectedProgramId.value)
+    : undefined;
+  emit('assignHours', definition, hours, programInfo);
+}
+
+function handleChangeRowProgram(codeItem: SacCode, nextProgramId: string) {
+  if (props.readonly) return;
+  const currentHours = props.teacher.allocations[codeItem.code]?.hours ?? 0;
+  if (currentHours <= 0) return;
+  emit('assignHours', codeItem, currentHours, resolveProgramInfo(nextProgramId));
+}
+
+function formatEffectiveCapLabel(codeItem: SacCode): string {
+  const alloc = props.teacher.allocations[codeItem.code];
+  if (alloc?.programId) {
+    const prog = unitPrograms.value.find((p) => p.id === alloc.programId);
+    if (prog) {
+      const progCap = getProgramCapForCode(prog, codeItem.code);
+      if (progCap !== null) return `${progCap}p`;
+    }
+  }
+  if (store.activeUnit.hasPostgraduates && codeItem.postgraduateCapHours) {
+    return `${codeItem.postgraduateCapHours}*`;
+  }
+  return `${codeItem.capHours ?? 'Aval'}`;
 }
 
 function getTeacherCodeApprovalStatus(teacherId: string, code: string) {
@@ -76,7 +218,7 @@ function getTeacherCodeApprovalStatus(teacherId: string, code: string) {
 
 function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
   const req = getTeacherCodeApprovalStatus(teacherId, code);
-  if (req) printOfficialAnnex3Format(req);
+  if (req) printOfficialAnnex3Format(req, store.activePeriod);
 }
 </script>
 
@@ -84,24 +226,26 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
   <div class="panel-card">
     <div class="panel-card__head">
       <div>
-        <h3>2. Funciones Sustantivas y Códigos SAC</h3>
+        <h3>Actividades y códigos SAC</h3>
         <p>
           {{
             codesViewMode === 'assigned'
-              ? 'Mostrando únicamente los códigos activos del docente (sin ruido)'
-              : `Explorador completo de los ${store.sacCodes.length} códigos del ANEXO 4`
+              ? 'Códigos asignados al docente en este periodo.'
+              : `Catálogo de ${store.sacCodes.length} códigos del Anexo 4.`
           }}
         </p>
       </div>
 
       <div class="segmented-control">
         <button
+          type="button"
           :class="{ active: codesViewMode === 'assigned' }"
           @click="codesViewMode = 'assigned'"
         >
           Activos ({{ activeTeacherCodes.length }})
         </button>
         <button
+          type="button"
           :class="{ active: codesViewMode === 'catalog' }"
           @click="codesViewMode = 'catalog'"
         >
@@ -112,49 +256,90 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
 
     <!-- Quick code assignment bar -->
     <div
-      v-if="codesViewMode === 'assigned'"
-      style="display: grid; grid-template-columns: 1fr 78px auto; gap: 6px; align-items: center; margin-bottom: 12px; background: var(--surface-soft); padding: 8px; border-radius: 9px"
+      v-if="codesViewMode === 'assigned' && !readonly"
+      style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; background: var(--surface-soft); padding: 8px; border-radius: 9px"
     >
-      <select
-        v-model="quickSelectedCode"
-        style="padding: 6px 8px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 12px; font-weight: 600; color: var(--navy); width: 100%"
+      <div
+        style="display: grid; grid-template-columns: 1fr 78px auto; gap: 6px; align-items: center"
       >
-        <optgroup
-          v-for="fn in substantiveFunctions"
-          :key="fn"
-          :label="fn"
+        <select
+          v-model="quickSelectedCode"
+          class="control-sm"
+          style="width: 100%"
         >
-          <option
-            v-for="codeOption in assignableCodes.filter(
-              (x) => x.substantiveFunction === fn,
-            )"
-            :key="codeOption.code"
-            :value="codeOption.code"
+          <optgroup
+            v-for="fn in substantiveFunctions"
+            :key="fn"
+            :label="fn"
           >
-            {{ codeOption.code }} — {{ codeOption.name.replace('TUNJA ', '') }} ({{
-              codeOption.baseHours ?? 0
-            }}–{{ codeOption.capHours ?? 'Aval' }}h)
+            <option
+              v-for="codeOption in assignableCodes.filter(
+                (x) => x.substantiveFunction === fn,
+              )"
+              :key="codeOption.code"
+              :value="codeOption.code"
+            >
+              {{ codeOption.code }} — {{ codeOption.name.replace('TUNJA ', '') }} ({{
+                codeOption.baseHours ?? 0
+              }}–{{ codeOption.capHours ?? 'Aval' }}h)
+            </option>
+          </optgroup>
+        </select>
+        <input
+          v-model.number="quickCodeHours"
+          type="number"
+          min="1"
+          max="240"
+          step="2"
+          placeholder="Horas"
+          class="control-sm control-sm--num"
+        />
+        <button
+          type="button"
+          class="btn primary small"
+          style="height: 34px"
+          @click="handleQuickAssignCode"
+        >
+          Asignar
+        </button>
+      </div>
+
+      <div
+        v-if="isProgramLinkable(quickSelectedCode)"
+        style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap"
+      >
+        <span style="font-size: 11px; font-weight: 700; color: var(--navy); white-space: nowrap">
+          Programa asociado (Anexo 5):
+        </span>
+        <select
+          v-model="quickSelectedProgramId"
+          class="control-sm"
+          style="flex: 1; min-width: 220px"
+        >
+          <option value="">Bolsa consolidada de la unidad</option>
+          <option
+            v-for="prog in getProgramsForCode(quickSelectedCode)"
+            :key="prog.id"
+            :value="prog.id"
+          >
+            {{ prog.programName }} ({{ prog.level }}){{
+              getProgramCapForCode(prog, quickSelectedCode) !== null
+                ? ` · Usado ${sumProgramHoursInUnit(prog.id, quickSelectedCode)}/${getProgramCapForCode(prog, quickSelectedCode)}h`
+                : ''
+            }}{{ !prog.isActive ? ' [Cohorte excluida]' : '' }}
           </option>
-        </optgroup>
-      </select>
-      <input
-        v-model.number="quickCodeHours"
-        type="number"
-        min="1"
-        max="240"
-        step="2"
-        placeholder="Horas"
-        style="padding: 6px 7px; border: 1.5px solid var(--border); border-radius: 7px; font-family: var(--font-mono); font-weight: 700; font-size: 12px"
-      />
-      <button class="btn primary small" @click="handleQuickAssignCode">
-        + Asignar
-      </button>
+        </select>
+      </div>
     </div>
 
-    <div v-else style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px">
+    <div
+      v-else-if="codesViewMode === 'catalog'"
+      style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px"
+    >
       <button
         v-for="fn in substantiveFunctions"
         :key="fn"
+        type="button"
         class="dia-chip"
         style="height: 28px; font-size: 11px"
         :class="{ active: activeFunction === fn }"
@@ -167,18 +352,22 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
     <table class="compact-table">
       <thead>
         <tr>
-          <th>Código y Actividad</th>
+          <th>Código y actividad</th>
           <th>Rango</th>
           <th>Horas</th>
-          <th v-if="store.versionComparisonMode">v1→v2</th>
-          <th>Validación / Aval</th>
+          <th v-if="store.versionComparisonMode">Versión inicial</th>
+          <th>Estado</th>
           <th style="text-align: right">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr v-if="displayedCodes.length === 0">
           <td colspan="6" class="empty-note" style="padding: 14px 0; text-align: center">
-            Este docente no tiene códigos adicionales asignados. Usa el selector superior para agregar uno.
+            {{
+              readonly
+                ? 'Sin códigos adicionales asignados en este periodo.'
+                : 'Sin códigos adicionales asignados. Seleccione uno arriba para registrarlo.'
+            }}
           </td>
         </tr>
         <tr
@@ -188,12 +377,12 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
           <td
             data-label="Código"
             style="cursor: pointer"
-            title="Haz clic para ver el lineamiento normativo de este código SAC"
+            title="Ver lineamiento del código"
             @click="selectedCodeInfo = codeItem"
           >
             <div style="display: flex; align-items: flex-start; gap: 6px">
               <span class="code-chip">{{ codeItem.code }}</span>
-              <div>
+              <div style="min-width: 0; flex: 1">
                 <b
                   style="color: var(--navy); font-size: 11.5px; line-height: 1.2; display: block"
                 >
@@ -202,6 +391,45 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
                 <span style="font-size: 10.5px; color: var(--ink-soft)">
                   {{ codeItem.substantiveFunction }}
                 </span>
+
+                <div
+                  v-if="
+                    isProgramLinkable(codeItem.code) &&
+                    (teacher.allocations[codeItem.code]?.hours ?? 0) > 0
+                  "
+                  style="margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap"
+                  @click.stop
+                >
+                  <select
+                    :value="teacher.allocations[codeItem.code]?.programId ?? ''"
+                    :disabled="
+                      readonly ||
+                      (Boolean(codeItem.lockedByResearch) && store.activeRole === 'dean')
+                    "
+                    class="table-select"
+                    style="font-size: 10.5px; height: 26px; padding: 0 22px 0 7px; max-width: 260px"
+                    title="Programa académico al que aporta este código"
+                    @change="
+                      handleChangeRowProgram(
+                        codeItem,
+                        ($event.target as HTMLSelectElement).value,
+                      )
+                    "
+                  >
+                    <option value="">Programa: Consolidado unidad</option>
+                    <option
+                      v-for="prog in getProgramsForCode(codeItem.code)"
+                      :key="prog.id"
+                      :value="prog.id"
+                    >
+                      {{ prog.programName }} ({{ prog.level }}){{
+                        getProgramCapForCode(prog, codeItem.code) !== null
+                          ? ` — ${sumProgramHoursInUnit(prog.id, codeItem.code)}/${getProgramCapForCode(prog, codeItem.code)}h`
+                          : ''
+                      }}
+                    </option>
+                  </select>
+                </div>
               </div>
             </div>
           </td>
@@ -209,11 +437,7 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
             data-label="Rango"
             style="font-family: var(--font-mono); font-size: 11px; white-space: nowrap"
           >
-            {{ codeItem.baseHours ?? 0 }}–{{
-              store.activeUnit.hasPostgraduates && codeItem.postgraduateCapHours
-                ? `${codeItem.postgraduateCapHours}*`
-                : `${codeItem.capHours ?? 'Aval'}`
-            }}h
+            {{ codeItem.baseHours ?? 0 }}–{{ formatEffectiveCapLabel(codeItem) }}h
           </td>
           <td data-label="Horas">
             <div style="display: flex; align-items: center; gap: 4px">
@@ -223,8 +447,12 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
                 min="0"
                 max="240"
                 step="2"
-                :disabled="Boolean(codeItem.lockedByResearch) && store.activeRole === 'dean'"
-                style="width: 64px; padding: 4px 6px; border: 1.5px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 12px; color: var(--navy)"
+                :disabled="
+                  readonly ||
+                  (Boolean(codeItem.lockedByResearch) && store.activeRole === 'dean')
+                "
+                class="table-input table-input--num"
+                style="width: 64px"
                 @change="
                   emit(
                     'assignHours',
@@ -242,7 +470,7 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
               </span>
             </div>
           </td>
-          <td v-if="store.versionComparisonMode" data-label="v1→v2">
+          <td v-if="store.versionComparisonMode" data-label="Versión inicial">
             <span
               v-if="
                 teacher.allocations[codeItem.code]?.version1Hours !== undefined &&
@@ -269,7 +497,9 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
                     'Avalado'
                       ? 'aprobado'
                       : getTeacherCodeApprovalStatus(teacher.id, codeItem.code)?.status ===
-                          'Con Observaciones'
+                          'Con Observaciones' ||
+                          getTeacherCodeApprovalStatus(teacher.id, codeItem.code)?.status ===
+                            'Rechazado'
                         ? 'reprobado'
                         : 'pendiente'
                   "
@@ -282,7 +512,7 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
                   class="badge reprobado"
                   style="padding: 2px 6px; font-size: 10px"
                 >
-                  Falta ANEXO 3
+                  Falta Anexo 3
                 </span>
               </template>
               <span
@@ -296,7 +526,7 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
                 v-else
                 style="font-size: 11px; color: var(--success); font-weight: 700"
               >
-                ✓ Activo
+                Activo
               </span>
             </template>
             <span v-else style="font-size: 11px; color: var(--ink-faint)">—</span>
@@ -304,38 +534,47 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
           <td style="text-align: right; white-space: nowrap">
             <div style="display: flex; gap: 4px; justify-content: flex-end">
               <button
-                v-if="codeItem.requiresViceRectorApproval"
+                v-if="!readonly && codeItem.requiresViceRectorApproval"
+                type="button"
                 class="btn accent small"
                 style="padding: 3px 8px; font-size: 11px"
                 @click.stop="emit('openAnnex3', codeItem)"
               >
-                ANEXO 3
+                Anexo 3
               </button>
               <button
                 v-if="
                   codeItem.requiresViceRectorApproval &&
                   getTeacherCodeApprovalStatus(teacher.id, codeItem.code)
                 "
+                type="button"
                 class="btn ghost small"
                 style="padding: 3px 7px; font-size: 11px"
-                title="Imprimir / Guardar PDF Oficial ANEXO 3"
+                title="Imprimir o guardar PDF del Anexo 3"
                 @click.stop="handlePrintTeacherCodeApproval(teacher.id, codeItem.code)"
               >
-                🖨 PDF
+                PDF
               </button>
               <button
-                v-if="(teacher.allocations[codeItem.code]?.hours ?? 0) > 0"
+                v-if="!readonly && (teacher.allocations[codeItem.code]?.hours ?? 0) > 0"
+                type="button"
                 class="btn ghost small"
                 style="padding: 3px 8px; font-size: 11px"
                 @click.stop="emit('openException', codeItem)"
               >
-                {{ store.activeRole === 'director' ? 'Ajustar' : 'Nota' }}
+                {{
+                  store.activeRole === 'director' || store.activeRole === 'vice_rector'
+                    ? 'Ajustar'
+                    : 'Nota'
+                }}
               </button>
               <button
                 v-if="
+                  !readonly &&
                   (teacher.allocations[codeItem.code]?.hours ?? 0) > 0 &&
                   !(codeItem.lockedByResearch && store.activeRole === 'dean')
                 "
+                type="button"
                 class="btn ghost small"
                 style="padding: 3px 7px; color: var(--danger)"
                 title="Quitar código"
@@ -357,20 +596,21 @@ function handlePrintTeacherCodeApproval(teacherId: string, code: string) {
     >
       <div class="lineamiento-popover__head">
         <span>
-          📌 Lineamiento {{ selectedCodeInfo.code }} ·
+          Lineamiento {{ selectedCodeInfo.code }} ·
           {{ selectedCodeInfo.name.replace('TUNJA ', '') }}
         </span>
         <button
+          type="button"
           style="border: none; background: transparent; cursor: pointer; font-weight: 700; color: var(--ink-soft)"
           @click="selectedCodeInfo = null"
         >
-          × Cerrar
+          Cerrar
         </button>
       </div>
       <div class="lineamiento-popover__body">
         {{ selectedCodeInfo.guideline }}
         <div style="margin-top: 4px; font-weight: 700; color: var(--navy)">
-          Rango ANEXO 4: {{ selectedCodeInfo.baseHours ?? 0 }} h –
+          Rango Anexo 4: {{ selectedCodeInfo.baseHours ?? 0 }} h –
           {{
             store.activeUnit.hasPostgraduates && selectedCodeInfo.postgraduateCapHours
               ? `${selectedCodeInfo.postgraduateCapHours} h (con posgrado)`

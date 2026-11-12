@@ -52,6 +52,7 @@ export interface AuthEnvConfig {
   readonly azureApiScope: string;
   readonly azureAudience: string;
   readonly institutionalDomain: string;
+  readonly institutionalDomains: readonly string[];
   readonly msalCacheLocation: 'sessionStorage' | 'localStorage';
 }
 
@@ -60,6 +61,8 @@ export interface AppConfig {
   readonly host: string;
   readonly nodeEnv: string;
   readonly corsOrigin: string;
+  readonly trustProxy: boolean;
+  readonly uploadsDir: string;
   readonly maxBodySizeBytes: number;
   readonly database: DatabaseConfig;
   readonly auth: AuthEnvConfig;
@@ -84,6 +87,12 @@ function readPositiveInt(name: string, fallback: number): number {
   const parsed = Number.parseInt(readString(name, String(fallback)), 10);
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 }
+
+const DEFAULT_INSTITUTIONAL_DOMAINS = [
+  'ustatunja.edu.co',
+  INSTITUTIONAL_EMAIL_DOMAIN,
+  'usantoto.edu.co',
+] as const;
 
 export function resolveAuthEnvConfig(): AuthEnvConfig {
   const azureTenantId = readFirstString([
@@ -123,16 +132,29 @@ export function resolveAuthEnvConfig(): AuthEnvConfig {
   const msalCacheLocation: 'sessionStorage' | 'localStorage' =
     rawCache === 'localStorage' ? 'localStorage' : 'sessionStorage';
 
+  const rawDomains = readFirstString(
+    ['INSTITUTIONAL_EMAIL_DOMAINS', 'INSTITUTIONAL_EMAIL_DOMAIN'],
+    DEFAULT_INSTITUTIONAL_DOMAINS.join(','),
+  );
+  const parsedDomains = Array.from(
+    new Set(
+      rawDomains
+        .split(',')
+        .map((d) => d.trim().toLowerCase().replace(/^@+/, ''))
+        .filter(Boolean),
+    ),
+  );
+  const institutionalDomains =
+    parsedDomains.length > 0 ? parsedDomains : [...DEFAULT_INSTITUTIONAL_DOMAINS];
+
   return {
     mode,
     azureTenantId,
     azureClientId,
     azureApiScope,
     azureAudience,
-    institutionalDomain: readString(
-      'INSTITUTIONAL_EMAIL_DOMAIN',
-      INSTITUTIONAL_EMAIL_DOMAIN,
-    ).toLowerCase(),
+    institutionalDomain: institutionalDomains[0] ?? 'ustatunja.edu.co',
+    institutionalDomains,
     msalCacheLocation,
   };
 }
@@ -142,6 +164,11 @@ export const ENV_CONFIG: AppConfig = {
   host: readString('HOST', '0.0.0.0'),
   nodeEnv: readString('NODE_ENV', 'development'),
   corsOrigin: readString('CORS_ORIGIN', '*'),
+  trustProxy: readString('TRUST_PROXY', 'false').toLowerCase() === 'true',
+  uploadsDir: resolve(
+    process.cwd(),
+    readString('UPLOADS_DIR', 'uploads'),
+  ),
   maxBodySizeBytes: 25 * 1024 * 1024, // 25 MB
   database: {
     host: readString('DB_HOST', '127.0.0.1'),

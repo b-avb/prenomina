@@ -86,32 +86,50 @@ export class HttpClient {
     path: string,
     options: { query?: QueryParams; body?: unknown } = {},
   ): Promise<T> {
-    const endpoint = this.resolveEndpoint(path, options.query);
+    const normalizedMethod = method.toUpperCase();
+    const shouldTunnelOverPost =
+      normalizedMethod === 'PUT' ||
+      normalizedMethod === 'PATCH' ||
+      normalizedMethod === 'DELETE';
+    const transportMethod = shouldTunnelOverPost ? 'POST' : normalizedMethod;
+    const effectiveQuery = shouldTunnelOverPost
+      ? { ...options.query, _method: normalizedMethod }
+      : options.query;
+    const endpoint = this.resolveEndpoint(path, effectiveQuery);
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.timeoutMs);
-    const hasBody = options.body !== undefined;
+    const payload =
+      options.body !== undefined
+        ? options.body
+        : shouldTunnelOverPost
+          ? {}
+          : undefined;
+    const hasBody = payload !== undefined;
 
     let response: Response;
     try {
       response = await fetch(endpoint, {
-        method,
+        method: transportMethod,
         cache: 'no-store',
         signal: controller.signal,
         headers: {
           Accept: 'application/json',
           ...(hasBody ? { 'Content-Type': 'application/json' } : {}),
+          ...(shouldTunnelOverPost
+            ? { 'X-HTTP-Method-Override': normalizedMethod }
+            : {}),
           ...this.defaultHeadersProvider(),
         },
-        body: hasBody ? JSON.stringify(options.body) : undefined,
+        body: hasBody ? JSON.stringify(payload) : undefined,
       });
     } catch (error) {
       if (controller.signal.aborted) {
-        throw new ApiError(0, 'TIMEOUT', 'El servidor no respondió a tiempo. Intenta de nuevo.', endpoint);
+        throw new ApiError(0, 'TIMEOUT', 'El servidor tardó demasiado en responder. Intente de nuevo.', endpoint);
       }
       throw new ApiError(
         0,
         'NETWORK_ERROR',
-        'No fue posible conectar con el servidor de prenómina.',
+        'No se pudo conectar con el servidor.',
         endpoint,
         error,
       );
@@ -127,7 +145,7 @@ export class HttpClient {
         : new ApiError(
             response.status,
             'INVALID_RESPONSE',
-            `Error HTTP ${response.status} en ${endpoint}`,
+            'No se pudo completar la solicitud.',
             endpoint,
           );
       const isPublicAuthAttempt =
@@ -144,7 +162,7 @@ export class HttpClient {
       throw new ApiError(
         response.status,
         'INVALID_RESPONSE',
-        `Respuesta inesperada del servidor en ${endpoint}`,
+        'El servidor devolvió una respuesta no válida.',
         endpoint,
       );
     }
@@ -169,6 +187,59 @@ export class HttpClient {
 
   public delete<T>(path: string, query?: QueryParams): Promise<T> {
     return this.request<T>('DELETE', path, { query });
+  }
+
+  public async fetchBlob(path: string, query?: QueryParams): Promise<Blob> {
+    const endpoint = this.resolveEndpoint(path, query);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.timeoutMs);
+    let response: Response;
+    try {
+      response = await fetch(endpoint, {
+        method: 'GET',
+        cache: 'no-store',
+        signal: controller.signal,
+        headers: {
+          ...this.defaultHeadersProvider(),
+        },
+      });
+    } catch (error) {
+      if (controller.signal.aborted) {
+        throw new ApiError(
+          0,
+          'TIMEOUT',
+          'La descarga tardó demasiado. Intente de nuevo.',
+          endpoint,
+        );
+      }
+      throw new ApiError(
+        0,
+        'NETWORK_ERROR',
+        'No se pudo descargar el documento adjunto.',
+        endpoint,
+        error,
+      );
+    } finally {
+      clearTimeout(timer);
+    }
+
+    if (!response.ok) {
+      const body = await readJson(response);
+      const apiError = isApiFailure(body)
+        ? new ApiError(response.status, body.code, body.error, endpoint, body.details)
+        : new ApiError(
+            response.status,
+            'INVALID_RESPONSE',
+            'No se pudo abrir el archivo adjunto.',
+            endpoint,
+          );
+      if (response.status === 401 && this.unauthorizedHandler) {
+        this.unauthorizedHandler(apiError);
+      }
+      throw apiError;
+    }
+
+    return response.blob();
   }
 }
 
