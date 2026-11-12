@@ -426,9 +426,6 @@ if (\$authHeader !== '') {
 if (!empty(\$_SERVER['HTTP_X_ACADEMIC_PERIOD'])) {
     \$headers[] = 'X-Academic-Period: ' . \$_SERVER['HTTP_X_ACADEMIC_PERIOD'];
 }
-if (!empty(\$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
-    \$headers[] = 'X-HTTP-Method-Override: ' . \$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
-}
 if (!empty(\$_SERVER['REMOTE_ADDR'])) {
     \$headers[] = 'X-Forwarded-For: ' . \$_SERVER['REMOTE_ADDR'];
 }

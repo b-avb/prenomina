@@ -563,11 +563,8 @@ export class ApiRouter {
   }
 
   /**
-   * Dispatches an incoming HTTP request.
-   *
-   * Institutional Apache/WAF gateways may block `PUT`, `PATCH`, and `DELETE` verbs; `POST` requests
-   * carrying `X-HTTP-Method-Override` or `?_method=` are upgraded to the target mutating verb before
-   * matching. Sub-path mount prefixes (`/prenomina` and `/app/prenomina`) are stripped automatically.
+   * Dispatches an incoming HTTP request by matching its native HTTP verb and normalized path.
+   * Subpath mount prefixes (`/prenomina` and `/app/prenomina`) are stripped before route resolution.
    */
   public dispatch = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
     if (req.method === 'OPTIONS') {
@@ -576,22 +573,7 @@ export class ApiRouter {
     }
 
     const url = new URL(req.url ?? '/', `http://localhost:${ENV_CONFIG.port}`);
-    const rawMethod = (req.method ?? 'GET').toUpperCase();
-    const overrideHeader = req.headers['x-http-method-override'];
-    const overrideCandidate = (
-      (typeof overrideHeader === 'string' ? overrideHeader : undefined) ??
-      url.searchParams.get('_method') ??
-      ''
-    )
-      .trim()
-      .toUpperCase();
-    const method =
-      rawMethod === 'POST' &&
-      (overrideCandidate === 'PUT' ||
-        overrideCandidate === 'PATCH' ||
-        overrideCandidate === 'DELETE')
-        ? overrideCandidate
-        : rawMethod;
+    const method = (req.method ?? 'GET').toUpperCase();
     const normalizedPathname =
       url.pathname.replace(/^\/(?:app\/)?prenomina(?=\/|$)/, '') || '/';
     const actualSegments = splitPath(normalizedPathname);

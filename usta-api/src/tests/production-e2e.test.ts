@@ -1182,7 +1182,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-9.2 Idempotent production re-seed (deploy.sh path) preserves activated user passwords',
     );
 
-    // Reverse-proxy HTTP verb tunneling, Acuerdo No. 48 nomenclature, and per-program allocations.
+    // Verify Acuerdo No. 48 nomenclature, native REST verb enforcement, and per-program Annex 5 allocations.
     const stateAfterReseedRes = await request<PayrollSnapshot>({
       path: '/api/state?period=2026-2',
       token: reloginDirector.token,
@@ -1283,8 +1283,8 @@ async function runProductionE2ESuite(): Promise<void> {
       'POST /api/teachers (TC teacher in Inteligencia de Negocios Test)',
     );
 
-    // Exercise `POST` verb tunneling (`?_method=PUT` + `X-HTTP-Method-Override: PUT`) for per-program allocations.
-    const tunneledAllocRes = await request<FacultyTeacher>({
+    // Reject POST verb-override attempts on native PUT endpoints and apply per-program allocations via PUT.
+    const rejectedMethodOverrideRes = await request<FacultyTeacher>({
       method: 'POST',
       path: `/api/teachers/${encodeURIComponent(unitTcTeacher.id)}/allocations/30411?_method=PUT`,
       token: reloginDirector.token,
@@ -1295,18 +1295,34 @@ async function runProductionE2ESuite(): Promise<void> {
         programName: addedPostgradProg.program.programName,
       },
     });
-    const tunneledTeacher = expectData(
-      tunneledAllocRes,
-      200,
-      'POST ?_method=PUT /api/teachers/:id/allocations/30411 (tunneled PUT + programId)',
+    expectError(
+      rejectedMethodOverrideRes,
+      404,
+      'Reject non-standard POST method override on PUT /api/teachers/:id/allocations/30411',
     );
-    assert.equal(tunneledTeacher.allocations['30411']?.hours, 12);
+
+    const nativePutAllocRes = await request<FacultyTeacher>({
+      method: 'PUT',
+      path: `/api/teachers/${encodeURIComponent(unitTcTeacher.id)}/allocations/30411`,
+      token: reloginDirector.token,
+      body: {
+        hours: 12,
+        programId: addedPostgradProg.program.id,
+        programName: addedPostgradProg.program.programName,
+      },
+    });
+    const updatedProgAllocTeacher = expectData(
+      nativePutAllocRes,
+      200,
+      'PUT /api/teachers/:id/allocations/30411 (native PUT + programId)',
+    );
+    assert.equal(updatedProgAllocTeacher.allocations['30411']?.hours, 12);
     assert.equal(
-      tunneledTeacher.allocations['30411']?.programId,
+      updatedProgAllocTeacher.allocations['30411']?.programId,
       addedPostgradProg.program.id,
     );
     assert.equal(
-      tunneledTeacher.allocations['30411']?.programName,
+      updatedProgAllocTeacher.allocations['30411']?.programName,
       'MAESTRÍA EN ANALÍTICA DE NEGOCIOS',
     );
 
@@ -1338,7 +1354,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'Reject cross-unit programId on SAC allocation',
     );
     recordStep(
-      'UC-10.2 Apache/WAF POST method tunneling (?_method=PUT), per-program ANEXO 5 allocation & cross-unit programId guard verified',
+      'UC-10.2 Native PUT/PATCH/DELETE enforcement (POST override rejected), per-program ANEXO 5 allocation & cross-unit programId guard verified',
     );
 
     // Multi-unit Dean scope (`managedUnitIds`), workflow edit locks, binary PDF attachments, and `CATEDRA` guards.

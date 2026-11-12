@@ -20,7 +20,6 @@ export type RouteHandler = (
 
 /**
  * Builds standard CORS, anti-framing, MIME-sniffing, and `no-store` cache headers for API responses.
- * Permits `X-HTTP-Method-Override` for WAF verb tunneling and the custom period context header.
  */
 export function buildCorsHeaders(): Record<string, string> {
   return {
@@ -29,7 +28,6 @@ export function buildCorsHeaders(): Record<string, string> {
     'Access-Control-Allow-Headers': [
       'Content-Type',
       'Authorization',
-      'X-HTTP-Method-Override',
       ACTOR_HEADERS.period,
     ].join(', '),
     'X-Content-Type-Options': 'nosniff',

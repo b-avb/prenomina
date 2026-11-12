@@ -53,8 +53,7 @@ async function readJson(response: Response): Promise<unknown> {
  *
  * Architectural behaviors:
  * - Deduplicates `/api` prefixes when joining `baseUrl` and endpoint paths.
- * - Tunnels `PUT`, `PATCH`, and `DELETE` over `POST ?_method=<VERB>` with `X-HTTP-Method-Override`
- *   and a fallback `{}` JSON payload so restrictive reverse proxies/WAFs do not block mutating verbs.
+ * - Dispatches standard RESTful HTTP verbs (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`) with per-request `AbortController` timeouts.
  * - Invokes the registered `401` handler on expired sessions while excluding unauthenticated login endpoints.
  */
 export class HttpClient {
@@ -97,42 +96,23 @@ export class HttpClient {
     options: { query?: QueryParams; body?: unknown } = {},
   ): Promise<T> {
     const normalizedMethod = method.toUpperCase();
-    // Tunnel non-POST write verbs over POST so institutional reverse proxies do not reject PUT/PATCH/DELETE.
-    const shouldTunnelOverPost =
-      normalizedMethod === 'PUT' ||
-      normalizedMethod === 'PATCH' ||
-      normalizedMethod === 'DELETE';
-    const transportMethod = shouldTunnelOverPost ? 'POST' : normalizedMethod;
-    const effectiveQuery = shouldTunnelOverPost
-      ? { ...options.query, _method: normalizedMethod }
-      : options.query;
-    const endpoint = this.resolveEndpoint(path, effectiveQuery);
+    const endpoint = this.resolveEndpoint(path, options.query);
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.timeoutMs);
-    // Supply `{}` on bodyless tunneled writes so proxies requiring Content-Length on POST accept the request.
-    const payload =
-      options.body !== undefined
-        ? options.body
-        : shouldTunnelOverPost
-          ? {}
-          : undefined;
-    const hasBody = payload !== undefined;
+    const hasBody = options.body !== undefined;
 
     let response: Response;
     try {
       response = await fetch(endpoint, {
-        method: transportMethod,
+        method: normalizedMethod,
         cache: 'no-store',
         signal: controller.signal,
         headers: {
           Accept: 'application/json',
           ...(hasBody ? { 'Content-Type': 'application/json' } : {}),
-          ...(shouldTunnelOverPost
-            ? { 'X-HTTP-Method-Override': normalizedMethod }
-            : {}),
           ...this.defaultHeadersProvider(),
         },
-        body: hasBody ? JSON.stringify(payload) : undefined,
+        body: hasBody ? JSON.stringify(options.body) : undefined,
       });
     } catch (error) {
       if (controller.signal.aborted) {
