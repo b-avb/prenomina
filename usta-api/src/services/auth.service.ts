@@ -288,6 +288,16 @@ export const OFFICIAL_INSTITUTIONAL_ACCOUNTS: readonly OfficialInstitutionalAcco
     passwordHash:
       'scrypt:92e32f5d66bb4b3aca809520702717aa:1e69343b3a44035fa6bce6656bae3ad11f6a13aaff65ddac3d62c044551a013754694f9fecb1bcba0694fc9bbd380f6195e750d03c4cde3c50080d03af3efb29',
   },
+  {
+    id: 'user-dean-ing-qa',
+    role: 'dean',
+    unitId: 'ing-qa',
+    username: 'profesp.docencia',
+    email: 'profesp.docencia@ustatunja.edu.co',
+    fullName: 'Yaderliz Mendivelso Melo',
+    passwordHash:
+      'scrypt:7e446a7a40c223eded5310a301115e39:617a3056f74199c7009b3a270671128f04547d0b8cd743206cad087ec3c3db1c3f60d09884878cf321e36ddd7caa80e10b00b917fc8857d8bd3a23369aa22b8a',
+  },
 ];
 
 /** Generates a random 17-character alphanumeric temporary password satisfying letter-and-digit complexity rules. */

@@ -1056,6 +1056,25 @@ export const ACADEMIC_UNITS_SEED: AcademicUnitSummary[] = [
     "totalTeachers": 13,
     "pendingAlerts": 0,
     "pendingApprovals": 0
+  },
+  {
+    "id": "ing-qa",
+    "name": "Ingeniería de QA",
+    "division": "División de Ingenierías y Arquitectura",
+    "unitType": "Facultad",
+    "hasPostgraduates": true,
+    "deanName": "Yaderliz Mendivelso Melo",
+    "payrollStatus": "Borrador",
+    "currentVersion": 1,
+    "updatedAt": "",
+    "qualityCap30411": 24,
+    "curriculumCap40106": 24,
+    "seaCap40109": 12,
+    "saberProCap40127": 12,
+    "graduatesCap20502": 12,
+    "totalTeachers": 4,
+    "pendingAlerts": 0,
+    "pendingApprovals": 0
   }
 ];
 
@@ -1487,6 +1506,34 @@ export const PROGRAM_QUOTAS_ANNEX5_SEED: ProgramQuotaAnnex5[] = [
     "curriculum40106": 16,
     "sea40109": 8,
     "saberPro40127": 8,
+    "isActive": true
+  },
+  {
+    "id": "p-qa-1",
+    "unitId": "ing-qa",
+    "unitName": "Ingeniería de QA",
+    "programName": "INGENIERÍA DE QA",
+    "level": "Pregrado",
+    "modality": "Presencial",
+    "accreditationStatus": "Registro Calificado Vigente",
+    "quality30411": 16,
+    "curriculum40106": 16,
+    "sea40109": 8,
+    "saberPro40127": 12,
+    "isActive": true
+  },
+  {
+    "id": "p-qa-2",
+    "unitId": "ing-qa",
+    "unitName": "Ingeniería de QA",
+    "programName": "ESPECIALIZACIÓN EN ASEGURAMIENTO DE LA CALIDAD DE SOFTWARE",
+    "level": "Posgrado",
+    "modality": "Virtual",
+    "accreditationStatus": "Registro Calificado Vigente",
+    "quality30411": 8,
+    "curriculum40106": 8,
+    "sea40109": 4,
+    "saberPro40127": 0,
     "isActive": true
   }
 ];
@@ -5561,6 +5608,62 @@ export const FACULTY_TEACHERS_SEED: FacultyTeacher[] = [
     "expectedWorkload": 160,
     "rank": "Categoría 2 (Asistente)",
     "education": "Licenciatura en Lenguas Extranjeras · Magíster en Didáctica de las Lenguas",
+    "isProvisional": false,
+    "seniorityYears": 3,
+    "academicSpaces": [],
+    "allocations": {}
+  },
+  {
+    "id": "qa-1",
+    "unitId": "ing-qa",
+    "documentId": "QA-DOC-01",
+    "fullName": "YADERLIZ MENDIVELSO MELO",
+    "dedication": "DIRECTIVO",
+    "expectedWorkload": 210,
+    "rank": "Decanatura de Facultad",
+    "education": "Profesional Especializado en Docencia · Magíster en Educación",
+    "isProvisional": false,
+    "seniorityYears": 5,
+    "academicSpaces": [],
+    "allocations": {}
+  },
+  {
+    "id": "qa-2",
+    "unitId": "ing-qa",
+    "documentId": "QA-DOC-02",
+    "fullName": "CAMILO ANDRÉS ROJAS VARGAS",
+    "dedication": "TC",
+    "expectedWorkload": 160,
+    "rank": "Categoría 2 (Asistente)",
+    "education": "Ingeniero de Sistemas · Magíster en Ingeniería de Software",
+    "isProvisional": false,
+    "seniorityYears": 5,
+    "academicSpaces": [],
+    "allocations": {}
+  },
+  {
+    "id": "qa-3",
+    "unitId": "ing-qa",
+    "documentId": "QA-DOC-03",
+    "fullName": "LAURA SOFÍA MÉNDEZ CASTRO",
+    "dedication": "TC",
+    "expectedWorkload": 160,
+    "rank": "Categoría 3 (Asociado)",
+    "education": "Ingeniera de Sistemas · Magíster en Calidad de Software",
+    "isProvisional": false,
+    "seniorityYears": 6,
+    "academicSpaces": [],
+    "allocations": {}
+  },
+  {
+    "id": "qa-4",
+    "unitId": "ing-qa",
+    "documentId": "QA-DOC-04",
+    "fullName": "DIEGO FERNANDO TORRES PÉREZ",
+    "dedication": "MT",
+    "expectedWorkload": 80,
+    "rank": "Categoría 1 (Auxiliar)",
+    "education": "Ingeniero Electrónico · Especialista en Gerencia de Proyectos",
     "isProvisional": false,
     "seniorityYears": 3,
     "academicSpaces": [],

@@ -337,7 +337,7 @@ async function runProductionE2ESuite(): Promise<void> {
       'UC-0.3 Director (@dir.ensenanza) first-time login, mandatory password change & JWT rotation verified',
     );
 
-    // Confirm baseline seed produces zero synthetic audit entries and the 22 institutional accounts.
+    // Confirm baseline seed produces zero synthetic audit entries and the 23 institutional accounts.
     const initialAuditRes = await request<AuditLogEntry[]>({
       path: '/api/audit-logs?period=2026-2&limit=50',
       token: directorSession.token,
@@ -351,9 +351,14 @@ async function runProductionE2ESuite(): Promise<void> {
       token: directorSession.token,
     });
     const initialUsers = expectData(initialUsersRes, 200, 'Initial GET /api/users');
-    assert.equal(initialUsers.length, 22);
+    assert.equal(initialUsers.length, 23);
     assert.ok(!initialUsers.some((u) => u.username === 'investigacion'));
     assert.ok(!initialUsers.some((u) => u.username === 'yolanda.fonseca'));
+    const qaDeanAccount = initialUsers.find((u) => u.username === 'profesp.docencia');
+    assert.ok(qaDeanAccount, 'Expected profesp.docencia QA Dean account in seed');
+    assert.equal(qaDeanAccount.email, 'profesp.docencia@ustatunja.edu.co');
+    assert.equal(qaDeanAccount.role, 'dean');
+    assert.equal(qaDeanAccount.unitId, 'ing-qa');
 
     const deanSession = await authenticateAndActivateAccount(
       'dec.industrial',
@@ -475,10 +480,10 @@ async function runProductionE2ESuite(): Promise<void> {
     });
     const snapshot = expectData(stateRes, 200, 'GET /api/state');
     assert.equal(snapshot.activePeriod, '2026-2');
-    assert.equal(snapshot.units.length, 21);
-    assert.equal(snapshot.teachers.length, 291);
+    assert.equal(snapshot.units.length, 22);
+    assert.equal(snapshot.teachers.length, 295);
     assert.equal(snapshot.sacCodes.length, 51);
-    assert.ok(snapshot.programQuotas.length >= 28);
+    assert.ok(snapshot.programQuotas.length >= 30);
     assert.equal(snapshot.approvalRequests.length, 0);
     assert.equal(snapshot.researchAllocations.length, 0);
     assert.ok(
@@ -518,6 +523,10 @@ async function runProductionE2ESuite(): Promise<void> {
       snapshot.units.find((u) => u.id === 'lic-infantil')?.deanName,
       'Gladys Leonor Arias Rodríguez',
     );
+    assert.equal(
+      snapshot.units.find((u) => u.id === 'ing-qa')?.deanName,
+      'Yaderliz Mendivelso Melo',
+    );
     assert.ok(
       snapshot.sacCodes.every(
         (c) => !c.guideline.includes('INC-') && !c.name.includes('SIN CÓDIGO'),
@@ -540,8 +549,8 @@ async function runProductionE2ESuite(): Promise<void> {
       token: directorSession.token,
     });
     const usersList = expectData(usersRes, 200, 'GET /api/users');
-    assert.equal(usersList.length, 23);
-    recordStep('UC-2.2 Active period (2026-2 only) and 22+1 institutional user accounts verified');
+    assert.equal(usersList.length, 24);
+    recordStep('UC-2.2 Active period (2026-2 only) and 23+1 institutional user accounts verified');
 
     // Academic unit lifecycle, auto-provisioned Dean account, and Annex 5 program quota rollups.
     const createUnitRes = await request<UnitWithDirectorResponse>({
@@ -1112,7 +1121,7 @@ async function runProductionE2ESuite(): Promise<void> {
     });
     const clonedState = expectData(clonedStateRes, 200, 'GET /api/state?period=2027-1');
     assert.equal(clonedState.activePeriod, '2027-1');
-    assert.equal(clonedState.units.length, 21);
+    assert.equal(clonedState.units.length, 22);
     assert.ok(clonedState.units.every((u: AcademicUnitSummary) => u.payrollStatus === 'Borrador'));
     recordStep(
       'UC-8.2 Semester period cloning (2026-2 -> 2027-1) with status reset & roster migration verified',

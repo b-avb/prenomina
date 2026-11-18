@@ -150,7 +150,78 @@ async function cleanupAndSyncExistingDatabase(
       .execute();
   }
 
-  const existingUnits = await repos.units.listAll(trx);
+  const seed = await import('./usta-seed.data.js');
+  const nowIso = new Date().toISOString();
+
+  // Backfill newly introduced seed units unless previously retired via administrative audit log.
+  const retiredUnitAudits = await trx
+    .selectFrom('audit_logs')
+    .select('unit_name')
+    .where('action', '=', 'Retiro de unidad académica')
+    .execute();
+  const retiredUnitNames = new Set(
+    retiredUnitAudits.map((r) => r.unit_name).filter(Boolean),
+  );
+
+  let existingUnits = await repos.units.listAll(trx);
+  const existingUnitIdsBeforeBackfill = new Set(existingUnits.map((u) => u.id));
+  const missingUnits: AcademicUnitRecord[] = seed.ACADEMIC_UNITS_SEED.filter(
+    (u) => !existingUnitIdsBeforeBackfill.has(u.id) && !retiredUnitNames.has(u.name),
+  ).map((u) => ({
+    id: u.id,
+    name: u.name,
+    division: u.division,
+    unitType: u.unitType,
+    hasPostgraduates: u.hasPostgraduates,
+    deanName: u.deanName,
+    qualityCap30411: u.qualityCap30411,
+    curriculumCap40106: u.curriculumCap40106,
+    seaCap40109: u.seaCap40109,
+    saberProCap40127: u.saberProCap40127,
+    graduatesCap20502: u.graduatesCap20502,
+    updatedAt: u.updatedAt || nowIso,
+  }));
+
+  if (missingUnits.length > 0) {
+    await repos.units.insertMany(trx, missingUnits);
+    const existingPeriods = await repos.periods.listAll(trx);
+    const targetPeriods =
+      existingPeriods.length > 0 ? existingPeriods.map((p) => p.code) : ['2026-2'];
+    const newUnitCycles: UnitPayrollCycle[] = [];
+    for (const periodCode of targetPeriods) {
+      for (const unit of missingUnits) {
+        newUnitCycles.push({
+          unitId: unit.id,
+          periodCode,
+          payrollStatus: 'Borrador',
+          currentVersion: 1,
+          updatedAt: nowIso,
+        });
+      }
+    }
+    if (newUnitCycles.length > 0) {
+      await repos.units.saveCycles(trx, newUnitCycles);
+    }
+
+    const missingUnitIdSet = new Set(missingUnits.map((u) => u.id));
+    const seedTeachersForMissingUnits = structuredClone(
+      seed.FACULTY_TEACHERS_SEED,
+    ).filter((t) => missingUnitIdSet.has(t.unitId));
+    if (seedTeachersForMissingUnits.length > 0) {
+      for (const periodCode of targetPeriods) {
+        const periodScopedTeachers =
+          periodCode === '2026-2'
+            ? seedTeachersForMissingUnits
+            : seedTeachersForMissingUnits.map((t) => ({
+                ...t,
+                id: `${t.id}-${periodCode}`,
+              }));
+        await repos.teachers.insertMany(trx, periodCode, periodScopedTeachers);
+      }
+    }
+    existingUnits = await repos.units.listAll(trx);
+  }
+
   const existingUsers = await repos.users.count(trx);
   if (existingUsers === 0) {
     await repos.users.insertMany(
@@ -178,7 +249,6 @@ async function cleanupAndSyncExistingDatabase(
       deanUpdatedAudits.map((r) => r.unit_id).filter(Boolean),
     );
 
-    const nowIso = new Date().toISOString();
     const unitById = new Map(existingUnits.map((u) => [u.id, u]));
     const licInfantil = unitById.get('lic-infantil');
     if (
@@ -193,6 +263,10 @@ async function cleanupAndSyncExistingDatabase(
     }
 
     for (const official of OFFICIAL_INSTITUTIONAL_ACCOUNTS) {
+      if (official.unitId && !unitById.has(official.unitId)) {
+        continue;
+      }
+
       if (official.unitId && !unitsWithEditedDean.has(official.unitId)) {
         const unit = unitById.get(official.unitId);
         if (unit && unit.deanName !== official.fullName) {
@@ -255,7 +329,6 @@ async function cleanupAndSyncExistingDatabase(
   }
 
   // Backfill missing Annex 5 programs unless explicitly deleted in the audit log.
-  const seed = await import('./usta-seed.data.js');
   const programDeletedAudits = await trx
     .selectFrom('audit_logs')
     .select('previous_value')
@@ -266,7 +339,7 @@ async function cleanupAndSyncExistingDatabase(
   );
   const existingPrograms = await repos.programs.list(trx);
   const existingProgramIds = new Set(existingPrograms.map((p) => p.id));
-  const existingUnitIds = new Set((await repos.units.listAll(trx)).map((u) => u.id));
+  const existingUnitIds = new Set(existingUnits.map((u) => u.id));
   const missingPrograms: AcademicProgramRecord[] = [];
   for (const { unitName: _unitName, ...program } of seed.PROGRAM_QUOTAS_ANNEX5_SEED) {
     if (
