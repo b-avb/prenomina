@@ -542,7 +542,7 @@ write_apache_proxy_conf() {
 </IfModule>
 
 <Directory "${WEB_TARGET_DIR:-/var/app/www/html/prenomina}">
-  Options FollowSymLinks -Indexes
+  Options +FollowSymLinks -Indexes
   AllowOverride All
   Require all granted
 </Directory>
@@ -552,11 +552,21 @@ APACHECONF
 if [[ -d "/etc/httpd/conf.d" ]]; then
   echo "[Server] Configurando Reverse Proxy en /etc/httpd/conf.d/usta-prenomina.conf..."
   write_apache_proxy_conf "/etc/httpd/conf.d/usta-prenomina.conf"
-  run_as_root systemctl reload httpd 2>/dev/null || run_as_root systemctl restart httpd 2>/dev/null || true
+  if run_as_root httpd -t >/dev/null 2>&1; then
+    run_as_root systemctl reload httpd 2>/dev/null || run_as_root systemctl restart httpd 2>/dev/null || true
+  else
+    echo "[WARN] httpd -t detectó un error de sintaxis en Apache; se omite reload para no detener el servicio:" >&2
+    run_as_root httpd -t || true
+  fi
 elif [[ -d "/etc/apache2/conf-enabled" ]]; then
   run_as_root a2enmod proxy proxy_http rewrite headers >/dev/null 2>&1 || true
   write_apache_proxy_conf "/etc/apache2/conf-enabled/usta-prenomina.conf"
-  run_as_root systemctl reload apache2 2>/dev/null || run_as_root systemctl restart apache2 2>/dev/null || true
+  if run_as_root apache2ctl -t >/dev/null 2>&1; then
+    run_as_root systemctl reload apache2 2>/dev/null || run_as_root systemctl restart apache2 2>/dev/null || true
+  else
+    echo "[WARN] apache2ctl -t detectó un error de sintaxis en Apache; se omite reload para no detener el servicio:" >&2
+    run_as_root apache2ctl -t || true
+  fi
 fi
 
 echo "=============================================================================="
