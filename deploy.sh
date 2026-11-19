@@ -79,6 +79,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUNDLE_PATH="/tmp/usta-deploy.tar.gz"
 ENV_FILE="/opt/usta-plataforma/usta-api/.env"
 UPLOADS_PATH="/opt/usta-plataforma/usta-api/uploads"
+BACKUPS_PATH="/opt/usta-plataforma/backups"
 
 run_as_root() {
   if [[ "$(id -u)" -eq 0 ]]; then
@@ -281,7 +282,7 @@ run_as_root mkdir -p /opt/usta-plataforma
 run_as_root rm -rf /opt/usta-plataforma/usta-api/dist /opt/usta-plataforma/usta-web/dist /opt/usta-plataforma/packages/domain/dist /opt/usta-plataforma/usta-api/data
 run_as_root tar -xzf "$BUNDLE_PATH" -C /opt/usta-plataforma
 rm -f "$BUNDLE_PATH"
-run_as_root mkdir -p "$UPLOADS_PATH"
+run_as_root mkdir -p "$UPLOADS_PATH" "$BACKUPS_PATH"
 
 cd /opt/usta-plataforma
 if command -v pnpm >/dev/null 2>&1; then
@@ -325,17 +326,30 @@ upsert_env_var "DB_NAME" "$DB_NAME" "$ENV_FILE"
 upsert_env_var "DB_USER" "$DB_USER" "$ENV_FILE"
 upsert_env_var "DB_PASSWORD" "$DB_PASSWORD" "$ENV_FILE"
 
-run_as_root chown -R ustaapp:ustaapp /opt/usta-plataforma/usta-api "$UPLOADS_PATH"
-run_as_root chmod 750 "$UPLOADS_PATH"
+run_as_root chown -R ustaapp:ustaapp /opt/usta-plataforma/usta-api "$UPLOADS_PATH" "$BACKUPS_PATH"
+run_as_root chmod 750 "$UPLOADS_PATH" "$BACKUPS_PATH"
 run_as_root chmod 600 "$ENV_FILE"
 
 NODE_BIN="$(command -v node)"
-echo "==> 6. Ejecutando migraciones Kysely y sincronización inicial segura en MySQL/MariaDB..."
+echo "==> 6. Generando respaldo automático previo (BD y soportes) en ${BACKUPS_PATH}..."
 cd /opt/usta-plataforma/usta-api
+run_as_root -u ustaapp "$NODE_BIN" dist/database/backup.cli.js --dir "$BACKUPS_PATH" --keep 20 || \
+  run_as_root "$NODE_BIN" dist/database/backup.cli.js --dir "$BACKUPS_PATH" --keep 20
+
+if [[ -n "$(run_as_root ls -A "$UPLOADS_PATH" 2>/dev/null || true)" ]]; then
+  UPLOADS_ARCHIVE="${BACKUPS_PATH}/uploads_$(date -u +%Y%m%d_%H%M%S).tar.gz"
+  run_as_root tar -czf "$UPLOADS_ARCHIVE" -C "$UPLOADS_PATH" .
+  run_as_root chmod 600 "$UPLOADS_ARCHIVE"
+  run_as_root chown ustaapp:ustaapp "$UPLOADS_ARCHIVE"
+  echo "[db:backup] Saved Annex 3 uploads archive -> ${UPLOADS_ARCHIVE}"
+  run_as_root bash -c "ls -1t '${BACKUPS_PATH}'/uploads_*.tar.gz 2>/dev/null | tail -n +21 | xargs -r rm -f"
+fi
+
+echo "==> 7. Ejecutando migraciones Kysely y sincronización inicial segura en MySQL/MariaDB..."
 run_as_root -u ustaapp "$NODE_BIN" dist/database/migrate.cli.js || run_as_root "$NODE_BIN" dist/database/migrate.cli.js
 run_as_root -u ustaapp "$NODE_BIN" dist/database/seed.cli.js || run_as_root "$NODE_BIN" dist/database/seed.cli.js
 
-echo "==> 7. Configurando servicio systemd (usta-api.service en ${APP_HOST}:${APP_PORT})..."
+echo "==> 8. Configurando servicio systemd (usta-api.service en ${APP_HOST}:${APP_PORT})..."
 run_as_root tee /etc/systemd/system/usta-api.service >/dev/null <<SERVICE
 [Unit]
 Description=USTA Tunja Prenomina Plataforma Web + API
@@ -366,7 +380,7 @@ sleep 2
 curl -fsS "http://127.0.0.1:${APP_PORT}/api/health" >/dev/null
 echo "[Server] Health check http://127.0.0.1:${APP_PORT}/api/health OK"
 
-echo "==> 8. Configurando Reverse Proxy Apache (/prenomina y /app/prenomina) y permisos SELinux..."
+echo "==> 9. Configurando Reverse Proxy Apache (/prenomina y /app/prenomina) y permisos SELinux..."
 if command -v setsebool >/dev/null 2>&1; then
   run_as_root setsebool -P httpd_can_network_connect 1 >/dev/null 2>&1 || true
 fi
@@ -574,4 +588,5 @@ echo " ¡Despliegue completado exitosamente!"
 echo " -> Acceso público institucional : ${PUBLIC_ORIGIN}/app/prenomina/"
 echo " -> Ruta alternativa subpath     : ${PUBLIC_ORIGIN}/prenomina/"
 echo " -> Servicio interno loopback    : http://127.0.0.1:${APP_PORT}/api/health"
+echo " -> Respaldos automáticos        : ${BACKUPS_PATH}"
 echo "=============================================================================="

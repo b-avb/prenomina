@@ -13,6 +13,8 @@
     "test:e2e": "tsc && ALLOW_DESTRUCTIVE_STATE_RESET=true node dist/tests/production-e2e.test.js",
     "db:migrate": "tsc && node dist/database/migrate.cli.js",
     "db:seed": "tsc && node dist/database/seed.cli.js",
+    "db:backup": "tsc && node dist/database/backup.cli.js",
+    "db:restore": "tsc && node dist/database/backup.cli.js --restore",
     "db:import": "tsc && node dist/database/seed.cli.js --force",
     "db:reset": "tsc && node dist/database/migrate.cli.js && node dist/database/seed.cli.js --force"
   },
