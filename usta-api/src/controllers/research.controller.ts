@@ -11,14 +11,17 @@ import {
   readJsonBody,
   sendSuccess,
 } from '../utils/http.utils.js';
-import { SICDDI_LEVELS } from '../validation/domain-enums.js';
+import {
+  RESEARCH_TEACHER_DEDICATIONS,
+  SICDDI_LEVELS,
+} from '../validation/domain-enums.js';
 import { PayloadReader } from '../validation/payload-reader.js';
 import { optionalQueryParam, requirePathParam } from '../validation/query-params.js';
 
 /**
- * HTTP handlers for Annex 7 SICDDI research allocations.
+ * HTTP handlers for Annex 7 research allocations.
  * Mutations are restricted to `research`, `director`, and `vice_rector` roles and synchronize
- * matching teacher SAC allocations (`lockedByResearch`) automatically.
+ * matching teacher SAC allocations automatically.
  */
 export class ResearchController {
   constructor(
@@ -58,15 +61,26 @@ export class ResearchController {
       documentId: r.requiredString('documentId', { maxLength: 40 }),
       teacherName: r.requiredString('teacherName', { maxLength: 200 }),
       code: r.requiredString('code', { maxLength: 16 }),
-      activityName: r.requiredString('activityName', { maxLength: 200 }),
+      activityName: r.optionalString('activityName', { maxLength: 200 }) ?? '',
       projectOrGroup: r.requiredString('projectOrGroup', { maxLength: 300 }),
-      role: r.requiredString('role', { maxLength: 160 }),
+      role: r.optionalString('role', { maxLength: 160 }) ?? '',
       sicddiLevel: r.optionalNullableEnum('sicddiLevel', SICDDI_LEVELS) ?? null,
       weeklyHours: r.optionalNumber('weeklyHours', { min: 0 }) ?? 0,
       monthlyHours: r.requiredNumber('monthlyHours', { min: 0 }),
-      isSicddiLocked: r.requiredBoolean('isSicddiLocked'),
+      isSicddiLocked: r.optionalBoolean('isSicddiLocked') ?? false,
       ...(r.has('notes')
         ? { notes: r.optionalString('notes', { maxLength: 1000 }) }
+        : {}),
+      ...(r.has('teacherDedication')
+        ? {
+            teacherDedication: r.optionalEnum(
+              'teacherDedication',
+              RESEARCH_TEACHER_DEDICATIONS,
+            ),
+          }
+        : {}),
+      ...(r.has('isProvisional')
+        ? { isProvisional: r.optionalBoolean('isProvisional') }
         : {}),
     }));
     const created = await this.service.create(actor, dto, period);
@@ -134,7 +148,7 @@ export class ResearchController {
           }
         : {}),
       ...(r.has('role')
-        ? { role: r.optionalString('role', { allowEmpty: false, maxLength: 160 }) }
+        ? { role: r.optionalString('role', { maxLength: 160 }) }
         : {}),
       ...(r.has('sicddiLevel')
         ? { sicddiLevel: r.optionalNullableEnum('sicddiLevel', SICDDI_LEVELS) }

@@ -43,4 +43,8 @@ export class MariaDbPeriodRepository implements PeriodRepository {
       .execute();
     await db.updateTable('academic_periods').set({ is_current: 1 }).where('code', '=', code).execute();
   }
+
+  public async delete(db: DbExecutor, code: string): Promise<void> {
+    await db.deleteFrom('academic_periods').where('code', '=', code).execute();
+  }
 }

@@ -5,12 +5,13 @@ import { ENV_CONFIG } from '../config/env.config.js';
 import type { PayrollStateService } from '../services/payroll-state.service.js';
 import { ForbiddenError } from '../utils/app-error.js';
 import { type RouteParams, readJsonBody, sendSuccess } from '../utils/http.utils.js';
+import { PERIOD_COPY_MODES } from '../validation/domain-enums.js';
 import { PayloadReader } from '../validation/payload-reader.js';
-import { optionalQueryParam } from '../validation/query-params.js';
+import { optionalQueryParam, requirePathParam } from '../validation/query-params.js';
 
 /**
  * HTTP handlers for MariaDB connectivity health checks, consolidated period state snapshots,
- * academic period cloning/activation, and gated non-production database resets.
+ * academic period lifecycle management, and gated non-production database resets.
  */
 export class PayrollStateController {
   constructor(
@@ -45,7 +46,7 @@ export class PayrollStateController {
     sendSuccess(res, 200, periods);
   };
 
-  /** Activates an existing academic period or clones a new period (`YYYY-1`/`YYYY-2`) from `sourcePeriod`. */
+  /** Opens a new academic period initialized from `sourcePeriod` according to `copyMode`. */
   public createPeriod = async (
     req: IncomingMessage,
     res: ServerResponse,
@@ -61,9 +62,28 @@ export class PayrollStateController {
       code: r.requiredString('code', { maxLength: 16 }),
       sourcePeriod: r.requiredString('sourcePeriod', { maxLength: 16 }),
       resetStatuses: r.requiredBoolean('resetStatuses'),
+      ...(r.has('copyMode')
+        ? { copyMode: r.optionalEnum('copyMode', PERIOD_COPY_MODES) }
+        : {}),
     }));
     const created = await this.service.createOrClonePeriod(actor, dto);
     sendSuccess(res, 201, created);
+  };
+
+  /** Deletes a non-baseline academic period (`:code !== '2026-2'`). */
+  public deletePeriod = async (
+    req: IncomingMessage,
+    res: ServerResponse,
+    _url: URL,
+    params: RouteParams,
+    resolvedActor?: ActorContext,
+  ): Promise<void> => {
+    const actor =
+      resolvedActor ??
+      (await this.actorResolver.resolve(req, ROLE_PERMISSIONS.management));
+    const code = requirePathParam(params, 'code', { maxLength: 16 });
+    const deleted = await this.service.deletePeriod(actor, code);
+    sendSuccess(res, 200, deleted);
   };
 
   /**

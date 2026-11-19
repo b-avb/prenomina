@@ -146,14 +146,24 @@ export interface HealthResponse {
 /** `GET /api/state?period=` */
 export type SnapshotResponse = PayrollSnapshot;
 
-/** `POST /api/periods` — clones teachers, spaces, allocations, rules, and schedule phases from `sourcePeriod`. */
+/** Controls how teacher rosters and hour allocations are initialized when opening a new period. */
+export type PeriodCopyMode = 'roster_only' | 'empty' | 'full_clone';
+
+/** `POST /api/periods` — opens a new period initialized from `sourcePeriod` according to `copyMode`. */
 export interface CreatePeriodDto {
   code: string;
   sourcePeriod: string;
   resetStatuses: boolean;
+  copyMode?: PeriodCopyMode;
 }
 
 export type PeriodResponse = AcademicPeriod;
+
+/** `DELETE /api/periods/:code` */
+export interface DeletePeriodResponse {
+  deletedId: string;
+  activePeriod: string;
+}
 
 /** `PUT /api/rules-config?period=` */
 export type UpdateRulesConfigDto = Partial<BusinessRulesConfig>;
@@ -342,7 +352,10 @@ export interface DecideApprovalDto {
 }
 
 /** `POST /api/research?period=` */
-export type CreateResearchAllocationDto = Omit<ResearchAllocationAnnex7, 'id' | 'period'>;
+export type CreateResearchAllocationDto = Omit<ResearchAllocationAnnex7, 'id' | 'period'> & {
+  teacherDedication?: 'TC' | 'MT' | 'DIRECTIVO';
+  isProvisional?: boolean;
+};
 
 /** `PUT /api/research/:id` */
 export type UpdateResearchAllocationDto = Partial<Omit<ResearchAllocationAnnex7, 'id' | 'period'>> & {

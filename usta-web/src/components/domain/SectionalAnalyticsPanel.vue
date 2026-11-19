@@ -61,7 +61,7 @@ const sectionalAnalytics = computed(() => {
       color: 'var(--cerulean)',
     },
     {
-      label: 'Investigación e innovación (proyectos, SICDDI, opciones de grado)',
+      label: 'Investigación e innovación (proyectos, grupos, centros y opciones de grado)',
       hours: research,
       pct: pct(research),
       color: 'var(--navy)',

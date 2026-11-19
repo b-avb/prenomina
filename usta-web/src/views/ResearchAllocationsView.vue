@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * Annex 7 research and SICDDI allocation management view for the Research Directorate,
- * supporting XLSX matrix import/export and synchronized teacher workload updates.
+ * Annex 7 research allocation management view for the Research Directorate,
+ * supporting XLSX matrix import/export, dynamic catalog code filters, and synchronized teacher workload updates.
  */
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -12,7 +12,10 @@ import {
   importResearchMatrixAnnex7FromXlsx,
 } from '@/services/exporters';
 import { usePayrollStore } from '@/stores/payroll.store';
-import type { ResearchAllocationAnnex7 } from '@usta/domain';
+import type {
+  CreateResearchAllocationDto,
+  ResearchAllocationAnnex7,
+} from '@usta/domain';
 
 const store = usePayrollStore();
 const router = useRouter();
@@ -23,6 +26,31 @@ const isModalOpen = ref(false);
 const editingItem = ref<ResearchAllocationAnnex7 | null>(null);
 const allocationPendingDelete = ref<ResearchAllocationAnnex7 | null>(null);
 const annex7FileInputRef = ref<HTMLInputElement | null>(null);
+
+const canManageCatalog = computed(
+  () => store.activeRole === 'director' || store.activeRole === 'vice_rector',
+);
+
+const codeFilterChips = computed(() => {
+  const explicitAnnex7 = store.sacCodes.filter(
+    (c) => Boolean(c.lockedByResearch) && c.code !== '10226',
+  );
+  const researchCodes =
+    explicitAnnex7.length > 0
+      ? explicitAnnex7
+      : store.sacCodes.filter(
+          (c) => c.substantiveFunction === 'Investigación' && c.code !== '10226',
+        );
+  return [
+    { id: 'TODOS', label: 'Todos' },
+    ...researchCodes.map((c) => {
+      const cleanName = c.name.replace(/^TUNJA\s+/i, '');
+      const shortName =
+        cleanName.length > 22 ? `${cleanName.slice(0, 20).trim()}…` : cleanName;
+      return { id: c.code, label: `${c.code} · ${shortName}` };
+    }),
+  ];
+});
 
 const filteredAllocations = computed(() => {
   return store.researchAllocations.filter((item) => {
@@ -49,7 +77,7 @@ function openEditModal(item: ResearchAllocationAnnex7): void {
 }
 
 async function handleSaveAllocation(
-  payload: Omit<ResearchAllocationAnnex7, 'id' | 'period'>,
+  payload: CreateResearchAllocationDto,
   editingId: string | null,
 ): Promise<void> {
   const res = editingId
@@ -77,6 +105,13 @@ function navigateToTeacherSheet(unitId: string, documentId?: string): void {
   });
 }
 
+function navigateToResearchCatalog(): void {
+  router.push({
+    path: '/director/catalog',
+    query: { fn: 'Investigación' },
+  });
+}
+
 function handleExportAnnex7Excel(): void {
   exportResearchMatrixAnnex7Xlsx(store.activePeriod, store.researchAllocations);
   store.showToast('Asignaciones de investigación descargadas');
@@ -95,7 +130,7 @@ async function handleImportAnnex7Excel(event: Event): Promise<void> {
     let count = 0;
     for (const item of items) {
       const teacher = store.teachers.find((t) => t.documentId === item.documentId);
-      // Adjunct (CATEDRA) contracts are ineligible for Annex 7 research and SICDDI hour allocations.
+      // Adjunct (CATEDRA) contracts are ineligible for Annex 7 research hour allocations.
       if (teacher && teacher.dedication === 'CATEDRA') continue;
       const unit = teacher
         ? store.units.find((u) => u.id === teacher.unitId)
@@ -136,6 +171,15 @@ async function handleImportAnnex7Excel(event: Event): Promise<void> {
         </h1>
       </div>
       <div class="page-actions">
+        <button
+          v-if="canManageCatalog"
+          type="button"
+          class="btn accent small"
+          title="Editar o crear códigos SAC de investigación en el catálogo"
+          @click="navigateToResearchCatalog"
+        >
+          Configurar códigos
+        </button>
         <input
           ref="annex7FileInputRef"
           type="file"
@@ -158,7 +202,7 @@ async function handleImportAnnex7Excel(event: Event): Promise<void> {
     <div class="validation-banner warning" style="margin-bottom: 14px">
       <div>
         <b>Reserva institucional (Anexo 7):</b>
-        Las horas registradas aquí se reflejan automáticamente en la prenómina de cada unidad. Las asignaciones SICDDI (Acuerdo 3 de 2025: 20, 80 o 136 h/mes) no admiten edición por decanatura.
+        Las horas registradas aquí se reflejan automáticamente en la prenómina de cada unidad. Los códigos habilitados son aquellos marcados con <b>Asignación exclusiva de Investigación (Anexo 7)</b> en el Catálogo SAC.
       </div>
     </div>
 
@@ -168,13 +212,7 @@ async function handleImportAnnex7Excel(event: Event): Promise<void> {
       >
         <div style="display: flex; gap: 6px; flex-wrap: wrap">
           <button
-            v-for="item in [
-              { id: 'TODOS', label: 'Todos' },
-              { id: '10336', label: '10336 Proyectos' },
-              { id: '10226', label: '10226 SICDDI' },
-              { id: '10384', label: '10384 Coordinación' },
-              { id: '10318', label: '10318 Grupo' },
-            ]"
+            v-for="item in codeFilterChips"
             :key="item.id"
             type="button"
             class="dia-chip"
@@ -202,7 +240,7 @@ async function handleImportAnnex7Excel(event: Event): Promise<void> {
             <th>Unidad</th>
             <th class="col-center">Código SAC</th>
             <th>Proyecto o grupo</th>
-            <th class="col-center">Rol o nivel SICDDI</th>
+            <th class="col-center">Rol en la actividad</th>
             <th class="col-center">Horas/sem.</th>
             <th class="col-center">Horas/mes</th>
             <th class="col-center">Estado</th>
@@ -244,9 +282,11 @@ async function handleImportAnnex7Excel(event: Event): Promise<void> {
                 {{ item.notes }}
               </div>
             </td>
-            <td data-label="Rol o nivel" class="col-center">
-              <span v-if="item.sicddiLevel" class="badge aprobado">{{ item.sicddiLevel }}</span>
-              <span v-else class="badge inscrito">{{ item.role }}</span>
+            <td data-label="Rol en la actividad" class="col-center">
+              <span v-if="item.role && item.role !== '—'" class="badge inscrito">
+                {{ item.role }}
+              </span>
+              <span v-else style="color: var(--ink-soft)">—</span>
             </td>
             <td data-label="Horas/sem." class="col-center" style="font-family: var(--font-mono); white-space: nowrap">
               {{ item.weeklyHours }} h
@@ -258,7 +298,7 @@ async function handleImportAnnex7Excel(event: Event): Promise<void> {
             </td>
             <td data-label="Estado" class="col-center">
               <span v-if="item.isSicddiLocked" class="badge reprobado" style="white-space: nowrap">
-                Fijo por Acuerdo 3
+                Reserva Investigación
               </span>
               <span v-else class="badge aprobado" style="white-space: nowrap">
                 Asignado en unidad
@@ -274,12 +314,11 @@ async function handleImportAnnex7Excel(event: Event): Promise<void> {
                 </button>
                 <button
                   type="button"
-                  class="btn danger icon small"
-                  style="font-size: 15px; line-height: 1"
+                  class="btn danger small"
                   title="Eliminar asignación"
                   @click="allocationPendingDelete = item"
                 >
-                  ×
+                  Eliminar
                 </button>
               </div>
             </td>

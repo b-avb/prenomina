@@ -431,22 +431,6 @@ export class ValidationEngineDomain {
         });
       }
 
-      if (alloc.code === '10226' && ![20, 80, 136].includes(alloc.hours)) {
-        alerts.push({
-          id: `${teacher.id}-rn11-sicddi`,
-          ruleId: 'RN-11',
-          severity: alloc.exceptionJustification ? 'info' : 'blocking',
-          teacherId: teacher.id,
-          teacherName: teacher.fullName,
-          code: '10226',
-          title: `Horas SICDDI no válidas: ${alloc.hours} h registradas`,
-          detail:
-            'El Acuerdo 3 del 19/03/2025 establece tres niveles fijos: Nivel I (20 h), Nivel II (80 h) o Nivel III (136 h).',
-          justified: Boolean(alloc.exceptionJustification),
-          justificationText: alloc.exceptionJustification,
-        });
-      }
-
       if (def.requiresViceRectorApproval) {
         const request = ctx.approvalRequests.find(
           (r) => r.teacherId === teacher.id && r.code === alloc.code,

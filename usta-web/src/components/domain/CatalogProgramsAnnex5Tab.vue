@@ -184,12 +184,11 @@ async function confirmRemoveProgram() {
               </button>
               <button
                 type="button"
-                class="btn danger icon small"
-                style="font-size: 15px; line-height: 1"
+                class="btn danger small"
                 title="Eliminar programa académico"
                 @click="programPendingDelete = program"
               >
-                ×
+                Eliminar
               </button>
             </div>
           </td>

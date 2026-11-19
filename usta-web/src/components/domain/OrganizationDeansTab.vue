@@ -3,8 +3,9 @@
  * Academic units and Deans directory table with inline Annex 6 cap editing, temporary password
  * resets, and quick navigation to unit programs or pre-payroll.
  */
-import { computed, onMounted, toRef } from 'vue';
+import { computed, onMounted, ref, toRef } from 'vue';
 import type { AcademicUnitSummary } from '@usta/domain';
+import UstaModal from '@/components/ui/UstaModal.vue';
 import { usePayrollStore } from '@/stores/payroll.store';
 import { useSearchFilter } from '@/composables/useSearchFilter';
 import { eventChecked, eventNumber } from '@/utils/dom-events';
@@ -27,6 +28,7 @@ const emit = defineEmits<{
 }>();
 
 const store = usePayrollStore();
+const unitPendingDelete = ref<AcademicUnitSummary | null>(null);
 
 onMounted(() => {
   if (store.usersDirectory.length === 0) {
@@ -94,6 +96,14 @@ async function handleResetDeanPassword(unit: AcademicUnitSummary): Promise<void>
       err instanceof Error ? err.message : 'No fue posible restablecer la contraseña.',
       'error',
     );
+  }
+}
+
+async function confirmRemoveUnit(): Promise<void> {
+  if (!unitPendingDelete.value) return;
+  const res = await store.removeAcademicUnit(unitPendingDelete.value.id);
+  if (res.ok) {
+    unitPendingDelete.value = null;
   }
 }
 </script>
@@ -317,10 +327,38 @@ async function handleResetDeanPassword(unit: AcademicUnitSummary): Promise<void>
               >
                 Prenómina
               </button>
+              <button
+                type="button"
+                class="btn danger small"
+                style="grid-column: span 2; min-height: 27px; padding: 4px 8px; font-size: 11px; white-space: nowrap"
+                title="Eliminar unidad académica"
+                @click="unitPendingDelete = unit"
+              >
+                Eliminar unidad
+              </button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+
+    <UstaModal
+      :open="!!unitPendingDelete"
+      title="Eliminar unidad académica"
+      subtitle="Se retirarán la unidad, sus programas asociados y la planta vinculada exclusivamente a esta dependencia."
+      @close="unitPendingDelete = null"
+    >
+      <p v-if="unitPendingDelete" class="sub" style="margin: 0">
+        ¿Desea eliminar la unidad <b>{{ unitPendingDelete.name }}</b> ({{ unitPendingDelete.division }})?
+      </p>
+      <template #actions>
+        <button type="button" class="btn ghost" @click="unitPendingDelete = null">
+          Cancelar
+        </button>
+        <button type="button" class="btn danger" @click="confirmRemoveUnit">
+          Eliminar unidad
+        </button>
+      </template>
+    </UstaModal>
   </div>
 </template>

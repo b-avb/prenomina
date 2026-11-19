@@ -521,17 +521,6 @@ export class FacultyTeachersService {
         );
       }
 
-      if (
-        dto.code === '10226' &&
-        dto.hours > 0 &&
-        ![20, 80, 136].includes(dto.hours) &&
-        !dto.exceptionJustification
-      ) {
-        throw new BusinessRuleError(
-          'El código SICDDI 10226 solo admite asignaciones de 20 h (Nivel I), 80 h (Nivel II) o 136 h (Nivel III), conforme al Acuerdo 3 del 19 de marzo de 2025.',
-        );
-      }
-
       const existing = teacher.allocations[dto.code];
       const previousHours = existing?.hours ?? 0;
 

@@ -353,7 +353,8 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "unitLabel": "revistas científicas",
     "requiresViceRectorApproval": false,
     "appliesTo": "Divisiones con revistas científicas (según ANEXO 7)",
-    "severity": "justifiable_alert"
+    "severity": "justifiable_alert",
+    "lockedByResearch": true
   },
   {
     "code": "13315",
@@ -367,7 +368,8 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "unitLabel": "revistas de divulgación",
     "requiresViceRectorApproval": false,
     "appliesTo": "Unidades con revistas de divulgación (según ANEXO 7)",
-    "severity": "justifiable_alert"
+    "severity": "justifiable_alert",
+    "lockedByResearch": true
   },
   {
     "code": "10334",
@@ -381,7 +383,8 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "unitLabel": "revistas científicas",
     "requiresViceRectorApproval": false,
     "appliesTo": "Divisiones con revistas científicas (según ANEXO 7)",
-    "severity": "justifiable_alert"
+    "severity": "justifiable_alert",
+    "lockedByResearch": true
   },
   {
     "code": "10224",
@@ -405,7 +408,8 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "capHours": 16,
     "requiresViceRectorApproval": false,
     "appliesTo": "Todas las facultades y direcciones académicas",
-    "severity": "justifiable_alert"
+    "severity": "justifiable_alert",
+    "lockedByResearch": true
   },
   {
     "code": "10318",
@@ -417,7 +421,8 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "capHours": 8,
     "requiresViceRectorApproval": false,
     "appliesTo": "Facultades con grupos de investigación (según ANEXO 7)",
-    "severity": "justifiable_alert"
+    "severity": "justifiable_alert",
+    "lockedByResearch": true
   },
   {
     "code": "10336",
@@ -429,7 +434,8 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "capHours": 80,
     "requiresViceRectorApproval": false,
     "appliesTo": "Docentes con proyecto activo en ANEXO 7",
-    "severity": "justifiable_alert"
+    "severity": "justifiable_alert",
+    "lockedByResearch": true
   },
   {
     "code": "10225",
@@ -441,7 +447,8 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "capHours": 20,
     "requiresViceRectorApproval": false,
     "appliesTo": "Docentes asignados en ANEXO 7",
-    "severity": "justifiable_alert"
+    "severity": "justifiable_alert",
+    "lockedByResearch": true
   },
   {
     "code": "10416",
@@ -453,19 +460,7 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "capHours": 20,
     "requiresViceRectorApproval": false,
     "appliesTo": "Facultades de Ingeniería (según ANEXO 7)",
-    "severity": "justifiable_alert"
-  },
-  {
-    "code": "10226",
-    "name": "TUNJA DOCENTE SICDDI",
-    "substantiveFunction": "Investigación",
-    "definition": "Dedicación escalafonada de investigación según el Acuerdo 3 del 19/03/2025.",
-    "guideline": "Horas fijas no modificables por la decanatura según categoría SICDDI: Nivel I = 20 h/mes, Nivel II = 80 h/mes, Nivel III = 136 h/mes. Las demás actividades de investigación del docente quedan incluidas bajo este código.",
-    "baseHours": 20,
-    "capHours": 136,
-    "requiresViceRectorApproval": false,
-    "appliesTo": "Docentes categorizados en SICDDI 2026 (Anexo 7)",
-    "severity": "blocking",
+    "severity": "justifiable_alert",
     "lockedByResearch": true
   },
   {
@@ -479,7 +474,8 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "requiresViceRectorApproval": true,
     "annex3Format": "10212",
     "appliesTo": "Docentes seleccionados por la Vicerrectoría Académica (ANEXO 7)",
-    "severity": "justifiable_alert"
+    "severity": "justifiable_alert",
+    "lockedByResearch": true
   },
   {
     "code": "10383",
@@ -491,7 +487,8 @@ export const SAC_CODES_ANNEX4_SEED: SacCode[] = [
     "capHours": 4,
     "requiresViceRectorApproval": false,
     "appliesTo": "Docentes designados en ANEXO 7",
-    "severity": "justifiable_alert"
+    "severity": "justifiable_alert",
+    "lockedByResearch": true
   },
   {
     "code": "10364",

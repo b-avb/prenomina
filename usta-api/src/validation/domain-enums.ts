@@ -3,8 +3,10 @@ import type {
   ApprovalStatus,
   AssignedAcademicSpace,
   AuthProvider,
+  CreateResearchAllocationDto,
   PayrollRole,
   PayrollStatus,
+  PeriodCopyMode,
   ProgramQuotaAnnex5,
   RuleSeverity,
   SchedulePhase,
@@ -54,6 +56,20 @@ export const TEACHER_DEDICATIONS = keysOf<TeacherDedication>({
   MT: true,
   CATEDRA: true,
   DIRECTIVO: true,
+});
+
+export const RESEARCH_TEACHER_DEDICATIONS = keysOf<
+  NonNullable<CreateResearchAllocationDto['teacherDedication']>
+>({
+  TC: true,
+  MT: true,
+  DIRECTIVO: true,
+});
+
+export const PERIOD_COPY_MODES = keysOf<PeriodCopyMode>({
+  roster_only: true,
+  empty: true,
+  full_clone: true,
 });
 
 export const ACADEMIC_LEVELS = keysOf<AssignedAcademicSpace['level']>({

@@ -62,7 +62,7 @@ const canEditWorkload = computed<boolean>(() => {
 const readonlyBannerMessage = computed<string | null>(() => {
   if (canEditWorkload.value) return null;
   if (store.activeRole === 'research') {
-    return 'Modo de consulta: las horas de investigación y SICDDI se gestionan en el módulo Investigación.';
+    return 'Modo de consulta: las horas del Anexo 7 se gestionan en el módulo Investigación.';
   }
   if (store.activeRole === 'dean') {
     const status = store.activeUnit.payrollStatus;

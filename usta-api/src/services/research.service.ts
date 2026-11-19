@@ -51,8 +51,9 @@ export class ResearchService {
   }
 
   /**
-   * Registers an Annex 7 research allocation, rejecting `CATEDRA` teachers and invalid
-   * SICDDI `10226` tiers, then recomputes the matching teacher's SAC allocation.
+   * Registers an Annex 7 research allocation, rejecting `CATEDRA` teachers, auto-provisioning a
+   * master teacher row in `(periodCode, dto.unitId)` when `dto.documentId` is not yet on the unit
+   * roster (e.g. newly hired or provisional `Por definir` researchers), and synchronizing SAC hours.
    */
   public async create(
     actor: ActorContext,
@@ -61,7 +62,6 @@ export class ResearchService {
   ): Promise<ResearchMutationResponse> {
     return this.tx.run(async (trx) => {
       const periodCode = await this.periodContext.resolvePeriod(trx, requestedPeriod);
-      this.validateSicddiHours(dto.code, dto.monthlyHours);
 
       const unitRecord = await this.repos.units.findById(trx, dto.unitId);
       if (!unitRecord) {
@@ -85,12 +85,44 @@ export class ResearchService {
         );
       }
 
+      if (!matchedTeacher) {
+        const dedication = dto.teacherDedication ?? 'TC';
+        const expectedWorkload =
+          dedication === 'DIRECTIVO' ? 210 : dedication === 'MT' ? 80 : 160;
+        const isProvisional = Boolean(dto.isProvisional);
+        const provisionedTeacher: FacultyTeacher = {
+          id: this.ids.next(),
+          unitId: dto.unitId,
+          documentId: dto.documentId.trim(),
+          fullName: dto.teacherName.trim().toUpperCase(),
+          dedication,
+          expectedWorkload,
+          rank: isProvisional
+            ? 'Docente por definir (Anexo 7)'
+            : 'Categoría 1 (Auxiliar)',
+          education: isProvisional ? 'Por definir en proceso de vinculación' : '',
+          isProvisional,
+          seniorityYears: isProvisional ? 0 : 2,
+          academicSpaces: [],
+          allocations: {},
+        };
+        await this.repos.teachers.insertMany(trx, periodCode, [provisionedTeacher]);
+      }
+
+      const {
+        teacherDedication: _teacherDedication,
+        isProvisional: _isProvisional,
+        ...allocationFields
+      } = dto;
+
       const allocation: ResearchAllocationAnnex7 = {
-        ...dto,
+        ...allocationFields,
         id: this.ids.next(),
         period: periodCode,
         unitName: unitRecord.name,
         activityName: sacCode.name,
+        sicddiLevel: null,
+        isSicddiLocked: Boolean(sacCode.lockedByResearch),
         weeklyHours:
           dto.weeklyHours > 0
             ? dto.weeklyHours
@@ -149,7 +181,6 @@ export class ResearchService {
       const nextUnitId = dto.unitId ?? existing.unitId;
       const nextDocumentId = dto.documentId ?? existing.documentId;
       const nextMonthlyHours = dto.monthlyHours ?? existing.monthlyHours;
-      this.validateSicddiHours(nextCode, nextMonthlyHours);
 
       const unitRecord = await this.repos.units.findById(trx, nextUnitId);
       if (!unitRecord) {
@@ -183,6 +214,8 @@ export class ResearchService {
         documentId: nextDocumentId,
         code: nextCode,
         activityName: sacCode.name,
+        sicddiLevel: null,
+        isSicddiLocked: Boolean(sacCode.lockedByResearch),
         monthlyHours: nextMonthlyHours,
         weeklyHours:
           dto.weeklyHours !== undefined
@@ -276,18 +309,6 @@ export class ResearchService {
         teacher,
       };
     });
-  }
-
-  /**
-   * Enforces Acuerdo 3 (19 March 2025) on SAC `10226` (SICDDI), allowing only fixed
-   * monthly hour tiers of `20` (Nivel I), `80` (Nivel II), or `136` (Nivel III).
-   */
-  private validateSicddiHours(code: string, monthlyHours: number): void {
-    if (code === '10226' && monthlyHours > 0 && ![20, 80, 136].includes(monthlyHours)) {
-      throw new BusinessRuleError(
-        'El código SICDDI 10226 solo admite asignaciones fijas de 20 h (Nivel I), 80 h (Nivel II) o 136 h (Nivel III), conforme al Acuerdo 3 del 19 de marzo de 2025.',
-      );
-    }
   }
 
   /**

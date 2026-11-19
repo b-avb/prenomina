@@ -41,7 +41,6 @@ export const STRUCTURAL_SAC_CODES: readonly string[] = [
   '40104',
   '40108',
   '40006',
-  '10226',
   '30411',
   '40106',
   '40109',

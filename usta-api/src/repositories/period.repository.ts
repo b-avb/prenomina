@@ -9,4 +9,5 @@ export interface PeriodRepository {
   insertMany(db: DbExecutor, periods: AcademicPeriod[]): Promise<void>;
   /** Flags `code` as the only current period. */
   markCurrent(db: DbExecutor, code: string): Promise<void>;
+  delete(db: DbExecutor, code: string): Promise<void>;
 }

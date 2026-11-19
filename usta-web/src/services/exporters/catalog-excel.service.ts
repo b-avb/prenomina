@@ -195,7 +195,7 @@ export class CatalogExcelService {
       'CÓDIGO SAC',
       'ACTIVIDAD',
       'PROYECTO O GRUPO',
-      'ROL / NIVEL SICDDI',
+      'ROL EN LA ACTIVIDAD',
       'HORAS SEMANA',
       'HORAS MES',
     ];
@@ -206,7 +206,7 @@ export class CatalogExcelService {
       i.code,
       i.activityName,
       i.projectOrGroup,
-      i.sicddiLevel ?? i.role,
+      i.role === '—' ? '' : i.role,
       i.weeklyHours,
       i.monthlyHours,
     ]);
@@ -588,7 +588,7 @@ export class CatalogExcelService {
     return { sacCodes, programs, unitQuotas };
   }
 
-  /** Exports the active period's Annex 7 research and SICDDI allocations to a single-sheet XLSX workbook. */
+  /** Exports the active period's Annex 7 research allocations to a single-sheet XLSX workbook. */
   public static exportResearchMatrixAnnex7Xlsx(
     period: string,
     allocations: ResearchAllocationAnnex7[],
@@ -602,8 +602,7 @@ export class CatalogExcelService {
       'CÓDIGO SAC',
       'ACTIVIDAD DE INVESTIGACIÓN',
       'PROYECTO / GRUPO / CENTRO',
-      'ROL / CATEGORÍA',
-      'SUBNIVEL SICDDI',
+      'ROL EN LA ACTIVIDAD',
       'HORAS SEMANA',
       'HORAS MES',
       'OBSERVACIÓN',
@@ -616,8 +615,7 @@ export class CatalogExcelService {
       a.code,
       a.activityName,
       a.projectOrGroup,
-      a.role,
-      a.sicddiLevel ?? '—',
+      a.role === '—' ? '' : a.role,
       a.weeklyHours,
       a.monthlyHours,
       a.notes ?? '',
@@ -631,8 +629,7 @@ export class CatalogExcelService {
       { wch: 12 },
       { wch: 36 },
       { wch: 36 },
-      { wch: 22 },
-      { wch: 18 },
+      { wch: 24 },
       { wch: 14 },
       { wch: 14 },
       { wch: 30 },
@@ -642,11 +639,18 @@ export class CatalogExcelService {
   }
 
   /**
-   * Parses an Annex 7 Excel sheet into research and SICDDI allocation drafts (`10211` / `10226`).
+   * Parses an Annex 7 Excel sheet into research allocation drafts, supporting both the
+   * 11-column template and legacy 12-column files as well as provisional (`Por definir`) rows.
    */
   public static async importResearchMatrixAnnex7FromXlsx(
     file: File,
-  ): Promise<Omit<ResearchAllocationAnnex7, 'id' | 'period'>[]> {
+  ): Promise<
+    Array<
+      Omit<ResearchAllocationAnnex7, 'id' | 'period'> & {
+        isProvisional?: boolean;
+      }
+    >
+  > {
     const buffer = await file.arrayBuffer();
     const wb = XLSX.read(buffer, { type: 'array' });
     const sheet = wb.Sheets[wb.SheetNames[0]];
@@ -655,54 +659,68 @@ export class CatalogExcelService {
       defval: null,
     });
 
-    const found: Omit<ResearchAllocationAnnex7, 'id' | 'period'>[] = [];
+    const headerRow = (rows[0] ?? []).map((cell) => String(cell ?? '').toUpperCase());
+    const hasLegacySublevelCol = headerRow.some((h) => h.includes('SUBNIVEL'));
+    const hoursMonthCol = hasLegacySublevelCol ? 10 : 9;
+    const notesCol = hasLegacySublevelCol ? 11 : 10;
+
+    const found: Array<
+      Omit<ResearchAllocationAnnex7, 'id' | 'period'> & {
+        isProvisional?: boolean;
+      }
+    > = [];
     for (let r = 1; r < rows.length; r++) {
       const row = rows[r];
       if (!row || row.length < 4) continue;
-      const rawDocId = String(row[1] ?? row[0] ?? '').trim();
-      const rawName = String(row[2] ?? row[1] ?? '').trim();
+      let rawDocId = String(row[1] ?? '').trim();
+      const rawName = String(row[2] ?? '').trim();
       if (
-        !rawDocId ||
         rawDocId.toUpperCase().includes('CÉDULA') ||
         rawDocId.toUpperCase().includes('CEDULA')
       ) {
         continue;
       }
-      const rawUnitName = String(row[3] ?? '').trim();
+      if (!rawDocId && !rawName) continue;
+
+      const isProvisional =
+        !rawDocId ||
+        rawDocId.toUpperCase().includes('DEFINIR') ||
+        rawDocId.toUpperCase().includes('VACANTE') ||
+        rawName.toUpperCase().includes('POR DEFINIR') ||
+        rawName.toUpperCase().includes('SIN DEFINIR');
+
+      if (!rawDocId) {
+        rawDocId = `POR-DEFINIR-INV-${String(r).padStart(2, '0')}`;
+      }
+
       const rawCode = String(row[4] ?? '10336').trim();
+      if (rawCode === '10226') continue;
+
+      const rawUnitName = String(row[3] ?? '').trim();
       const rawActivity = String(
         row[5] ?? 'Desarrollo de Proyectos de Investigación',
       ).trim();
       const rawProject = String(row[6] ?? 'Proyecto Convocatoria FODEIN').trim();
-      const rawRole = String(row[7] ?? 'Investigador Principal').trim();
-      const rawLevel = String(row[8] ?? '').trim();
-      const rawMonthlyHours = Number(row[10] ?? row[8] ?? 20);
+      const rawRole = String(row[7] ?? '').trim();
+      const rawMonthlyHours = Number(row[hoursMonthCol] ?? 16);
       const monthlyHours =
-        Number.isFinite(rawMonthlyHours) && rawMonthlyHours > 0 ? rawMonthlyHours : 20;
-
-      const sicddiLevel =
-        rawCode === '10226'
-          ? rawLevel.includes('III')
-            ? 'Nivel III (136h)'
-            : rawLevel.includes('II')
-              ? 'Nivel II (80h)'
-              : 'Nivel I (20h)'
-          : null;
+        Number.isFinite(rawMonthlyHours) && rawMonthlyHours > 0 ? rawMonthlyHours : 16;
 
       found.push({
         unitId: '',
         unitName: rawUnitName,
         documentId: rawDocId,
-        teacherName: rawName.toUpperCase(),
+        teacherName: (rawName || 'DOCENTE POR DEFINIR INVESTIGACIÓN').toUpperCase(),
         code: rawCode,
         activityName: rawActivity,
         projectOrGroup: rawProject,
         role: rawRole,
-        sicddiLevel,
+        sicddiLevel: null,
         weeklyHours: Math.round((monthlyHours / 4) * 10) / 10,
         monthlyHours,
-        isSicddiLocked: rawCode === '10226',
-        notes: String(row[11] ?? 'Importado desde Excel ANEXO 7').trim(),
+        isSicddiLocked: false,
+        notes: String(row[notesCol] ?? 'Importado desde Excel ANEXO 7').trim(),
+        ...(isProvisional ? { isProvisional: true } : {}),
       });
     }
     return found;

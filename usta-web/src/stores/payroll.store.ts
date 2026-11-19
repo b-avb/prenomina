@@ -2,6 +2,7 @@ import { defineStore, storeToRefs } from 'pinia';
 import type {
   CreateAcademicUnitDto,
   CreateTeacherPayload,
+  DeletedResponse,
   FacultyTeacher,
   HourBalanceSuggestion,
   ImportedTeacherDto,
@@ -95,6 +96,32 @@ export const usePayrollStore = defineStore('payroll', () => {
       request: () => unitsApi.create(payload),
       commit: commitUnitWithDirector,
       successMessage: ({ unit }) => `Unidad "${unit.name}" creada`,
+    });
+  }
+
+  function removeAcademicUnit(unitId: string): Promise<MutationResult<DeletedResponse>> {
+    const unit = orgStore.findUnit(unitId);
+    if (!unit) return rejectMissingUnit();
+    const removedName = unit.name;
+    return runPessimistic({
+      request: () => unitsApi.remove(unitId),
+      commit: () => {
+        units.value = units.value.filter((u) => u.id !== unitId);
+        programQuotas.value = programQuotas.value.filter((p) => p.unitId !== unitId);
+        teachers.value = teachers.value.filter((t) => t.unitId !== unitId);
+        approvalRequests.value = approvalRequests.value.filter(
+          (r) => r.unitId !== unitId,
+        );
+        researchAllocations.value = researchAllocations.value.filter(
+          (r) => r.unitId !== unitId,
+        );
+        usersDirectory.value = usersDirectory.value.filter((u) => u.unitId !== unitId);
+        if (activeUnitId.value === unitId) {
+          authStore.setActiveUnit(units.value[0]?.id ?? '');
+        }
+      },
+      successMessage: `Unidad "${removedName}" eliminada`,
+      successType: 'info',
     });
   }
 
@@ -237,6 +264,7 @@ export const usePayrollStore = defineStore('payroll', () => {
     dismissToast,
     switchPeriod: syncStore.switchPeriod,
     createPeriod: syncStore.createPeriod,
+    deletePeriod: syncStore.deletePeriod,
 
     computeHours40104: workloadStore.computeHours40104,
     computeHours40006: workloadStore.computeHours40006,
@@ -299,6 +327,7 @@ export const usePayrollStore = defineStore('payroll', () => {
     saveSchedulePhases: orgStore.saveSchedulePhases,
 
     addAcademicUnit,
+    removeAcademicUnit,
     updateUnit: orgStore.updateUnit,
     updateUnitDean,
     changePayrollStatus,

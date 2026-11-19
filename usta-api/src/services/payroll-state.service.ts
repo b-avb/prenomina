@@ -2,10 +2,12 @@ import type {
   AcademicPeriod,
   ActorContext,
   CreatePeriodDto,
+  DeletePeriodResponse,
   FacultyTeacher,
   HealthResponse,
   IdGenerator,
   PayrollSnapshot,
+  PeriodCopyMode,
   TeacherCodeAllocation,
 } from '@usta/domain';
 import { getActorAllowedUnitIds } from '../auth/actor-resolver.js';
@@ -13,9 +15,17 @@ import { ENV_CONFIG } from '../config/env.config.js';
 import type { TransactionRunner } from '../database/transaction-runner.js';
 import type { Repositories } from '../repositories/repositories.js';
 import { seedDatabaseWithOfficialData } from '../seed/database-seeder.js';
-import { ConflictError, ForbiddenError, NotFoundError } from '../utils/app-error.js';
+import {
+  BusinessRuleError,
+  ConflictError,
+  ForbiddenError,
+  NotFoundError,
+} from '../utils/app-error.js';
 import type { AuditService } from './audit.service.js';
 import type { PeriodContextService } from './period-context.service.js';
+
+/** Baseline semester protected against administrative deletion. */
+const PROTECTED_BASELINE_PERIOD = '2026-2';
 
 /** Maximum number of recent audit entries bundled into a period snapshot payload. */
 const SNAPSHOT_AUDIT_LIMIT = 200;
@@ -131,29 +141,37 @@ export class PayrollStateService {
   }
 
   /**
-   * Opens a new academic period cloned from `dto.sourcePeriod` inside a single transaction,
-   * marking the new period as current. When `dto.resetStatuses` is enabled, unit cycles revert
-   * to `Borrador` v1, version-1 baselines and director notes are stripped from allocations,
-   * and Annex 3 approval requests are omitted; otherwise approvals are cloned with remapped `teacherId`s.
+   * Opens a new academic period initialized from `dto.sourcePeriod` inside a single transaction,
+   * marking the new period as current.
+   *
+   * Supported `copyMode` behaviors:
+   * - `'roster_only'`: copies Dean and teacher master profiles at `0 h` (`academicSpaces: []`, `allocations: {}`),
+   *   omitting research and approval rows and resetting all unit cycles to `Borrador` v1.
+   * - `'empty'`: initializes rules, schedule phases, and `Borrador` v1 unit cycles with zero teacher records.
+   * - `'full_clone'` (default when omitted): clones teachers, academic spaces, SAC allocations, and research rows.
    */
   public async createOrClonePeriod(
     actor: ActorContext,
     dto: CreatePeriodDto,
   ): Promise<AcademicPeriod> {
     return this.tx.run(async (trx) => {
-      const existing = await this.repos.periods.findByCode(trx, dto.code);
+      const code = dto.code.trim();
+      const existing = await this.repos.periods.findByCode(trx, code);
       if (existing) {
-        throw new ConflictError(`El periodo académico ${dto.code} ya está registrado.`);
+        throw new ConflictError(`El periodo académico ${code} ya está registrado.`);
       }
       const source = await this.repos.periods.findByCode(trx, dto.sourcePeriod);
       if (!source) {
         throw new NotFoundError(`El periodo base ${dto.sourcePeriod} no existe.`);
       }
 
+      const copyMode: PeriodCopyMode = dto.copyMode ?? 'full_clone';
+      const shouldResetStatuses = copyMode !== 'full_clone' ? true : dto.resetStatuses;
+
       const nowIso = new Date().toISOString();
       const createdPeriod: AcademicPeriod = {
-        code: dto.code,
-        name: `Periodo Académico ${dto.code} — Seccional Tunja`,
+        code,
+        name: `Periodo Académico ${code} — Seccional Tunja`,
         status: 'ABIERTO',
         isCurrent: true,
         openedAt: nowIso,
@@ -161,19 +179,19 @@ export class PayrollStateService {
       };
 
       await this.repos.periods.insertMany(trx, [createdPeriod]);
-      await this.repos.periods.markCurrent(trx, dto.code);
+      await this.repos.periods.markCurrent(trx, code);
 
       const sourceRules = await this.periodContext.getRulesForPeriod(trx, dto.sourcePeriod);
-      await this.repos.businessRules.save(trx, dto.code, sourceRules, actor.name);
+      await this.repos.businessRules.save(trx, code, sourceRules, actor.name);
 
       const sourcePhases = await this.repos.schedulePhases.listByPeriod(trx, dto.sourcePeriod);
       if (sourcePhases.length > 0) {
         const clonedPhases = sourcePhases.map((phase) => ({
           ...phase,
           id: this.ids.next(),
-          status: dto.resetStatuses ? ('Programada' as const) : phase.status,
+          status: shouldResetStatuses ? ('Programada' as const) : phase.status,
         }));
-        await this.repos.schedulePhases.insertMany(trx, dto.code, clonedPhases);
+        await this.repos.schedulePhases.insertMany(trx, code, clonedPhases);
       }
 
       const allUnits = await this.repos.units.listAll(trx);
@@ -186,89 +204,177 @@ export class PayrollStateService {
           const prev = sourceCycleByUnit.get(unit.id);
           return {
             unitId: unit.id,
-            periodCode: dto.code,
-            payrollStatus: dto.resetStatuses ? 'Borrador' : (prev?.payrollStatus ?? 'Borrador'),
-            currentVersion: dto.resetStatuses ? 1 : (prev?.currentVersion ?? 1),
+            periodCode: code,
+            payrollStatus: shouldResetStatuses
+              ? 'Borrador'
+              : (prev?.payrollStatus ?? 'Borrador'),
+            currentVersion: shouldResetStatuses ? 1 : (prev?.currentVersion ?? 1),
             updatedAt: nowIso,
           };
         }),
       );
 
-      const sourceTeachers = await this.repos.teachers.listByPeriod(trx, dto.sourcePeriod);
-      const teacherIdMap = new Map<string, string>();
-      const clonedTeachers: FacultyTeacher[] = sourceTeachers.map((teacher) => {
-        const nextId = this.ids.next();
-        teacherIdMap.set(teacher.id, nextId);
-        const cloned = structuredClone(teacher);
-        if (dto.resetStatuses) {
-          delete cloned.version1Total;
-          const resetAllocations: Record<string, TeacherCodeAllocation> = {};
-          for (const [code, alloc] of Object.entries(cloned.allocations)) {
-            const nextAlloc: TeacherCodeAllocation = {
-              code: alloc.code,
-              hours: alloc.hours,
-              ...(alloc.unitCount !== undefined ? { unitCount: alloc.unitCount } : {}),
-              ...(alloc.programId ? { programId: alloc.programId } : {}),
-              ...(alloc.programName ? { programName: alloc.programName } : {}),
-              ...(alloc.exceptionJustification
-                ? { exceptionJustification: alloc.exceptionJustification }
-                : {}),
-            };
-            resetAllocations[code] = nextAlloc;
+      if (copyMode === 'roster_only') {
+        const sourceTeachers = await this.repos.teachers.listByPeriod(trx, dto.sourcePeriod);
+        const blankRosterTeachers: FacultyTeacher[] = sourceTeachers.map((teacher) => ({
+          id: this.ids.next(),
+          unitId: teacher.unitId,
+          documentId: teacher.documentId,
+          fullName: teacher.fullName,
+          dedication: teacher.dedication,
+          expectedWorkload: teacher.expectedWorkload,
+          rank: teacher.rank,
+          education: teacher.education,
+          isProvisional: teacher.isProvisional,
+          seniorityYears: teacher.seniorityYears,
+          academicSpaces: [],
+          allocations: {},
+        }));
+        await this.repos.teachers.insertMany(trx, code, blankRosterTeachers);
+      } else if (copyMode === 'full_clone') {
+        const sourceTeachers = await this.repos.teachers.listByPeriod(trx, dto.sourcePeriod);
+        const teacherIdMap = new Map<string, string>();
+        const clonedTeachers: FacultyTeacher[] = sourceTeachers.map((teacher) => {
+          const nextId = this.ids.next();
+          teacherIdMap.set(teacher.id, nextId);
+          const cloned = structuredClone(teacher);
+          if (shouldResetStatuses) {
+            delete cloned.version1Total;
+            const resetAllocations: Record<string, TeacherCodeAllocation> = {};
+            for (const [sacCode, alloc] of Object.entries(cloned.allocations)) {
+              const nextAlloc: TeacherCodeAllocation = {
+                code: alloc.code,
+                hours: alloc.hours,
+                ...(alloc.unitCount !== undefined ? { unitCount: alloc.unitCount } : {}),
+                ...(alloc.programId ? { programId: alloc.programId } : {}),
+                ...(alloc.programName ? { programName: alloc.programName } : {}),
+                ...(alloc.exceptionJustification
+                  ? { exceptionJustification: alloc.exceptionJustification }
+                  : {}),
+              };
+              resetAllocations[sacCode] = nextAlloc;
+            }
+            cloned.allocations = resetAllocations;
           }
-          cloned.allocations = resetAllocations;
-        }
-        return {
-          ...cloned,
-          id: nextId,
-          academicSpaces: teacher.academicSpaces.map((space) => ({
-            ...space,
-            id: this.ids.next(),
-          })),
-        };
-      });
-      await this.repos.teachers.insertMany(trx, dto.code, clonedTeachers);
-
-      const sourceResearch = await this.repos.research.listByPeriod(trx, dto.sourcePeriod);
-      if (sourceResearch.length > 0) {
-        await this.repos.research.insertMany(
-          trx,
-          sourceResearch.map((item) => ({
-            ...item,
-            id: this.ids.next(),
-            period: dto.code,
-          })),
-        );
-      }
-
-      if (!dto.resetStatuses) {
-        const sourceApprovals = await this.repos.approvals.listByPeriod(trx, dto.sourcePeriod);
-        if (sourceApprovals.length > 0) {
-          await this.repos.approvals.insertMany(
-            trx,
-            sourceApprovals.map((req) => ({
-              ...req,
+          return {
+            ...cloned,
+            id: nextId,
+            academicSpaces: teacher.academicSpaces.map((space) => ({
+              ...space,
               id: this.ids.next(),
-              period: dto.code,
-              teacherId: teacherIdMap.get(req.teacherId) ?? req.teacherId,
+            })),
+          };
+        });
+        await this.repos.teachers.insertMany(trx, code, clonedTeachers);
+
+        const sourceResearch = await this.repos.research.listByPeriod(trx, dto.sourcePeriod);
+        if (sourceResearch.length > 0) {
+          await this.repos.research.insertMany(
+            trx,
+            sourceResearch.map((item) => ({
+              ...item,
+              id: this.ids.next(),
+              period: code,
             })),
           );
         }
+
+        if (!shouldResetStatuses) {
+          const sourceApprovals = await this.repos.approvals.listByPeriod(
+            trx,
+            dto.sourcePeriod,
+          );
+          if (sourceApprovals.length > 0) {
+            await this.repos.approvals.insertMany(
+              trx,
+              sourceApprovals.map((req) => ({
+                ...req,
+                id: this.ids.next(),
+                period: code,
+                teacherId: teacherIdMap.get(req.teacherId) ?? req.teacherId,
+              })),
+            );
+          }
+        }
       }
 
+      const modeDescription =
+        copyMode === 'empty'
+          ? `Periodo abierto en blanco sin planta docente a partir de ${dto.sourcePeriod}`
+          : copyMode === 'roster_only'
+            ? `Periodo abierto con decanos y planta docente en 0 h a partir de ${dto.sourcePeriod}`
+            : shouldResetStatuses
+              ? `Configuración y carga tomadas de ${dto.sourcePeriod} con unidades abiertas en Borrador`
+              : `Configuración y estados conservados a partir del periodo ${dto.sourcePeriod}`;
+
       await this.audit.record(trx, actor, {
-        periodCode: dto.code,
+        periodCode: code,
         unitId: null,
         unitName: `Consolidado seccional (${allUnits.length} unidades)`,
-        action: `Apertura de periodo académico ${dto.code}`,
+        action: `Apertura de periodo académico ${code}`,
         previousValue: dto.sourcePeriod,
-        newValue: dto.code,
-        reason: dto.resetStatuses
-          ? `Configuración base tomada de ${dto.sourcePeriod} con unidades abiertas en Borrador`
-          : `Configuración y estados conservados a partir del periodo ${dto.sourcePeriod}`,
+        newValue: code,
+        reason: modeDescription,
       });
 
       return createdPeriod;
+    });
+  }
+
+  /**
+   * Deletes a non-baseline academic period (`code !== '2026-2'`) and cascades removal across its
+   * period-scoped cycles, teachers, spaces, allocations, approvals, and research rows.
+   */
+  public async deletePeriod(
+    actor: ActorContext,
+    rawCode: string,
+  ): Promise<DeletePeriodResponse> {
+    return this.tx.run(async (trx) => {
+      const code = rawCode.trim();
+      const normalizedComparable = code.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      if (code === PROTECTED_BASELINE_PERIOD || normalizedComparable === '20262') {
+        throw new BusinessRuleError(
+          'El periodo base institucional 2026-2 está protegido y no puede eliminarse.',
+        );
+      }
+
+      const existing = await this.repos.periods.findByCode(trx, code);
+      if (!existing) {
+        throw new NotFoundError(`El periodo académico ${code} no existe.`);
+      }
+
+      const allPeriods = await this.repos.periods.listAll(trx);
+      if (allPeriods.length <= 1) {
+        throw new BusinessRuleError(
+          'Debe permanecer al menos un periodo académico activo en la plataforma.',
+        );
+      }
+
+      await this.repos.periods.delete(trx, code);
+
+      const remaining = allPeriods.filter((p) => p.code !== code);
+      let nextCurrent = remaining.find((p) => p.isCurrent)?.code;
+      if (!nextCurrent) {
+        nextCurrent =
+          remaining.find((p) => p.code === PROTECTED_BASELINE_PERIOD)?.code ??
+          remaining[0]!.code;
+        await this.repos.periods.markCurrent(trx, nextCurrent);
+      }
+
+      await this.audit.record(trx, actor, {
+        periodCode: nextCurrent,
+        unitId: null,
+        unitName: 'Configuración institucional de periodos',
+        action: `Eliminación de periodo académico ${code}`,
+        previousValue: code,
+        newValue: `Activo: ${nextCurrent}`,
+        reason: 'Retiro administrativo de periodo académico',
+      });
+
+      return {
+        deletedId: code,
+        activePeriod: nextCurrent,
+      };
     });
   }
 

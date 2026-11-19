@@ -4,6 +4,7 @@ import * as initialSchema from './2026110501-initial-schema.js';
 import * as usersAuth from './2026110901-users-auth.js';
 import * as usersEntraAdFields from './2026110902-users-entra-ad-fields.js';
 import * as allocationProgram from './2026111101-allocation-program.js';
+import * as cleanPeriodsAndRemoveSicddi from './2026111901-clean-periods-and-remove-sicddi.js';
 
 /**
  * Static (in-code) migration registry: works identically from `src` and `dist`
@@ -14,6 +15,7 @@ const MIGRATIONS: Readonly<Record<string, Migration>> = {
   '2026110901-users-auth': usersAuth,
   '2026110902-users-entra-ad-fields': usersEntraAdFields,
   '2026111101-allocation-program': allocationProgram,
+  '2026111901-clean-periods-and-remove-sicddi': cleanPeriodsAndRemoveSicddi,
 };
 
 class StaticMigrationProvider implements MigrationProvider {

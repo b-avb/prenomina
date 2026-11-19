@@ -3,7 +3,8 @@
  * Annex 4 SAC activity catalog table supporting substantive-function filtering, inline
  * base/cap/severity edits, and modal configuration launch.
  */
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import type { RuleSeverity, SacCode } from '@usta/domain';
 import { usePayrollStore } from '@/stores/payroll.store';
 import { eventChecked, eventNullableNumber, eventValue } from '@/utils/dom-events';
@@ -13,9 +14,7 @@ const emit = defineEmits<{
 }>();
 
 const store = usePayrollStore();
-
-const functionFilter = ref<string>('TODAS');
-const codeSearchQuery = ref<string>('');
+const route = useRoute();
 
 const filterOptions = [
   'TODAS',
@@ -24,6 +23,23 @@ const filterOptions = [
   'Investigación',
   'Gestión Académica',
 ];
+
+const initialFn =
+  typeof route.query.fn === 'string' && filterOptions.includes(route.query.fn)
+    ? route.query.fn
+    : 'TODAS';
+
+const functionFilter = ref<string>(initialFn);
+const codeSearchQuery = ref<string>('');
+
+watch(
+  () => route.query.fn,
+  (fn) => {
+    if (typeof fn === 'string' && filterOptions.includes(fn)) {
+      functionFilter.value = fn;
+    }
+  },
+);
 
 const filteredCodes = computed(() =>
   store.sacCodes.filter((codeItem) => {

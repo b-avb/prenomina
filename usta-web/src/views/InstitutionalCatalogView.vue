@@ -6,7 +6,12 @@
 import { ref } from 'vue';
 import { usePayrollStore } from '@/stores/payroll.store';
 import { usePeriodSelect } from '@/composables/usePeriodSelect';
-import type { AcademicUnitSummary, ProgramQuotaAnnex5, SacCode } from '@usta/domain';
+import type {
+  AcademicUnitSummary,
+  PeriodCopyMode,
+  ProgramQuotaAnnex5,
+  SacCode,
+} from '@usta/domain';
 import UstaModal from '@/components/ui/UstaModal.vue';
 import CatalogSacCodesTab from '@/components/domain/CatalogSacCodesTab.vue';
 import CatalogFacultyQuotasTab from '@/components/domain/CatalogFacultyQuotasTab.vue';
@@ -32,7 +37,9 @@ const editingCode = ref<SacCode | null>(null);
 const isNewCodeModalOpen = ref(false);
 const isPeriodModalOpen = ref(false);
 const newPeriodInput = ref(suggestNextPeriodCode(store.activePeriod));
+const periodCopyMode = ref<PeriodCopyMode>('roster_only');
 const resetStatusesOnClone = ref(true);
+const periodPendingDelete = ref<string | null>(null);
 const isNewUnitModalOpen = ref(false);
 const isNewProgramModalOpen = ref(false);
 const editingProgramModel = ref<ProgramQuotaAnnex5 | null>(null);
@@ -77,6 +84,9 @@ function matchUnitByName(rawName: string): AcademicUnitSummary | undefined {
 
 function openClonePeriodModal(): void {
   newPeriodInput.value = suggestNextPeriodCode(store.activePeriod);
+  periodCopyMode.value = 'roster_only';
+  resetStatusesOnClone.value = true;
+  periodPendingDelete.value = null;
   isPeriodModalOpen.value = true;
 }
 
@@ -100,8 +110,19 @@ async function handleSaveNewPeriod() {
     store.showToast('Indique el código del nuevo periodo', 'error');
     return;
   }
-  const result = await store.createPeriod(newPeriodInput.value.trim(), resetStatusesOnClone.value);
+  const result = await store.createPeriod(
+    newPeriodInput.value.trim(),
+    periodCopyMode.value === 'full_clone' ? resetStatusesOnClone.value : true,
+    periodCopyMode.value,
+  );
   if (result.ok) isPeriodModalOpen.value = false;
+}
+
+async function confirmDeletePeriod(code: string) {
+  const res = await store.deletePeriod(code);
+  if (res.ok) {
+    periodPendingDelete.value = null;
+  }
 }
 
 function handleExportCatalogExcel() {
@@ -251,7 +272,7 @@ async function handleImportCatalogExcel(ev: Event) {
             </option>
           </select>
           <button class="btn accent small" style="height: 34px" @click="openClonePeriodModal">
-            Abrir periodo
+            Periodos
           </button>
         </div>
         <input
@@ -338,15 +359,32 @@ async function handleImportCatalogExcel(ev: Event) {
 
     <UstaModal
       :open="isPeriodModalOpen"
-      title="Abrir nuevo periodo"
-      subtitle="Se conservarán el catálogo SAC, los criterios de validación y los cupos de horas vigentes."
+      title="Periodos académicos"
+      subtitle="Abra un nuevo periodo definiendo cómo iniciar la planta docente o retire periodos distintos al periodo base 2026-2."
+      max-width="620px"
       @close="isPeriodModalOpen = false"
     >
       <div class="field">
-        <label>Código del periodo</label>
+        <label>Código del nuevo periodo</label>
         <input v-model="newPeriodInput" type="text" placeholder="Ej. 2027-1" />
       </div>
-      <label class="toggle" style="margin: 10px 0">
+
+      <div class="field" style="margin-top: 10px">
+        <label>Datos iniciales del periodo</label>
+        <select v-model="periodCopyMode">
+          <option value="roster_only">
+            Solo decanos y planta docente en 0 h (sin clases ni códigos asignados)
+          </option>
+          <option value="empty">
+            Periodo en blanco sin datos docentes (0 docentes)
+          </option>
+          <option value="full_clone">
+            Clonar carga completa del periodo actual (docentes, clases y códigos)
+          </option>
+        </select>
+      </div>
+
+      <label v-if="periodCopyMode === 'full_clone'" class="toggle" style="margin: 10px 0">
         <input v-model="resetStatusesOnClone" type="checkbox" />
         <span class="toggle__track"></span>
         <span style="font-size: 12px; font-weight: 700">
@@ -354,8 +392,66 @@ async function handleImportCatalogExcel(ev: Event) {
         </span>
       </label>
 
+      <div
+        v-if="store.availablePeriods.length > 0"
+        style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 12px"
+      >
+        <div class="section-label" style="margin: 0 0 8px">
+          Periodos registrados ({{ store.availablePeriods.length }})
+        </div>
+        <div style="display: grid; gap: 6px">
+          <div
+            v-for="per in store.availablePeriods"
+            :key="per"
+            style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 12px; background: var(--surface-soft); border: 1px solid var(--border); border-radius: 8px"
+          >
+            <div style="display: flex; align-items: center; gap: 8px">
+              <b style="font-family: var(--font-mono); color: var(--navy)">{{ per }}</b>
+              <span v-if="per === store.activePeriod" class="badge avalado" style="font-size: 10px">
+                Activo
+              </span>
+              <span v-if="per === '2026-2'" class="badge inscrito" style="font-size: 10px">
+                Base protegido
+              </span>
+            </div>
+            <div v-if="per !== '2026-2'" style="display: flex; align-items: center; gap: 6px">
+              <template v-if="periodPendingDelete === per">
+                <span style="font-size: 11px; color: var(--danger); font-weight: 700">
+                  ¿Eliminar {{ per }}?
+                </span>
+                <button
+                  type="button"
+                  class="btn danger small"
+                  style="min-height: 26px; padding: 3px 8px; font-size: 11px"
+                  @click="confirmDeletePeriod(per)"
+                >
+                  Confirmar
+                </button>
+                <button
+                  type="button"
+                  class="btn ghost small"
+                  style="min-height: 26px; padding: 3px 8px; font-size: 11px"
+                  @click="periodPendingDelete = null"
+                >
+                  Cancelar
+                </button>
+              </template>
+              <button
+                v-else
+                type="button"
+                class="btn danger small"
+                style="min-height: 26px; padding: 3px 10px; font-size: 11px"
+                @click="periodPendingDelete = per"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <template #actions>
-        <button type="button" class="btn ghost" @click="isPeriodModalOpen = false">Cancelar</button>
+        <button type="button" class="btn ghost" @click="isPeriodModalOpen = false">Cerrar</button>
         <button type="button" class="btn primary" @click="handleSaveNewPeriod">
           Abrir periodo
         </button>

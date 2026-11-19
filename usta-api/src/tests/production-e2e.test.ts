@@ -15,6 +15,7 @@ import {
   type AuthSessionResponse,
   type AuthUser,
   type BusinessRulesConfig,
+  type DeletePeriodResponse,
   type DeletedResponse,
   type FacultyTeacher,
   type HealthResponse,
@@ -482,7 +483,8 @@ async function runProductionE2ESuite(): Promise<void> {
     assert.equal(snapshot.activePeriod, '2026-2');
     assert.equal(snapshot.units.length, 22);
     assert.equal(snapshot.teachers.length, 295);
-    assert.equal(snapshot.sacCodes.length, 51);
+    assert.equal(snapshot.sacCodes.length, 50);
+    assert.ok(!snapshot.sacCodes.some((c) => c.code === '10226'));
     assert.ok(snapshot.programQuotas.length >= 30);
     assert.equal(snapshot.approvalRequests.length, 0);
     assert.equal(snapshot.researchAllocations.length, 0);
@@ -542,7 +544,21 @@ async function runProductionE2ESuite(): Promise<void> {
     });
     const periods = expectData(periodsRes, 200, 'GET /api/periods');
     assert.equal(periods.length, 1);
-    assert.ok(periods.some((p) => p.code === '2026-2' && p.isCurrent));
+    assert.equal(periods[0]?.code, '2026-2');
+    assert.equal(periods[0]?.isCurrent, true);
+
+    const researchLockedCodes = snapshot.sacCodes
+      .filter((c) => c.lockedByResearch)
+      .map((c) => c.code)
+      .sort();
+    assert.deepEqual(
+      researchLockedCodes,
+      ['10225', '10318', '10334', '10336', '10340', '10383', '10384', '10416', '10426', '13315'],
+    );
+    assert.equal(
+      Boolean(snapshot.sacCodes.find((c) => c.code === '10212')?.lockedByResearch),
+      false,
+    );
 
     const usersRes = await request<AuthUser[]>({
       path: '/api/users',
@@ -550,7 +566,9 @@ async function runProductionE2ESuite(): Promise<void> {
     });
     const usersList = expectData(usersRes, 200, 'GET /api/users');
     assert.equal(usersList.length, 24);
-    recordStep('UC-2.2 Active period (2026-2 only) and 23+1 institutional user accounts verified');
+    recordStep(
+      'UC-2.2 Baseline period (2026-2), 10 Annex 7 Research SAC codes & 23+1 institutional user accounts verified',
+    );
 
     // Academic unit lifecycle, auto-provisioned Dean account, and Annex 5 program quota rollups.
     const createUnitRes = await request<UnitWithDirectorResponse>({
@@ -1001,22 +1019,22 @@ async function runProductionE2ESuite(): Promise<void> {
         unitName: 'Ingeniería Industrial',
         documentId: createdTeacher.documentId,
         teacherName: createdTeacher.fullName,
-        code: '20222',
-        activityName: 'Investigación en Proyectos FODEIN',
+        code: '10336',
+        activityName: 'Desarrollo de Proyectos de Investigación',
         projectOrGroup: 'FODEIN-2026-IND-99 · Gemelos Digitales en Manufactura Sostenible',
-        role: 'Investigador Principal',
-        sicddiLevel: 'Nivel I (20h)',
+        role: 'Investigador principal',
+        sicddiLevel: null,
         weeklyHours: 5,
         monthlyHours: 20,
-        isSicddiLocked: true,
-        notes: 'Avalado por Comité SICDDI Seccional Tunja',
+        isSicddiLocked: false,
+        notes: 'Avalado en convocatoria FODEIN Seccional Tunja',
       },
     });
     const createdResearch = expectData(createResearchRes, 201, 'POST /api/research');
     assert.ok(createdResearch.allocation);
     assert.equal(createdResearch.allocation.monthlyHours, 20);
     assert.ok(createdResearch.teacher);
-    assert.equal(createdResearch.teacher.allocations['20222']?.hours, 20);
+    assert.equal(createdResearch.teacher.allocations['10336']?.hours, 20);
 
     const updateResearchRes = await request<ResearchMutationResponse>({
       method: 'PUT',
@@ -1033,7 +1051,7 @@ async function runProductionE2ESuite(): Promise<void> {
     assert.ok(updatedResearch.allocation);
     assert.equal(updatedResearch.allocation.monthlyHours, 32);
     assert.ok(updatedResearch.teacher);
-    assert.equal(updatedResearch.teacher.allocations['20222']?.hours, 32);
+    assert.equal(updatedResearch.teacher.allocations['10336']?.hours, 32);
 
     const deleteResearchRes = await request<ResearchMutationResponse>({
       method: 'DELETE',
@@ -1046,9 +1064,57 @@ async function runProductionE2ESuite(): Promise<void> {
       'DELETE /api/research/:id',
     );
     assert.ok(deletedResearchData.teacher);
-    assert.equal(deletedResearchData.teacher.allocations['20222']?.hours ?? 0, 0);
+    assert.equal(deletedResearchData.teacher.allocations['10336']?.hours ?? 0, 0);
+
+    // Verify auto-provisioning of an undefined (`Por definir`) researcher directly from Research.
+    const provisionalResearchRes = await request<ResearchMutationResponse>({
+      method: 'POST',
+      path: '/api/research',
+      token: researchSession.token,
+      body: {
+        unitId: 'ing-industrial',
+        unitName: 'Ingeniería Industrial',
+        documentId: 'POR-DEFINIR-INV-99',
+        teacherName: 'DOCENTE POR DEFINIR INVESTIGACIÓN',
+        code: '10318',
+        activityName: 'Líderes Grupos de Investigación',
+        projectOrGroup: 'Grupo GIIE — Vacante por definir',
+        role: '',
+        sicddiLevel: null,
+        weeklyHours: 2,
+        monthlyHours: 8,
+        isSicddiLocked: false,
+        teacherDedication: 'TC',
+        isProvisional: true,
+      },
+    });
+    const provisionalResearch = expectData(
+      provisionalResearchRes,
+      201,
+      'POST /api/research (auto-provision undefined teacher)',
+    );
+    assert.ok(provisionalResearch.allocation);
+    assert.equal(provisionalResearch.allocation.role, '');
+    assert.ok(provisionalResearch.teacher);
+    assert.equal(provisionalResearch.teacher.isProvisional, true);
+    assert.equal(provisionalResearch.teacher.expectedWorkload, 160);
+    assert.equal(provisionalResearch.teacher.allocations['10318']?.hours, 8);
+
+    const cleanupProvResearchRes = await request<ResearchMutationResponse>({
+      method: 'DELETE',
+      path: `/api/research/${provisionalResearch.allocation.id}`,
+      token: researchSession.token,
+    });
+    expectData(cleanupProvResearchRes, 200, 'DELETE /api/research/:id (provisional)');
+    const cleanupProvTeacherRes = await request<DeletedResponse>({
+      method: 'DELETE',
+      path: `/api/teachers/${provisionalResearch.teacher.id}`,
+      token: deanSession.token,
+    });
+    expectData(cleanupProvTeacherRes, 200, 'DELETE /api/teachers/:id (provisional)');
+
     recordStep(
-      'UC-7.1 Annex 7 Confidential Research CRUD & real-time synchronization with teacher SAC allocations verified',
+      'UC-7.1 Annex 7 Research CRUD, undefined teacher auto-provisioning & SAC synchronization verified',
     );
 
     const removeSpaceRes = await request<FacultyTeacher>({
@@ -1067,7 +1133,7 @@ async function runProductionE2ESuite(): Promise<void> {
     assert.equal(deletedTeacher.deletedId, createdTeacher.id);
     recordStep('UC-7.2 Teacher academic space removal and teacher deletion verified');
 
-    // Unit version baselines, workflow transitions, and semester period cloning.
+    // Unit version baselines, workflow transitions, and semester period lifecycle.
     const snapshotVersionRes = await request<UnitVersionSnapshotResponse>({
       method: 'POST',
       path: '/api/units/ing-industrial/version-snapshot',
@@ -1101,6 +1167,53 @@ async function runProductionE2ESuite(): Promise<void> {
     assert.equal(statusChangeData.unit.payrollStatus, 'En Revisión');
     recordStep('UC-8.1 Unit payroll version snapshot & workflow status transition verified');
 
+    const deleteProtectedBaselineRes = await request<DeletePeriodResponse>({
+      method: 'DELETE',
+      path: '/api/periods/2026-2',
+      token: directorSession.token,
+    });
+    expectError(
+      deleteProtectedBaselineRes,
+      422,
+      'Reject deletion of protected baseline period 2026-2',
+    );
+
+    const openEmptyPeriodRes = await request<AcademicPeriod>({
+      method: 'POST',
+      path: '/api/periods',
+      token: directorSession.token,
+      body: {
+        code: '2027-1VF2',
+        sourcePeriod: '2026-2',
+        resetStatuses: true,
+        copyMode: 'empty',
+      },
+    });
+    expectData(openEmptyPeriodRes, 201, 'POST /api/periods (2027-1VF2 empty)');
+
+    const emptyPeriodStateRes = await request<PayrollSnapshot>({
+      path: '/api/state?period=2027-1VF2',
+      token: directorSession.token,
+    });
+    const emptyPeriodState = expectData(
+      emptyPeriodStateRes,
+      200,
+      'GET /api/state?period=2027-1VF2',
+    );
+    assert.equal(emptyPeriodState.teachers.length, 0);
+
+    const deleteTestPeriodRes = await request<DeletePeriodResponse>({
+      method: 'DELETE',
+      path: '/api/periods/2027-1VF2',
+      token: directorSession.token,
+    });
+    const deletedTestPeriod = expectData(
+      deleteTestPeriodRes,
+      200,
+      'DELETE /api/periods/2027-1VF2',
+    );
+    assert.equal(deletedTestPeriod.deletedId, '2027-1VF2');
+
     const clonePeriodRes = await request<AcademicPeriod>({
       method: 'POST',
       path: '/api/periods',
@@ -1109,6 +1222,7 @@ async function runProductionE2ESuite(): Promise<void> {
         code: '2027-1',
         sourcePeriod: '2026-2',
         resetStatuses: true,
+        copyMode: 'roster_only',
       },
     });
     const clonedPeriod = expectData(clonePeriodRes, 201, 'POST /api/periods (2027-1)');
@@ -1123,8 +1237,14 @@ async function runProductionE2ESuite(): Promise<void> {
     assert.equal(clonedState.activePeriod, '2027-1');
     assert.equal(clonedState.units.length, 22);
     assert.ok(clonedState.units.every((u: AcademicUnitSummary) => u.payrollStatus === 'Borrador'));
+    assert.ok(
+      clonedState.teachers.every(
+        (t: FacultyTeacher) =>
+          t.academicSpaces.length === 0 && Object.keys(t.allocations).length === 0,
+      ),
+    );
     recordStep(
-      'UC-8.2 Semester period cloning (2026-2 -> 2027-1) with status reset & roster migration verified',
+      'UC-8.2 Period deletion (2026-2 protected), empty period (0 teachers) & blank roster_only 2027-1 verified',
     );
 
     // User account provisioning, administrative password reset, audit trail, and idempotent re-seeding.

@@ -123,6 +123,17 @@ async function handleSave() {
     emit('close');
   }
 }
+
+const confirmingDelete = ref(false);
+
+async function handleDelete() {
+  if (!props.editingProgram) return;
+  const res = await store.removeProgram(props.editingProgram.id);
+  if (res.ok) {
+    confirmingDelete.value = false;
+    emit('close');
+  }
+}
 </script>
 
 <template>
@@ -134,7 +145,10 @@ async function handleSave() {
         : 'Nuevo programa académico'
     "
     subtitle="Defina modalidad, estado de acreditación y topes de horas del Anexo 5."
-    @close="emit('close')"
+    @close="
+      confirmingDelete = false;
+      emit('close');
+    "
   >
     <div class="grid cols-2">
       <div class="field">
@@ -215,7 +229,40 @@ async function handleSave() {
     </div>
 
     <template #actions>
-      <button type="button" class="btn ghost" @click="emit('close')">Cancelar</button>
+      <template v-if="editingProgram">
+        <template v-if="confirmingDelete">
+          <button
+            type="button"
+            class="btn danger"
+            style="margin-right: auto"
+            @click="handleDelete"
+          >
+            Confirmar eliminación
+          </button>
+          <button type="button" class="btn ghost" @click="confirmingDelete = false">
+            No eliminar
+          </button>
+        </template>
+        <button
+          v-else
+          type="button"
+          class="btn danger"
+          style="margin-right: auto"
+          @click="confirmingDelete = true"
+        >
+          Eliminar programa
+        </button>
+      </template>
+      <button
+        type="button"
+        class="btn ghost"
+        @click="
+          confirmingDelete = false;
+          emit('close');
+        "
+      >
+        Cancelar
+      </button>
       <button type="button" class="btn primary" @click="handleSave">
         {{ editingProgram ? 'Guardar cambios' : 'Crear programa' }}
       </button>

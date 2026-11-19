@@ -251,7 +251,7 @@ export class Annex2ExcelService {
         summaryPct(sumOutreach),
       ],
       [
-        'Investigación e Innovación (Proyectos, SICDDI, Opciones de Grado)',
+        'Investigación e Innovación (Proyectos, Grupos, Centros y Opciones de Grado)',
         sumResearch,
         summaryPct(sumResearch),
       ],

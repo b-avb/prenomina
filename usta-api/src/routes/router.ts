@@ -259,6 +259,13 @@ export class ApiRouter {
         allowedRoles: ROLE_PERMISSIONS.management,
         handler: controllers.payrollState.createPeriod,
       },
+      {
+        method: 'DELETE',
+        path: '/api/periods/:code',
+        access: 'authenticated',
+        allowedRoles: ROLE_PERMISSIONS.management,
+        handler: controllers.payrollState.deletePeriod,
+      },
 
       // Academic units, Dean assignments, payroll workflow transitions, and validation
       {

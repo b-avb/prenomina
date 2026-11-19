@@ -24,13 +24,12 @@ import type { PeriodContextService } from './period-context.service.js';
 
 /**
  * Core SAC activity codes referenced directly by domain formulas (teaching, PSE 25%, postgrad,
- * SICDDI, Annex 6 graduate caps, academic advising); protected from deletion or code renumbering.
+ * Annex 5/6 bag caps); protected from deletion or code renumbering.
  */
 const PROTECTED_SAC_CODES = new Set([
   '40104',
   '40108',
   '40006',
-  '10226',
   '30411',
   '40106',
   '40109',

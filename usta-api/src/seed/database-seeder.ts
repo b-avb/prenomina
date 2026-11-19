@@ -91,6 +91,13 @@ async function cleanupAndSyncExistingDatabase(
     .where('id', 'in', [...LEGACY_DEMO_AUDIT_IDS])
     .execute();
 
+  // Retire legacy SICDDI code 10226 if still present from prior seed versions.
+  await trx.deleteFrom('research_allocations').where('code', '=', '10226').execute();
+  await trx.deleteFrom('teacher_code_allocations').where('code', '=', '10226').execute();
+  await trx.deleteFrom('approval_requests').where('code', '=', '10226').execute();
+  await trx.deleteFrom('sac_faculty_rules').where('sac_code', '=', '10226').execute();
+  await trx.deleteFrom('sac_codes').where('code', '=', '10226').execute();
+
   // Prune placeholder closed periods only when no teacher rosters reference them.
   for (const periodCode of LEGACY_DEMO_CLOSED_PERIODS) {
     const teacherInPeriod = await trx
@@ -501,7 +508,7 @@ async function cleanupAndSyncExistingDatabase(
     }
   }
 
-  // Refresh Annex 4 SAC catalog descriptions only if no catalog edits are recorded in `audit_logs`.
+  // Refresh Annex 4 SAC catalog descriptions and Annex 7 ownership flags only if no catalog edits are recorded in `audit_logs`.
   const sacEditedAudit = await trx
     .selectFrom('audit_logs')
     .select('id')
@@ -516,6 +523,7 @@ async function cleanupAndSyncExistingDatabase(
           name: cleanCode.name,
           definition: cleanCode.definition,
           guideline: cleanCode.guideline,
+          locked_by_research: cleanCode.lockedByResearch ? 1 : 0,
         })
         .where('code', '=', cleanCode.code)
         .execute();
@@ -537,8 +545,8 @@ async function cleanupAndSyncExistingDatabase(
 }
 
 /**
- * Seeds the database with institutional baseline data for period `2026-2` when empty (or when
- * `options.forceTruncate` is true); otherwise runs `cleanupAndSyncExistingDatabase` in a transaction.
+ * Seeds the database with institutional baseline data for period `2026-2` when empty or when
+ * `options.forceTruncate` is true; otherwise runs `cleanupAndSyncExistingDatabase` inside a transaction.
  */
 export async function seedDatabaseWithOfficialData(
   tx: TransactionRunner,
@@ -619,7 +627,7 @@ export async function seedDatabaseWithOfficialData(
     const unitCycles: UnitPayrollCycle[] = seed.ACADEMIC_UNITS_SEED.map((u) => ({
       unitId: u.id,
       periodCode: activePeriod,
-      payrollStatus: 'Borrador',
+      payrollStatus: 'Borrador' as const,
       currentVersion: 1,
       updatedAt: nowIso,
     }));

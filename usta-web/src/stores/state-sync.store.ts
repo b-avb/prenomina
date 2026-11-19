@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { AcademicPeriod, PayrollSnapshot } from '@usta/domain';
+import type {
+  AcademicPeriod,
+  DeletePeriodResponse,
+  PayrollSnapshot,
+  PeriodCopyMode,
+} from '@usta/domain';
 import { DEFAULT_RULES_CONFIG } from '@/constants/payroll.constants';
 import { toApiError, useMutation, type MutationResult } from '@/composables/useMutation';
 import { useToast } from '@/composables/useToast';
@@ -163,20 +168,53 @@ export const useStateSyncStore = defineStore('stateSync', () => {
     return loadSnapshot(code);
   }
 
-  /** Clones the active period server-side and then loads the new one. */
+  /** Opens a new period server-side using the selected `copyMode` and hydrates it. */
   async function createPeriod(
     code: string,
     resetStatuses: boolean,
+    copyMode: PeriodCopyMode = 'roster_only',
   ): Promise<MutationResult<AcademicPeriod>> {
-    if (orgStore.availablePeriods.includes(code)) {
-      return reject('CONFLICT', `El periodo ${code} ya existe`);
+    const trimmed = code.trim();
+    if (orgStore.availablePeriods.includes(trimmed)) {
+      return reject('CONFLICT', `El periodo ${trimmed} ya existe`);
     }
     const result = await runPessimistic({
       request: () =>
-        periodsApi.create({ code, sourcePeriod: orgStore.activePeriod, resetStatuses }),
+        periodsApi.create({
+          code: trimmed,
+          sourcePeriod: orgStore.activePeriod,
+          resetStatuses,
+          copyMode,
+        }),
       successMessage: (period) => `Periodo ${period.code} abierto y activo`,
     });
     if (result.ok) await loadSnapshot(result.data.code);
+    return result;
+  }
+
+  /** Deletes a non-baseline period (`code !== '2026-2'`) and reloads the active fallback period. */
+  async function deletePeriod(
+    code: string,
+  ): Promise<MutationResult<DeletePeriodResponse>> {
+    const trimmed = code.trim();
+    if (trimmed === '2026-2') {
+      return reject(
+        'BUSINESS_RULE_VIOLATION',
+        'El periodo base 2026-2 está protegido y no puede eliminarse',
+      );
+    }
+    const result = await runPessimistic({
+      request: () => periodsApi.remove(trimmed),
+      successMessage: `Periodo ${trimmed} eliminado`,
+      successType: 'info',
+    });
+    if (result.ok) {
+      const targetPeriod =
+        orgStore.activePeriod === trimmed
+          ? result.data.activePeriod
+          : orgStore.activePeriod;
+      await loadSnapshot(targetPeriod);
+    }
     return result;
   }
 
@@ -204,5 +242,6 @@ export const useStateSyncStore = defineStore('stateSync', () => {
     reset,
     switchPeriod,
     createPeriod,
+    deletePeriod,
   };
 });

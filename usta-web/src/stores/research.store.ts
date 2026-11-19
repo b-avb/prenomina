@@ -15,7 +15,7 @@ import { useWorkloadStore } from './workload.store';
 export type ResearchAllocationPatch = Omit<UpdateResearchAllocationDto, 'id'>;
 
 /**
- * Manages Annex 7 research and SICDDI allocations, reconciling returned teacher records
+ * Manages Annex 7 research allocations, reconciling returned teacher records
  * into `useWorkloadStore` whenever research hours are created, updated, or removed.
  */
 export const useResearchStore = defineStore('research', () => {
@@ -29,10 +29,19 @@ export const useResearchStore = defineStore('research', () => {
     researchAllocations.value = snapshotAllocations;
   }
 
-  /** The server synchronizes the teacher allocation and returns both entities. */
+  /** Reconciles the returned Annex 7 row and any newly provisioned or updated teacher record. */
   function commitResearchMutation({ allocation, teacher }: ResearchMutationResponse): void {
     if (allocation) upsertById(researchAllocations.value, allocation, 'start');
-    if (teacher) workloadStore.upsertTeacher(teacher);
+    if (teacher) {
+      const existedBefore = workloadStore.teachers.some((t) => t.id === teacher.id);
+      workloadStore.upsertTeacher(teacher);
+      if (!existedBefore) {
+        const unit = orgStore.findUnit(teacher.unitId);
+        if (unit) {
+          unit.totalTeachers = workloadStore.countUnitTeachers(teacher.unitId);
+        }
+      }
+    }
   }
 
   function rejectMissingAllocation<T>(): Promise<MutationResult<T>> {
